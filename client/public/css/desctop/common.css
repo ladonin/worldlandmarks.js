@@ -1,0 +1,219 @@
+body {
+    font-size: 13px;
+    color: #000;
+    background-color: #eaedf3;
+}
+
+#category_info_block{
+    width:100%;
+    position:fixed;
+    z-index:100000;
+    display:none;
+}
+
+.category_info_content{
+    background-color: #474c57;
+    width: 880px;
+    margin: 0 auto;
+    margin-top: 90px;
+    padding: 10px;
+    color: #eee;
+    opacity: 0.9;
+    filter:alpha(opacity=90);
+}
+.padding_after_hat{
+    padding-top:20px;
+}
+#category_info_content_row_block_selected .category_info_content_row_title{
+    width: 840px;
+}
+.category_info_content_row_img{
+    padding:5px 0;
+    width:27px;
+    float:left;
+
+}
+.category_info_content_row_title{
+    width:259px;
+    padding:5px 0;
+    float:left;
+
+}
+.category_info_content_row_block{
+    float:left;
+}
+.category_info_content_row_title div{
+    margin:2px 10px 0 10px;
+
+}
+
+#category_info_content_row_block_selected{
+    color: rgb(255, 255, 34) !important;
+    font-weight: bold !important;
+}
+
+.category_info_content_title{
+    float:left;
+    font-weight:bold;
+    font-size:19px;
+}
+
+.category_info_content_close{
+    float:right;
+    font-size:19px;
+    cursor:pointer;
+
+}
+
+.category_info_content_title,category_info_content_close{
+    font-size:19px;
+    margin-bottom:10px;
+}
+
+
+.sublist_placemarks,
+.sublist_articles{
+    margin: 0 20px;
+    padding-bottom:10px;
+    text-align: left;
+}
+
+.sublist_placemarks_content_adress{
+    font-size:12px;
+    margin-bottom:5px;
+}
+
+
+.sublist_placemarks_content_adress > .adress_country_flag,.sublist_placemarks_content_adress{
+    /*line-height: 21px;*/
+}
+
+.action_placemark.controller_catalog.view_placemark .sublist_placemarks_content_adress{
+    line-height: 21px;
+}
+
+.sublist_placemarks_block{
+    width:430px;
+    float:left;
+}
+.sublist_placemarks_content{
+    width:226px;
+}
+
+.sublist_placemarks_photo{
+    margin:10px 10px 10px 0;
+    float:left;
+}
+.sublist_placemarks_content{
+    margin:10px 0;
+    float:left;
+}
+.sublist_placemarks_photo{
+    cursor:pointer;
+}
+.sublist_placemarks_content_title{
+    font-size:15px;
+    margin-bottom:5px;
+}
+.sublist_placemarks_title,
+.sublist_articles_title{
+    font-size:17px;
+    font-weight:bold;
+    margin:10px 0;
+}
+
+
+.placemarks_category_html_content img{
+    float:left;
+    margin:0px 5px 0px 0 !important;
+    border: 0 !important;
+}
+
+
+.page_bottom_block{
+    width: 100%;
+    margin: 0px auto 0 auto;
+    text-align: left;
+    background-color: #2b2b2b;
+}
+
+.page_bottom_column_1{
+
+    padding:15px 15px 10px 15px;
+    float:left;
+}
+
+
+.page_bottom_liveinternet{
+    padding:15px 15px 10px 15px;
+    float:right;
+    position:relative;
+    bottom:0;
+}
+
+
+
+
+
+
+
+.page_bottom_column_row_header{
+    padding-bottom:10px;
+    font-size:21px;
+    font-weight: bold;
+    color: #80C5F3;
+}
+
+
+.page_bottom_column_row{
+    padding-bottom:5px;
+    color:#fff;
+    font-size:15px;
+}
+.page_bottom_column_row a{
+    color:#fff !important;
+    text-decoration:none;
+}
+
+.page_bottom_rights{
+    padding:0px 15px 10px 15px;
+    color:#ccc;
+    font-size:12px;
+}
+.page_bottom_rights a{
+    color:#80C5F3;
+}
+
+
+ ::-webkit-scrollbar-button {
+background-image:url('');
+background-repeat:no-repeat;
+width:6px;
+height:0px
+}
+
+::-webkit-scrollbar-track {
+background-color:#32312e;
+box-shadow:0px 0px 3px #000 inset;
+}
+
+::-webkit-scrollbar-thumb {
+-webkit-border-radius: 5px;
+border-radius: 5px;
+background-color:#ffcb17;
+box-shadow:0px 1px 1px #fff inset;
+background-image:url('https://yraaa.ru/_pu/24/59610063.png');
+background-position:center;
+background-repeat:no-repeat;
+}
+
+::-webkit-resizer{
+background-image:url('');
+background-repeat:no-repeat;
+width:7px;
+height:0px
+}
+
+::-webkit-scrollbar{
+width: 11px;
+}
