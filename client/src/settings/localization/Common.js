@@ -1,4 +1,4 @@
-//import Consts from 'src/settings/Consts';
+//import consts from 'src/settings/Constants';
 
 
 export default {

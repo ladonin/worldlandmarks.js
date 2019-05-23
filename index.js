@@ -1,5 +1,11 @@
-const express = require('express');
-const app = express();
+const Express = require('express');
+const Fs = require('fs');
+//const ErrorHandler = require('modules/errorhandler/ErrorHandler');
+
+const _lnum = require('lodash/util');
+
+
+const app = Express();
 const port = process.env.PORT || 3001;
 
 
@@ -10,6 +16,11 @@ const port = process.env.PORT || 3001;
 
 
 app.set('trust proxy', true);
+const uniqid = require('uniqid');
+
+console.log(Fs.existsSync('index.js'));
+
+
 
 
 
@@ -71,14 +82,16 @@ var timer = setTimeout(()=>{res.send('j;jghjghj;sdl');}, 1000);
 
 
 
-
-
-
-
-
-
-
 app.get('/api/get_list', (req, res) => {
+
+
+
+
+
+
+
+
+
     var list = ['item1', 'item2', 'item3'];
     res.json(list);
     console.log(req.ip);

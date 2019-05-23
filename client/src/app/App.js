@@ -1,14 +1,20 @@
 import React, { Component } from 'react';
 import { Route, Switch } from 'react-router-dom';
-//import './App.css';
-import Home from './pages/home/Home';
-import Map from './pages/map/Map';
-import Catalog from './pages/catalog/Catalog';
+
+// Modules
 import Localization from 'src/modules/localization/Localization';
-import Consts from 'src/settings/Consts';
+
+// Settings
+import Consts from 'src/settings/Constants';
+
+// Components
+import Main from './controllers/main/Main';
+import Map from './controllers/map/Map';
+import Catalog from './controllers/catalog/Catalog';
+import Article from './controllers/article/Article';
+
+// Css
 import "./Css";
-
-
 
 
 
@@ -29,9 +35,10 @@ class App extends Component {
     const App = () => (
       <div>
         <Switch>
-          <Route exact path='/' component={Home}/>
+          <Route exact path='/' component={Main}/>
           <Route path='/map' component={Map}/>
           <Route path='/catalog' component={Catalog}/>
+          <Route path='/article' component={Article}/>
         </Switch>
       </div>
     )

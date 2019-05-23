@@ -1,21 +1,31 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
-import "./Css";
 
+// Settings
+import Consts from 'src/settings/Constants';
 
+// Modules
+import Url from 'src/modules/controller/Controller';
+
+// Components
 import Hat from "src/app/common/blocks/Hat";
-import HomeMain from "src/app/common/blocks/HomeMain";
+
+//Css
+//import "./Css";
 
 
 
 
 
 
-class Home extends Component {
 
-    //constructor() {
-    //    super();
-    //}
+
+class Article extends Component {
+
+    constructor() {
+        super();
+        Url.setControllerName(Consts.MY_CONTROLLER_NAME_ARTICLE);
+    }
 
 
     render() {
@@ -23,7 +33,7 @@ class Home extends Component {
                 <React.Fragment>
                     <Hat/>
                     <div className="padding_after_hat"></div>
-                    <HomeMain/>
+
 
 
 
@@ -32,4 +42,4 @@ class Home extends Component {
                 );
     }
 }
-export default Home;
+export default Article;

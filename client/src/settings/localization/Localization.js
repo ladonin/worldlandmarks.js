@@ -1,6 +1,6 @@
-import Consts from 'src/settings/Consts';
+import Consts from 'src/settings/Constants';
 import Ru from './Ru';
-import En from './en';
+import En from './En';
 import Common from './Common';
 
 

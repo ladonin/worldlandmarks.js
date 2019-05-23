@@ -1,4 +1,4 @@
-import Consts from 'src/settings/Consts';
+import consts from 'src/settings/Constants';
 
 
 export default {
@@ -129,7 +129,7 @@ export default {
     'site/description/articles/category': '',
     'site/description/articles/index': '',
     'site/keywords/articles/index': '',
-    ['form/map_new_point/category/' + Consts.MY_NONE_CATEGORY_CODE]: 'Select from the list',
+    ['form/map_new_point/category/' + consts.MY_NONE_CATEGORY_CODE]: 'Select from the list',
     'form/map_new_point/category/0': 'Other places',
     'form/map_new_point/category/1': 'Castles',
     'form/map_new_point/category/2': 'Palaces, manor houses',
