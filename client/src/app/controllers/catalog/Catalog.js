@@ -8,7 +8,7 @@ import Consts from 'src/settings/Constants';
 import Url from 'src/modules/controller/Controller';
 
 // Components
-import Hat from "src/app/common/blocks/Hat";
+import Hat from 'src/app/common/blocks/Hat';
 
 //Css
 //import "./Css";
@@ -24,7 +24,7 @@ class Catalog extends Component {
 
     constructor() {
         super();
-        Url.setControllerName(Consts.MY_CONTROLLER_NAME_CATALOG);
+        Url.setControllerName(Consts.CONTROLLER_NAME_CATALOG);
     }
 
 

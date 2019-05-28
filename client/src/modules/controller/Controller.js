@@ -1,6 +1,7 @@
 import Consts from 'src/settings/Constants';
-import Messages from 'src/settings/Messages';
-import ErrorHandler from 'src/modules/errorhandler/ErrorHandler';
+import ErrorHandler from 'src/modules/error_handler/ErrorHandler';
+import ErrorCodes from 'src/settings/ErrorCodes';
+
 
 /*
  * Controller name
@@ -8,7 +9,7 @@ import ErrorHandler from 'src/modules/errorhandler/ErrorHandler';
  *
  * @Type string
  */
-var controllerName = Consts.MY_CONTROLLER_NAME_MAIN;
+var controllerName = Consts.CONTROLLER_NAME_MAIN;
 
 
 
@@ -19,7 +20,7 @@ var controllerName = Consts.MY_CONTROLLER_NAME_MAIN;
  *
  * @Type string
  */
-var actionName = Consts.MY_ACTION_NAME_INDEX;
+var actionName = Consts.ACTION_NAME_INDEX;
 
 
 
@@ -34,14 +35,14 @@ var actionName = Consts.MY_ACTION_NAME_INDEX;
  * @return boolean or throw error (in dev mode)
  */
 function checkConrtollerName(name) {
-    if ((Consts.MY_CONTROLLER_NAME_MAP === name)
-            || (Consts.MY_CONTROLLER_NAME_MAIN === name)
-            || (Consts.MY_CONTROLLER_NAME_CATALOG === name)
-            || (Consts.MY_CONTROLLER_NAME_ARTICLE === name))
+    if ((Consts.CONTROLLER_NAME_MAP === name)
+            || (Consts.CONTROLLER_NAME_MAIN === name)
+            || (Consts.CONTROLLER_NAME_CATALOG === name)
+            || (Consts.CONTROLLER_NAME_ARTICLE === name))
     {
         return true;
     }
-    ErrorHandler.process(Messages.ERROR_WRONG_CONTROLLER_NAME + ': [' + name + ']');
+    ErrorHandler.process(ErrorCodes.ERROR_WRONG_CONTROLLER_NAME + ': [' + name + ']');
     return false;
 }
 
@@ -91,7 +92,7 @@ export default {
     getActionName:() => actionName,
 
 
-    isMapPage:()=> (controllerName === Consts.MY_CONTROLLER_NAME_MAP)
+    isMapPage:()=> (controllerName === Consts.CONTROLLER_NAME_MAP)
 }
 
 

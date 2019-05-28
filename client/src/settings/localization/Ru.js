@@ -1,4 +1,4 @@
-import consts from 'src/settings/Constants';
+import Consts from 'src/settings/Constants';
 
 
 export default {
@@ -129,7 +129,7 @@ export default {
     'site/description/articles/category': '', //'Статьи. %country%',
     'site/description/articles/index': '', //'Статьи. Выберите страну',
     'site/keywords/articles/index': '',
-    ['form/map_new_point/category/' + consts.MY_NONE_CATEGORY_CODE]: 'Выберите из списка',
+    ['form/map_new_point/category/' + Consts.NONE_CATEGORY_CODE]: 'Выберите из списка',
     'form/map_new_point/category/0': 'Прочие места',
     'form/map_new_point/category/1': 'Замки',
     'form/map_new_point/category/2': 'Дворцы, усадьбы',

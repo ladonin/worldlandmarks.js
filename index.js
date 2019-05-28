@@ -1,3 +1,49 @@
+var app = require('express')();
+var server = require('http').Server(app);
+var io = require('socket.io')(server);
+
+server.listen(80);
+// WARNING: app.listen(80) will NOT work here!
+
+app.get('/', function (req, res) {
+  res.send('Hello world!');
+});
+
+io.on('connection', function (socket) {
+  socket.emit('news', { hello: 'world' });
+  socket.on('my other event', function (data) {
+    console.log(data);
+  });
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*
 const Express = require('express');
 const Fs = require('fs');
 //const ErrorHandler = require('modules/errorhandler/ErrorHandler');
@@ -24,7 +70,7 @@ console.log(Fs.existsSync('index.js'));
 
 
 
-/*
+
 var expiryDate = new Date(Date.now() + 60 * 60 * 1000) // 1 hour
 
 app.use(cookieSession({
@@ -41,7 +87,6 @@ app.use(expressSession({
   resave: false,
   saveUninitialized: false
 }))
-*/
 
 
 
@@ -49,7 +94,7 @@ app.use(expressSession({
 
 
 
-/*
+
 app.use(function (req, res, next) {
   console.log(req.session);
   res.cookie('name', 'tobi', { domain: '192.168.56.1', secure: false });
@@ -64,7 +109,7 @@ app.get('/api/1', (req, res) => {
 var timer = setTimeout(()=>{res.send('j;jghjghj;sdl');}, 1000);
 });
 
-*/
+
 
 
 
@@ -109,3 +154,4 @@ app.get('/api/get_users', (req, res) => {
 
 app.listen(port);
 console.log('App is listening on port ' + port);
+*/

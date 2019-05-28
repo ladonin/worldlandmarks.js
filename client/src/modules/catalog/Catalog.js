@@ -28,7 +28,7 @@ for(var index in this.categories) {
 }
 
 
-        if (get_controller_name() === Consts.MY_CONTROLLER_NAME_ARTICLE){
+        if (get_controller_name() === Consts.CONTROLLER_NAME_ARTICLE){
             $categories_component = components\Categories::get_instance();
             foreach($this->categories as &$category){
                 $category['title'] = $categories_component->prepare_name_for_articles($category['code'], $category['title']);

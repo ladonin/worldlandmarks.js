@@ -25,7 +25,7 @@ class App extends Component {
     }
 
     initSettings(){
-        Localization.changeLang(Consts.MY_LANGUAGE_EN);
+        Localization.changeLang(Consts.LANGUAGE_EN);
     }
 
     componentDidMount(){

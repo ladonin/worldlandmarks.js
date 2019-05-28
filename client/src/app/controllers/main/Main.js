@@ -8,8 +8,8 @@ import Consts from 'src/settings/Constants';
 import Url from 'src/modules/controller/Controller';
 
 // Components
-import Hat from "src/app/common/blocks/Hat";
-import MainBlock_1 from "src/app/common/blocks/Main_1";
+import Hat from 'src/app/common/blocks/Hat';
+import MainBlock_1 from 'src/app/common/blocks/Main_1';
 
 //Css
 import "./Css";
@@ -25,7 +25,7 @@ class Main extends Component {
 
     constructor() {
         super();
-        Url.setControllerName(Consts.MY_CONTROLLER_NAME_MAIN);
+        Url.setControllerName(Consts.CONTROLLER_NAME_MAIN);
     }
 
 

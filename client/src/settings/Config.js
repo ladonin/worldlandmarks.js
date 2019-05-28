@@ -1,8 +1,8 @@
-import consts from 'src/settings/Constants';
+import Consts from 'src/settings/Constants';
 
 export default {
     'generic': {
-        'site_name': process.env.REACT_APP_DOMAIN,
+        'site_name': Consts.SITE_NAME,
         'need_photos_for_placemarks': true,
         'use_titles': true,
         'show_relevant_placemarks': true,
@@ -20,7 +20,7 @@ export default {
         }
     },
     'ftp': {//ftp подключения
-        [consts.MY_FTP_DEFAULT_SERVER_NAME]: {
+        [Consts.FTP_DEFAULT_SERVER_NAME]: {
             'url': '140706.selcdn.ru',
             'user_name': '40679',
             'user_password': 'XrhbDnXv',
@@ -29,11 +29,11 @@ export default {
     },
     'languages': [
         {
-            'code': consts.MY_LANGUAGE_RU,
+            'code': Consts.LANGUAGE_RU,
             'title': 'Русский',
         },
         {
-            'code': consts.MY_LANGUAGE_EN,
+            'code': Consts.LANGUAGE_EN,
             'title': 'English',
         }
         //внимание! если добавляем новый язык, то нужно сразу прогнать все метки по нему через гугл сервис, иначе в режиме этого языка адреса не будут отображаться, поскольку они формируются из записей в базе по конкретному языку
@@ -58,7 +58,7 @@ export default {
     },
     'categories': {
         'categories_add_new_point_form_options': [
-            ['none', 'form/map_new_point/category/' + consts.MY_NONE_CATEGORY_CODE, 'selected'],
+            ['none', 'form/map_new_point/category/' + Consts.NONE_CATEGORY_CODE, 'selected'],
             [0, 'form/map_new_point/category/0'],
             [1, 'form/map_new_point/category/1'],
             [2, 'form/map_new_point/category/2'],
@@ -207,35 +207,35 @@ export default {
         },
         'tags': [
             {
-                'code': consts.MY_FORM_TEXT_TAG_CODE_A,
+                'code': Consts.FORM_TEXT_TAG_CODE_A,
                 'open_tag': '[a=link]',
                 'close_tag': '[/a]',
                 'title': 'text_form/tags/a/title',
                 'free': false
             },
             {
-                'code': consts.MY_FORM_TEXT_TAG_CODE_P,
+                'code': Consts.FORM_TEXT_TAG_CODE_P,
                 'open_tag': '\n[p]',
                 'close_tag': '[/p]\n',
                 'title': 'text_form/tags/p/title',
                 'free': true
             },
             {
-                'code': consts.MY_FORM_TEXT_TAG_CODE_B,
+                'code': Consts.FORM_TEXT_TAG_CODE_B,
                 'open_tag': '[b]',
                 'close_tag': '[/b]',
                 'title': 'text_form/tags/b/title',
                 'free': true
             },
             {
-                'code': consts.MY_FORM_TEXT_TAG_CODE_STRONG,
+                'code': Consts.FORM_TEXT_TAG_CODE_STRONG,
                 'open_tag': '[strong]',
                 'close_tag': '[/strong]',
                 'title': 'text_form/tags/strong/title',
                 'free': false
             },
             {
-                'code': consts.MY_FORM_TEXT_TAG_CODE_IMAGE_ADVANCED,
+                'code': Consts.FORM_TEXT_TAG_CODE_IMAGE_ADVANCED,
                 'open_tag': '[img url=\"x\" style=\"x\"]',
                 'close_tag': '',
                 'title': 'text_form/tags/img/title',

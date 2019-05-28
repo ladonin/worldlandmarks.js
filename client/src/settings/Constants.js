@@ -1,47 +1,14 @@
-export default {
-    MY_PROCESS_DEV: 'development',
-    MY_LANGUAGE_RU: 'ru',
-    MY_LANGUAGE_EN: 'en',
+import CommonConsts from 'src/../../settings/common/Constants';
 
-    MY_LANGUAGE_COMMON: 'COMMON',
-
-    MY_DEVICE_NAME_DESCTOP: 'desctop',
-    MY_DEVICE_NAME_MOBILE: 'mobile',
-    MY_DEVICE_NAME_COMMON: 'common',
-
-    MY_AJAX_SUCCESS_CODE: 'success',
-    MY_AJAX_UNDEFINED: 'undefined',
-
-    MY_NONE_CATEGORY_CODE: 'none',
-
-    MY_FTP_DEFAULT_SERVER_NAME: 'default_server',
+let Consts = {
 
     MY_FORM_TEXT_TAG_CODE_A: 'a',
     MY_FORM_TEXT_TAG_CODE_B: 'b',
     MY_FORM_TEXT_TAG_CODE_STRONG: 'strong',
     MY_FORM_TEXT_TAG_CODE_IMAGE_ADVANCED: 'image_advanced',
     MY_FORM_TEXT_TAG_CODE_P: 'p',
-
-    MY_SERVICE_IMGS_URL_CATEGORIES: '/imgs/categories/',
-
-
-
-
-MY_CONTROLLER_NAME_MAP:'map',
-MY_CONTROLLER_NAME_MAIN:'main',
-MY_CONTROLLER_NAME_CATALOG:'catalog',
-MY_CONTROLLER_NAME_ARTICLE:'article',
-
-MY_ACTION_NAME_INDEX:'index',
-
-
-
-
-
-
 }
-
-
+export default {...CommonConsts, ...Consts}
 
 
 

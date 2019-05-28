@@ -1,6 +1,13 @@
 import React, { Component } from 'react';
 import Localization from 'src/modules/localization/Localization';
 import {BrowserView, MobileView, isBrowser, isMobile} from "react-device-detect";
+import Consts from 'src/settings/Constants';
+
+
+
+
+
+
 
 class Hat extends Component {
 
@@ -22,12 +29,12 @@ class Hat extends Component {
                 <div id="hat">
                     <div className="hat_logo">
                         <div className="hat_logo_img">
-                            <a href={process.env.REACT_APP_DOMAIN}>
+                            <a href={Consts.DOMAIN}>
                                 <img src="/img/logo.png"/>
                             </a>
                         </div>
                         <div className="hat_logo_text_main">
-                            <a href={process.env.REACT_APP_DOMAIN}>{Localization.getText('common/domain_name')}</a>
+                            <a href={Consts.DOMAIN}>{Localization.getText('common/domain_name')}</a>
                         </div>
                         <div className="hat_logo_text_under">{Localization.getText('hat/logo/under_text')}</div>
                     </div>

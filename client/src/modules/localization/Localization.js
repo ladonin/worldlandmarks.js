@@ -2,9 +2,9 @@ import localizedStrings from 'react-localization';
 import {locales, commonLocales} from 'src/settings/localization/Localization';
 
 
-import ErrorHandler from 'src/modules/errorhandler/ErrorHandler';
+import ErrorHandler from 'src/modules/error_handler/ErrorHandler';
 import Messages from 'src/settings/Messages';
-
+import ErrorCodes from 'src/settings/ErrorCodes';
 
 let locale = new localizedStrings(locales);
 let commonLocale = new localizedStrings(commonLocales);
@@ -19,7 +19,7 @@ export default {
                 return commonLocale[name];
             } else {
                 // Text not found anywhere
-                ErrorHandler.process(Messages.ERROR_LOCALIZATION_WORD_NOT_FOUND + ': ' + name);
+                ErrorHandler.process(ErrorCodes.ERROR_LOCALIZATION_WORD_NOT_FOUND + ': ' + name);
             }
         }
     },

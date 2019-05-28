@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom';
 import {BrowserView, MobileView, isBrowser, isMobile} from "react-device-detect";
 import Localization from 'src/modules/localization/Localization';
-
+import Consts from 'src/settings/Constants';
 
 class HomeMain extends Component {
     constructor() {
@@ -31,9 +31,9 @@ class HomeMain extends Component {
         return (
                 <div className="main_block">
                     <div className="main_block_map_block">
-                        <img src={process.env.REACT_APP_DOMAIN + '/img/map_240.png'} onClick={this.goTo} data-url="map"/>
+                        <img src={Consts.DOMAIN + '/img/map_240.png'} onClick={this.goTo} data-url="map"/>
                         <div className="main_block_map_block_title">
-                            <a href={process.env.REACT_APP_DOMAIN + '/map'}>map</a>
+                            <a href={Consts.DOMAIN + '/map'}>map</a>
                         </div>
                     </div>
                     <div className="main_block_catalog_block">
@@ -43,9 +43,9 @@ class HomeMain extends Component {
                         </div>
                     </div>
                     <div className="main_block_search_block">
-                        <img src={process.env.REACT_APP_DOMAIN + '/img/search_240.png'} onClick={this.goTo} data-url="catalog/search"/>
+                        <img src={Consts.DOMAIN + '/img/search_240.png'} onClick={this.goTo} data-url="catalog/search"/>
                         <div className="main_block_search_block_title">
-                            <a href={process.env.REACT_APP_DOMAIN + '/catalog/search'}>search</a>
+                            <a href={Consts.DOMAIN + '/catalog/search'}>search</a>
                         </div>
                     </div>
                     <div className="clear"></div>

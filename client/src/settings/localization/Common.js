@@ -1,4 +1,3 @@
-//import consts from 'src/settings/Constants';
 
 
 export default {

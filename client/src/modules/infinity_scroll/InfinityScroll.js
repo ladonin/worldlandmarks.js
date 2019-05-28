@@ -1,5 +1,5 @@
 import {BrowserView, MobileView, isBrowser, isMobile} from "react-device-detect";
-import consts from 'src/settings/Constants';
+import Consts from 'src/settings/Constants';
 
 
             //разрешаем выводить данные
@@ -24,7 +24,7 @@ import consts from 'src/settings/Constants';
                         var result = '';
                         try {
                             var ajax_result = JSON.parse(data);
-                            if (ajax_result['status'] === consts.MY_AJAX_SUCCESS_CODE) {
+                            if (ajax_result['status'] === Consts.AJAX_SUCCESS_CODE) {
 
                                 if (typeof (ajax_result['data']) === 'object') {
 
@@ -37,13 +37,13 @@ import consts from 'src/settings/Constants';
                                         // берем одну из фоток метки
                                         var photos_count = value['photos'].length;
                                         var photo = value['photos'][getRandomInt(0, photos_count - 1)];
-                                        if ((value['state_code'] === consts.MY_AJAX_UNDEFINED) || (!value['state_code'])) {
+                                        if ((value['state_code'] === Consts.AJAX_UNDEFINED) || (!value['state_code'])) {
                                             var state_url = '';
                                         } else {
                                             var state_url = '/' + value['state_code'];
                                         }
 
-                                        var url_placemark = process.env.REACT_APP_DOMAIN+'/catalog/' + value['country_code'] + state_url + '/' + value['id'];
+                                        var url_placemark = Consts.DOMAIN+'/catalog/' + value['country_code'] + state_url + '/' + value['id'];
                                         var categories = '<img src="' + my_placemark_category_viewer.get_category_image_url(value['category']) + '" onclick="category_info_show(\'' + value['category'] + '\');">';
                                         var subcategories = my_placemark_object.get_subcategories(value['subcategories']);
                                         $.each(subcategories, function (id, subcategory) {
