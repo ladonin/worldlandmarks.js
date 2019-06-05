@@ -1,0 +1,1 @@
+<?php $this->trace_service_block('add_new_point', false, $data); ?>

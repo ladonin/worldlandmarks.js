@@ -1,0 +1,47 @@
+.main_block{
+    width:100%;
+    margin:0 auto;
+    text-align:left;
+
+background-image: url(/img/fon_230.jpg);
+    background-size: 230px auto;
+    background-repeat: no-repeat;
+    background-position: top;
+
+
+}
+
+
+
+
+.main_block_last_placemarks_title,
+.main_block_last_articles_title{
+    width:100%;
+    font-size: 22px;
+    text-align: left;
+    margin-top:10px;
+    margin-bottom:10px;
+}
+
+
+
+
+
+.main_block_map_block_link, .main_block_catalog_block_link{
+    margin-top:10px;
+    margin-left:10px;
+}
+
+.main_block_map_block_title, .main_block_catalog_block_title,.main_block_search_block_title{
+    color:#fff;
+    font-size:14px;
+    text-align: right;
+}
+
+.main_block_catalog_block_description, .main_block_map_block_description, .main_block_description{
+    padding:10px;
+}
+
+.main_block_description,.main_block_catalog_block_description,.main_block_map_block_description{
+    font-size:14px;
+}

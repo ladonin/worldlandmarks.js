@@ -1,0 +1,41 @@
+.main_block .main_block_map_block_title a, .main_block .main_block_catalog_block_title a, .main_block .main_block_search_block_title a{
+    text-decoration:none;
+    color:#fff;
+}
+.main_block_last_placemarks_title_count{
+    float:right;
+}
+.main_block_map_block a{
+background: #333/*rgba(100, 142, 183, 1)*/;
+padding: 5px 10px;
+border-radius: 999px;
+}
+.main_block_catalog_block a{
+background: #333/*rgba(216, 143, 86,1)*/;
+padding: 5px 10px;
+border-radius: 999px;
+}
+.main_block_search_block a{
+background: #333/*rgba(65, 75, 97,1)*/;
+padding: 5px 10px;
+border-radius: 999px;
+}
+
+.main_block_map_block,.main_block_catalog_block,.main_block_search_block{
+border-radius: 5px;
+}
+.main_block_map_block{
+    float:left;
+}
+.main_block_catalog_block{
+    float:left;
+}
+.main_block_search_block{
+    float:left;
+}
+
+.main_block_last_placemarks_title,
+.main_block_last_articles_title{
+    color: #fff;
+    background-color:rgba(65, 75, 97, 0.7);
+}

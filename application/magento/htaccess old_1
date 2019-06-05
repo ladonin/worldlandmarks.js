@@ -1,0 +1,55 @@
+php_value upload_max_filesize 16M
+php_value post_max_size 16M
+php_value memory_limit 2048M
+php_value max_execution_time 30000
+php_value max_input_time 30000
+php_value session.gc_maxlifetime 120000
+
+AddDefaultCharset UTF-8
+Options -Indexes
+
+RewriteEngine on
+
+RewriteRule (css|javascript|img)/(.+)$  $1/$2 [L]
+
+# запрещаем выполнять файлы, не относящиеся к картинкам
+RewriteCond %{REQUEST_URI} !(files/temp)/.*\.(jpg|jpeg|gif|png)$
+RewriteRule (files/temp)/(.*)$  - [F]
+
+
+# временно
+RewriteRule ^[\/]?$ index.php?var1=map&query_string=1&type=landmarks [L]
+
+
+
+# --> главная страница сервиса
+RewriteRule ^(landmarks|roads)[\/]?$ index.php?var1=main&query_string=1&type=$1 [L]
+
+
+# --> страница карты
+# сокращения адресов (action = index)
+# Важно - имена контроллеров и имена типов карт не должны совпадать!
+RewriteRule ^map/([\w]+)[\/]?$ index.php?var1=map&query_string=1&type=$1 [L]
+RewriteRule ^map/([\w]+)\/([\d]+)[\/]?$ index.php?var1=map&query_string=1&type=$1&id=$2 [L]
+
+# --> страница каталога
+RewriteRule ^catalog\/([\w]+)\/scroll$ index.php?var1=catalog&var2=scroll&query_string=1&type=$1 [L]
+
+RewriteRule ^catalog\/([\w]+)\/([\w]+)\/([\w]+)\/([\d]+)[\/]?$ index.php?var1=catalog&var2=placemark&query_string=1&type=$1&country=$2&state=$3&id=$4 [L]
+RewriteRule ^catalog\/([\w]+)\/([\w]+)\/([\d]+)[\/]?$ index.php?var1=catalog&var2=placemark&query_string=1&type=$1&country=$2&id=$3 [L]
+
+RewriteRule ^catalog\/([\w]+)\/([\w]+)\/([\w]+)[\/]?$ index.php?var1=catalog&var2=state&query_string=1&type=$1&country=$2&state=$3 [L]
+RewriteRule ^catalog\/([\w]+)\/([\w]+)[\/]?$ index.php?var1=catalog&var2=country&query_string=1&type=$1&country=$2 [L]
+RewriteRule ^catalog\/([\w]+)[\/]?$ index.php?var1=catalog&var2=index&query_string=1&type=$1 [L]
+
+
+# для внутренних обращений (ajax и т.д.) action задается второй переменной
+#RewriteRule ^$ index.php?query_string=1&%{QUERY_STRING} [L]
+RewriteRule ^mvc\/([\w]+)$ index.php?var1=$1&query_string=1&%{QUERY_STRING} [L]
+RewriteRule ^mvc\/([\w]+)\/([\w]+)$ index.php?var1=$1&var2=$2&query_string=1&%{QUERY_STRING} [L]
+RewriteRule ^mvc\/([\w]+)\/([\w]+)\/([\w]+)$ index.php?var1=$1&var2=$2&var3=$3&query_string=1&%{QUERY_STRING} [L]
+
+RewriteRule ^([\w]+)\/([\w]+)\/(download)\/([\w\.]+)$ index.php?var1=$1&var2=$2&var3=$3&var4=$4 [L]
+
+
+

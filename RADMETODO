@@ -1,0 +1,32 @@
+нет вьюх и лэйаутов
+
+
+
+
+const Consts = require('application/express/settings/Constants');
+const Messages = require('application/express//settingsMessages');
+const Functions = require('application/express/functions/BaseFunctions');
+
+const ErrorHandler = require('application/express/components/ErrorHandler');
+
+const Component = require('vendor/Component');
+
+const Controller = require('application/express/vendor/Controller');
+
+
+const Config = require('application/express/settings/Config.js');
+
+
+const Request = require('application/express/components/base/Request');
+
+
+
+
+
+
+
+
+//ATTENTION - обратите внимание
+
+#???????????????????????????? - то, что возможно не нужно
+nextTTTTTTTTTTTT - продолжать с этого момента

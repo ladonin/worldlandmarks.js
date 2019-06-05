@@ -1,8 +1,8 @@
-var app = require('express')();
+/*var app = require('express')();
 var server = require('http').Server(app);
 var io = require('socket.io')(server);
 
-server.listen(80);
+server.listen(3001);
 // WARNING: app.listen(80) will NOT work here!
 
 app.get('/', function (req, res) {
@@ -20,6 +20,7 @@ io.on('connection', function (socket) {
 
 
 
+*/
 
 
 
@@ -43,16 +44,10 @@ io.on('connection', function (socket) {
 
 
 
-/*
-const Express = require('express');
-const Fs = require('fs');
+/*const Fs = require('fs');*/
+/*console.log(Fs.existsSync('index.js'));*/
+
 //const ErrorHandler = require('modules/errorhandler/ErrorHandler');
-
-const _lnum = require('lodash/util');
-
-
-const app = Express();
-const port = process.env.PORT || 3001;
 
 
 //const fetch = require('node-fetch');
@@ -61,16 +56,10 @@ const port = process.env.PORT || 3001;
 
 
 
-app.set('trust proxy', true);
-const uniqid = require('uniqid');
 
-console.log(Fs.existsSync('index.js'));
+/*const uniqid = require('uniqid');*/
 
-
-
-
-
-
+/*
 var expiryDate = new Date(Date.now() + 60 * 60 * 1000) // 1 hour
 
 app.use(cookieSession({
@@ -88,13 +77,18 @@ app.use(expressSession({
   saveUninitialized: false
 }))
 
-
-
-
-
-
-
-
+*/
+/*
+app.use(function (req, res, next) {
+  console.log(req.session);
+  res.cookie('name', 'tobi', { domain: '192.168.56.1', secure: false });
+  var n = req.session.views || 0;
+  n++;
+  req.session.views = n;next();
+  //res.end(n + ' views');
+})
+*/
+/*
 app.use(function (req, res, next) {
   console.log(req.session);
   res.cookie('name', 'tobi', { domain: '192.168.56.1', secure: false });
@@ -104,11 +98,13 @@ app.use(function (req, res, next) {
   //res.end(n + ' views');
 })
 
+
 app.get('/api/1', (req, res) => {
 //res.cookie('name', 'tobi');
 var timer = setTimeout(()=>{res.send('j;jghjghj;sdl');}, 1000);
 });
 
+*/
 
 
 
@@ -116,10 +112,10 @@ var timer = setTimeout(()=>{res.send('j;jghjghj;sdl');}, 1000);
 
 
 
-
-
-
-
+const Express = require('express');
+const app = Express();
+const port = process.env.PORT || 3001;
+app.set('trust proxy', true);
 
 
 
@@ -128,14 +124,6 @@ var timer = setTimeout(()=>{res.send('j;jghjghj;sdl');}, 1000);
 
 
 app.get('/api/get_list', (req, res) => {
-
-
-
-
-
-
-
-
 
     var list = ['item1', 'item2', 'item3'];
     res.json(list);
@@ -154,4 +142,3 @@ app.get('/api/get_users', (req, res) => {
 
 app.listen(port);
 console.log('App is listening on port ' + port);
-*/

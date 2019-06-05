@@ -15,6 +15,7 @@
     "react-localization": "^1.0.13",
     "react-router-dom": "^5.0.0",
     "react-scripts": "2.1.8",
+    "socket.io-client": "^2.2.0",
     "typescript": "^3.4.5",
     "websocket": "^1.0.28"
   },

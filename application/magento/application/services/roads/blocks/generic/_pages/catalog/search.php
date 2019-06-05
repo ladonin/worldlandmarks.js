@@ -1,0 +1,1 @@
+<?php $this->trace_block('_pages' . MY_DS . 'catalog' . MY_DS . 'search' . MY_DS . 'generic', false, $data); ?>
