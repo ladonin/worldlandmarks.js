@@ -11,6 +11,8 @@ const Component = require('vendor/Component');
 
 class Security extends Component {
     constructor(){
+        super();
+        
     /*
      * Request GET variables
      *

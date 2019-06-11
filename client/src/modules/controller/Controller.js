@@ -42,7 +42,7 @@ function checkConrtollerName(name) {
     {
         return true;
     }
-    ErrorHandler.process(ErrorCodes.ERROR_WRONG_CONTROLLER_NAME + ': [' + name + ']');
+    ErrorHandler.process(ErrorCodes.ERROR_WRONG_CONTROLLER_NAME, '[' + name + ']');
     return false;
 }
 

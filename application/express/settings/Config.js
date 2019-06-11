@@ -20,7 +20,9 @@ module.exports = {
         on: 1
     },
     // Where upload files will be stored
-    files_upload_storage: require('application/express/settings/gitignore/Upload'),
+    files_upload_storage: {
+        server:'ftp'
+    },
 
     // Controllers settings
     controllers: {

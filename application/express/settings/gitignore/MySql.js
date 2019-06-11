@@ -5,12 +5,10 @@
  */
 
 module.exports = {
-    mysql:{
-        dbase:'quitecorg_map',
-        user:'quitecorg_map',
-        password:'neirvaafem',
-        host:'localhost',
-        persistent:false,
-        charset:'UTF8'
+    connect:{
+        database:'wlandmarks',
+        user:'root',
+        password:'111',
+        host:'localhost'
     }
 };

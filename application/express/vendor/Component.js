@@ -1,17 +1,15 @@
 /*
- * Module vendor\Component
+ * File vendor\Component.js
  *
- * Base module for other inheritor modules
+ * Base component
  */
 
-
-const ModulesComponent = require('application/express/components/base/Modules');
 
 class Component {
 
 
-    get_module(name){
-        return ModulesComponent.get(name);
+    constructor(){
+        
     }
 
 }

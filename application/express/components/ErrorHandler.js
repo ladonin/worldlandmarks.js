@@ -12,18 +12,29 @@ const Consts = require('application/settings/express/Constants');
 const Messages = require('application/settings/express/Messages');
 
 
-let errorStatus = false;
-
+let _errorStatus = false;
+let _errorCode = '';
 
 module.exports = {
-    process: (message) => {
-        errorStatus = true;
+    process: (errorCode, message, log_type = Consts.LOG_APPLICATION_TYPE) => {
+        _errorStatus = true;
+        _errorCode = errorCode;
+
+        message = errorCode + ': ';
+
         if (process.env.NODE_ENV === Consts.PROCESS_PROD) {
-            fs.appendFileSync("log/error.log", '#' + GetDate() + '# ' + message + "\r\n");
+            let filename = 'error.log';
+            if (log_type === Consts.LOG_MYSQL_TYPE) {
+                filename = 'db.log';
+            }
+            fs.appendFileSync("log/" + filename, '#' + GetDate() + '# ' + message + "\r\n");
         }
         throw new Error('#' + Messages.ERROR_SYNTHETIC_STATUS + ': ' + message);
     },
     errorEnable:()=>{
-        return errorStatus;
+        return _errorStatus;
+    },
+    getErrorCode:()=>{
+        return _errorCode;
     }
 };

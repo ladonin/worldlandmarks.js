@@ -62,6 +62,9 @@ let Consts = {
     ERROR_COUNTRY_STATE_ID_WAS_NOT_FOUND: 58,
     ERROR_COUNTRY_DATA_WAS_NOT_FOUND: 59,
 
+    LOG_MYSQL_TYPE:'mysql',
+    LOG_APPLICATION_TYPE:'app',
+
     NO_PHOTO_NAME: 'no_photo.jpg',
 
     FTP_DEFAULT_SERVER_NAME:'default_server',
@@ -169,7 +172,7 @@ let Consts = {
     FORM_TEXT_TAG_CODE_IMAGE_ADVANCED: 'image_advanced',
     FORM_TEXT_TAG_CODE_P: 'p',
 
-    MODULE_ACCOUNT_ROLE_ADMIN_CODE: 9,
+    ACCOUNT_ROLE_ADMIN_CODE: 9,
 
     LANGUAGE_RU: 'ru',
     LANGUAGE_EN: 'en',
@@ -179,6 +182,8 @@ let Consts = {
 // - добавляется и в базу (как простые данные пользователя, у которого роль админ) и в константу (можно потом брать хеш не из константы, а из базы)
     SUPER_ADMIN_PASSWORD_HASH: '$6$$J/xCAtPslyQ7xy3SLwmDo.SMr0fnyyddNZI2ag6iMNnn7hMwetjqOzp198eeINWOP6yoS3QdmkJIhmJHUQ.dB/',
 
+
+    TIME_CURRENT: Math.floor(Date.now() / 1000)
 }
 
 module.exports = Object.assign(CommonConsts, Consts);
@@ -216,8 +221,8 @@ module.exports = Object.assign(CommonConsts, Consts);
  JS_DIR:DOCROOT . 'javascript' . DS,
  LOG_MYSQL_PATH:DOCROOT . 'log' . DS . 'mysql.log',
  LOG_APPLICATION_PATH:DOCROOT . 'log' . DS . 'application.log',
- LOG_APPLICATION_TYPE:'app',
- LOG_MYSQL_TYPE:'mysql',
+
+
  SERVICE_VAR_NAME:'type',
  CRYPT_HASH_ALGORYTM_CODE:'$6$',
  FILES_DIR_NAME:'files',

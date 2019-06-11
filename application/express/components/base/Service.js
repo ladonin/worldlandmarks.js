@@ -10,9 +10,20 @@ const Functions = require('application/express/functions/BaseFunctions');
 const ErrorHandler = require('application/express/components/ErrorHandler');
 const ErrorCodes = require('application/express/settings/ErrorCodes');
 
+
+
+
+
+
+
+
+
+
 class Service extends Component
 {
     constructor(){
+        super();
+
         /*
          * Service congiguration
          *
@@ -61,7 +72,7 @@ class Service extends Component
         if (Functions.isSet(this.data.config.email[number])) {
             return this.data.config.email[number]['from'];
         }
-        ErrorHandler.process(ErrorCodes.ERROR_SERVICE_CONFIG_ABSENT + ': service=[' + this.name + '] email-' + number + '-from');
+        ErrorHandler.process(ErrorCodes.ERROR_SERVICE_CONFIG_ABSENT, 'service=[' + this.name + '] email-' + number + '-from');
     }
 
 
@@ -70,7 +81,7 @@ class Service extends Component
         if (Functions.isSet(this.data.config.email[number])) {
             return this.data.config.email[number]['name'];
         }
-        ErrorHandler.process(ErrorCodes.ERROR_SERVICE_CONFIG_ABSENT + ': service=[' + this.name + '] email-' + number + '-name');
+        ErrorHandler.process(ErrorCodes.ERROR_SERVICE_CONFIG_ABSENT, 'service=[' + this.name + '] email-' + number + '-name');
     }
 
     get_site_name()
@@ -78,7 +89,7 @@ class Service extends Component
         if (Functions.isSet(this.data.config.generic.site_name)) {
             return this.data.config.generic.site_name;
         }
-        ErrorHandler.process(ErrorCodes.ERROR_SERVICE_CONFIG_ABSENT + ': service=[' + this.name + '] generic-site_name');
+        ErrorHandler.process(ErrorCodes.ERROR_SERVICE_CONFIG_ABSENT, 'service=[' + this.name + '] generic-site_name');
     }
 
 
@@ -87,7 +98,7 @@ class Service extends Component
         if (Functions.isSet(this.data.text[language])) {
             return this.data.text[language];
         }
-        ErrorHandler.process(ErrorCodes.ERROR_SERVICE_CONFIG_ABSENT + ': service=[' + this.name + '] language [' + language + ']');
+        ErrorHandler.process(ErrorCodes.ERROR_SERVICE_CONFIG_ABSENT, 'service=[' + this.name + '] language [' + language + ']');
     }
 
 
@@ -96,7 +107,7 @@ class Service extends Component
         if (Functions.isSet(this.data.config.ftp)) {
             return this.data.config.ftp;
         }
-        ErrorHandler.process(ErrorCodes.ERROR_SERVICE_CONFIG_ABSENT + ': service=[' + this.name + '] ftp');
+        ErrorHandler.process(ErrorCodes.ERROR_SERVICE_CONFIG_ABSENT, 'service=[' + this.name + '] ftp');
     }
 
 
@@ -108,7 +119,7 @@ class Service extends Component
         if (Functions.isSet(this.data.config.languages)) {
             return this.data.config.languages;
         }
-        ErrorHandler.process(ErrorCodes.ERROR_SERVICE_CONFIG_ABSENT + ': service=[' + this.name + '] languages');
+        ErrorHandler.process(ErrorCodes.ERROR_SERVICE_CONFIG_ABSENT, 'service=[' + this.name + '] languages');
     }
 
 

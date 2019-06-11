@@ -7,7 +7,7 @@ import Messages from 'src/settings/Messages';
 import ErrorCodes from 'src/settings/ErrorCodes';
 
 let locale = new localizedStrings(locales);
-let commonLocale = new localizedStrings(commonLocales);
+let common_locale = new localizedStrings(commonLocales);
 
 export default {
     getText: (name) => {
@@ -15,11 +15,11 @@ export default {
             return locale[name];
         } else {
             // Then maybe this text is enabled in common localization
-            if (commonLocale.hasOwnProperty(name)) {
-                return commonLocale[name];
+            if (common_locale.hasOwnProperty(name)) {
+                return common_locale[name];
             } else {
                 // Text not found anywhere
-                ErrorHandler.process(ErrorCodes.ERROR_LOCALIZATION_WORD_NOT_FOUND + ': ' + name);
+                ErrorHandler.process(ErrorCodes.ERROR_LOCALIZATION_WORD_NOT_FOUND, name);
             }
         }
     },

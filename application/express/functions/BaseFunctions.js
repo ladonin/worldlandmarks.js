@@ -29,47 +29,288 @@ function deleteFile(path) {
     }
 }
 
+
+
+
+
+
+
+function clone(obj) {
+    return _lang.cloneDeep(obj);
+}
+
+
+
+
+function isSet(val) {
+    return !isUndefined(val);
+}
+
+
+
+
+function isNull(val) {
+    return _lang.isNull(val);
+}
+function isUndefined(val) {
+    return _lang.isUndefined(val);
+}
+
+function isString(val) {
+    if (isUndefined(val)) {
+        ErrorHandler.process(ErrorCodes.ERROR_UNDEFINED_VARIABLE);
+    }
+    return _lang.isString(val);
+}
+
+function checkOnString(val){
+    if (!isString(val)) {
+        ErrorHandler.process(ErrorCodes.ERROR_WRONG_VARIABLE_TYPE, 'string[' + typeof(val) + ']');
+    }
+    return true;
+}
+
+function isArray(val) {
+    return _lang.isArray(val);
+}
+
+function checkOnArray(val){
+    if (!isArray(val)) {
+        ErrorHandler.process(ErrorCodes.ERROR_WRONG_VARIABLE_TYPE, 'array[' + typeof(val) + ']');
+    }
+    return true;
+}
+
+
+function trim(text, val) {
+    //let regexp = new RegExp('^'+val+'+|'+val+'+$','g');
+    //return text.replace(regexp, '');
+    return _string.trim(text, val);
+}
+
+
+function rtrim(text, val) {
+    //let regexp = new RegExp('^'+val+'+|'+val+'+$','g');
+    //return text.replace(regexp, '');
+    return _string.trimEnd(text, val);
+}
+
+function ltrim(text, val) {
+    //let regexp = new RegExp('^'+val+'+|'+val+'+$','g');
+    //return text.replace(regexp, '');
+    return _string.trimStart(text, val);
+}
+
+
+
 /*
- let source = '2.jpg';
- let path_to = '22222222.jpg';
-
- function resolveAfter2Seconds(x) {
- return new Promise(resolve => {
- ImageMagick.convert(
- [
- source,
- path_to
- ],
- function(err, stdout){console.log('resolveAfter2Seconds111111');
- resolve();console.log('resolveAfter2Seconds222222');
- });
-
- });
- }
- async function add1(x) {console.log(1);
- var a = await resolveAfter2Seconds(20);
- var b = await resolveAfter2Seconds(30);
- var c = 0;
- console.log(2);
- var files = {a:1,b:2,c:3};
-
- for (const file in files) {
- console.log(3);
- await resolveAfter2Seconds(30);
- console.log(4);
- }
- console.log(5);
- return x + a + b;
- }
- add1(10).then(v => {
- console.log(v);  // prints 60 after 4 seconds.
- });
- console.log(55);
+ * Замена двойных кавычек на одинарные
+ *
+ * @param string $text - передаваемое значение
+ *
+ * @return string - подготовленное значение
  */
+function prepare_double_commas(text)
+{
+    return text.replace(/"/g, "'");
+}
+
+/*
+ * Преобразование списка через запятые в массив
+ *
+ * @param string $string - передаваемое значение
+ *
+ * @return string - подготовленное значение
+ */
+function get_array_from_string(string)
+{
+    if (string === '') {
+        return [];
+    }
+
+    if (!isString(string)) {
+        ErrorHandler.process(ErrorCodes.ERROR_FUNCTION_ARGUMENTS, 'not a string type: ' + typeof (string));
+    }
+
+    return trim(string, ',').split(',');
+}
+
 
 
 /*
- * Strip HTML and PHP tags from a string
+ * Проверка - пустая переменная или нет (инверсия)
+ *
+ * @param string $var - передаваемое значение
+ *
+ * @return boolean
+ */
+function is_not_empty(val)
+{
+    if (!isUndefined(val) && val) {
+        return true;
+    }
+    return false;
+}
+
+
+/*
+ * Проверка - пустая переменная (массив) или нет (инверсия)
+ *
+ * @param array $var - передаваемый массив
+ *
+ * @return boolean
+ */
+function array_is_not_empty(val)
+{
+    if (!isArray(val) || isUndefined(val)) {
+        ErrorHandler.process(ErrorCodes.ERROR_FUNCTION_ARGUMENTS, 'not an array type: ' + typeof (string));
+    }
+    return !_lang.isEmpty(val);
+}
+
+
+
+/*
+ * Проверка - пустая переменная (массив) или нет
+ *
+ * @param array $var - передаваемый массив
+ *
+ * @return boolean
+ */
+function array_is_empty(val)
+{
+    return !array_is_not_empty(val);
+}
+
+
+
+
+
+
+
+
+
+
+/*
+ * Проверка - пустая переменная или нет
+ *
+ * @param string $var - передаваемое значение
+ *
+ * @return boolean
+ */
+function is_empty(val)
+{
+    return !is_not_empty(val);
+}
+
+
+//function is_method_and_class_enable($class_path, $method_name)
+
+
+/*
+ * Выводит значение переменной с гарантией, что оно не пустое
+ *
+ * @param string $var - выводимое значение
+ *
+ * @return string - выводимое значение
+ */
+function pass_through(val)
+{
+    if (!val && val !== "") {
+        ErrorHandler.process(ErrorCodes.ERROR_VALUE_NOT_PASSED_THROUGH, '[' + val + ']');
+    }
+    return (val);
+}
+
+
+//function get_self_mvc_url()
+
+
+
+//redirect_to_self_mvc_url()
+
+
+/*
+ * Преобразуем все значения одномерного массива в integer форму
+ *
+ * @param array $array - преобразуемый массив
+ *
+ * @return array - преобразованный массив
+ */
+function prepare_int_array(arr)
+{
+    for (var index in arr) {
+        arr[index] = toInt(arr[index]);
+    }
+    return arr;
+}
+
+
+//write_to_log($file, $message, $generic_error = false)
+
+
+
+
+function toInt(val) {
+    return _lang.toInteger(val);
+}
+
+
+
+
+function toString(val) {
+    return _lang.toString(val);
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//function checkdate( month, day, year )    // Validate a Gregorian date
+
+
+
+/*
+ * Проверка правильности введенной даты (есть такая дата в календаре или нет)
+ *
+ * @param string $day - день
+ * @param string $month - месяц
+ * @param string $year - год
+ *
+ * @return boolean
+ */
+function validate_date(day, month, year)
+{
+    month = toInt(month);
+    day = toInt(day);
+    year = toInt(year);
+
+    var myDate = new Date();
+    myDate.setFullYear(year, (month - 1), day);
+    return ((myDate.getMonth() + 1) == month && day < 32);
+}
+
+
+
+
+
+
+
+
+
+
+/*
+ * Strip HTML tags from a string
  *
  * @param string str - text with html tags
  *
@@ -78,6 +319,31 @@ function deleteFile(path) {
 function strip_tags(str){
     return str.replace(/<\/?[^>]+>/gi, '');
 }
+
+
+
+/*
+ * Escape HTML tags from a string
+ *
+ * @param string str - text with html tags
+ *
+ * @return string - text with escaped html tags
+ */
+function escapeHtml(text) {
+  return text
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;")
+      .replace(/'/g, "&#039;");
+}
+
+
+
+
+
+
+
 
 /*
  * Change image to .jpeg extention if necessary
@@ -106,7 +372,7 @@ function change_image_to_jpeg(source)
                 function (err, stdout) {
                     if (err) {
                         deleteFile(source);
-                        ErrorHandler.process(ErrorCodes.ERROR_IMAGE_CREATE + ': [' + path_to + ']');
+                        ErrorHandler.process(ErrorCodes.ERROR_IMAGE_CREATE, '[' + path_to + ']');
                     }
                     finished = true;
                 }
@@ -177,7 +443,7 @@ function image_resize(path_to, source, neww = 0, newh = 0, quality = 100)
     }, function (err, stdout, stderr) {
         if (err) {
             deleteFile(source);
-            ErrorHandler.process(ErrorCodes.ERROR_IMAGE_CREATE + ': [' + path_to + ']');
+            ErrorHandler.process(ErrorCodes.ERROR_IMAGE_CREATE, '[' + path_to + ']');
         }
         finished = true;
     });
@@ -198,7 +464,7 @@ function image_resize(path_to, source, neww = 0, newh = 0, quality = 100)
  *
  * @return string password
  */
-function my_create_password()
+function create_password()
 {
     let vowel = [
         'a',
@@ -254,7 +520,7 @@ function my_create_password()
  */
 function check_local_file(path) {
     if (!Fs.existsSync(path)) {
-        ErrorHandler.process(ErrorCodes.ERROR_LOCAL_FILE_NOT_FOUND + ': [' + path + ']');
+        ErrorHandler.process(ErrorCodes.ERROR_LOCAL_FILE_NOT_FOUND, '[' + path + ']');
     }
     return true;
 }
@@ -274,247 +540,11 @@ function check_local_file(path) {
 
 
 
-function isSet(val) {
-    return !isUndefined(val);
-}
 
 
 
 
-function isNull(val) {
-    return _lang.isNull(val);
-}
-function isUndefined(val) {
-    return _lang.isUndefined(val);
-}
-
-function isString(val) {
-    if (isUndefined(val)) {
-        ErrorHandler.process(ErrorCodes.ERROR_UNDEFINED_VARIABLE);
-    }
-    return _lang.isString(val);
-}
-
-function checkOnString(val){
-    if (!isString(val)) {
-        ErrorHandler.process(ErrorCodes.ERROR_WRONG_VARIABLE_TYPE + ': string[' + typeof(val) + ']');
-    }
-    return true;
-}
-
-function isArray(val) {
-    return _lang.isArray(val);
-}
-
-function checkOnArray(val){
-    if (!isArray(val)) {
-        ErrorHandler.process(ErrorCodes.ERROR_WRONG_VARIABLE_TYPE + ': array[' + typeof(val) + ']');
-    }
-    return true;
-}
-
-
-function trim(text, val) {
-    //let regexp = new RegExp('^'+val+'+|'+val+'+$','g');
-    //return text.replace(regexp, '');
-    return _string.trim(text, val);
-}
-
-
-function rtrim(text, val) {
-    //let regexp = new RegExp('^'+val+'+|'+val+'+$','g');
-    //return text.replace(regexp, '');
-    return _string.trimEnd(text, val);
-}
-
-function ltrim(text, val) {
-    //let regexp = new RegExp('^'+val+'+|'+val+'+$','g');
-    //return text.replace(regexp, '');
-    return _string.trimStart(text, val);
-}
-
-
-
-/*
- * Замена двойных кавычек на одинарные
- *
- * @param string $text - передаваемое значение
- *
- * @return string - подготовленное значение
- */
-function my_prepare_double_commas(text)
-{
-    return text.replace(/"/g, "'");
-}
-
-/*
- * Преобразование списка через запятые в массив
- *
- * @param string $string - передаваемое значение
- *
- * @return string - подготовленное значение
- */
-function my_get_array_from_string(string)
-{
-    if (string === '') {
-        return [];
-    }
-
-    if (!isString(string)) {
-        ErrorHandler.process(ErrorCodes.ERROR_FUNCTION_ARGUMENTS + ': not a string type: ' + typeof (string));
-    }
-
-    return trim(string, ',').split(',');
-}
-
-
-
-/*
- * Проверка - пустая переменная или нет (инверсия)
- *
- * @param string $var - передаваемое значение
- *
- * @return boolean
- */
-function my_is_not_empty(val)
-{
-    if (!isUndefined(val) && val) {
-        return true;
-    }
-    return false;
-}
-
-
-/*
- * Проверка - пустая переменная (массив) или нет (инверсия)
- *
- * @param array $var - передаваемый массив
- *
- * @return boolean
- */
-function my_array_is_not_empty(val)
-{
-    if (!isArray(val) || isUndefined(val)) {
-        ErrorHandler.process(ErrorCodes.ERROR_FUNCTION_ARGUMENTS + ': not an array type: ' + typeof (string));
-    }
-    return !_lang.isEmpty(val);
-}
-
-
-
-/*
- * Проверка - пустая переменная (массив) или нет
- *
- * @param array $var - передаваемый массив
- *
- * @return boolean
- */
-function my_array_is_empty(val)
-{
-    return !my_array_is_not_empty(val);
-}
-
-
-
-
-
-
-
-
-
-
-/*
- * Проверка - пустая переменная или нет
- *
- * @param string $var - передаваемое значение
- *
- * @return boolean
- */
-function my_is_empty(val)
-{
-    return !my_is_not_empty(val);
-}
-
-
-//function my_is_method_and_class_enable($class_path, $method_name)
-
-
-/*
- * Выводит значение переменной с гарантией, что оно не пустое
- *
- * @param string $var - выводимое значение
- *
- * @return string - выводимое значение
- */
-function my_pass_through(val)
-{
-    if (!val && val !== "") {
-        ErrorHandler.process(ErrorCodes.ERROR_VALUE_NOT_PASSED_THROUGH + ': [' + val + ']');
-    }
-    return (val);
-}
-
-
-//function my_get_self_mvc_url()
-
-
-
-//my_redirect_to_self_mvc_url()
-
-
-/*
- * Преобразуем все значения одномерного массива в integer форму
- *
- * @param array $array - преобразуемый массив
- *
- * @return array - преобразованный массив
- */
-function my_prepare_int_array(arr)
-{
-    for (var index in arr) {
-        arr[index] = toInt(arr[index]);
-    }
-    return arr;
-}
-
-
-//my_write_to_log($file, $message, $generic_error = false)
-
-
-
-
-function toInt(val) {
-    return _lang.toInteger(val);
-}
-
-
-//function checkdate( month, day, year )    // Validate a Gregorian date
-
-
-
-/*
- * Проверка правильности введенной даты (есть такая дата в календаре или нет)
- *
- * @param string $day - день
- * @param string $month - месяц
- * @param string $year - год
- *
- * @return boolean
- */
-function my_validate_date(day, month, year)
-{
-    month = toInt(month);
-    day = toInt(day);
-    year = toInt(year);
-
-    var myDate = new Date();
-    myDate.setFullYear(year, (month - 1), day);
-    return ((myDate.getMonth() + 1) == month && day < 32);
-}
-
-
-
-//my_pre($data = null, $return = false, $exit = true)
+//pre($data = null, $return = false, $exit = true)
 
 //is_ajax()
 
@@ -577,6 +607,25 @@ function is_image_type(type)
 
 
 /*
+ * Detect if value exists in array
+ *
+ * @param mix value - value
+ * @param array arr - array
+ *
+ * @return boolean
+ */
+function in_array(value, arr)
+{
+    return arr.includes(value)
+}
+
+
+
+
+
+
+
+/*
  * Get image dimentions
  *
  * @param string path - image path
@@ -588,7 +637,7 @@ function getImageDimentions(path) {
         let dimensions = SizeOf(path);
         return dimensions;
     } catch (e) {
-        ErrorHandler.process(ErrorCodes.ERROR_IMAGE_GET_TYPE + ': [' + path + ']' + '. ' + e.message);
+        ErrorHandler.process(ErrorCodes.ERROR_IMAGE_GET_TYPE, '[' + path + ']' + '. ' + e.message);
     }
 }
 
@@ -604,7 +653,7 @@ function getImageDimentions(path) {
  *
  * @return string - image's type
  */
-function my_get_image_type(path, by_url = false)
+function get_image_type(path, by_url = false)
 {
     if (by_url === true) {
         return path.replace(/(?:.+?)\.([a-z]+)$/i, '$1');
@@ -633,7 +682,7 @@ function getDate()
  *
  * @return string
  */
-function my_get_unique()
+function get_unique()
 {
     return Uniqid() + _num.random(1, 999);
 }
@@ -684,7 +733,7 @@ function my_get_unique()
 
 
 
-function my_htmlller_buttons(title = null)
+function htmlller_buttons(title = null)
 {
     let icons = 'icons_' + (IsMobile ? Consts.DEVICE_NAME_MOOBILE : Consts.DEVICE_NAME_DESCTOP) + '.png';
 
@@ -694,7 +743,7 @@ function my_htmlller_buttons(title = null)
             + '</div>';
     if (title) {
         html += '<div class="button_text">'
-                + my_pass_through(title)
+                + pass_through(title)
                 + '</div>';
     }
     return html;
@@ -713,11 +762,11 @@ function my_htmlller_buttons(title = null)
  *
  * @return boolean
  */
-function my_check_coords(x = null, y = null, error_call = true)
+function check_coords(x = null, y = null, error_call = true)
 {
     if (!x || !y || x >= 180 || x <= -180 || y <= -90 || y >= 90) {
         if (error_call) {
-            ErrorHandler.process(ErrorCodes.ERROR_WRONG_COORDS + 'x:' + x + ', y:' + y);
+            ErrorHandler.process(ErrorCodes.ERROR_WRONG_COORDS, 'x:' + x + ', y:' + y);
         } else {
             return false;
         }
@@ -781,7 +830,7 @@ function get_random_placemark_photo(photos, prefix, return_sizes = false)
 
     let count = photos.length;
     let photo_id = 0; //photo_id = _num.random(0, count-1);
-    let url = my_pass_through(photos[photo_id]['dir']) + my_pass_through(prefix) + '_' + my_pass_through(photos[photo_id]['name']);
+    let url = pass_through(photos[photo_id]['dir']) + pass_through(prefix) + '_' + pass_through(photos[photo_id]['name']);
 
     if (return_sizes) {
         return {
@@ -864,8 +913,26 @@ function get_service_name()
         return service_name;
     }
 
-    ErrorHandler.process(ErrorCodes.ERROR_UNDEFINED_SERVICE_NAME + ': [' + service_name + ']');
+    ErrorHandler.process(ErrorCodes.ERROR_UNDEFINED_SERVICE_NAME, '[' + service_name + ']');
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -891,7 +958,7 @@ function auto_translate_state($state_name, $state_code)
 }
 
 
-function my_get_request_uri(){
+function get_request_uri(){
 return  MY_DOMEN . $_SERVER['REQUEST_URI'];
 
 }
@@ -977,7 +1044,7 @@ function naking_text($text)
  *
  * @return string - преобразованное слово
  */
-function my_prepare_strange_words($var)
+function prepare_strange_words($var)
 {
     $words_from = array('ö', 'ü', 'ß', 'ć', 'ț', 'ș', 'í', 'ó', 'á', 'ñ', 'ô', 'Î', 'Ō', 'é','č', 'ž', 'ō','É');
     $words_to = array('o', 'u', 'ss', 't', 't', 's', 'i', 'o', 'a', 'n', 'o', 'i', 'o', 'e', 'c', 'z', 'o', 'e');
@@ -992,13 +1059,13 @@ function my_prepare_strange_words($var)
  *
  * @return string - подготовленный текст
  */
-function my_prepare_to_one_word($var = null, $default = MY_UNDEFINED_VALUE)
+function prepare_to_one_word($var = null, $default = MY_UNDEFINED_VALUE)
 {
     if (!$var) {
         $var = $default;
     }
 
-    $var = my_prepare_strange_words($var);
+    $var = prepare_strange_words($var);
     return preg_replace('#[,\(\)\']*#', '', strtolower(prepare_to_dir_name($var)));
 }
 
@@ -1066,7 +1133,7 @@ function is_dir_empty($dir)
  *
  * @return string - подготовленный текст
  */
-function my_translater_ru_to_en($text)
+function translater_ru_to_en($text)
 {
     $rus = array('А', 'Б', 'В', 'Г', 'Д', 'Е', 'Ё', 'Ж', 'З', 'И', 'Й', 'К', 'Л', 'М', 'Н', 'О', 'П', 'Р', 'С', 'Т', 'У', 'Ф', 'Х', 'Ц', 'Ч', 'Ш', 'Щ', 'Ъ', 'Ы', 'Ь', 'Э', 'Ю', 'Я', 'а', 'б', 'в', 'г', 'д', 'е', 'ё', 'ж', 'з', 'и', 'й', 'к', 'л', 'м', 'н', 'о', 'п', 'р', 'с', 'т', 'у', 'ф', 'х', 'ц', 'ч', 'ш', 'щ', 'ъ', 'ы', 'ь', 'э', 'ю', 'я', ' ');
     $lat = array('a', 'b', 'v', 'g', 'd', 'e', 'e', 'gh', 'z', 'i', 'y', 'k', 'l', 'm', 'n', 'o', 'p', 'r', 's', 't', 'u', 'f', 'h', 'c', 'ch', 'sh', 'sch', 'y', 'y', 'y', 'e', 'yu', 'ya', 'a', 'b', 'v', 'g', 'd', 'e', 'e', 'gh', 'z', 'i', 'y', 'k', 'l', 'm', 'n', 'o', 'p', 'r', 's', 't', 'u', 'f', 'h', 'c', 'ch', 'sh', 'sch', 'y', 'y', 'y', 'e', 'yu', 'ya', ' ');
@@ -1438,7 +1505,7 @@ function return_random($lenght = 3)
  */
 function prepare_to_array($value)
 {
-    return my_array_is_not_empty($value) ? $value : array();
+    return array_is_not_empty($value) ? $value : array();
 }
 
 /*
@@ -1708,3 +1775,54 @@ function isSearchBot($ip=''){
 
         return (boolean)preg_match("#$pattern#", $ip);
 }
+
+
+
+
+
+
+
+
+
+
+
+
+/*
+ let source = '2.jpg';
+ let path_to = '22222222.jpg';
+
+ function resolveAfter2Seconds(x) {
+ return new Promise(resolve => {
+ ImageMagick.convert(
+ [
+ source,
+ path_to
+ ],
+ function(err, stdout){console.log('resolveAfter2Seconds111111');
+ resolve();console.log('resolveAfter2Seconds222222');
+ });
+
+ });
+ }
+ async function add1(x) {console.log(1);
+ var a = await resolveAfter2Seconds(20);
+ var b = await resolveAfter2Seconds(30);
+ var c = 0;
+ console.log(2);
+ var files = {a:1,b:2,c:3};
+
+ for (const file in files) {
+ console.log(3);
+ await resolveAfter2Seconds(30);
+ console.log(4);
+ }
+ console.log(5);
+ return x + a + b;
+ }
+ add1(10).then(v => {
+ console.log(v);  // prints 60 after 4 seconds.
+ });
+ console.log(55);
+ */
+
+
