@@ -122,7 +122,6 @@ app.set('trust proxy', true);
 
 
 
-/*
 
 var MySql = require('sync-mysql');
 
@@ -138,15 +137,15 @@ var connection = new MySql({
 
 let result = [];
 try{
-result = connection.query("SELECT * FROM country where id = 3", []);
-} catch(e){
+result = connection.query("SELECT * FROM country where id = ? or id = ?",[1,9]);
+} catch(e){console.log(9999999999);
 console.log(e.code);
 }
 console.log(result);
-*/
 
 
 
+/*
 const mysql2 = require('mysql2');
 
 // create the connection to database
@@ -159,10 +158,10 @@ const connection2 = mysql2.createConnection({
 
 // simple query
 
-//connection2.query("SELECT * FRgM country where id = ? or id = ?",[1,9]).catch(err=>{console.log(err.code)}).then(r=>{console.log(r[0]);});
+let result = connection2.query("SELECT * FROM country where id = ? or id = ?",[1,9]).catch(err=>{console.log(err.code)}).then(r=>{console.log(r[0].length); return r[0];});
 
 
-
+result.then((r)=>{console.log(111111111111111);console.log(r);});
 
 
 
@@ -238,7 +237,7 @@ const module1 = require('./aaa');
 app.get('/api/get_list', (req, res) => {
 
 
-module1.sett();
+module1.setcache(11111111);
 res.send('sett');
 
   //  var list = ['item1', 'item2', 'item3'];
@@ -247,7 +246,7 @@ res.send('sett');
 });
 
 app.get('/api/get_users', (req, res) => {
-    res.send(' '+module1.gett());
+    res.send(' '+module1.getcache());
 });
 
 

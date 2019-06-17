@@ -1,8 +1,22 @@
 нет вьюх и лэйаутов
 перед контроллером в beforeaction инициировать responce и request base-компоненты
+
 snapshot_fields_data() в конце каждого конструктора исходной модели
+при сбрасывании fields тоже клонирование, а не передача по ссылке
+
 ERROR_USER_NOT_VERIFICATED - в catch в application.run() сделать проверку на него и показать страницу для ERROR_USER_NOT_VERIFICATED
+
 при каждом обращении к серверу в before нужно сбрасывать account свойства (role, id и т.д.)
+
+все статические настройки одинаковые между запросами - писать в приватные переменные модулей
+
+
+
+
+
+
+
+
 
 const Messages = require('application/express//settingsMessages');
 
@@ -26,10 +40,25 @@ const Responce = require('application/express/components/base/Responce');
 
 
 
-ErrorHandler.process(ErrorCodes.ERROR_DB_NO_CONNECT + ': mysql: ' +  err.sqlMessage);
+ErrorHandler.process(ErrorCodes.ERROR_DB_NO_CONNECT, 'mysql: ' +  err.sqlMessage);
 
 
 //ATTENTION - обратите внимание
 
 #???????????????????????????? - то, что возможно не нужно
 nextTTTTTTTTTTTT - продолжать с этого момента
+
+
+    for (var index in arr) {
+        arr[index] = toInt(arr[index]);
+    }
+
+
+
+
+
+field['value'] = field['value'].replace(/\[strong\](.+?)\[\/strong\]/g, '<strong>$1</strong>');
+//монструозная регулярка
+                        field['value'] = field['value'].replace(/\[p\]((?:.*?[\n\r]?.*?)*?)\[\/p\][\n\r]*/gm, function(matches, part1) {
+                            return '<p class="text_form_tag_p">'+part1.replace(/[\r\n]*/g, '')+'</p>';
+                        });

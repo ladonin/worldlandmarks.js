@@ -52,10 +52,10 @@ class Model extends Component {
     }
 
     /*
-     * Check field value according its rules
+     * Checking value according with field rules
      *
      * @param string name - field name
-     * @param string value - field value
+     * @param string value - checked value (usually field value)
      * @param string filter_type - validation type (either all rules or only 'required' rule or all rules besides 'required' rule)
      * @param string with_rollback - should we execute roolback or only return false if checking will not be passed
      *

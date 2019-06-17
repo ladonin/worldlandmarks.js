@@ -310,7 +310,7 @@ function validate_date(day, month, year)
 
 
 /*
- * Strip HTML tags from a string
+ * Delete HTML tags
  *
  * @param string str - text with html tags
  *

@@ -1,5 +1,6 @@
 /*
  * File application/express/components/ErrorHandler.js
+ * const ErrorHandler = require('application/express/components/ErrorHandler');
  *
  * Error processor
  */
@@ -16,11 +17,11 @@ let _errorStatus = false;
 let _errorCode = '';
 
 module.exports = {
-    process: (errorCode, message, log_type = Consts.LOG_APPLICATION_TYPE) => {
+    process: (errorCode, message = '', log_type = Consts.LOG_APPLICATION_TYPE) => {
         _errorStatus = true;
         _errorCode = errorCode;
 
-        message = errorCode + ': ';
+        message = errorCode + ': ' + message;
 
         if (process.env.NODE_ENV === Consts.PROCESS_PROD) {
             let filename = 'error.log';

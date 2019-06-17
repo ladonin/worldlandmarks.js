@@ -1,5 +1,6 @@
 /*
  * File application/express/settings/ErrorCodes.js
+ * const ErrorCodes = require('application/express/settings/ErrorCodes');
  *
  * Error codes
  */

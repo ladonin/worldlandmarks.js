@@ -1,5 +1,6 @@
 /*
  * File application/express/models/dbase/mysql/UsersRegistered.js
+ * const UsersRegistered = require('application/express/models/dbase/mysql/UsersRegistered');
  *
  * Users registered MySql db model
  */
@@ -20,15 +21,15 @@ class Users_Registered extends DBaseMysql
     constructor(){
         super();
         this.fields = {
-            'role':{
+            role:{
                 'rules':['numeric', 'required'],
                 //'processing':['htmlspecialchars'],
             },
-            'name':{
+            name:{
                 'rules':['word', 'required'],
                 //'processing':['htmlspecialchars'],
             },
-            'password_hash':{
+            password_hash:{
                 'rules':['hash', 'required'],
                 //'processing':['htmlspecialchars'],
             },

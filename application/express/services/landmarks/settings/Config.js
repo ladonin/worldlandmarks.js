@@ -1,5 +1,6 @@
 /*
  * File application/express/services/landmarks/settings/Config.js
+ * const Config = require('application/express/services/landmarks/settings/Config');
  *
  * Specific service config
  */

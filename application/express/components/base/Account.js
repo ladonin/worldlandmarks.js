@@ -1,5 +1,6 @@
 /*
  * File application/express/components/base/Account.js
+ * const Account = require('application/express/components/base/Account');
  *
  * Account component
  */
@@ -10,8 +11,8 @@ const Cookies = require('application/express/components/base/Cookies');
 const Functions = require('application/express/functions/BaseFunctions');
 const UsersRegistered = require('application/express/models/dbase/mysql/UsersRegistered');
 const Consts = require('application/express/settings/Constants');
-
-
+const ErrorCodes = require('application/express/settings/ErrorCodes');
+const ErrorHandler = require('application/express/components/ErrorHandler');
 
 class Account extends Component {
 
@@ -66,26 +67,10 @@ class Account extends Component {
 
     is_admin()
     {
-        if ((this.id) && (this.role === Consts.ACCOUNT_ROLE_ADMIN_CODE) ||
-
-
-
-                //Admin_Access.autorize() - сессий не будет
-
-
-
-                (isset($_SESSION['admin_access_autorize']) && $_SESSION['admin_access_autorize'] === true)) {
+        if ((this.id) && (this.role === Consts.ACCOUNT_ROLE_ADMIN_CODE)) {
             return true;
         }
+        return false;
     }
 }
 module.exports = Account;
-
-
-
-
-
-
-
-
-}
