@@ -1,5 +1,6 @@
 /*
  * File application/express/vendor/dbases/DBaseMysql.js
+ * const DBaseMysql = require('application/express/vendor/dbases/DBaseMysql');
  *
  * Base database component for MySql
  */
@@ -21,7 +22,9 @@ const Account = require('application/express/components/base/Account');
 const User = require('application/express/components/User');
 
 
-//######### Create connections #########
+//######################### Create connections #################################
+//##                                                                          ##
+//##                                                                          ##
 
 // You can use only one of two connections per request
 //
@@ -55,7 +58,9 @@ try {
  */
 const asyncConnection = asyncMySql.createPool(MySqlConfig.connect).promise();
 
-//######################################
+//##                                                                          ##
+//##                                                                          ##
+//##############################################################################
 
 
 class DBase_Mysql extends Model
@@ -542,8 +547,6 @@ class DBase_Mysql extends Model
                 }
             }
         }
-
-
         return result;
     }
 
@@ -562,25 +565,35 @@ class DBase_Mysql extends Model
         return this.fetch_query(sql, need_result, where_values, async);
     }
 
+
+
+
+
     /*
-     public function set_values_to_fields_from_form(\vendor\Form $form) {
-
-     $data = $form->get_all_fields();
-
-     //вставл¤ем массив значений в таблицу
-
-     foreach ($data as $name => $field) {
-
-     // Только если имя формы сответствует имени пол¤ в таблице
-     if (array_key_exists($name, $this->fields)) {
-
-     //фильтруем значени¤
-     $this->filter($name, $field['value'], MY_FILTER_TYPE_ALL);
-
-     $this->fields[$name]['value'] = $field['value'];
-     }
-     }
-     return true;
-     }
+     * Begin sync transaction
      */
+    begin_transaction(){
+        this.query('START TRANSACTION;');
+    }
+
+
+    /*
+     * Commit sync transaction
+     */
+    commit(){
+        this.query('COMMIT;');
+    }
+
+
+    /*
+     * Rollback sync transaction
+     */
+    rollback(){
+        this.query('ROLLBACK;');
+    }
+
+
+
+
+
 }

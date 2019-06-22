@@ -62,6 +62,15 @@ let Consts = {
     ERROR_COUNTRY_STATE_ID_WAS_NOT_FOUND: 58,
     ERROR_COUNTRY_DATA_WAS_NOT_FOUND: 59,
 
+
+
+    SERVICES_DIR:'application/express/services/',
+
+
+
+
+
+
     LOG_MYSQL_TYPE:'mysql',
     LOG_APPLICATION_TYPE:'app',
 
@@ -181,9 +190,6 @@ let Consts = {
 
 // - добавляется и в базу (как простые данные пользователя, у которого роль админ) и в константу (можно потом брать хеш не из константы, а из базы)
     SUPER_ADMIN_PASSWORD_HASH: '$6$$J/xCAtPslyQ7xy3SLwmDo.SMr0fnyyddNZI2ag6iMNnn7hMwetjqOzp198eeINWOP6yoS3QdmkJIhmJHUQ.dB/',
-
-
-    TIME_CURRENT: Math.floor(Date.now() / 1000)
 }
 
 module.exports = Object.assign(CommonConsts, Consts);
@@ -231,7 +237,7 @@ module.exports = Object.assign(CommonConsts, Consts);
  FUNCTIONS_DIR:APPLICATION_DIR . 'functions' . DS,
  LOG_DIR:APPLICATION_DIR . 'log' . DS,
 
- SERVICES_DIR:APPLICATION_DIR . SERVICES_NAME . DS,
+
  UNDEFINED_VALUE:'undefined',
 
 

@@ -1,5 +1,6 @@
 /*
  * File application/express/components/base/Security.js
+ * const Security = require('application/express/components/base/Security');
  *
  * The main component for working with application
  */
@@ -8,48 +9,49 @@ const BaseFunctions = require('application/express/functions/BaseFunctions');
 const ErrorHandler = require('application/express/components/ErrorHandler');
 const Config = require('application/express/settings/Config.js');
 const Component = require('vendor/Component');
+const DBaseMysql = require('application/express/vendor/dbases/DBaseMysql');
+const Responce = require('application/express/components/base/Responce');
+const Request = require('application/express/components/base/Request');
+const ErrorCodes = require('application/settings/express/ErrorCodes');
+const Consts = require('application/express/settings/Constants');
+
 
 class Security extends Component {
     constructor(){
         super();
-        
-    /*
-     * Request GET variables
-     *
-     * @type array
-     */
-    this.get_vars=[];
+
+
+        /*
+         * Controllet name
+         *
+         * @type string
+         */
+        this.controller;
+
+        /*
+         * Name controller's action
+         *
+         * @type string
+         */
+        this.action;
 
 
 
-    /*
-     * Controllet name
-     *
-     * @type string
-     */
-    this.controller=undefined;
+        /*
+         * Database connection model
+         *
+         * @type resource
+         */
+        this.db_model;
 
-    /*
-     * Name controller's action
-     *
-     * @type string
-     */
-    this.action=undefined;
+    }
 
 
-
-    /*
-     * Database connection model
-     *
-     * @type resource
-     */
-    this.db_model=undefined;
+    init(){
+        this.set_controller_and_action();
 
 
-
-
-
-
+    }
 
     /*
      * Get controller name
@@ -73,34 +75,10 @@ class Security extends Component {
     }
 
 
-    /*
-     * Get all GET vars
-     *
-     * @return array
-     */
-    get_get_vars()
-    {
-        return this.get_vars;
-    }
 
 
 
 
-
-    /*
-     * Get specific GET variable's value
-     *
-     * @param string var_name - GET variable's name to be got
-     *
-     * @return string
-     */
-    get_get_var(var_name)
-    {
-        if (BaseFunctions.isSet(this.get_vars[var_name])) {
-            return this.get_vars[var_name];
-        }
-        return null;
-    }
 
 
 
@@ -271,79 +249,52 @@ class Security extends Component {
 
     /*
      * Detect and set controller and action
-     *
-     * @return boolean result
      */
     set_controller_and_action()
     {
-        let controller_name = this.get_vars['var1'];
+        let controller_name = Request.get('controller').toLowerCase();
 
-        if (BaseFunctions.check_local_file('application/express/controllers/'+controller_name+'.js  path)($controller)) {
+        if (BaseFunctions.is_not_empty(Config.controllers.enabled[controller_name])){
 
-            $method_name = $this->get_vars['var2'];
+            let controller_file_name = Config.controllers.enabled[controller_name];
+            let controller_path = 'application/express/controllers/'+controller_file_name+'.js';
 
-            if (\method_exists($controller, 'action_' . $method_name)) {
+            let Controller = require(controller_path);
+            let controller_object = Controller.get_instance(this.requestId);
 
-                if ($controller::get_instance() instanceof \vendor\Controller) {
 
-                    $this->controller = $controller_name;
-                    $this->action = $method_name;
-                    return true;
-                }
+            nextTTTTTTTTTTTT - продолжать с этого момента
+
+
+
+
+            
+            let action_name = 'action_' + Request.get('action').toLowerCase();
+
+            // If action exists
+            if (typeof controller_object[action_name] === 'function') {
+
+                this.controller = controller_object;
+                this.action = action_name;
             }
         }
-        self::concrete_error(array(
-            MY_ERROR_WRONG_ADRESS,
-            'url:' . json_encode($this->get_vars)));
-
-        return false;
+        ErrorHandler.process(ErrorCodes.ERROR_WRONG_ADRESS, 'url:[' + Request.getFullUrl() + ']');
     }
-
-
-
-
-
-
-
-
-
 
 
 
     /*
      * Controller runner
      *
-     * @return object - result data
+     * @return object - controller execution result
      */
     run_controller()
     {
-        if (ErrorHandler.errorEnable()) {
-            return false;
-        }
+        let controller_object = this.get_controller();
+        let action_name = this.get_action();
 
-        let controller_name = this.get_controller();
-        let action_name = 'action_' + this.get_action();
-        let controller_object = controller_name.get_instance();
-
-        $result = $controller_object->$action_name();
-
-        return $result;
+        return controller_object[action_name]();
     }
-
-
-
-
-};
-
-abstract class Security extends \vendor\Module
-{
-
-
-
-
-
-
-
 
 
 
@@ -351,93 +302,64 @@ abstract class Security extends \vendor\Module
 
 
     /*
-     * Запуск операций, которые прописаны в конфигурации (запускаются перед или после выполнения контроллера)
+     * Run operations before or after controller running
      *
-     * @param string $var - какие запускаем операции - перед или после выполнения контроллера
+     * @param string ('before'/'after') param - determine which operations will be performed
      */
-    protected function app_operations($var)
+    app_operations(param)
     {
-        $config = self::get_config();
-        if (my_is_not_empty(@$config['operations'][$var])) {
-            foreach ($config['operations'][$var] as $operation) {
-                $class_name = $operation['class'];
-                $method_name = $operation['method'];
-                $class_name::$method_name();
+        if (BaseFunctions.is_not_empty(Config.operations[param])) {
+            let operations = Config.operations[param];
+            for (let index in operations) {
+                let operation = operations[index];
+                let operation_object = require(operation.class);
+                operation_object[operation.method]();
             }
+        } else {
+            ErrorHandler.process(ErrorCodes.ERROR_FUNCTION_ARGUMENTS, 'param [' + param + ']');
         }
     }
 
-    /*
-     * Запуск view сайта
-     *
-     * @param array $data - данные выполнения контроллера - учавствуют в построении view сайта
-     */
-    protected function run_view($data)
-    {
-        $config = self::get_config();
-
-        $device_dir = (self::get_device_type() === MY_DEVICE_MOBILE_TYPE_CODE) ? MY_DIR_MOBILE_NAME : MY_DIR_DESCTOP_NAME;
-
-        if (($data === false) && ($config['debug'] !== 1)) {
-            self::redirect('error_works.php');
-        } else if (($data === false) && ($config['debug'] === 1)) {
-
-        } else if (my_array_is_not_empty(@$data)) {
-
-            $layout_file = $this->get_layout_file();
-            $view_file = $this->get_view_file();
-
-            ob_start();
-            require_once(\MY_APPLICATION_DIR . 'views' . \MY_DS . $device_dir . \MY_DS . 'controllers' . \MY_DS . $view_file);
-            $content = ob_get_clean();
-            require_once(\MY_APPLICATION_DIR . 'views' . \MY_DS . $device_dir . \MY_DS . 'layouts' . \MY_DS . $layout_file);
-        }
-    }
 
     /*
-     * Получение и обработка всех GET переменных
+     * Validate all GET variables
      */
-    protected function detect_get_vars()
+    validate_get_vars()
     {
-        $config = self::get_config();
-        // Validate get vars
-        $var_category = MY_VAR_CATEGORY_SYSTEM;
-        foreach ($_GET as $get_name => $get_value) {
-            if ($get_name === MY_GET_VARS_QUERY_STRING_NAME) {
-                $var_category = MY_VAR_CATEGORY_USER;
+
+        let var_category = Consts.VAR_CATEGORY_SYSTEM;
+        let get_variables = Request.getQueryVars();
+
+        // All passed GET variables must be valid
+        for (let get_name in get_variables) {
+            let get_value = get_variables[get_name];
+
+            if (get_name === Consts.GET_VARS_QUERY_STRING_NAME) {
+                var_category = Consts.VAR_CATEGORY_USER;
                 continue;
             }
-            $var_category_array = my_pass_through(@$config['get_vars'][$var_category]);
-            if (array_key_exists($get_name, $var_category_array)) {
-                foreach ($var_category_array[$get_name]['rules'] as $key => $rule) {
-                    if (!$this->validate($rule, $get_value, $key)) {
-                        self::concrete_error(array(
-                            MY_ERROR_WRONG_ADRESS,
-                            'key="' . $key . '", rule="' . $rule . '", name="' . $get_name . '", value="' . $get_value . '"'));
+            let var_category_array = Config.get_vars[var_category];
+
+            // If GET variable exists in config
+            if (BaseFunctions.in_array(get_name, var_category_array)) {
+
+                // Validation by set rules
+                for (var index in var_category_array[get_name].rules) {
+                    let rule = var_category_array[get_name].rules[index];
+
+                    if (!this.validate(rule, get_value)) {
+                        ErrorHandler.process(ErrorCodes.ERROR_WRONG_ADRESS, 'name[' + get_name + '], value[' + get_value + '], rule[' + JSON.stringify(rule) + '], url[' + Request.getUrl() + ']');
                     }
                 }
             } else {
-                self::concrete_error(array(
-                    MY_ERROR_WRONG_ADRESS,
-                    $get_name . ':unknown GET variable'));
+                ErrorHandler.process(ErrorCodes.ERROR_WRONG_ADRESS, get_name + ':unknown GET variable, url[' + Request.getUrl() + ']');
             }
         }
 
-        // Дефолт
-        if (my_is_not_empty(@$_GET['var1'])) {
-            $_GET['var1'] = @$_GET['var1'];
-        } else {
-            $_GET['var1'] = my_pass_through(@$config['controllers']['default']);
-        }
-
-        if (my_is_not_empty(@$_GET['var2'])) {
-            $_GET['var2'] = @$_GET['var2'];
-        } else {
-            $_GET['var2'] = 'index';
-        }
-
-        // после проверки извлекаем get-переменные
+/*#???????????????????????????? - то, что возможно не нужно
+        // Prepare GET variables
         $self_url = '';
+
         $get_vars_config = my_pass_through(@$config['get_vars']);
         // 1) System vars
         foreach (my_pass_through(@$get_vars_config[MY_VAR_CATEGORY_SYSTEM]) as $var_name => $arary) {
@@ -465,129 +387,95 @@ abstract class Security extends \vendor\Module
         $query_string = trim($query_string, '&');
         $this->set_self_url($self_url);
         $this->set_query_string($query_string);
+
         $this->set_self_url_without_query_string($self_url_without_query_string);
+*/
+
     }
 
 
 
-    /*
-     * Проверка ячейки paths в общем конфигурационном файле, что они ведут на существующие классы и методы
-     */
-    public function check_config_paths()
-    {
-        $config = self::get_config();
-        foreach ($config['paths'] as $path) {
-            if (\method_exists('\\controllers\\' . my_pass_through(@$path['controller']), 'action_' . my_pass_through(@$path['action']))) {
-                return true;
-            } else {
-                self::concrete_error(array(MY_ERROR_CONFIG_PATH_NOT_FOUND, 'controller:' . $path['controller'] . '-> action:' . $path['action']));
-            }
-        }
-    }
+
+
+
+
 
     /*
-     * Старт приложения
-     *
-     * @param array $conf - общая конфигурация приложения
-     */
-    public function run(array $conf)
-    {
-
-        if (my_array_is_not_empty(@$conf)) {
-            $this->set_config($conf);
-        } else {
-            exit('Config not found.');
-        }
-        $config = self::get_config();
-        $this->db_model = $this->get_db();
-        $db_connect = $this->db_model->get_connect();
-        try {
-
-            $db_connect->beginTransaction();
-
-            $this->execute();
-
-            $db_connect->commit();
-
-            // Если задали редирект
-            if (!is_null(self::get_redirect_url())) {
-                self::redirect(self::get_redirect_url());
-            }
-        } catch (\Exception $e) {
-
-            $db_connect->rollBack();
-
-            if (is_ajax() === true) {
-                http_response_code(501);
-            } else {
-
-                if ((my_is_not_empty(@self::$errors[MY_ERROR_WRONG_ADRESS]) ||
-                        (my_is_not_empty(@self::$errors[MY_ERROR_MAP_WRONG_GET_VALUE]))
-                        ) && ($config['debug'] !== 1)) {
-
-                    self::redirect('error_404.php');
-                } else if ((my_is_not_empty(@self::$errors[MY_ERROR_USER_NOT_VERIFICATED]))
-                        && ($this->get_vars['var1'] != $config['controllers']['errors'][MY_ERROR_USER_NOT_VERIFICATED])) {
-
-                    self::redirect($config['controllers']['errors'][MY_ERROR_USER_NOT_VERIFICATED]);
-                } else {
-
-                    if (!isset(self::$errors) || !self::$errors) {
-                        \my_write_to_log(MY_LOG_APPLICATION_PATH, '[UNDEFINED ERROR]:' . json_encode($e->getTrace()[0]));
-                    }
-
-                    if ($config['debug'] !== 1) {
-
-                        self::redirect('error_works.php');
-                    }
-                }
-            }
-
-            if ($config['debug'] === 1) {
-                echo ("Ошибки:");
-                my_pre(self::$errors, false, false);
-                echo ("<br>");
-                echo ("<b>System message:</b>");
-                echo ("<br>");
-                my_pre($e->getTrace(), false, false);
-            }
-        }
-    }
-
-    /*
-     * Запуск основных команд для построения страницы
-     */
-    private function execute()
-    {
-
-        $this->check_config_paths();
-
-        $this->detect_get_vars();
-
-        $this->app_operations('before');
-
-        $this->set_controller_and_action();
-
-        $this->run_view($this->run_controller());
-
-        $this->app_operations('after');
-    }
-
-    /*
-     * Возвращаем тип БД - mysql, redis и т.д.
+     * Get db - mysql, redis etc.
      *
      * @return string
      */
-    private function get_db()
+    get_db()
     {
-        $config = self::get_config();
-        if (my_array_is_not_empty(@$config['db'])) {
-            if (key($config['db']) === 'mysql') {
-                return \vendor\DBase_Mysql::model();
+        if (Config.db.type === 'mysql') {
+            return new DBaseMysql();
+        }
+    }
+
+
+
+
+
+
+
+    /*
+     * Run primary methods
+     */
+    execute()
+    {
+        this.init();
+
+        this.validate_get_vars();
+
+        this.app_operations('before');
+
+        this.set_controller_and_action();
+
+        let data = this.run_controller();
+
+        this.app_operations('after');
+
+        return data;
+    }
+
+
+
+
+
+
+    /*
+     * Run application
+     */
+    run()
+    {
+        this.db_model = this.get_db();
+
+        try {
+
+            this.db_model.begin_transaction();
+
+            this.execute();
+
+            this.db_model.commit();
+
+        } catch (e) {
+
+            this.db_model.rollback();
+
+            if (Config.debug === 1) {
+
+                Responce.send(ErrorHandler.getLogMessage());
+
+            } else {
+                Responce.sendJson(
+                    {
+                        status:'error',
+                        code:ErrorHandler.getErrorCode()
+                    }
+                );
             }
         }
-        exit('Database settings not found.');
     }
-}
+};
 
-
+Security.id = BaseFunctions.unique_id();

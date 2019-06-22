@@ -1,5 +1,6 @@
 /*
  * File application/express/vendor/Controller.js
+ * const Controller = require('application/express/vendor/Controller');
  *
  * Basic controller
  */

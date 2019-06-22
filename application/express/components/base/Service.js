@@ -1,5 +1,6 @@
 /*
  * File application/express/components/base/Service.js
+ * const Service = require('application/express/components/base/Service');
  *
  * Basic component for working with services
  */
@@ -17,36 +18,26 @@ class Service extends Component
 {
     constructor() {
         super();
-        /*
-         * Service congiguration
-         *
-         * @type array
-         */
-        this.config = [];
-        /*
-         * Service dictionary
-         *
-         * @type array
-         */
-        this.words = [];
-        /*
-         * Path to service
-         *
-         * @type string
-         */
-        this.path = '';
-        /*
-         * All service data from config
-         *
-         * @type object
-         */
-        this.data = Functions.get_service_data();
+
         /*
          * Service name
          *
          * @type string
          */
         this.name = Functions.get_service_name();
+        /*
+         * Path to service
+         *
+         * @type string
+         */
+        this.path = Consts.SERVICES_DIR + this.name + '/';
+        /*
+         * All service data from config
+         *
+         * @type object
+         */
+        this.data = Functions.get_service_data();
+
     }
 
     /*

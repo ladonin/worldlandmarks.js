@@ -37,6 +37,9 @@ module.exports = {
     CONTROLLER_NAME_MAIN: 'main',
     CONTROLLER_NAME_CATALOG: 'catalog',
     CONTROLLER_NAME_ARTICLE: 'article',
+    CONTROLLER_NAME_ADMIN_ACCESS: 'admin_access',
+
+
 
     ACTION_NAME_INDEX: 'index',
 

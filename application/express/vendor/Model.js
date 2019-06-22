@@ -1,5 +1,6 @@
 /*
  * File application/express/vendor/Model.js
+ * const Model = require('application/express/vendor/Model');
  *
  * Base model component
  */
@@ -7,7 +8,7 @@
 const Component = require('vendor/Component');
 const ErrorHandler = require('application/express/components/ErrorHandler');
 const ErrorCodes = require('application/express/settings/ErrorCodes');
-const Consts = require('application/settings/express/Constants');
+const Consts = require('application/express/settings/Constants');
 const Functions = require('application/express/functions/BaseFunctions');
 
 class Model extends Component {
@@ -70,20 +71,20 @@ class Model extends Component {
 
         if (Functions.isSet(this.fields[name]['rules'] && Functions.isArray(this.fields[name]['rules']))) {
 
-            for (var key in this.fields[name]['rules']) {
+            for (let index in this.fields[name]['rules']) {
 
-                let rule = this.fields[name]['rules'][key];
+                let rule = this.fields[name]['rules'][index];
 
                 let result;
 
                 if ((filter_type === Consts.FILTER_TYPE_ALL) || ((filter_type === Consts.FILTER_TYPE_ONLY_REQUIRED) && rule === 'required')
                         || ((filter_type === Consts.FILTER_TYPE_WITHOUT_REQUIRED) && rule !== 'required')) {
-                    result = this.validate(rule, value, key);
+                    result = this.validate(rule, value);
                     if (result === Consts.ERROR_UNKNOWN_VALIDATION_RULE) {
-                        ErrorHandler.process(ErrorCodes.ERROR_MODEL_FILTER, 'unknown rule: name[' + name + '], value[' + value + '], key[' + key + '], rule[' + rule + ']');
+                        ErrorHandler.process(ErrorCodes.ERROR_MODEL_FILTER, 'unknown rule: name[' + name + '], value[' + value + '], rule[' + JSON.stringify(rule) + ']');
                     } else if (!result) {
                         if (with_rollback === true) {
-                            ErrorHandler.process(ErrorCodes.ERROR_MODEL_FILTER, 'wrong value: name[' + name + '], value[' + value + '], key[' + key + '], rule[' + rule + ']');
+                            ErrorHandler.process(ErrorCodes.ERROR_MODEL_FILTER, 'wrong value: name[' + name + '], value[' + value + '], rule[' + JSON.stringify(rule) + ']');
                         } else {
                             return false;
                         }

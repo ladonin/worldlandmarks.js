@@ -1,26 +1,45 @@
-/*var app = require('express')();
+var app = require('express')();
 var server = require('http').Server(app);
 var io = require('socket.io')(server);
+
+
+const Security = require('application/express/components/base/Security');
+const Instances = require('application/express/vendor/Instances');
+
 
 server.listen(3001);
 // WARNING: app.listen(80) will NOT work here!
 
 app.get('/', function (req, res) {
+
+    Security.get_instance(Instances.init()).run();
+
+
+
+
   res.send('Hello world!');
 });
 
 io.on('connection', function (socket) {
+
+
+
+
   socket.emit('news', { hello: 'world' });
   socket.on('my other event', function (data) {
-    console.log(data);
+
+    setTimeout(()=>{socket.emit('news', { hello: 'world' });}, 10000);
+
+
+
+
+
+
   });
 });
 
 
 
-
-
-*/
 
 
 
@@ -108,8 +127,7 @@ var timer = setTimeout(()=>{res.send('j;jghjghj;sdl');}, 1000);
 */
 
 
-
-
+/*
 
 
 
@@ -137,7 +155,7 @@ var connection = new MySql({
 
 let result = [];
 try{
-result = connection.query("SELECT * FROM country where id = ? or id = ?",[1,9]);
+result = connection.query("SELECT * FROM country where id = ? or id = ?", [1,9]);
 } catch(e){console.log(9999999999);
 console.log(e.code);
 }
@@ -145,7 +163,7 @@ console.log(result);
 
 
 
-/*
+
 const mysql2 = require('mysql2');
 
 // create the connection to database
@@ -158,12 +176,10 @@ const connection2 = mysql2.createConnection({
 
 // simple query
 
-let result = connection2.query("SELECT * FROM country where id = ? or id = ?",[1,9]).catch(err=>{console.log(err.code)}).then(r=>{console.log(r[0].length); return r[0];});
+let result = connection2.query("SELErtCT * FROM country where id = ? or id = ?",[1,9]).catch(err=>{console.log(err.code)}).then(r=>{console.log(r[0].length); return r[0];});
 
 
 result.then((r)=>{console.log(111111111111111);console.log(r);});
-
-
 
 /*
 
@@ -211,7 +227,6 @@ pool.execute("SELECT * FROM country limit 1", []) // изменение объе
     .catch(function(err) {
       console.log(err.message);
     });
-*/
 
 
 
@@ -224,9 +239,15 @@ pool.execute("SELECT * FROM country limit 1", []) // изменение объе
 
 
 
+const aaa = require('./bbb');
+var bbb=new aaa();
+
+try {bbb.methB();} catch(e){
+ //console.log(e.stack);
+
+}
 
 
-const module1 = require('./aaa');
 
 
 
@@ -234,10 +255,14 @@ const module1 = require('./aaa');
 
 
 
-app.get('/api/get_list', (req, res) => {
 
 
-module1.setcache(11111111);
+var app = require('express')();
+
+app.get('/:var1/:var2', (req, res) => {
+
+
+console.log(req._parsedUrl.query);
 res.send('sett');
 
   //  var list = ['item1', 'item2', 'item3'];
@@ -245,13 +270,14 @@ res.send('sett');
    // console.log(req.ip);
 });
 
-app.get('/api/get_users', (req, res) => {
-    res.send(' '+module1.getcache());
-});
+//app.get('/:var1/:var2', (req, res) => {
+ //   res.send(' '+module1.getcache());
+//});
 
 
 
 
 
-app.listen(port);
-console.log('App is listening on port ' + port);
+app.listen(3001);
+console.log('App is listening on port ' + 3001);
+*/

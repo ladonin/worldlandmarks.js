@@ -1,4 +1,4 @@
-import CommonConsts from 'src/../../settings/common/Constants';
+import CommonConsts from 'src/../../application/common/settings/Constants';
 
 let Consts = {
 

@@ -1,5 +1,6 @@
 /*
- * File application/express/settings/Config
+ * File application/express/settings/Config.js
+ * const Config = require('application/express/settings/Config');
  *
  * Base config
  */
@@ -21,24 +22,24 @@ module.exports = {
     },
     // Where upload files will be stored
     files_upload_storage: {
-        server:'ftp'
+        server: 'ftp'
     },
 
     // Controllers settings
     controllers: {
-
-        // Controller to be redirect to in case of next errors
-        // Errors may be envoked also from anywhere
-        // Example:
-        //    error(ERROR_USER_NOT_VERIFICATED);
-        errors: {
-            [Consts.ERROR_USER_NOT_VERIFICATED]: Consts.CONTROLLER_NAME_MAIN
+        enabled: {
+            [Consts.CONTROLLER_NAME_MAP]: 'Map',
+            [Consts.CONTROLLER_NAME_MAIN]: 'Main',
+            [Consts.CONTROLLER_NAME_CATALOG]: 'Catalog',
+            [Consts.CONTROLLER_NAME_ARTICLE]: 'Article',
+            [Consts.CONTROLLER_NAME_ADMIN_ACCESS]: 'AdminAccess'
         }
+
     },
 
     // Services
-    services:{
-        landmarks:{
+    services: {
+        landmarks: {
             config: require('application/express/services/landmarks/settings/Config'),
 
             // Localizations
@@ -54,15 +55,15 @@ module.exports = {
         // Before
         before: [
             {
-                class: 'components/app/user',
+                class: 'application/express/components/User',
                 method: 'authentication'
             },
+            //{
+            //    class: 'components/app/visitors_analyze',
+            //    method: 'identify'
+            //},
             {
-                class: 'components/app/visitors_analyze',
-                method: 'identify'
-            },
-            {
-                class: 'components/app/language',
+                class: 'application/components/express/Language',
                 method: 'set_language'
             }
         ],
@@ -134,10 +135,10 @@ module.exports = {
 
         // System variables
         [Consts.VAR_CATEGORY_SYSTEM]: {
-            var1: {
+            controller: {
                 rules: ['varname', {max: 50}, 'not_empty']
             },
-            var2: {
+            action: {
                 rules: ['varname', {max: 50}, 'not_empty']
             },
             var3: {
@@ -237,4 +238,3 @@ module.exports = {
         }
     }
 };
-

@@ -31,13 +31,13 @@ class App extends Component {
         Localization.changeLang(Consts.LANGUAGE_EN);
 
                                     socket.on('news', function (data) {
+                                        console.log('on news');
                                                      console.log(data);
-                                                 socket.emit('my other event', { my: 'data' });
                                                 });
 
     }
                                                  rr(){
-                                                        socket.emit('my other event', { my: 'data' });
+                                                        socket.emit('my other event', { my: 'data' });socket.emit('my other event', { my: 'data' });
                                              }
     componentDidMount(){
 

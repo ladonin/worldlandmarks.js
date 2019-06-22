@@ -1,5 +1,6 @@
 /*
  * File application/express/components/User.js
+ * const User = require('application/express/components/User');
  *
  * User component
  */
@@ -9,9 +10,8 @@ const Component = require('vendor/Component');
 const AccessConfig = require('application/express/settings/gitignore/Access');
 const Account = require('application/express/components/base/Account');
 const Request = require('application/express/components/base/Request');
-const Consts = require('application/settings/express/Constants');
-
-
+const Consts = require('application/express/settings/Constants');
+const BaseFunctions = require('application/express/functions/BaseFunctions');
 
 
 class User extends Component
@@ -38,3 +38,6 @@ class User extends Component
         return true;
     }
 }
+
+
+User.instanceId = BaseFunctions.unique_id();

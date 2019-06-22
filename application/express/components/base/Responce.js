@@ -10,20 +10,22 @@ const ErrorCodes = require('application/express/settings/ErrorCodes');
 
 let responceData = {};
 module.exports = {
-    init(data) {
-        // Only once
-        if (!responceData) {
-            responceData = data;
-        }
+    init(res) {
+        responceData = res;
     },
 
-    // Use with caution!
-    getResponce:()=>responceData,
+    getResponce() {
+        return responceData;
+    },
 
     get(name) {
         if (responceData.hasOwnProperty(name)) {
             return responceData[name];
         }
         ErrorHandler.process(ErrorCodes.ERROR_UNDEFINED_RESPONCE_VARIABLE, '[' + name + ']');
+    },
+    
+    sendJson(json){
+        responceData.json(json);
     }
 }
