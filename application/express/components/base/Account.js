@@ -5,7 +5,7 @@
  * Account component
  */
 
-const Component = require('vendor/Component');
+const Component = require('application/express/vendor/Component');
 
 const Cookies = require('application/express/components/base/Cookies');
 const Functions = require('application/express/functions/BaseFunctions');

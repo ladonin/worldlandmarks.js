@@ -5,7 +5,7 @@
  * Basic component for working with services
  */
 
-const Component = require('vendor/Component');
+const Component = require('application/express/vendor/Component');
 const Config = require('application/express/settings/Config.js');
 const Functions = require('application/express/functions/BaseFunctions');
 const ErrorHandler = require('application/express/components/ErrorHandler');

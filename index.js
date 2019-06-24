@@ -23,16 +23,13 @@ app.get('/', function (req, res) {
 io.on('connection', function (socket) {
 
 
+    socket.emit('news', { hello: 'world' });
 
+    socket.on('api', function (data) {
 
-  socket.emit('news', { hello: 'world' });
-  socket.on('my other event', function (data) {
+        Security.get_instance(Instances.init()).run(data);
 
-    setTimeout(()=>{socket.emit('news', { hello: 'world' });}, 10000);
-
-
-
-
+        socket.emit('news', { hello: 'world' });
 
 
   });

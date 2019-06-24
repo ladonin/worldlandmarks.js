@@ -8,7 +8,7 @@
 const BaseFunctions = require('application/express/functions/BaseFunctions');
 const ErrorHandler = require('application/express/components/ErrorHandler');
 const Config = require('application/express/settings/Config.js');
-const Component = require('vendor/Component');
+const Component = require('application/express/vendor/Component');
 const DBaseMysql = require('application/express/vendor/dbases/DBaseMysql');
 const Responce = require('application/express/components/base/Responce');
 const Request = require('application/express/components/base/Request');
@@ -48,7 +48,10 @@ class Security extends Component {
 
 
     init(){
-        this.set_controller_and_action();
+
+
+        Request.getInstance(this.requestId).init(data);
+
 
 
     }
@@ -252,7 +255,9 @@ class Security extends Component {
      */
     set_controller_and_action()
     {
-        let controller_name = Request.get('controller').toLowerCase();
+        let requestInstance = Request.getInstance(this.requestId);
+
+        let controller_name = requestInstance.get('controller').toLowerCase();
 
         if (BaseFunctions.is_not_empty(Config.controllers.enabled[controller_name])){
 
@@ -260,25 +265,17 @@ class Security extends Component {
             let controller_path = 'application/express/controllers/'+controller_file_name+'.js';
 
             let Controller = require(controller_path);
-            let controller_object = Controller.get_instance(this.requestId);
+            let controller_object = Controller.getInstance(this.requestId);
 
-
-            nextTTTTTTTTTTTT - продолжать с этого момента
-
-
-
-
-            
-            let action_name = 'action_' + Request.get('action').toLowerCase();
+            let action_name = 'action_' + requestInstance.get('action').toLowerCase();
 
             // If action exists
-            if (typeof controller_object[action_name] === 'function') {
-
+            if (BaseFunctions.isMethod(controller_object[action_name])) {
                 this.controller = controller_object;
                 this.action = action_name;
             }
         }
-        ErrorHandler.process(ErrorCodes.ERROR_WRONG_ADRESS, 'url:[' + Request.getFullUrl() + ']');
+        ErrorHandler.getInstance(this.requestId).process(ErrorCodes.ERROR_WRONG_ADRESS, 'data:[' + requestInstance.getStringData() + ']');
     }
 
 
@@ -312,11 +309,17 @@ class Security extends Component {
             let operations = Config.operations[param];
             for (let index in operations) {
                 let operation = operations[index];
-                let operation_object = require(operation.class);
-                operation_object[operation.method]();
+                let operation_component = require(operation.class);
+                // If traditional class
+                if (BaseFunctions.isClass(operation_component)) {
+                    operation_component.getInstance(this.requestId)[operation.method]();
+                } else {
+                    // Otherwise it is a simple common object with methods
+                    operation_component[operation.method]();
+                }
             }
         } else {
-            ErrorHandler.process(ErrorCodes.ERROR_FUNCTION_ARGUMENTS, 'param [' + param + ']');
+            ErrorHandler.getInstance(this.requestId).process(ErrorCodes.ERROR_FUNCTION_ARGUMENTS, 'param [' + param + ']');
         }
     }
 
@@ -326,9 +329,11 @@ class Security extends Component {
      */
     validate_get_vars()
     {
+        let requestInstance = Request.getInstance(this.requestId);
+        let errorHandlerInstance = ErrorHandler.getInstance(this.requestId);
 
         let var_category = Consts.VAR_CATEGORY_SYSTEM;
-        let get_variables = Request.getQueryVars();
+        let get_variables = requestInstance.getData();
 
         // All passed GET variables must be valid
         for (let get_name in get_variables) {
@@ -348,11 +353,11 @@ class Security extends Component {
                     let rule = var_category_array[get_name].rules[index];
 
                     if (!this.validate(rule, get_value)) {
-                        ErrorHandler.process(ErrorCodes.ERROR_WRONG_ADRESS, 'name[' + get_name + '], value[' + get_value + '], rule[' + JSON.stringify(rule) + '], url[' + Request.getUrl() + ']');
+                        errorHandlerInstance.process(ErrorCodes.ERROR_WRONG_ADRESS, 'name[' + get_name + '], value[' + get_value + '], rule[' + JSON.stringify(rule) + '], data[' + requestInstance.getStringData() + ']');
                     }
                 }
             } else {
-                ErrorHandler.process(ErrorCodes.ERROR_WRONG_ADRESS, get_name + ':unknown GET variable, url[' + Request.getUrl() + ']');
+                errorHandlerInstance.process(ErrorCodes.ERROR_WRONG_ADRESS, get_name + ':unknown GET variable, data[' + requestInstance.getStringData() + ']');
             }
         }
 
@@ -408,7 +413,7 @@ class Security extends Component {
     get_db()
     {
         if (Config.db.type === 'mysql') {
-            return new DBaseMysql();
+            return DBaseMysql.getInstance(this.requestId);
         }
     }
 
@@ -421,21 +426,21 @@ class Security extends Component {
     /*
      * Run primary methods
      */
-    execute()
+    execute(data)
     {
-        this.init();
+        this.init(data);
 
-        this.validate_get_vars();
+        ////////////////this.validate_get_vars();
 
-        this.app_operations('before');
+        //////////////////this.app_operations('before');
 
         this.set_controller_and_action();
 
-        let data = this.run_controller();
+        ////////let result = this.run_controller();
 
-        this.app_operations('after');
+        /////////////this.app_operations('after');
 
-        return data;
+        //////////////return result;
     }
 
 
@@ -446,36 +451,37 @@ class Security extends Component {
     /*
      * Run application
      */
-    run()
+    run(data)
     {
+
         this.db_model = this.get_db();
 
         try {
 
             this.db_model.begin_transaction();
 
-            this.execute();
+            this.execute(data);
 
             this.db_model.commit();
 
         } catch (e) {
 
+            let errorHandlerInstance = ErrorHandler.getInstance(this.requestId);
+            let responceInstance = Responce.getInstance(this.requestId);
+
             this.db_model.rollback();
 
-            if (Config.debug === 1) {
+            let errorMessage = (Config.debug === 1) ? errorHandlerInstance.getLogMessage() : errorHandlerInstance.getErrorCode();
 
-                Responce.send(ErrorHandler.getLogMessage());
-
-            } else {
-                Responce.sendJson(
-                    {
-                        status:'error',
-                        code:ErrorHandler.getErrorCode()
-                    }
-                );
-            }
+            responceInstance.sendPrivate({
+                    status:'error',
+                    data: errorMessage
+                }
+            );
         }
     }
 };
 
-Security.id = BaseFunctions.unique_id();
+Security.instanceId = BaseFunctions.unique_id();
+
+module.exports = Security;

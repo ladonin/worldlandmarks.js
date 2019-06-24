@@ -42,10 +42,10 @@ class Component {
      *
      * @returns object - instance of requested class
      */
-    static get_instance(reqId){
+    static getInstance(reqId){
         let instanceId = this.instanceId;
         if (Instances.checkInstance(reqId, instanceId) == false) {
-            Instances.register(reqId, new this(), instanceId);
+            //Instances.register(reqId, new this(), instanceId);
         }
         return Instances.getObject(reqId, instanceId);
     }
@@ -66,7 +66,7 @@ class Component {
 
 
 
-    validate(rule = false, value = false) {}//, $key = false
+   // validate(rule = false, value = false) {}//, $key = false
 
 
 
@@ -74,7 +74,7 @@ class Component {
 
 
 
-#???????????????????????????? - то, что возможно не нужно
+//#???????????????????????????? - то, что возможно не нужно
     /*
      * Запись основных GET переменных без query string
      *

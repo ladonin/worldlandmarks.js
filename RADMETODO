@@ -19,24 +19,7 @@ var1 и var2 переименовал в controller и action
 
 
 
-const Messages = require('application/express//settingsMessages');
 
-const Functions = require('application/express/functions/BaseFunctions');
-
-
-
-const ErrorHandler = require('application/express/components/ErrorHandler');
-
-
-const Component = require('vendor/Component');
-const Consts = require('application/express/settings/Constants');
-const Controller = require('application/express/vendor/Controller');
-const Config = require('application/express/settings/Config.js');
-const Cookies = require('application/express/components/base/Cookies');
-
-
-const Request = require('application/express/components/base/Request');
-const Responce = require('application/express/components/base/Responce');
 
 
 
@@ -64,3 +47,14 @@ field['value'] = field['value'].replace(/\[strong\](.+?)\[\/strong\]/g, '<strong
                         field['value'] = field['value'].replace(/\[p\]((?:.*?[\n\r]?.*?)*?)\[\/p\][\n\r]*/gm, function(matches, part1) {
                             return '<p class="text_form_tag_p">'+part1.replace(/[\r\n]*/g, '')+'</p>';
                         });
+
+
+
+
+
+
+
+
+let errorHandlerInstance = ErrorHandler.getInstance(this.requestId);
+let responceInstance = Responce.getInstance(this.requestId);
+let requestInstance = Request.getInstance(this.requestId);

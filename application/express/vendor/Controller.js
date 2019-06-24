@@ -5,7 +5,7 @@
  * Basic controller
  */
 
-const Component = require('vendor/Component');
+const Component = require('application/express/vendor/Component');
 
 class Controller extends Component {
 

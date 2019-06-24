@@ -39,7 +39,12 @@ function clone(obj) {
 function isSet(val) {
     return !isUndefined(val);
 }
-
+function isClass(val) {
+    return isFunction(val);
+}
+function isFunction(val) {
+    return _lang.isFunction(val);
+}
 function isNull(val) {
     return _lang.isNull(val);
 }
@@ -50,7 +55,9 @@ function isUndefined(val) {
 function isObject(val) {
     return _lang.isObject(val);
 }
-
+function isMethod(val) {
+    return _lang.isFunction(val);
+}
 
 
 
@@ -732,7 +739,10 @@ module.exports = {
     get_cutted_text,
     get_service_data,
     get_service_name,
-    isUndefined
+    isClass,
+    isFunction,
+    isMethod,
+    isObject
 };
 
 

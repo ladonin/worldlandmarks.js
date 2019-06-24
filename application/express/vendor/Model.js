@@ -5,7 +5,7 @@
  * Base model component
  */
 
-const Component = require('vendor/Component');
+const Component = require('application/express/vendor/Component');
 const ErrorHandler = require('application/express/components/ErrorHandler');
 const ErrorCodes = require('application/express/settings/ErrorCodes');
 const Consts = require('application/express/settings/Constants');

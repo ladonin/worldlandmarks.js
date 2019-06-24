@@ -6,7 +6,7 @@
  */
 
 const Consts = require('application/express/settings/Constants');
-const Component = require('vendor/Component');
+const Component = require('application/express/vendor/Component');
 const Service = require('application/express/components/base/Service');
 
 class Language extends Component{

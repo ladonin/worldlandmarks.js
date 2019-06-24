@@ -6,7 +6,7 @@
  */
 
 
-const Component = require('vendor/Component');
+const Component = require('application/express/vendor/Component');
 const AccessConfig = require('application/express/settings/gitignore/Access');
 const Account = require('application/express/components/base/Account');
 const Request = require('application/express/components/base/Request');

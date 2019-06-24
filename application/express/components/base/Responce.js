@@ -7,25 +7,34 @@
 
 const ErrorHandler = require('application/express/components/ErrorHandler');
 const ErrorCodes = require('application/express/settings/ErrorCodes');
+const Component = require('application/express/vendor/Component');
+const BaseFunctions = require('application/express/functions/BaseFunctions');
 
-let responceData = {};
-module.exports = {
-    init(res) {
-        responceData = res;
-    },
 
-    getResponce() {
-        return responceData;
-    },
 
-    get(name) {
-        if (responceData.hasOwnProperty(name)) {
-            return responceData[name];
-        }
-        ErrorHandler.process(ErrorCodes.ERROR_UNDEFINED_RESPONCE_VARIABLE, '[' + name + ']');
-    },
-    
-    sendJson(json){
-        responceData.json(json);
+
+
+
+class Responce extends Component{
+
+    constructor(){
+        super();
+        this.socket;
+        this.io;
     }
+
+
+    init(socket, io) {
+        this.socket = socket;
+        this.io = io;
+    }
+    sendPrivate(message){
+
+
+    }
+
 }
+
+
+Responce.instanceId = BaseFunctions.unique_id();
+module.exports = Responce;
