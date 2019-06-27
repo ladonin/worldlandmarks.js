@@ -6,13 +6,13 @@ var io = require('socket.io')(server);
 const Security = require('application/express/components/base/Security');
 const Instances = require('application/express/vendor/Instances');
 
-
+Security.getInstance(Instances.init()).run({controller:'main', action:'index'});
 server.listen(3001);
 // WARNING: app.listen(80) will NOT work here!
 
-app.get('/', function (req, res) {
+app.get('/api/1', function (req, res) {
 
-    Security.get_instance(Instances.init()).run();
+
 
 
 
@@ -27,7 +27,7 @@ io.on('connection', function (socket) {
 
     socket.on('api', function (data) {
 
-        Security.get_instance(Instances.init()).run(data);
+        Security.getInstance(Instances.init()).run(data);
 
         socket.emit('news', { hello: 'world' });
 

@@ -22,3 +22,47 @@
 #2019.4.23 6:2# 40: [catalog_icon_30.png]
 #2019.4.23 6:2# 40: [catalog_icon_30.png]
 #2019.4.23 6:2# 40: [catalog_icon_30.png]
+#####2019.5.25 3:56:  66: [controller]
+Error
+    at ErrorHandler.process (/var/www/fishplanet.ru/application/express/components/ErrorHandler.js:38:21)
+    at Request.get (/var/www/fishplanet.ru/application/express/components/base/Request.js:44:50)
+    at Security.set_controller_and_action (/var/www/fishplanet.ru/application/express/components/base/Security.js:260:47)
+    at Security.execute (/var/www/fishplanet.ru/application/express/components/base/Security.js:437:14)
+    at Security.run (/var/www/fishplanet.ru/application/express/components/base/Security.js:464:18)
+    at Object.<anonymous> (/var/www/fishplanet.ru/index.js:9:40)
+    
+
+
+#####2019.5.25 4:13:  66: [controller]
+Error
+    at ErrorHandler.process (/var/www/fishplanet.ru/application/express/components/ErrorHandler.js:38:21)
+    at Request.get (/var/www/fishplanet.ru/application/express/components/base/Request.js:44:50)
+    at Security.set_controller_and_action (/var/www/fishplanet.ru/application/express/components/base/Security.js:260:47)
+    at Security.execute (/var/www/fishplanet.ru/application/express/components/base/Security.js:437:14)
+    at Security.run (/var/www/fishplanet.ru/application/express/components/base/Security.js:464:18)
+    at Object.<anonymous> (/var/www/fishplanet.ru/index.js:9:40)
+    
+
+
+#####2019.5.25 4:14:  66: [controller]
+Error
+    at ErrorHandler.process (/var/www/fishplanet.ru/application/express/components/ErrorHandler.js:38:21)
+    at Request.get (/var/www/fishplanet.ru/application/express/components/base/Request.js:44:50)
+    at Security.set_controller_and_action (/var/www/fishplanet.ru/application/express/components/base/Security.js:260:47)
+    at Security.execute (/var/www/fishplanet.ru/application/express/components/base/Security.js:437:14)
+    at Security.run (/var/www/fishplanet.ru/application/express/components/base/Security.js:464:18)
+    at Object.<anonymous> (/var/www/fishplanet.ru/index.js:9:40)
+    
+
+
+#####2019.5.25 4:14:  66: [controller]
+Error
+    at ErrorHandler.process (/var/www/fishplanet.ru/application/express/components/ErrorHandler.js:38:21)
+    at Request.get (/var/www/fishplanet.ru/application/express/components/base/Request.js:44:50)
+    at Security.set_controller_and_action (/var/www/fishplanet.ru/application/express/components/base/Security.js:260:47)
+    at Security.execute (/var/www/fishplanet.ru/application/express/components/base/Security.js:437:14)
+    at Security.run (/var/www/fishplanet.ru/application/express/components/base/Security.js:464:18)
+    at Object.<anonymous> (/var/www/fishplanet.ru/index.js:9:40)
+    
+
+

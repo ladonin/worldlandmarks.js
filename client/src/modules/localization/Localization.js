@@ -19,7 +19,7 @@ export default {
                 return common_locale[name];
             } else {
                 // Text not found anywhere
-                ErrorHandler.process(ErrorCodes.ERROR_LOCALIZATION_WORD_NOT_FOUND, name);
+                ErrorHandler.getInstance(this.requestId).process(ErrorCodes.ERROR_LOCALIZATION_WORD_NOT_FOUND, name);
             }
         }
     },

@@ -8,6 +8,10 @@
 const Consts = require('application/express/settings/Constants');
 const Component = require('application/express/vendor/Component');
 const Service = require('application/express/components/base/Service');
+const Request = require('application/express/components/base/Request');
+const BaseFunctions = require('application/express/functions/BaseFunctions');
+const Config = require('application/express/settings/Config');
+
 
 class Language extends Component{
 
@@ -18,7 +22,7 @@ class Language extends Component{
          *
          * @type string
          */
-        this.default_language = Consts.MY_LANGUAGE_RU;
+        this.default_language = Consts.MY_LANGUAGE_EN;
 
 
         /*
@@ -43,30 +47,37 @@ class Language extends Component{
          *
          * @type array
          */
-        this.base_words;
+        this.base_words = Config.text[this.get_language()];
 
         /*
          * Service dictionary
          *
          * @type array
          */
-
-        nextTTTTTTTTTTTT - продолжать с этого момента
-        this.service_words = Service.get_words(this.get_language())
-        $this->base_words = require_once(MY_APPLICATION_DIR . 'config' . MY_DS . 'language' . MY_DS . $this->get_language() . '.php');
-
-
+        this.service_words = Service.get_words(this.get_language());
 
 
     }
 
+    /*
+     * Get language
+     *
+     * @return string
+     */
+    get_language()
+    {
+        // If not set yet
+        if (!this.language) {
+            // Try to get value from request
+            this.language = Request.getInstance(this.requestId).get(Consts.LANGUAGE_CODE_VAR_NAME, false);
+            if (!this.language || !BaseFunctions.in_array(this.language, this.available_languages)) {
+                // Set default
+                this.language = this.default_language;
+            }
+        }
 
-
-
-
-
-
-
+        return this.language;
+    }
 
 
 
@@ -74,7 +85,7 @@ class Language extends Component{
 
 }
 
-
+/*
 
 
 final class Language extends Component
@@ -89,13 +100,13 @@ final class Language extends Component
 
 
 
-    /*
+
      * Проверка - доступен ли такой язык
      *
      * @param string $language - проверяемый код языка
      *
      * @return boolean
-     */
+
     public function is_available_language($language)
     {
         if (in_array($language, self::$available_languages)) {
@@ -104,14 +115,14 @@ final class Language extends Component
         self::concrete_error(array(MY_ERROR_LANGUAGE_CODE_NOT_FOUND, 'language="' . $language . '"'));
     }
 
-    /*
+
      * Получить текст из массива по его идентификатору (адресу)
      *
      * @param string $adress - адрес текста в массиве
      * @param array $vars - дополнительные переменные, которыми может быть заменена часть возвращаемого текста
      *
      * @return string - найденный подготовленный текст
-     */
+
     public function get_text($adress, $vars = null)
     {
         if (isset($this->base_words[$adress])) {
@@ -137,11 +148,11 @@ final class Language extends Component
         }
     }
 
-    /*
+
      * Записать язык в сессию
      *
      * @param string $language - код языка
-     */
+
     public function set_language_in_session($language)
     {
         if (in_array($language, self::$available_languages)) {
@@ -151,9 +162,9 @@ final class Language extends Component
         }
     }
 
-    /*
+
      * Установить язык приложения
-     */
+
     public static function set_language()
     {
         if (my_is_not_empty(@$_SESSION['site']['language'])) {
@@ -178,21 +189,13 @@ final class Language extends Component
         self::$language = $cookie_language;
     }
 
-    /*
-     * Получить язык приложения
-     *
-     * @return string
-     */
-    public function get_language()
-    {
-        return self::$language;
-    }
 
-    /*
+
+
      * Орпеделить язык клиента
      *
      * @return string - код языка клиента
-     */
+
     public static function get_client_language()
     {
 
@@ -209,3 +212,4 @@ final class Language extends Component
         return self::DEFAULT_LANGUAGE;
     }
 }
+*/

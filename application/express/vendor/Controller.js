@@ -9,10 +9,8 @@ const Component = require('application/express/vendor/Component');
 
 class Controller extends Component {
 
-
-
-    constructor(){
-
+    constructor() {
+        super();
         /*
          * Data for response
          *
@@ -21,7 +19,6 @@ class Controller extends Component {
         this.data = {};
 
     }
-
 
     /*
      * Flush result

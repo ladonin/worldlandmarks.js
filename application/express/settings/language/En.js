@@ -1,7 +1,13 @@
-import Consts from 'src/settings/Constants';
+/*
+ * File application/express/settings/language/En.js
+ * const En = require('application/express/settings/language/En');
+ *
+ */
 
+const Constants = require('application/express/settings/Constants');
 
-export default {
+module.exports = {
+    'domain_name': 'WORLD-LANDMARKS.RU',
     'countries/undefined/name': 'Other places',
     'errors/new_point/photos_upload': 'Please attach at least one photo.',
     'errors/new_point/photos_uploaded_yet': 'Photos are still being downloaded.',
@@ -129,7 +135,7 @@ export default {
     'site/description/articles/category': '',
     'site/description/articles/index': '',
     'site/keywords/articles/index': '',
-    ['form/map_new_point/category/' + Consts.NONE_CATEGORY_CODE]: 'Select from the list',
+    ['form/map_new_point/category/' + Constants.NONE_CATEGORY_CODE]: 'Select from the list',
     'form/map_new_point/category/0': 'Other places',
     'form/map_new_point/category/1': 'Castles',
     'form/map_new_point/category/2': 'Palaces, manor houses',

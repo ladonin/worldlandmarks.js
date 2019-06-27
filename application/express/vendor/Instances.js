@@ -7,7 +7,6 @@
  */
 
 const BaseFunctions = require('application/express/functions/BaseFunctions');
-const Request = require('application/express/components/base/Request');
 const ErrorHandler = require('application/express/components/ErrorHandler');
 const ErrorCodes = require('application/express/settings/ErrorCodes');
 
@@ -21,7 +20,7 @@ let instances_pool = {};
  */
 function checkReqId(reqId, errorMessage = '') {
     if (!instances_pool.hasOwnProperty(reqId)) {
-        ErrorHandler.process(ErrorCodes.ERROR_REQUEST_ABSENT_IN_POOL,
+        ErrorHandler.getInstance(this.requestId).process(ErrorCodes.ERROR_REQUEST_ABSENT_IN_POOL,
                 errorMessage + ': reqId[' + BaseFunctions.toString(reqId) + '], type of reqId[' + typeof (reqId) + ']');
     }
 }
@@ -38,7 +37,7 @@ function checkObject(reqId, objectId, errorMessage = '') {
     checkReqId(reqId, errorMessage);
 
     if (!instances_pool[reqId].hasOwnProperty(objectId)) {
-        ErrorHandler.process(ErrorCodes.ERROR_OBJECT_ABSENT_IN_REQUEST_POOL,
+        ErrorHandler.getInstance(this.requestId).process(ErrorCodes.ERROR_OBJECT_ABSENT_IN_REQUEST_POOL,
                 errorMessage + ': objectId[' + BaseFunctions.toString(objectId) + '], type of objectId[' + typeof (objectId) + ']');
     }
 }
@@ -74,16 +73,16 @@ module.exports = {
         let message = 'for register object';
 
         if (instances_pool[reqId].hasOwnProperty(objectId)) {
-            ErrorHandler.process(ErrorCodes.ERROR_POOL_INSTANCE_ALREADY_EXISTS,
+            ErrorHandler.getInstance(this.requestId).process(ErrorCodes.ERROR_POOL_INSTANCE_ALREADY_EXISTS,
                 message + ': objectName[' + object.constructor.name + '], instanceId[' + BaseFunctions.toString(objectId) + ']');
         }
 
         if (!BaseFunctions.isObject(object)) {
-            ErrorHandler.process(ErrorCodes.ERROR_POOL_INSTANCE_IS_NOT_OBJECT,
+            ErrorHandler.getInstance(this.requestId).process(ErrorCodes.ERROR_POOL_INSTANCE_IS_NOT_OBJECT,
                 message + ': object[' + BaseFunctions.toString(object) + '], type of object[' + typeof (object) + ']');
         }
         if (!BaseFunctions.isInteger(objectId) || !objectId) {
-            ErrorHandler.process(ErrorCodes.ERROR_POOL_INSTANCE_ID_IS_WRONG,
+            ErrorHandler.getInstance(this.requestId).process(ErrorCodes.ERROR_POOL_INSTANCE_ID_IS_WRONG,
                 message + ': objectName[' + object.constructor.name + '], instanceId[' + BaseFunctions.toString(objectId) + '], type of instanceId[' + typeof (objectId) + ']');
         }
 

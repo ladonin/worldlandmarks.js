@@ -25,8 +25,7 @@ class Model extends Component {
          * 'rules':
          *      required - value must be specified and must not be empty
          *      not_empty - if value specified then must not be empty
-         *      numeric - value must be integer
-         *      float - value must be float
+         *      numeric - value must be integer or float
          *      boolean - value must be boolean
          *      {max:number} - maximum length of value
          *      {min:number} - minimum length of value
@@ -40,7 +39,7 @@ class Model extends Component {
          *      ip - value must match an ip conception
          *      url - value must match an url conception
          *      varname - value must match a variable name conception
-         *      get_query_string_var_value - value must match a value of url query variable (after ? sign) conception
+         *      get_query_string_var_value - value must match a value of url query variable conception
          *      db_table_name - value must match a database table name conception
          *      none - value must not be specified (for example 'created': will be set automatically)
          *
@@ -66,7 +65,7 @@ class Model extends Component {
     {
 
         if (!Functions.isSet(this.fields[name])) {
-            ErrorHandler.process(ErrorCodes.ERROR_DB_UNDEFINED_FIELD, 'unknown field_name: [' + name + '], value: [' + value + ']');
+            ErrorHandler.getInstance(this.requestId).process(ErrorCodes.ERROR_DB_UNDEFINED_FIELD, 'unknown field_name: [' + name + '], value: [' + value + ']');
         }
 
         if (Functions.isSet(this.fields[name]['rules'] && Functions.isArray(this.fields[name]['rules']))) {
@@ -80,11 +79,9 @@ class Model extends Component {
                 if ((filter_type === Consts.FILTER_TYPE_ALL) || ((filter_type === Consts.FILTER_TYPE_ONLY_REQUIRED) && rule === 'required')
                         || ((filter_type === Consts.FILTER_TYPE_WITHOUT_REQUIRED) && rule !== 'required')) {
                     result = this.validate(rule, value);
-                    if (result === Consts.ERROR_UNKNOWN_VALIDATION_RULE) {
-                        ErrorHandler.process(ErrorCodes.ERROR_MODEL_FILTER, 'unknown rule: name[' + name + '], value[' + value + '], rule[' + JSON.stringify(rule) + ']');
-                    } else if (!result) {
+                    if (!result) {
                         if (with_rollback === true) {
-                            ErrorHandler.process(ErrorCodes.ERROR_MODEL_FILTER, 'wrong value: name[' + name + '], value[' + value + '], rule[' + JSON.stringify(rule) + ']');
+                            ErrorHandler.getInstance(this.requestId).process(ErrorCodes.ERROR_MODEL_FILTER, 'wrong value: name[' + name + '], value[' + value + '], rule[' + JSON.stringify(rule) + ']');
                         } else {
                             return false;
                         }

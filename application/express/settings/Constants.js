@@ -1,3 +1,10 @@
+/*
+ * File application/express/settings/Constants.js
+ * const Constants = require('application/express/settings/Constants');
+ *
+ */
+
+
 const CommonConsts = require('application/common/settings/Constants');
 
 let Consts = {
@@ -123,9 +130,6 @@ let Consts = {
 
     SERVICES_NAME: 'services',
     FILE_UPLOADED_VARNAME: 'file',
-    GET_VARS_QUERY_STRING_NAME: 'query_string',
-    VAR_CATEGORY_SYSTEM: 'system',
-    VAR_CATEGORY_USER: 'user',
     SERVICE_VAR_NAME: 'service',//ATTENTION - обратите внимание
     ID_VAR_NAME: 'id',
     CATALOG_CATEGORY_VAR_NAME: 'category',

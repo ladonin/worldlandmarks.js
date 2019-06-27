@@ -15,7 +15,7 @@ module.exports = {
     //########################
 
     //Debug mode
-    debug: 0,
+    debug: 1,
     //Logging errors
     log: {
         on: 1
@@ -36,7 +36,11 @@ module.exports = {
         }
 
     },
-
+    // Common localizations
+    text: {
+        en: require('application/express/settings/language/En'),
+        ru: require('application/express/settings/language/Ru')
+    },
     // Services
     services: {
         landmarks: {
@@ -55,17 +59,13 @@ module.exports = {
         // Before
         before: [
             {
-                class: 'application/express/components/User',
+                class: 'application/express/components/base/Account',
                 method: 'authentication'
             },
             //{
             //    class: 'components/app/visitors_analyze',
             //    method: 'identify'
             //},
-            {
-                class: 'application/components/express/Language',
-                method: 'set_language'
-            }
         ],
         // After
         after: [
@@ -132,36 +132,33 @@ module.exports = {
         // 'not_empty means - if found, then should not be empty
         // All variables also have rule 'not_required' by default
 
-
         // System variables
-        [Consts.VAR_CATEGORY_SYSTEM]: {
-            controller: {
-                rules: ['varname', {max: 50}, 'not_empty']
-            },
-            action: {
-                rules: ['varname', {max: 50}, 'not_empty']
-            },
-            var3: {
-                rules: ['varname', {max: 50}, 'not_empty']
-            },
-            var4: {
-                rules: ['varname', {max: 50}, 'not_empty']
-            }
+        controller: {
+            rules: ['varname', {max: 50}, 'required']
         },
+        action: {
+            rules: ['varname', {max: 50}, 'required']
+        },
+        var3: {
+            rules: ['varname', {max: 50}, 'not_empty']
+        },
+        var4: {
+            rules: ['varname', {max: 50}, 'not_empty']
+        },
+
         // Custom variablles
-        [Consts.VAR_CATEGORY_USER]: {
-            [Consts.SERVICE_VAR_NAME]: {rules: ['get_query_string_var_value', 'not_empty']},
-            [Consts.ID_VAR_NAME]: {rules: ['numeric', 'not_empty']},
-            [Consts.CATALOG_CATEGORY_VAR_NAME]: {rules: ['get_query_string_var_value', 'not_empty']},
-            [Consts.CATALOG_COUNTRY_VAR_NAME]: {rules: ['get_query_string_var_value', 'not_empty']},
-            [Consts.CATALOG_STATE_VAR_NAME]: {rules: ['get_query_string_var_value', 'not_empty']},
-            [Consts.CATALOG_PAGE_NUMBER_VAR_NAME]: {rules: ['numeric', 'not_empty']},
-            [Consts.SPAM_TRANSFERED_EMAIL_ID_VAR_NAME]: {rules: ['numeric', 'not_empty']},
-            [Consts.SPAM_TRANSFERED_EMAIL_CODE_VAR_NAME]: {rules: ['numeric', 'not_empty']},
-            [Consts.SPAM_TRANSFERED_EMAIL_INTEREST_VAR_NAME]: {rules: ['numeric', 'not_empty']},
-            [Consts.LANGUAGE_CODE_VAR_NAME]: {rules: ['get_query_string_var_value', 'not_empty']},
-            [Consts.ADMIN_PASSWORD_VAR_NAME]: {rules: ['get_query_string_var_value', 'not_empty']}
-        }
+        [Consts.SERVICE_VAR_NAME]: {rules: ['get_query_string_var_value', 'not_empty']},
+        [Consts.ID_VAR_NAME]: {rules: ['numeric', 'not_empty']},
+        [Consts.CATALOG_CATEGORY_VAR_NAME]: {rules: ['get_query_string_var_value', 'not_empty']},
+        [Consts.CATALOG_COUNTRY_VAR_NAME]: {rules: ['get_query_string_var_value', 'not_empty']},
+        [Consts.CATALOG_STATE_VAR_NAME]: {rules: ['get_query_string_var_value', 'not_empty']},
+        [Consts.CATALOG_PAGE_NUMBER_VAR_NAME]: {rules: ['numeric', 'not_empty']},
+        [Consts.SPAM_TRANSFERED_EMAIL_ID_VAR_NAME]: {rules: ['numeric', 'not_empty']},
+        [Consts.SPAM_TRANSFERED_EMAIL_CODE_VAR_NAME]: {rules: ['numeric', 'not_empty']},
+        [Consts.SPAM_TRANSFERED_EMAIL_INTEREST_VAR_NAME]: {rules: ['numeric', 'not_empty']},
+        [Consts.LANGUAGE_CODE_VAR_NAME]: {rules: ['get_query_string_var_value', 'not_empty']},
+        [Consts.ADMIN_PASSWORD_VAR_NAME]: {rules: ['get_query_string_var_value', 'not_empty']}
+
     },
     //########################
     //#

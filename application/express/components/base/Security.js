@@ -9,10 +9,10 @@ const BaseFunctions = require('application/express/functions/BaseFunctions');
 const ErrorHandler = require('application/express/components/ErrorHandler');
 const Config = require('application/express/settings/Config.js');
 const Component = require('application/express/vendor/Component');
-const DBaseMysql = require('application/express/vendor/dbases/DBaseMysql');
+const DBaseMysql = require('application/express/vendor/dbases/Mysql');
 const Responce = require('application/express/components/base/Responce');
 const Request = require('application/express/components/base/Request');
-const ErrorCodes = require('application/settings/express/ErrorCodes');
+const ErrorCodes = require('application/express/settings/ErrorCodes');
 const Consts = require('application/express/settings/Constants');
 
 
@@ -47,7 +47,7 @@ class Security extends Component {
     }
 
 
-    init(){
+    init(data){
 
 
         Request.getInstance(this.requestId).init(data);
@@ -273,6 +273,7 @@ class Security extends Component {
             if (BaseFunctions.isMethod(controller_object[action_name])) {
                 this.controller = controller_object;
                 this.action = action_name;
+                return true;
             }
         }
         ErrorHandler.getInstance(this.requestId).process(ErrorCodes.ERROR_WRONG_ADRESS, 'data:[' + requestInstance.getStringData() + ']');
@@ -326,76 +327,27 @@ class Security extends Component {
 
     /*
      * Validate all GET variables
+     * Url variables don't specified in config is not used in project
      */
     validate_get_vars()
     {
         let requestInstance = Request.getInstance(this.requestId);
         let errorHandlerInstance = ErrorHandler.getInstance(this.requestId);
-
-        let var_category = Consts.VAR_CATEGORY_SYSTEM;
         let get_variables = requestInstance.getData();
 
-        // All passed GET variables must be valid
-        for (let get_name in get_variables) {
-            let get_value = get_variables[get_name];
+        for (let config_get_name in Config.get_vars) {
 
-            if (get_name === Consts.GET_VARS_QUERY_STRING_NAME) {
-                var_category = Consts.VAR_CATEGORY_USER;
-                continue;
-            }
-            let var_category_array = Config.get_vars[var_category];
+            let config_get_rules = Config.get_vars[config_get_name].rules;
+            let get_value = get_variables[config_get_name];
 
-            // If GET variable exists in config
-            if (BaseFunctions.in_array(get_name, var_category_array)) {
-
-                // Validation by set rules
-                for (var index in var_category_array[get_name].rules) {
-                    let rule = var_category_array[get_name].rules[index];
-
-                    if (!this.validate(rule, get_value)) {
-                        errorHandlerInstance.process(ErrorCodes.ERROR_WRONG_ADRESS, 'name[' + get_name + '], value[' + get_value + '], rule[' + JSON.stringify(rule) + '], data[' + requestInstance.getStringData() + ']');
-                    }
+            for (let index in config_get_rules) {
+                let rule = config_get_rules[index];
+                if (!this.validate(rule, get_value)) {
+                    errorHandlerInstance.process(ErrorCodes.ERROR_GET_VAR_IS_INVALID,
+                    'name[' + config_get_name + '], value[' + get_value + '], rule[' + BaseFunctions.toString(rule) + '], data[' + requestInstance.getStringData() + ']');
                 }
-            } else {
-                errorHandlerInstance.process(ErrorCodes.ERROR_WRONG_ADRESS, get_name + ':unknown GET variable, data[' + requestInstance.getStringData() + ']');
             }
         }
-
-/*#???????????????????????????? - то, что возможно не нужно
-        // Prepare GET variables
-        $self_url = '';
-
-        $get_vars_config = my_pass_through(@$config['get_vars']);
-        // 1) System vars
-        foreach (my_pass_through(@$get_vars_config[MY_VAR_CATEGORY_SYSTEM]) as $var_name => $arary) {
-            if (array_key_exists($var_name, $_GET)) {
-                $this->get_vars[$var_name] = strtolower($_GET[$var_name]);
-                $self_url .= $this->get_vars[$var_name] !== 'index' ? $this->get_vars[$var_name] . '/' : '';
-            }
-        }
-        $self_url = trim($self_url, '/');
-
-        $self_url_without_query_string = $self_url;
-
-        // 2) Query vars
-        $self_url .= '?';
-        $query_string = '';
-        foreach (my_pass_through(@$get_vars_config[MY_VAR_CATEGORY_USER]) as $var_name => $array) {
-            if (array_key_exists($var_name, $_GET)) {
-                $this->get_vars[$var_name] = strtolower($_GET[$var_name]);
-                $self_url .= $var_name . '=' . $this->get_vars[$var_name] . '&';
-                $query_string .= $var_name . '=' . $this->get_vars[$var_name] . '&';
-            }
-        }
-
-        $self_url = trim($self_url, '&');
-        $query_string = trim($query_string, '&');
-        $this->set_self_url($self_url);
-        $this->set_query_string($query_string);
-
-        $this->set_self_url_without_query_string($self_url_without_query_string);
-*/
-
     }
 
 
@@ -427,20 +379,21 @@ class Security extends Component {
      * Run primary methods
      */
     execute(data)
-    {
+    {console.log('execute');
         this.init(data);
 
-        ////////////////this.validate_get_vars();
+        this.validate_get_vars();
 
-        //////////////////this.app_operations('before');
+        this.app_operations('before');
 
         this.set_controller_and_action();
 
-        ////////let result = this.run_controller();
+        let result = this.run_controller();
 
-        /////////////this.app_operations('after');
+        this.app_operations('after');
 
-        //////////////return result;
+        console.log('//execute');
+        return result;
     }
 
 
@@ -471,7 +424,20 @@ class Security extends Component {
 
             this.db_model.rollback();
 
-            let errorMessage = (Config.debug === 1) ? errorHandlerInstance.getLogMessage() : errorHandlerInstance.getErrorCode();
+            let errorMessage = '';
+
+            if (!errorHandlerInstance.getErrorCode()) {
+                console.log('code error');
+                console.log(e);
+            }
+            if (Config.debug === 1) {
+                errorMessage = errorHandlerInstance.getLogMessage();
+                console.log('error: ' + errorMessage);
+            } else {
+                errorMessage = errorHandlerInstance.getErrorCode();
+            }
+
+
 
             responceInstance.sendPrivate({
                     status:'error',

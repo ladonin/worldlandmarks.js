@@ -5,21 +5,18 @@
  * Users registered MySql db model
  */
 
-const DBaseMysql = require('application/express/vendor/dbases/DBaseMysql');
+const DBaseMysql = require('application/express/vendor/dbases/Mysql');
 
 
 class Users_Registered extends DBaseMysql
 {
 
-    get_table_name()
-    {
-        if (!this.table_name) {
-            this.table_name = 'users_registered';
-        }
-        return this.table_name;
-    }
+
     constructor(){
         super();
+
+        this.table_name = 'users_registered';
+
         this.fields = {
             role:{
                 'rules':['numeric', 'required'],

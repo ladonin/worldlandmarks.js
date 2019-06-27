@@ -37,11 +37,14 @@ class Request extends Component {
     /*
      * @return string - value of specific query variable
      */
-    get(name) {
+    get(name, required = true) {
         if (this.data.hasOwnProperty(name)) {
-            return this.data[name];
+            return BaseFunctions.toString(this.data[name]);
+        } else if (required === false) {
+            return undefined;
+        } else {
+            ErrorHandler.getInstance(this.requestId).process(ErrorCodes.ERROR_UNDEFINED_REQUEST_VARIABLE, '[' + name + ']');
         }
-        ErrorHandler.process(ErrorCodes.ERROR_UNDEFINED_REQUEST_VARIABLE, '[' + name + ']');
     }
 
 

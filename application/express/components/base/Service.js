@@ -10,7 +10,7 @@ const Config = require('application/express/settings/Config.js');
 const Functions = require('application/express/functions/BaseFunctions');
 const ErrorHandler = require('application/express/components/ErrorHandler');
 const ErrorCodes = require('application/express/settings/ErrorCodes');
-const Account = require('application/express/components/base/Account');
+const User = require('application/express/components/User');
 const Consts = require('application/express/settings/Constants');
 
 
@@ -52,7 +52,7 @@ class Service extends Component
         if (Functions.isSet(this.data.config.email[number])) {
             return this.data.config.email[number]['from'];
         }
-        ErrorHandler.process(ErrorCodes.ERROR_SERVICE_CONFIG_ABSENT, 'service=[' + this.name + '] email-' + number + '-from');
+        ErrorHandler.getInstance(this.requestId).process(ErrorCodes.ERROR_SERVICE_CONFIG_ABSENT, 'service=[' + this.name + '] email-' + number + '-from');
     }
 
     /*
@@ -67,7 +67,7 @@ class Service extends Component
         if (Functions.isSet(this.data.config.email[number])) {
             return this.data.config.email[number]['name'];
         }
-        ErrorHandler.process(ErrorCodes.ERROR_SERVICE_CONFIG_ABSENT, 'service=[' + this.name + '] email-' + number + '-name');
+        ErrorHandler.getInstance(this.requestId).process(ErrorCodes.ERROR_SERVICE_CONFIG_ABSENT, 'service=[' + this.name + '] email-' + number + '-name');
     }
 
     /*
@@ -80,7 +80,7 @@ class Service extends Component
         if (Functions.isSet(this.data.config.generic.site_name)) {
             return this.data.config.generic.site_name;
         }
-        ErrorHandler.process(ErrorCodes.ERROR_SERVICE_CONFIG_ABSENT, 'service=[' + this.name + '] generic-site_name');
+        ErrorHandler.getInstance(this.requestId).process(ErrorCodes.ERROR_SERVICE_CONFIG_ABSENT, 'service=[' + this.name + '] generic-site_name');
     }
 
     /*
@@ -95,7 +95,7 @@ class Service extends Component
         if (Functions.isSet(this.data.text[language])) {
             return this.data.text[language];
         }
-        ErrorHandler.process(ErrorCodes.ERROR_SERVICE_CONFIG_ABSENT, 'service=[' + this.name + '] language [' + language + ']');
+        ErrorHandler.getInstance(this.requestId).process(ErrorCodes.ERROR_SERVICE_CONFIG_ABSENT, 'service=[' + this.name + '] language [' + language + ']');
     }
 
     /*
@@ -108,7 +108,7 @@ class Service extends Component
         if (Functions.isSet(this.data.config.ftp)) {
             return this.data.config.ftp;
         }
-        ErrorHandler.process(ErrorCodes.ERROR_SERVICE_CONFIG_ABSENT, 'service=[' + this.name + '] ftp');
+        ErrorHandler.getInstance(this.requestId).process(ErrorCodes.ERROR_SERVICE_CONFIG_ABSENT, 'service=[' + this.name + '] ftp');
     }
 
     /*
@@ -121,7 +121,7 @@ class Service extends Component
         if (Functions.isSet(this.data.config.languages)) {
             return this.data.config.languages;
         }
-        ErrorHandler.process(ErrorCodes.ERROR_SERVICE_CONFIG_ABSENT, 'service=[' + this.name + '] languages');
+        ErrorHandler.getInstance(this.requestId).process(ErrorCodes.ERROR_SERVICE_CONFIG_ABSENT, 'service=[' + this.name + '] languages');
     }
 
     /*
@@ -133,7 +133,7 @@ class Service extends Component
     {
         if (Functions.isSet(this.data.config.text_form.tags)) {
 
-            if (Account.is_admin()) {
+            if (User.is_admin()) {
                 // Set of tags for admin
                 return this.data.config.text_form.tags;
             } else {
@@ -148,7 +148,7 @@ class Service extends Component
                 return result;
             }
         }
-        ErrorHandler.process(ErrorCodes.ERROR_SERVICE_CONFIG_ABSENT, 'text_form-site_name');
+        ErrorHandler.getInstance(this.requestId).process(ErrorCodes.ERROR_SERVICE_CONFIG_ABSENT, 'text_form-site_name');
     }
 
     /*
@@ -161,7 +161,7 @@ class Service extends Component
         if (Functions.isSet(this.data.config.text_form.auto_process_links.admin)) {
             return this.data.config.text_form.auto_process_links.admin;
         }
-        ErrorHandler.process(ErrorCodes.ERROR_SERVICE_CONFIG_ABSENT, 'text_form-auto_process_links-admin');
+        ErrorHandler.getInstance(this.requestId).process(ErrorCodes.ERROR_SERVICE_CONFIG_ABSENT, 'text_form-auto_process_links-admin');
     }
 
     /*
@@ -174,7 +174,7 @@ class Service extends Component
         if (Functions.isSet(this.data.config.generic.need_photos_for_placemarks)) {
             return this.data.config.generic.need_photos_for_placemarks;
         }
-        ErrorHandler.process(ErrorCodes.ERROR_SERVICE_CONFIG_ABSENT, 'generic-need_photos_for_placemarks');
+        ErrorHandler.getInstance(this.requestId).process(ErrorCodes.ERROR_SERVICE_CONFIG_ABSENT, 'generic-need_photos_for_placemarks');
     }
 
     /*
@@ -187,7 +187,7 @@ class Service extends Component
         if (Functions.isSet(this.data.config.text_form.auto_process_links.free)) {
             return this.data.config.text_form.auto_process_links.free;
         }
-        ErrorHandler.process(ErrorCodes.ERROR_SERVICE_CONFIG_ABSENT, 'text_form-auto_process_links-free');
+        ErrorHandler.getInstance(this.requestId).process(ErrorCodes.ERROR_SERVICE_CONFIG_ABSENT, 'text_form-auto_process_links-free');
     }
 
     /*
@@ -200,7 +200,7 @@ class Service extends Component
         if (Functions.isSet(this.data.config.categories.categories_codes)) {
             return this.data.config.categories.categories_codes;
         }
-        ErrorHandler.process(ErrorCodes.ERROR_SERVICE_CONFIG_ABSENT, 'categories-categories_codes');
+        ErrorHandler.getInstance(this.requestId).process(ErrorCodes.ERROR_SERVICE_CONFIG_ABSENT, 'categories-categories_codes');
     }
 
     /*
@@ -231,7 +231,7 @@ class Service extends Component
         if (Functions.isSet(this.data.config.map.autofill.individual_limit)) {
             return this.data.config.map.autofill.individual_limit;
         }
-        ErrorHandler.process(ErrorCodes.ERROR_SERVICE_CONFIG_ABSENT, 'map-autofill-individual_limit');
+        ErrorHandler.getInstance(this.requestId).process(ErrorCodes.ERROR_SERVICE_CONFIG_ABSENT, 'map-autofill-individual_limit');
     }
 
     /*
@@ -244,7 +244,7 @@ class Service extends Component
         if (Functions.isSet(this.data.config.map.autofill.period)) {
             return this.data.config.map.autofill.period * 1000;
         }
-        ErrorHandler.process(ErrorCodes.ERROR_SERVICE_CONFIG_ABSENT, 'map-autofill-period');
+        ErrorHandler.getInstance(this.requestId).process(ErrorCodes.ERROR_SERVICE_CONFIG_ABSENT, 'map-autofill-period');
     }
 
     /*
@@ -257,7 +257,7 @@ class Service extends Component
         if (Functions.isSet(this.data.config.map.autofill.on)) {
             return this.data.config.map.autofill.on;
         }
-        ErrorHandler.process(ErrorCodes.ERROR_SERVICE_CONFIG_ABSENT, 'map-autofill-on');
+        ErrorHandler.getInstance(this.requestId).process(ErrorCodes.ERROR_SERVICE_CONFIG_ABSENT, 'map-autofill-on');
     }
 
     /*
@@ -270,7 +270,7 @@ class Service extends Component
         if (Functions.isSet(this.data.config.dimentions.ballon)) {
             return this.data.config.dimentions.ballon;
         }
-        ErrorHandler.process(ErrorCodes.ERROR_SERVICE_CONFIG_ABSENT, 'dimentions-ballon');
+        ErrorHandler.getInstance(this.requestId).process(ErrorCodes.ERROR_SERVICE_CONFIG_ABSENT, 'dimentions-ballon');
     }
 
     /*
@@ -283,7 +283,7 @@ class Service extends Component
         if (Functions.isSet(this.data.config.security.all_can_add_placemarks)) {
             return this.data.config.security.all_can_add_placemarks;
         }
-        ErrorHandler.process(ErrorCodes.ERROR_SERVICE_CONFIG_ABSENT, 'security-all_can_add_placemarks');
+        ErrorHandler.getInstance(this.requestId).process(ErrorCodes.ERROR_SERVICE_CONFIG_ABSENT, 'security-all_can_add_placemarks');
     }
 
     /*
@@ -297,7 +297,7 @@ class Service extends Component
         if (Functions.isSet(this.data.config.dimentions.categories_photo_initial_width)) {
             return this.data.config.dimentions.categories_photo_initial_width;
         }
-        ErrorHandler.process(ErrorCodes.ERROR_SERVICE_CONFIG_ABSENT, 'dimentions-categories_photo_initial_width');
+        ErrorHandler.getInstance(this.requestId).process(ErrorCodes.ERROR_SERVICE_CONFIG_ABSENT, 'dimentions-categories_photo_initial_width');
     }
 
     /*
@@ -311,7 +311,7 @@ class Service extends Component
         if (Functions.isSet(this.data.config.dimentions.categories_photo_initial_height)) {
             return this.data.config.dimentions.categories_photo_initial_height;
         }
-        ErrorHandler.process(ErrorCodes.ERROR_SERVICE_CONFIG_ABSENT, 'dimentions-categories_photo_initial_height');
+        ErrorHandler.getInstance(this.requestId).process(ErrorCodes.ERROR_SERVICE_CONFIG_ABSENT, 'dimentions-categories_photo_initial_height');
     }
 
     /*
@@ -325,7 +325,7 @@ class Service extends Component
         if (Functions.isSet(this.data.config.generic.max_map_load_size)) {
             return this.data.config.generic.max_map_load_size;
         }
-        ErrorHandler.process(ErrorCodes.ERROR_SERVICE_CONFIG_ABSENT, 'generic-max_map_load_size');
+        ErrorHandler.getInstance(this.requestId).process(ErrorCodes.ERROR_SERVICE_CONFIG_ABSENT, 'generic-max_map_load_size');
     }
 
     /*
@@ -338,7 +338,7 @@ class Service extends Component
         if (Functions.isSet(this.data.config.generic.max_random_articles)) {
             return this.data.config.generic.max_random_articles;
         }
-        ErrorHandler.process(ErrorCodes.ERROR_SERVICE_CONFIG_ABSENT, 'generic-max_random_articles');
+        ErrorHandler.getInstance(this.requestId).process(ErrorCodes.ERROR_SERVICE_CONFIG_ABSENT, 'generic-max_random_articles');
     }
 
     /*
@@ -351,7 +351,7 @@ class Service extends Component
         if (Functions.isSet(this.data.config.generic.max_last_country_articles)) {
             return this.data.config.generic.max_last_country_articles;
         }
-        ErrorHandler.process(ErrorCodes.ERROR_SERVICE_CONFIG_ABSENT, 'generic-max_last_country_articles');
+        ErrorHandler.getInstance(this.requestId).process(ErrorCodes.ERROR_SERVICE_CONFIG_ABSENT, 'generic-max_last_country_articles');
     }
 
     /*
@@ -364,7 +364,7 @@ class Service extends Component
         if (Functions.isSet(this.data.config.generic.max_last_main_page_articles)) {
             return this.data.config.generic.max_last_main_page_articles;
         }
-        ErrorHandler.process(ErrorCodes.ERROR_SERVICE_CONFIG_ABSENT, 'generic-max_last_main_page_articles');
+        ErrorHandler.getInstance(this.requestId).process(ErrorCodes.ERROR_SERVICE_CONFIG_ABSENT, 'generic-max_last_main_page_articles');
     }
 
     /*
@@ -378,7 +378,7 @@ class Service extends Component
         if (Functions.isSet(this.data.config.categories.generic.add_category_photo_as_first_in_placemark_view)) {
             return this.data.config.categories.generic.add_category_photo_as_first_in_placemark_view;
         }
-        ErrorHandler.process(ErrorCodes.ERROR_SERVICE_CONFIG_ABSENT, 'categories-generic-add_category_photo_as_first_in_placemark_view');
+        ErrorHandler.getInstance(this.requestId).process(ErrorCodes.ERROR_SERVICE_CONFIG_ABSENT, 'categories-generic-add_category_photo_as_first_in_placemark_view');
     }
 
     /*
@@ -391,7 +391,7 @@ class Service extends Component
         if (Functions.isSet(this.data.config.pages.main)) {
             return this.data.config.pages.main;
         }
-        ErrorHandler.process(ErrorCodes.ERROR_SERVICE_CONFIG_ABSENT, 'pages-main');
+        ErrorHandler.getInstance(this.requestId).process(ErrorCodes.ERROR_SERVICE_CONFIG_ABSENT, 'pages-main');
     }
 
     /*
@@ -404,7 +404,7 @@ class Service extends Component
         if (Functions.isSet(this.data.config.pages.catalog)) {
             return this.data.config.pages.catalog;
         }
-        ErrorHandler.process(ErrorCodes.ERROR_SERVICE_CONFIG_ABSENT, 'pages-catalog');
+        ErrorHandler.getInstance(this.requestId).process(ErrorCodes.ERROR_SERVICE_CONFIG_ABSENT, 'pages-catalog');
     }
 
     /*
@@ -417,7 +417,7 @@ class Service extends Component
         if (Functions.isSet(this.data.config.pages.search)) {
             return this.data.config.pages.search;
         }
-        ErrorHandler.process(ErrorCodes.ERROR_SERVICE_CONFIG_ABSENT, 'pages-search');
+        ErrorHandler.getInstance(this.requestId).process(ErrorCodes.ERROR_SERVICE_CONFIG_ABSENT, 'pages-search');
     }
 
     /*
@@ -430,7 +430,7 @@ class Service extends Component
         if (Functions.isSet(this.data.config.pages.article)) {
             return this.data.config.pages.article;
         }
-        ErrorHandler.process(ErrorCodes.ERROR_SERVICE_CONFIG_ABSENT, 'pages-article');
+        ErrorHandler.getInstance(this.requestId).process(ErrorCodes.ERROR_SERVICE_CONFIG_ABSENT, 'pages-article');
     }
 
     /*
@@ -444,7 +444,7 @@ class Service extends Component
         if (Functions.isSet(this.data.config.generic.use_titles)) {
             return this.data.config.generic.use_titles;
         }
-        ErrorHandler.process(ErrorCodes.ERROR_SERVICE_CONFIG_ABSENT, 'generic-use_titles');
+        ErrorHandler.getInstance(this.requestId).process(ErrorCodes.ERROR_SERVICE_CONFIG_ABSENT, 'generic-use_titles');
     }
 
     /*
@@ -498,7 +498,7 @@ class Service extends Component
         if (Functions.isSet(this.data.config.generic.show_relevant_placemarks)) {
             return this.data.config.generic.show_relevant_placemarks;
         }
-        ErrorHandler.process(ErrorCodes.ERROR_SERVICE_CONFIG_ABSENT, 'generic-show_relevant_placemarks');
+        ErrorHandler.getInstance(this.requestId).process(ErrorCodes.ERROR_SERVICE_CONFIG_ABSENT, 'generic-show_relevant_placemarks');
     }
 
     /*
@@ -512,6 +512,6 @@ class Service extends Component
         if (Functions.isSet(this.data.config.generic.show_another_placemarks)) {
             return this.data.config.generic.show_another_placemarks;
         }
-        ErrorHandler.process(ErrorCodes.ERROR_SERVICE_CONFIG_ABSENT, 'generic-show_another_placemarks');
+        ErrorHandler.getInstance(this.requestId).process(ErrorCodes.ERROR_SERVICE_CONFIG_ABSENT, 'generic-show_another_placemarks');
     }
 }

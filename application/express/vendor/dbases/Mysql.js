@@ -1,12 +1,9 @@
 /*
- * File application/express/vendor/dbases/DBaseMysql.js
- * const DBaseMysql = require('application/express/vendor/dbases/DBaseMysql');
+ * File application/express/vendor/dbases/Mysql.js
+ * const DBaseMysql = require('application/express/vendor/dbases/Mysql');
  *
  * Base database component for MySql
  */
-
-
-
 
 const syncMySql = require('sync-mysql');
 const asyncMySql = require('mysql2');
@@ -16,51 +13,10 @@ const Functions = require('application/express/functions/BaseFunctions');
 const ErrorHandler = require('application/express/components/ErrorHandler');
 const ErrorCodes = require('application/express/settings/ErrorCodes');
 const Consts = require('application/express/settings/Constants');
-const Model = require('vendor/Model');
 const Service = require('application/express/components/base/Service');
-const Account = require('application/express/components/base/Account');
 const User = require('application/express/components/User');
+const Model = require('application/express/vendor/Model');
 
-
-//######################### Create connections #################################
-//##                                                                          ##
-//##                                                                          ##
-
-// You can use only one of two connections per request
-//
-// If your request requires only fetching data from db (SELECT queries)
-// then you can use either async or sync conneection
-//
-// If your request also make changes in db,
-// then you should use ONLY sync connection to provide correct transaction work
-//
-// Connection by default is sync
-
-/*
- * DB sync connection
- * Use in requests where needed db changes
- *
- * @type object
- */
-let syncConnection = new syncMySql(MySqlConfig.connect);
-
-// Checking sync connection
-try {
-    syncConnection.query("SELECT 1");
-} catch (e) {
-    ErrorHandler.process(ErrorCodes.ERROR_DB_NO_CONNECT, 'mysql: ' + e.code);
-}
-
-/*
- * DB async connection
- *
- * @type resource
- */
-const asyncConnection = asyncMySql.createPool(MySqlConfig.connect).promise();
-
-//##                                                                          ##
-//##                                                                          ##
-//##############################################################################
 
 
 class DBase_Mysql extends Model
@@ -89,7 +45,59 @@ class DBase_Mysql extends Model
          * @type object
          */
         this.fields_initial_data;
+
+
+        this.syncConnection;
+        this.asyncConnection;
+        this.createConnections();
     }
+
+
+    createConnections(){
+
+        //######################### Create connections #################################
+        //##                                                                          ##
+        //##                                                                          ##
+
+        // You can use only one of two connections per request
+        //
+        // If your request requires only fetching data from db (SELECT queries)
+        // then you can use either async or sync conneection
+        //
+        // If your request also make changes in db,
+        // then you should use ONLY sync connection to provide correct transaction work
+        //
+        // Connection by default is sync
+
+        /*
+         * DB sync connection
+         * Use in requests where needed db changes
+         *
+         * @type object
+         */
+        this.syncConnection = new syncMySql(MySqlConfig.connect);
+
+        // Checking sync connection
+        try {
+            this.syncConnection.query("SELECT 1");
+        } catch (e) {
+            ErrorHandler.getInstance(this.requestId).process(ErrorCodes.ERROR_DB_NO_CONNECT, 'mysql: ' + e.code);
+        }
+
+        /*
+         * DB async connection
+         *
+         * @type resource
+         */
+        this.asyncConnection = asyncMySql.createPool(MySqlConfig.connect).promise();
+
+        //##                                                                          ##
+        //##                                                                          ##
+        //##############################################################################
+    }
+
+
+
 
 ////ATTENTION - обратите внимание
     snapshot_fields_data() {
@@ -109,7 +117,7 @@ class DBase_Mysql extends Model
      */
     get_connection(async = false)
     {
-        return async === true ? asyncConnection : syncConnection;
+        return async === true ? this.asyncConnection : this.syncConnection;
     }
 
     /*
@@ -123,7 +131,7 @@ class DBase_Mysql extends Model
      */
     query(sql, values = [], async = false) {
 
-        return async === true ? query_async(sql, values) : query_sync(sql, values);
+        return async === true ? this.query_async(sql, values) : this.query_sync(sql, values);
     }
 
     /*
@@ -138,7 +146,7 @@ class DBase_Mysql extends Model
         return this.get_connection(true)
                 .query(sql, values)
                 .catch(err => {
-                    ErrorHandler.process(
+                    ErrorHandler.getInstance(this.requestId).process(
                             ErrorCodes.ERROR_MYSQL
                             + ': ' + err.code
                             + ': request[' + sql + '], values[' + Functions.toString(values) + ']',
@@ -163,7 +171,7 @@ class DBase_Mysql extends Model
         try {
             result = this.get_connection().query(sql, values);
         } catch (e) {
-            ErrorHandler.process(
+            ErrorHandler.getInstance(this.requestId).process(
                     ErrorCodes.ERROR_MYSQL
                     + ': ' + e.code
                     + ': request[' + sql + '], values[' + Functions.toString(values) + ']',
@@ -173,89 +181,33 @@ class DBase_Mysql extends Model
         return result;
     }
 
-    /*
-     * Get data by id
-     *
-     * @param integer idValue - id key value
-     * @param boolean async - whether we use async query or sync
-     *
-     * @return array of objects / promise
-     */
-    get_by_id(idValue, async = false)
-    {
-        let id = Functions.toInt(idValue);
 
-        if (!id) {
-            ErrorHandler.process(ErrorCodes.ERROR_FUNCTION_ARGUMENTS, 'id [ ' + Functions.toString(idValue) + ']');
-        }
 
-        return query("SELECT * FROM " + this.table_name + " WHERE id = " + id, [], async);
-    }
+
 
     /*
-     * Validate all fields
-     *
-     * @param string filter_type - validation type
-     *
-     * @return boolean
+     * Begin sync transaction
      */
-    filter_all_fields(filter_type = Consts.FILTER_TYPE_ALL)
-    {
-        // Check all model fields
-        for (let key in this.fields) {
-            this.filter(key, this.fields[key]['value'], filter_type);
-        }
-        return true;
+    begin_transaction(){
+        this.query('START TRANSACTION;');
     }
+
 
     /*
-     * Sync update field by id
-     *
-     * @param integer idValue - row id
+     * Commit sync transaction
      */
-    update(idValue)
-    {
-
-        let id = Functions.toInt(idValue);
-
-        if (!id) {
-            ErrorHandler.process(ErrorCodes.ERROR_FUNCTION_ARGUMENTS, 'id [ ' + Functions.toString(idValue) + ']');
-        }
-
-        this.filter_all_fields(Consts.FILTER_TYPE_WITHOUT_REQUIRED);
-
-        array_values = [];
-
-        let sql = 'update ' + this.table_name + " set modified='" + Functions.get_current_time() + "'";
-
-        for (let field_name in this.fields) {
-
-            let field = this.fields[field_name];
-
-            // Field (column) will be updated ONLY if we set a value to field
-            if (Functions.isSet(field['value'])) {
-
-                /*
-                 * Rule 'none' tells that we should not update this field by hand
-                 * For example - 'created' field (if specified in model fields)
-                 */
-                if (Functions.in_array('none', field['rules'])) {
-                    continue;
-                }
-
-                sql += ',' + field_name + '=?';
-
-                this.processing_value(field);
-                array_values.push(field['value']);
-            }
-        }
-        sql += ' where id = ' + Functions.toInt(id);
-
-        this.query(sql, array_values);
-
-        // Reset field to initial values
-        this.reset_fields();
+    commit(){
+        this.query('COMMIT;');
     }
+
+
+    /*
+     * Rollback sync transaction
+     */
+    rollback(){
+        this.query('ROLLBACK;');
+    }
+
 
     /*
      * Processing field value according its 'processing' settings
@@ -305,7 +257,7 @@ class DBase_Mysql extends Model
                     } else if (tag['code'] === Consts.FORM_TEXT_TAG_CODE_A) {
 
                         let follow = ' rel="nofollow"';
-                        if (Account.is_admin()) {
+                        if (User.is_admin()) {
                             follow = '';
                         }
                         field['value'] = field['value'].replace(/\[a\=(.+?)\](.+?)\[\/a\]/g, '<a href="$1"' + follow + '>$2</a>');
@@ -328,7 +280,7 @@ class DBase_Mysql extends Model
             // Convert text urls into links
             if (Functions.in_array("urls", field['processing'])) {
 
-                if (((Account.is_admin() || User.admin_access_authentication()) && Service.is_available_to_process_links_in_text_for_admin())
+                if (((User.is_admin() || User.admin_access_authentication()) && Service.is_available_to_process_links_in_text_for_admin())
                         || Service.is_available_to_process_links_in_text_for_free_users()) {
 
                     // Mask already existed links
@@ -353,6 +305,97 @@ class DBase_Mysql extends Model
             }
         }
     }
+
+
+
+
+
+
+    /*
+     * Get data by id
+     *
+     * @param integer idValue - id key value
+     * @param boolean async - whether we use async query or sync
+     *
+     * @return array of objects / promise
+     */
+    get_by_id(idValue, async = false)
+    {
+        let id = Functions.toInt(idValue);
+
+        if (!id) {
+            ErrorHandler.getInstance(this.requestId).process(ErrorCodes.ERROR_FUNCTION_ARGUMENTS, 'id [ ' + Functions.toString(idValue) + ']');
+        }
+
+        return query("SELECT * FROM " + this.table_name + " WHERE id = " + id, [], async);
+    }
+
+    /*
+     * Validate all fields
+     *
+     * @param string filter_type - validation type
+     *
+     * @return boolean
+     */
+    filter_all_fields(filter_type = Consts.FILTER_TYPE_ALL)
+    {
+        // Check all model fields
+        for (let key in this.fields) {
+            this.filter(key, this.fields[key]['value'], filter_type);
+        }
+        return true;
+    }
+
+    /*
+     * Sync update field by id
+     *
+     * @param integer idValue - row id
+     */
+    update(idValue)
+    {
+
+        let id = Functions.toInt(idValue);
+
+        if (!id) {
+            ErrorHandler.getInstance(this.requestId).process(ErrorCodes.ERROR_FUNCTION_ARGUMENTS, 'id [ ' + Functions.toString(idValue) + ']');
+        }
+
+        this.filter_all_fields(Consts.FILTER_TYPE_WITHOUT_REQUIRED);
+
+        array_values = [];
+
+        let sql = 'update ' + this.table_name + " set modified='" + Functions.get_current_time() + "'";
+
+        for (let field_name in this.fields) {
+
+            let field = this.fields[field_name];
+
+            // Field (column) will be updated ONLY if we set a value to field
+            if (Functions.isSet(field['value'])) {
+
+                /*
+                 * Rule 'none' tells that we should not update this field by hand
+                 * For example - 'created' field (if specified in model fields)
+                 */
+                if (Functions.in_array('none', field['rules'])) {
+                    continue;
+                }
+
+                sql += ',' + field_name + '=?';
+
+                this.processing_value(field);
+                array_values.push(field['value']);
+            }
+        }
+        sql += ' where id = ' + Functions.toInt(id);
+
+        this.query(sql, array_values);
+
+        // Reset field to initial values
+        this.reset_fields();
+    }
+
+
 
     /*
      * Sync insert new record
@@ -409,7 +452,7 @@ class DBase_Mysql extends Model
         let id = Functions.toInt(idValue);
 
         if (!id) {
-            ErrorHandler.process(ErrorCodes.ERROR_FUNCTION_ARGUMENTS, 'id [ ' + Functions.toString(idValue) + ']');
+            ErrorHandler.getInstance(this.requestId).process(ErrorCodes.ERROR_FUNCTION_ARGUMENTS, 'id [ ' + Functions.toString(idValue) + ']');
         }
 
         sql = 'DELETE FROM ' + this.table_name + ' WHERE id = ' + id;
@@ -522,7 +565,7 @@ class DBase_Mysql extends Model
         let result = this.query(sql, where_values, async);
 
         function process_error() {
-            ErrorHandler.process(
+            ErrorHandler.getInstance(this.requestId).process(
                     ErrorCodes.ERROR_MYSQL
                     + ': request[' + sql + '], where_values[' + Functions.toString(where_values) + ']',
                     Consts.LOG_MYSQL_TYPE
@@ -569,31 +612,8 @@ class DBase_Mysql extends Model
 
 
 
-    /*
-     * Begin sync transaction
-     */
-    begin_transaction(){
-        this.query('START TRANSACTION;');
-    }
-
-
-    /*
-     * Commit sync transaction
-     */
-    commit(){
-        this.query('COMMIT;');
-    }
-
-
-    /*
-     * Rollback sync transaction
-     */
-    rollback(){
-        this.query('ROLLBACK;');
-    }
-
-
-
-
 
 }
+
+DBase_Mysql.instanceId = Functions.unique_id();
+module.exports = DBase_Mysql;

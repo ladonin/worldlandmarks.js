@@ -2,13 +2,12 @@
  * File application/express/components/User.js
  * const User = require('application/express/components/User');
  *
- * User component
+ * User component - keeps user data and some arbitrary methods
  */
 
 
 const Component = require('application/express/vendor/Component');
 const AccessConfig = require('application/express/settings/gitignore/Access');
-const Account = require('application/express/components/base/Account');
 const Request = require('application/express/components/base/Request');
 const Consts = require('application/express/settings/Constants');
 const BaseFunctions = require('application/express/functions/BaseFunctions');
@@ -17,14 +16,41 @@ const BaseFunctions = require('application/express/functions/BaseFunctions');
 class User extends Component
 {
 
-    /*
-     * User identification
-     */
-    authentication()
-    {
-        Account.authentication();
+    constructor(){
+        super();
+
+        /*
+         *  User id
+         *
+         * @type number
+         */
+        this.id;
+
+        /*
+         *  User role
+         *
+         * @type string
+         */
+        this.role;
+
+        /*
+         *  User name
+         *
+         * @type string
+         */
+        this.name;
+
     }
 
+    is_admin()
+    {
+        if ((this.id) && (this.role === Consts.ACCOUNT_ROLE_ADMIN_CODE)) {
+            return true;
+        }
+        return false;
+    }
+
+    
     /*
      * Admin access authorization via GET vars
      *
@@ -41,3 +67,6 @@ class User extends Component
 
 
 User.instanceId = BaseFunctions.unique_id();
+
+
+module.exports = User;

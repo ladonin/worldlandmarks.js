@@ -5,7 +5,7 @@
  */
 
 module.exports = {
-    model:'mysq',
+    type:'mysql',
     connect:{
         database:'wlandmarks',
         user:'root',
