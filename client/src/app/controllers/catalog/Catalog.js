@@ -1,43 +1,46 @@
+/*
+ * File src/app/controllers/main/Main.js
+ * import MainIndex from 'src/app/controllers/main/Main';
+ *
+ * Main controller
+ */
+
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
 
-// Settings
+
+import AbstractController from 'src/app/controllers/AbstractController';
 import Consts from 'src/settings/Constants';
-
-// Modules
-import Url from 'src/modules/controller/Controller';
+import Controller from 'src/modules/controller/Controller';
 
 // Components
+import CatalogIndex from 'src/app/controllers/catalog/actions/Index';
 import Hat from 'src/app/common/blocks/Hat';
 
 //Css
-//import "./Css";
+import "./Css";
 
 
-
-
-
-
-
-
-class Catalog extends Component {
+class Catalog extends AbstractController {
 
     constructor() {
         super();
-        Url.setControllerName(Consts.CONTROLLER_NAME_CATALOG);
     }
 
-
     render() {
+        let _actionComponent;
+        switch (Controller.getActionName()) {
+            case Consts.ACTION_NAME_INDEX:
+                _actionComponent = <CatalogIndex/>;
+
+            default:
+                _actionComponent = <CatalogIndex/>;
+        }
+
         return (
                 <React.Fragment>
                     <Hat/>
                     <div className="padding_after_hat"></div>
-
-
-
-
-
+                    {_actionComponent}
                 </React.Fragment>
                 );
     }

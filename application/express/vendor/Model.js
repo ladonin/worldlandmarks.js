@@ -6,7 +6,7 @@
  */
 
 const Component = require('application/express/vendor/Component');
-const ErrorHandler = require('application/express/components/ErrorHandler');
+
 const ErrorCodes = require('application/express/settings/ErrorCodes');
 const Consts = require('application/express/settings/Constants');
 const Functions = require('application/express/functions/BaseFunctions');
@@ -65,23 +65,23 @@ class Model extends Component {
     {
 
         if (!Functions.isSet(this.fields[name])) {
-            ErrorHandler.getInstance(this.requestId).process(ErrorCodes.ERROR_DB_UNDEFINED_FIELD, 'unknown field_name: [' + name + '], value: [' + value + ']');
+            this.error(ErrorCodes.ERROR_DB_UNDEFINED_FIELD, 'unknown field_name: [' + name + '], value: [' + value + ']');
         }
 
         if (Functions.isSet(this.fields[name]['rules'] && Functions.isArray(this.fields[name]['rules']))) {
 
-            for (let index in this.fields[name]['rules']) {
+            for (let _index in this.fields[name]['rules']) {
 
-                let rule = this.fields[name]['rules'][index];
+                let _rule = this.fields[name]['rules'][_index];
 
-                let result;
+                let _result;
 
-                if ((filter_type === Consts.FILTER_TYPE_ALL) || ((filter_type === Consts.FILTER_TYPE_ONLY_REQUIRED) && rule === 'required')
-                        || ((filter_type === Consts.FILTER_TYPE_WITHOUT_REQUIRED) && rule !== 'required')) {
-                    result = this.validate(rule, value);
-                    if (!result) {
+                if ((filter_type === Consts.FILTER_TYPE_ALL) || ((filter_type === Consts.FILTER_TYPE_ONLY_REQUIRED) && _rule === 'required')
+                        || ((filter_type === Consts.FILTER_TYPE_WITHOUT_REQUIRED) && _rule !== 'required')) {
+                    _result = this.validate(_rule, value);
+                    if (!_result) {
                         if (with_rollback === true) {
-                            ErrorHandler.getInstance(this.requestId).process(ErrorCodes.ERROR_MODEL_FILTER, 'wrong value: name[' + name + '], value[' + value + '], rule[' + JSON.stringify(rule) + ']');
+                            this.error(ErrorCodes.ERROR_MODEL_FILTER, 'wrong value: name[' + name + '], value[' + value + '], rule[' + JSON.stringify(_rule) + ']');
                         } else {
                             return false;
                         }

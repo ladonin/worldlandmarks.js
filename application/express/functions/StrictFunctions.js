@@ -9,15 +9,17 @@
 
 
 
-const ErrorHandler = require('application/express/components/ErrorHandler');
+
 const ErrorCodes = require('application/express/settings/ErrorCodes');
 const Config = require('application/express/settings/Config.js');
 const Consts = require('application/express/settings/Constants');
-const Request = require('application/express/components/base/Request');
+
 const Fs = require('fs');
 const ImageMagick = require('imagemagick');
 const Deasync = require('deasync');
 const _lang = require('lodash/lang');
+const Language = require('application/express/components/base/Language');
+
 
 /*
  * Check whether array is empty or not
@@ -31,21 +33,7 @@ function array_is_empty(arr)
     return !array_is_not_empty(arr);
 }
 
-/*
- * Return service name from url
- *
- * @return string
- */
-function get_service_name()
-{
-    let service_name = Request.get(Consts.SERVICE_VAR_NAME);
 
-    if (Config.services.hasOwnProperty(service_name)) {
-        return service_name;
-    }
-
-    ErrorHandler.getInstance(this.requestId).process(ErrorCodes.ERROR_UNDEFINED_SERVICE_NAME, '[' + service_name + ']');
-}
 /*
  * Check map coordinates on correctness
  *
@@ -58,7 +46,7 @@ function check_coords(x = null, y = null, error_call = true)
 {
     if (!x || !y || x >= 180 || x <= -180 || y <= -90 || y >= 90) {
         if (error_call) {
-            ErrorHandler.getInstance(this.requestId).process(ErrorCodes.ERROR_WRONG_COORDS, 'x:' + x + ', y:' + y);
+            this.error(ErrorCodes.ERROR_WRONG_COORDS, 'x:' + x + ', y:' + y);
         } else {
             return false;
         }
@@ -74,10 +62,10 @@ function check_coords(x = null, y = null, error_call = true)
  */
 function getImageDimentions(path) {
     try {
-        let dimensions = SizeOf(path);
-        return dimensions;
+        let _dimensions = SizeOf(path);
+        return _dimensions;
     } catch (e) {
-        ErrorHandler.getInstance(this.requestId).process(ErrorCodes.ERROR_IMAGE_GET_TYPE, '[' + path + ']' + '. ' + e.message);
+        this.error(ErrorCodes.ERROR_IMAGE_GET_TYPE, '[' + path + ']' + '. ' + e.message);
     }
 }
 /*
@@ -87,7 +75,7 @@ function getImageDimentions(path) {
  */
 function check_local_file(path) {
     if (!Fs.existsSync(path)) {
-        ErrorHandler.getInstance(this.requestId).process(ErrorCodes.ERROR_LOCAL_FILE_NOT_FOUND, '[' + path + ']');
+        this.error(ErrorCodes.ERROR_LOCAL_FILE_NOT_FOUND, '[' + path + ']');
     }
     return true;
 }
@@ -106,47 +94,47 @@ function check_local_file(path) {
  */
 function image_resize(path_to, source, neww = 0, newh = 0, quality = 100)
 {
-    let dimensions = getImageDimentions(source);
-    let source_width = dimensions.width;
-    let source_height = dimensions.height;
+    let _dimensions = getImageDimentions(source);
+    let _source_width = _dimensions.width;
+    let _source_height = _dimensions.height;
 
-    let width, height, k;
+    let _width, _height, _k;
 
     if ((neww === 0) && (newh === 0)) {
-        width = source_width;
-        height = source_height;
+        _width = _source_width;
+        _height = _source_height;
     } else if (newh === 0) {
-        k = neww / source_width;
-        width = neww;
-        height = parseInt(source_height * k, 10);
+        _k = neww / _source_width;
+        _width = neww;
+        _height = parseInt(_source_height * _k, 10);
     } else if (neww === 0) {
-        k = newh / source_height;
-        width = parseInt(source_width * k, 10);
-        height = newh;
+        _k = newh / _source_height;
+        _width = parseInt(_source_width * _k, 10);
+        _height = newh;
     } else {
-        width = neww;
-        height = newh;
+        _width = neww;
+        _height = newh;
     }
 
-    let finished = false;
+    let _finished = false;
 
     ImageMagick.resize({
         srcPath: source,
         dstPath: path_to,
-        width: width,
-        height: height,
+        width: _width,
+        height: _height,
         quality: quality
     }, function (err, stdout, stderr) {
         if (err) {
             deleteFile(source);
-            ErrorHandler.getInstance(this.requestId).process(ErrorCodes.ERROR_IMAGE_CREATE, '[' + path_to + ']');
+            this.error(ErrorCodes.ERROR_IMAGE_CREATE, '[' + path_to + ']');
         }
-        finished = true;
+        _finished = true;
     });
 
     // Wait for convertation to be finished
     Deasync.loopWhile(function () {
-        return !finished;
+        return !_finished;
     });
     // Delete source image
     deleteFile(source);
@@ -163,37 +151,37 @@ function image_resize(path_to, source, neww = 0, newh = 0, quality = 100)
 function change_image_to_jpeg(source)
 {
     // Define path to image with .jpeg extention
-    let path_to = prepare_image_name_to_jpeg(source);
+    let _path_to = prepare_image_name_to_jpeg(source);
 
     // If defined path differs from source path - create a new file with .jpeg extention
-    if (path_to !== source) {
+    if (_path_to !== source) {
 
-        let finished = false;
+        let _finished = false;
         ImageMagick.convert(
                 [
                     source,
                     '-background',
                     'rgb(255,255,255)',
                     '-flatten',
-                    path_to
+                    _path_to
                 ],
                 function (err, stdout) {
                     if (err) {
                         deleteFile(source);
-                        ErrorHandler.getInstance(this.requestId).process(ErrorCodes.ERROR_IMAGE_CREATE, '[' + path_to + ']');
+                        this.error(ErrorCodes.ERROR_IMAGE_CREATE, '[' + _path_to + ']');
                     }
-                    finished = true;
+                    _finished = true;
                 }
         );
         // Wait for convertation to be finished
         Deasync.loopWhile(function () {
-            return !finished;
+            return !_finished;
         });
 
         // Delete source image
         deleteFile(source);
     }
-    return path_to;
+    return _path_to;
 }
 /*
  * Return a value with guarantee it is not empty
@@ -205,7 +193,7 @@ function change_image_to_jpeg(source)
 function pass_through(val)
 {
     if (!val && val !== "") {
-        ErrorHandler.getInstance(this.requestId).process(ErrorCodes.ERROR_VALUE_NOT_PASSED_THROUGH, '[' + val + ']');
+        this.error(ErrorCodes.ERROR_VALUE_NOT_PASSED_THROUGH, '[' + val + ']');
     }
     return (val);
 }
@@ -219,7 +207,7 @@ function pass_through(val)
 function array_is_not_empty(arr)
 {
     if (!isArray(arr) || isUndefined(arr)) {
-        ErrorHandler.getInstance(this.requestId).process(ErrorCodes.ERROR_FUNCTION_ARGUMENTS, 'not an array type: ' + typeof (arr));
+        this.error(ErrorCodes.ERROR_FUNCTION_ARGUMENTS, 'not an array type: ' + typeof (arr));
     }
     return !_lang.isEmpty(arr);
 }
@@ -237,27 +225,27 @@ function get_array_from_string(str)
     }
 
     if (!isString(str)) {
-        ErrorHandler.getInstance(this.requestId).process(ErrorCodes.ERROR_FUNCTION_ARGUMENTS, 'not a string type: ' + typeof (str));
+        this.error(ErrorCodes.ERROR_FUNCTION_ARGUMENTS, 'not a string type: ' + typeof (str));
     }
 
     return trim(str, ',').split(',');
 }
 function checkOnArray(val) {
     if (!isArray(val)) {
-        ErrorHandler.getInstance(this.requestId).process(ErrorCodes.ERROR_WRONG_VARIABLE_TYPE, 'array[' + typeof (val) + ']');
+        this.error(ErrorCodes.ERROR_WRONG_VARIABLE_TYPE, 'array[' + typeof (val) + ']');
     }
     return true;
 }
 function isString(val) {
     if (isUndefined(val)) {
-        ErrorHandler.getInstance(this.requestId).process(ErrorCodes.ERROR_UNDEFINED_VARIABLE);
+        this.error(ErrorCodes.ERROR_UNDEFINED_VARIABLE);
     }
     return _lang.isString(val);
 }
 
 function checkOnString(val) {
     if (!isString(val)) {
-        ErrorHandler.getInstance(this.requestId).process(ErrorCodes.ERROR_WRONG_VARIABLE_TYPE, 'string[' + typeof (val) + ']');
+        this.error(ErrorCodes.ERROR_WRONG_VARIABLE_TYPE, 'string[' + typeof (val) + ']');
     }
     return true;
 }
@@ -282,6 +270,54 @@ function get_image_type(path, by_url = false)
 
 
 
+
+/*
+ * Translate state name on user's language
+ *
+ * @param string state_name - state name
+ * @param string state_code - state url code
+ *
+ * @return string - translated state name
+
+function auto_translate_state(state_name, state_code, requestId)
+{
+
+
+
+    let languageInstance = Language.getInstance(requestId);
+    let countriesInstance = Language.getInstance(requestId);
+
+
+
+    $countries_component = components\Countries::get_instance();
+    $language = $language_component->get_utiluage();
+    $country_code = $countries_component->get_country_code_from_url();
+    return $countries_component->translate_state_names($language, $country_code, $state_name, $state_code);
+}
+
+
+ */
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 module.exports = {
     checkOnString,
     isString,
@@ -294,7 +330,6 @@ module.exports = {
     check_local_file,
     getImageDimentions,
     check_coords,
-    get_service_name,
     array_is_empty,
     get_image_type
 };

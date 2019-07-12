@@ -8,17 +8,17 @@
 
 
 
-const Fs = require('fs');
+
 const SizeOf = require('image-size');
-const _num = require('lodash/number');
-const _util = require('lodash/util');
-const _lang = require('lodash/lang');
-const _string = require('lodash/string');
+const LodashNum = require('lodash/number');
+const LodashUtil = require('lodash/util');
+const LodashLang = require('lodash/lang');
+const LodashString = require('lodash/string');
 const Uniqid = require('uniqid');
 const Consts = require('application/express/settings/Constants');
 const Config = require('application/express/settings/Config.js');
-
-
+const Fs = require('fs');
+const Messages = require('application/express/settings/Messages');
 
 
 
@@ -34,11 +34,11 @@ function deleteFile(path) {
 }
 
 function unique_id() {
-    return toInt(_util.uniqueId());
+    return toInt(LodashUtil.uniqueId());
 }
 
 function clone(obj) {
-    return _lang.cloneDeep(obj);
+    return LodashLang.cloneDeep(obj);
 }
 
 function isSet(val) {
@@ -48,20 +48,20 @@ function isClass(val) {
     return isFunction(val);
 }
 function isFunction(val) {
-    return _lang.isFunction(val);
+    return LodashLang.isFunction(val);
 }
 function isNull(val) {
-    return _lang.isNull(val);
+    return LodashLang.isNull(val);
 }
 function isUndefined(val) {
-    return _lang.isUndefined(val);
+    return LodashLang.isUndefined(val);
 }
 
 function isObject(val) {
-    return _lang.isObject(val);
+    return LodashLang.isObject(val);
 }
 function isMethod(val) {
-    return _lang.isFunction(val);
+    return LodashLang.isFunction(val);
 }
 
 
@@ -69,12 +69,12 @@ function isMethod(val) {
 
 
 function isInteger(val) {
-    return _lang.isInteger(val);
+    return LodashLang.isInteger(val);
 }
 
 
 function isArray(val) {
-    return _lang.isArray(val);
+    return LodashLang.isArray(val);
 }
 
 
@@ -82,35 +82,35 @@ function isArray(val) {
 function trim(text, val) {
     //let regexp = new RegExp('^'+val+'+|'+val+'+$','g');
     //return text.replace(regexp, '');
-    return _string.trim(text, val);
+    return LodashString.trim(text, val);
 }
 
 
 function rtrim(text, val) {
     //let regexp = new RegExp('^'+val+'+|'+val+'+$','g');
     //return text.replace(regexp, '');
-    return _string.trimEnd(text, val);
+    return LodashString.trimEnd(text, val);
 }
 
 function ltrim(text, val) {
     //let regexp = new RegExp('^'+val+'+|'+val+'+$','g');
     //return text.replace(regexp, '');
-    return _string.trimStart(text, val);
+    return LodashString.trimStart(text, val);
 }
 
 function toInt(val) {
-    return _lang.toInteger(val);
+    return LodashLang.toInteger(val);
 }
 
 function toString(val) {
     if (isObject(val)) {
         return JSON.stringify(val);
     }
-    return _lang.toString(val);
+    return LodashLang.toString(val);
 }
 
 function isString(val) {
-    return _lang.isString(val);
+    return LodashLang.isString(val);
 }
 /*
  * Repace double quotes on single
@@ -238,14 +238,14 @@ function escapeHtml(text) {
 
 
 
- /*
+/*
  * Generate comfortable to remember password
  *
  * @return string password
  */
 function create_password()
 {
-    let vowel = [
+    let _vowel = [
         'a',
         'e',
         'i',
@@ -253,7 +253,7 @@ function create_password()
         'u',
     ];
 
-    let consonant = [
+    let _consonant = [
         'b',
         //'c',
         'd',
@@ -278,11 +278,11 @@ function create_password()
     ];
 
     result = '';
-    for (let i = 0; i < 8; i++) {
-        if (i % 2 === 0) {
-            result += consonant[_num.random(0, 15)];
+    for (let _i = 0; _i < 8; _i++) {
+        if (_i % 2 === 0) {
+            result += _consonant[LodashNum.random(0, 15)];
         } else {
-            result += vowel[_num.random(0, 4)];
+            result += _vowel[LodashNum.random(0, 4)];
         }
     }
 
@@ -351,9 +351,9 @@ function inObject(value, obj)
  */
 function getDate()
 {
-    let date = new Date();
+    let _date = new Date();
 
-    return date.getFullYear() + '.' + date.getMonth() + '.' + date.getDate() + ' ' + date.getHours() + ':' + date.getMinutes()
+    return _date.getFullYear() + '.' + _date.getMonth() + '.' + _date.getDate() + ' ' + _date.getHours() + ':' + _date.getMinutes()
 }
 
 /*
@@ -363,26 +363,26 @@ function getDate()
  */
 function get_unique()
 {
-    return Uniqid() + _num.random(1, 999);
+    return Uniqid() + LodashNum.random(1, 999);
 }
 
 
 //#???????????????????????????? - то, что возможно не нужно
 /*function htmlller_buttons(title = null)
-{
-    let icons = 'icons_' + (IsMobile ? Consts.DEVICE_NAME_MOOBILE : Consts.DEVICE_NAME_DESCTOP) + '.png';
+ {
+ let icons = 'icons_' + (IsMobile ? Consts.DEVICE_NAME_MOOBILE : Consts.DEVICE_NAME_DESCTOP) + '.png';
 
-    let html = ''
-            + '<div class="icon">'
-            + '<img src="/img/' + icons + '">'
-            + '</div>';
-    if (title) {
-        html += '<div class="button_text">'
-                + pass_through(title)
-                + '</div>';
-    }
-    return html;
-}*/
+ let html = ''
+ + '<div class="icon">'
+ + '<img src="/img/' + icons + '">'
+ + '</div>';
+ if (title) {
+ html += '<div class="button_text">'
+ + pass_through(title)
+ + '</div>';
+ }
+ return html;
+ }*/
 
 /*
  * Return url flag's picture
@@ -393,7 +393,7 @@ function get_unique()
  */
 function get_flag_url(country_code)
 {
-    return Consts.MY_IMG_URL + "flags/" + country_code + ".png";
+    return Consts.IMG_URL + "flags/" + country_code + ".png";
 }
 
 /*
@@ -409,19 +409,19 @@ function get_random_placemark_photo(photos, prefix, return_sizes = false)
 {
     checkOnArray(photos);
 
-    let count = photos.length;
-    let photo_id = 0; //photo_id = _num.random(0, count-1);
-    let url = pass_through(photos[photo_id]['dir']) + pass_through(prefix) + '_' + pass_through(photos[photo_id]['name']);
+    let _count = photos.length;
+    let _photo_id = 0; //photo_id = LodashNum.random(0, count-1);
+    let _url = pass_through(photos[_photo_id]['dir']) + pass_through(prefix) + '_' + pass_through(photos[_photo_id]['name']);
 
     if (return_sizes) {
         return {
-            'url': url,
-            'width': photos[photo_id]['width'],
-            'height': photos[photo_id]['height']
+            'url': _url,
+            'width': photos[_photo_id]['width'],
+            'height': photos[_photo_id]['height']
         };
     }
 
-    return url;
+    return _url;
 }
 
 /*
@@ -462,14 +462,48 @@ function get_cutted_text(text, length, dots = true)
 }
 
 /*
- * Return service name from url
+ * Call error
  *
- * @return string
+ * @param object errorCode - error data {code, name}
+ * @param string message - error message
+ * @param object requestData - whole request data
+ * @param string log_type - type of error (application or db ) - where error log will be saved
+ * @param boolean writeToLog - some errors must not be written to log to avoid error spaming
+ * @param boolean outerCall - means that we call this function directly, not from component,
+ *  therefore this error will not be catched,
+ *  whole site will be turned off,
+ *  only for system places,
+ *  in this case we should show the error message directly by console.log
+ *
  */
-function get_service_data()
-{
-    return Config.services[get_service_name()];
+function processError(errorCode, message = '', requestData = 'not set', log_type = Consts.LOG_APPLICATION_TYPE, writeToLog = true, outerCall = false) {
+
+    message += ' url[' + toString(requestData) + '] ';
+
+    // Add stack trace
+    Error.stackTraceLimit = Infinity;
+    let _trace = new Error().stack;
+
+    // Crop unnecessary lines
+    _trace = _trace.replace(/at Module\._compile(?:.*?[\n\r]?)*/i, '');
+
+    let _logMessage = '##' + Messages.ERROR_SYNTHETIC_STATUS + '## ' + getDate() + ':  ' + errorCode[1] + ': ' + message + "\r\n" + _trace + "\r\n\r\n\r\n";
+
+
+    // If debug is turned off then write error messages into file, otherwise show them in browser
+    if ((Config.debug === 0) && writeToLog) {
+        let _filename = 'error.log';
+        if (log_type === Consts.LOG_MYSQL_TYPE) {
+            _filename = 'db.log';
+        }
+        Fs.appendFileSync("log/" + _filename, _logMessage);
+    } else if ((Config.debug === 1) && (outerCall === true)){
+        console.log(_logMessage);
+    }
+
+    throw {syntCode: errorCode[0], syntMessage: _logMessage};
 }
+
 
 
 
@@ -510,7 +544,7 @@ module.exports = {
     isInteger,
     inObject,
     isString,
-    get_service_data
+    processError
 };
 
 

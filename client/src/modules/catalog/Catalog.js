@@ -1,5 +1,5 @@
 import Config from "src/settings/config";
-import Localization from 'src/modules/localization/Localization';
+//import Localization from 'src/modules/localization/Localization';
 import Consts from 'src/settings/Constants';
 
 class Catalog {
@@ -24,7 +24,7 @@ class Catalog {
 
 
 for(var index in this.categories) {
-    this.categories[index]['title']=Localization.getText('form/map_new_point/category/' . this.categories[index]['id']);
+    this.categories[index]['title']=1;//Localization.getText('form/map_new_point/category/' . this.categories[index]['id']);
 }
 
 
@@ -210,7 +210,7 @@ abstract class Catalog extends \vendor\Module
             return array();
         }
 
-        $security = \modules\base\Security\Security::get_instance();
+        $security = \modules\base\Application\Application::get_instance();
 
         $module = self::get_module(MY_MODULE_NAME_MAP);
 
@@ -403,7 +403,7 @@ abstract class Catalog extends \vendor\Module
             return $this->get_states($country_code, $language);
         } else {
 // сменим view и layout файлы - выводим метки, поскольку в этой стране нет штатов
-            $security = \modules\base\Security\Security::get_instance();
+            $security = \modules\base\Application\Application::get_instance();
             $security->change_view_file('catalog', 'state');
             $security->change_layout_file('catalog', 'state');
             //return $this->get_placemarks($country_code, '', $language);-нигде не используются

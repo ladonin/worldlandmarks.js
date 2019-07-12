@@ -51,7 +51,7 @@ module.exports = {
             title: 'Русский'
         },
         {
-            code: Consts.MY_LANGUAGE_EN,
+            code: Consts.LANGUAGE_EN,
             title: 'English'
         }
 

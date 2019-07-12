@@ -1,14 +1,27 @@
+/*
+ * File src/settings/Constants.js
+ * import Constants from 'src/settings/Constants';
+ */
+
+
+
 import CommonConsts from 'src/../../application/common/settings/Constants';
 
-let Consts = {
+let _Consts = {
+    FORM_TEXT_TAG_CODE_A: 'a',
+    FORM_TEXT_TAG_CODE_B: 'b',
+    FORM_TEXT_TAG_CODE_STRONG: 'strong',
+    FORM_TEXT_TAG_CODE_IMAGE_ADVANCED: 'image_advanced',
+    FORM_TEXT_TAG_CODE_P: 'p',
 
-    MY_FORM_TEXT_TAG_CODE_A: 'a',
-    MY_FORM_TEXT_TAG_CODE_B: 'b',
-    MY_FORM_TEXT_TAG_CODE_STRONG: 'strong',
-    MY_FORM_TEXT_TAG_CODE_IMAGE_ADVANCED: 'image_advanced',
-    MY_FORM_TEXT_TAG_CODE_P: 'p',
+
+
+
+
+
+
 }
-export default {...CommonConsts, ...Consts}
+export default {...CommonConsts, ..._Consts}
 
 
 

@@ -38,12 +38,23 @@ module.exports = {
     CONTROLLER_NAME_CATALOG: 'catalog',
     CONTROLLER_NAME_ARTICLE: 'article',
     CONTROLLER_NAME_ADMIN_ACCESS: 'admin_access',
-
+    CONTROLLER_NAME_ERRORS: 'errors',
 
 
     ACTION_NAME_INDEX: 'index',
 
     MY_IMG_URL: DOMAIN + '/img/',
+
+
+
+
+    REDUX_ACTION_TYPE_UPDATE_STATIC_TEXT:'UPDATE_STATIC_TEXT',
+    REDUX_ACTION_TYPE_UPDATE_DYNAMIC_TEXT:'UPDATE_DYNAMIC_TEXT',
+
+
+
+
+
 
     /*
      LANGUAGE_RU: 'ru',

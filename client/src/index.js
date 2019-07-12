@@ -1,16 +1,17 @@
 import React from 'react';
 import { render } from 'react-dom';
 import { BrowserRouter } from 'react-router-dom';
-//import Button from 'react-bootstrap/Button';
+
+import { Provider } from 'react-redux';
+import {Store} from 'src/app/redux/Init';
+
 import App from './app/App';
 
-
-
-///<Button>fghgfh</Button>
-
-render((
-    <BrowserRouter>
-        <App/>
-    </BrowserRouter>
-), document.getElementById('root'));
+render(
+        <BrowserRouter>
+            <Provider store={Store}>
+                <App/>
+            </Provider>
+        </BrowserRouter>
+        , document.getElementById('root'));
 

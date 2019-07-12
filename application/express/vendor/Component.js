@@ -3,14 +3,14 @@
  * const Component = require('application/express/vendor/Component');
  *
  * Base component
+ * Available validation rules see in 'application/express/vendor/Model.js'
  */
 const BaseFunctions = require('application/express/functions/BaseFunctions');
-const Instances = require('application/express/vendor/Instances');
-const ErrorHandler = require('application/express/components/ErrorHandler');
+const RequestsPool = require('application/express/vendor/RequestsPool');
 const ErrorCodes = require('application/express/settings/ErrorCodes');
 const Consts = require('application/express/settings/Constants');
-
-
+const Messages = require('application/express/settings/Messages');
+const Config = require('application/express/settings/Config');
 
 
 
@@ -29,8 +29,6 @@ class Component {
     constructor() {
         // For instances pool
         this.requestId;
-
-        // Available validation rules see in 'application/express/vendor/Model.js'
     }
 
     /*
@@ -43,25 +41,53 @@ class Component {
      * @returns object - instance of requested class
      */
     static getInstance(reqId) {
-        let instanceId = this.instanceId;
-        if (Instances.checkInstance(reqId, instanceId) === false) {
-            Instances.register(reqId, new this(), instanceId);
+        let _instanceId = this.instanceId;
+        if (RequestsPool.checkInstance(reqId, _instanceId) === false) {
+            RequestsPool.register(reqId, new this(), _instanceId);
         }
-        return Instances.getObject(reqId, instanceId);
+        return RequestsPool.getObject(reqId, _instanceId);
     }
 
     /*
-     * Set request id (see instances pool)
-     * Only one time
+     * Call error with request url in message
      *
-     * @param integer reqId
+     * @param object errorCode - error data {code, name}
+     * @param string message - error message
+     * @param string log_type - type of error (application or db) - where error log will be saved
+     * @param boolean writeToLog - some errors must not be written to log to avoid error spaming
+     *
      */
-    setRequestId(reqId) {
-        if (BaseFunctions.is_not_empty(this.requestId)) {
-            ErrorHandler.getInstance(this.requestId).process(ErrorCodes.ERROR_DOUBLE_REQUEST_ID_ASSIGNMENT,
-                    'first[' + BaseFunctions.toString(this.requestId) + '], second[' + BaseFunctions.toString(reqId) + ']');
+    error(errorCode, message = '', log_type = Consts.LOG_APPLICATION_TYPE, writeToLog = true) {
+        BaseFunctions.processError(errorCode, message, RequestsPool.getRequestData(this.requestId), log_type, writeToLog);
+    }
+
+    /*
+     * @return string - value of specific query variable
+     */
+    getFromRequest(name, required = true) {
+        let _data = RequestsPool.getRequestData(this.requestId);
+        if (_data.hasOwnProperty(name)) {
+            return BaseFunctions.toString(_data[name]);
+        } else if (required === false) {
+            return undefined;
+        } else {
+            this.error(ErrorCodes.ERROR_REQUEST_VARIABLE_NOT_FOUND, '[' + name + ']');
         }
-        this.requestId = reqId;
+    }
+
+    /*
+     * @return object - copy of request query data {name1:value1, name2:value2}
+     */
+    getData() {
+        let _data = RequestsPool.getRequestData(this.requestId);
+        return BaseFunctions.clone(_data)
+    }
+
+    /*
+     * @return string - string presentation of request object
+     */
+    getStringData() {
+        return BaseFunctions.toString(this.getData());
     }
 
     /*
@@ -76,21 +102,12 @@ class Component {
     {
 
         if (!BaseFunctions.isObject(rule) && !BaseFunctions.isString(rule)) {
-            ErrorHandler.getInstance(this.requestId).process(ErrorCodes.ERROR_FUNCTION_ARGUMENTS,
+            this.error(ErrorCodes.ERROR_FUNCTION_ARGUMENTS,
                     'rule[' + BaseFunctions.toString(rule) + '], value[' + BaseFunctions.toString(value) + ']');
         }
 
-
-
-
-
-
-// If value defined
+        // If value defined
         if (!BaseFunctions.isUndefined(value)) {
-
-
-
-
 
             if (rule === 'not_empty') {
                 // Value if specified must not be empty

@@ -8,7 +8,7 @@
 
 const Component = require('application/express/vendor/Component');
 const AccessConfig = require('application/express/settings/gitignore/Access');
-const Request = require('application/express/components/base/Request');
+
 const Consts = require('application/express/settings/Constants');
 const BaseFunctions = require('application/express/functions/BaseFunctions');
 
@@ -50,7 +50,7 @@ class User extends Component
         return false;
     }
 
-    
+
     /*
      * Admin access authorization via GET vars
      *
@@ -58,7 +58,7 @@ class User extends Component
      */
     admin_access_authentication()
     {
-        if (Request.get(Consts.ADMIN_PASSWORD_VAR_NAME) !== AccessConfig['admin_password']) {
+        if (this.getFromRequest(Consts.ADMIN_PASSWORD_VAR_NAME) !== AccessConfig['admin_password']) {
             return false;
         }
         return true;

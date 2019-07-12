@@ -32,7 +32,8 @@ module.exports = {
             [Consts.CONTROLLER_NAME_MAIN]: 'Main',
             [Consts.CONTROLLER_NAME_CATALOG]: 'Catalog',
             [Consts.CONTROLLER_NAME_ARTICLE]: 'Article',
-            [Consts.CONTROLLER_NAME_ADMIN_ACCESS]: 'AdminAccess'
+            [Consts.CONTROLLER_NAME_ADMIN_ACCESS]: 'AdminAccess',
+            [Consts.CONTROLLER_NAME_ERRORS]: 'Errors',
         }
 
     },
@@ -59,7 +60,7 @@ module.exports = {
         // Before
         before: [
             {
-                class: 'application/express/components/base/Account',
+                class: 'application/express/components/Account',
                 method: 'authentication'
             },
             //{

@@ -1,46 +1,38 @@
+/*
+ * File src/app/controllers/main/Main.js
+ * import MainIndex from 'src/app/controllers/main/Main';
+ *
+ * Main controller
+ */
+
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
 
-// Settings
+
+import AbstractController from 'src/app/controllers/AbstractController';
 import Consts from 'src/settings/Constants';
-
-// Modules
-import Url from 'src/modules/controller/Controller';
+import Controller from 'src/modules/controller/Controller';
 
 // Components
-import Hat from 'src/app/common/blocks/Hat';
-import MainBlock_1 from 'src/app/common/blocks/Main_1';
+import MainIndex from 'src/app/controllers/main/actions/Index';
 
 //Css
 import "./Css";
 
-
-
-
-
-
-
-
-class Main extends Component {
+class Main extends AbstractController {
 
     constructor() {
         super();
-        Url.setControllerName(Consts.CONTROLLER_NAME_MAIN);
     }
 
 
     render() {
-        return (
-                <React.Fragment>
-                    <Hat/>
-                    <div className="padding_after_hat"></div>
-                    <MainBlock_1/>
+        let _actionComponent;
+        switch (Controller.getActionName()){
+            case Consts.ACTION_NAME_INDEX: _actionComponent = <MainIndex/>;
 
-
-
-
-                </React.Fragment>
-                );
+            default: _actionComponent = <MainIndex/>;
+        }
+        return _actionComponent;
     }
 }
 export default Main;

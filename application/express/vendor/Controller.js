@@ -6,6 +6,14 @@
  */
 
 const Component = require('application/express/vendor/Component');
+const RequestsPool = require('application/express/vendor/RequestsPool');
+const SocketsPool = require('application/express/vendor/SocketsPool');
+
+
+
+
+
+
 
 class Controller extends Component {
 
@@ -25,11 +33,9 @@ class Controller extends Component {
      *
      * @return object
      */
-    flush_data() {
-
-        let data = this.data;
-        this.data = null;
-        return data;
+    sendbySocket(eventName = 'api') {
+        let _token = RequestsPool.getSocketToken(this.requestId);
+        SocketsPool.sendPrivate(_token, this.data, eventName)
     }
 
 }

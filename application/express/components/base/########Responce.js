@@ -5,7 +5,7 @@
  * Responce component
  */
 
-const ErrorHandler = require('application/express/components/ErrorHandler');
+
 const ErrorCodes = require('application/express/settings/ErrorCodes');
 const Component = require('application/express/vendor/Component');
 const BaseFunctions = require('application/express/functions/BaseFunctions');

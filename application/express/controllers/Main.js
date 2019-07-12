@@ -3,13 +3,21 @@
  *
  * Controller main/* pages
  */
-
+const Deasync = require('deasync');
 const BaseFunctions = require('application/express/functions/BaseFunctions');
-const Controller = require('application/express/vendor/Controller');
+const Language = require('application/express/components/base/Language');
+const ErrorCodes = require('application/express/settings/ErrorCodes');
+const Consts = require('application/express/settings/Constants');
 
-class Main extends Controller {
+const AbstractController = require('application/express/controllers/AbstractController');
 
-    constructor(){
+
+
+
+
+class Main extends AbstractController {
+
+    constructor() {
         super();
     }
 
@@ -17,10 +25,128 @@ class Main extends Controller {
      * Action index
      */
     action_index() {
+        console.log('+++' + this.requestId);
+        console.log('index action ' + Language.getInstance(this.requestId).get_text('site/description/catalog/sitemap_categories/category', {category: '111111111111111'}));
+        //this.error(ErrorCodes.ERROR_REQUEST_VARIABLE_NOT_FOUND, 'action_index111111111111');
 
-        console.log('index action');
+
+        this.data = {};
+
+        this.sendMe('index');
+
+
 
     }
+
+
+
+
+
+
+
+
+
+
+    action_index2() {
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        const UsersRegistered = require('application/express/models/dbase/mysql/UsersRegistered');
+
+        //console.log(UsersRegistered.getInstance(this.requestId).method());
+
+
+
+
+
+
+
+
+
+
+        return true;
+        let a = 9;
+        const mysql2 = require('mysql2');
+        const connection2 = mysql2.createConnection({
+            host: 'localhost',
+            user: 'root',
+            password: '111',
+            database: 'wlandmarks'
+        }).promise();
+
+
+
+
+
+        let finished = false;
+
+        setTimeout(() => {
+            let a;
+            console.log('------1');
+            for (var i = 0; i < 19000000; i++) {
+                a++;
+            }
+            console.log('-------2');
+        }, 500);
+
+        console.log(111);
+
+        connection2.query("SELECT * FROM country where id = ? or id = ?", [1, 9]).catch(err => {
+            console.log(err.code)
+        }).then(
+                r => {
+                    for (var i = 0; i < 90000000; i++) {
+                        a++;
+                    }
+                    console.log('SELECT1111111111111');
+                }
+        );
+        connection2.query("SELECT * FROM country where id = ? or id = ?", [1, 9]).catch(err => {
+            console.log(err.code)
+        }).then(
+                r => {
+                    finished = true;
+                    console.log('SELECT222222222222222');
+                }
+        );
+
+        // Wait for convertation to be finished
+        Deasync.loopWhile(function () {
+            return !finished;
+        });
+
+
+        console.log(333);
+
+        //console.log('+++' + this.requestId);
+        //console.log('index action ' + Language.getInstance(this.requestId).get_text('site/description/catalog/sitemap_categories/category', {category: '111111111111111'}));
+    }
+
+
+
+
+
+
+
+
+
+
+
+
 
 }
 

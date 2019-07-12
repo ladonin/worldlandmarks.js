@@ -1,28 +1,28 @@
 /*
- * File application/express/components/base/Security.js
- * const Security = require('application/express/components/base/Security');
+ * File application/express/components/base/Application.js
+ * const Application = require('application/express/components/base/Application');
  *
  * The main component for working with application
  */
 
 const BaseFunctions = require('application/express/functions/BaseFunctions');
-const ErrorHandler = require('application/express/components/ErrorHandler');
 const Config = require('application/express/settings/Config.js');
 const Component = require('application/express/vendor/Component');
 const DBaseMysql = require('application/express/vendor/dbases/Mysql');
-const Responce = require('application/express/components/base/Responce');
-const Request = require('application/express/components/base/Request');
+const RequestsPool = require('application/express/vendor/RequestsPool');
+const SocketsPool = require('application/express/vendor/SocketsPool');
+
 const ErrorCodes = require('application/express/settings/ErrorCodes');
 const Consts = require('application/express/settings/Constants');
 
 
-class Security extends Component {
+class Application extends Component {
     constructor(){
         super();
 
 
         /*
-         * Controllet name
+         * Controller name
          *
          * @type string
          */
@@ -47,11 +47,7 @@ class Security extends Component {
     }
 
 
-    init(data){
-
-
-        Request.getInstance(this.requestId).init(data);
-
+    init(){
 
 
     }
@@ -255,28 +251,26 @@ class Security extends Component {
      */
     set_controller_and_action()
     {
-        let requestInstance = Request.getInstance(this.requestId);
+        let _controller_name = this.getFromRequest('controller').toLowerCase();
 
-        let controller_name = requestInstance.get('controller').toLowerCase();
+        if (BaseFunctions.is_not_empty(Config.controllers.enabled[_controller_name])){
 
-        if (BaseFunctions.is_not_empty(Config.controllers.enabled[controller_name])){
+            let _controller_file_name = Config.controllers.enabled[_controller_name];
+            let _controller_path = 'application/express/controllers/'+_controller_file_name+'.js';
 
-            let controller_file_name = Config.controllers.enabled[controller_name];
-            let controller_path = 'application/express/controllers/'+controller_file_name+'.js';
+            let _Controller = require(_controller_path);
+            let _controller_object = _Controller.getInstance(this.requestId);
 
-            let Controller = require(controller_path);
-            let controller_object = Controller.getInstance(this.requestId);
-
-            let action_name = 'action_' + requestInstance.get('action').toLowerCase();
+            let _action_name = 'action_' + this.getFromRequest('action').toLowerCase();
 
             // If action exists
-            if (BaseFunctions.isMethod(controller_object[action_name])) {
-                this.controller = controller_object;
-                this.action = action_name;
+            if (BaseFunctions.isMethod(_controller_object[_action_name])) {
+                this.controller = _controller_object;
+                this.action = _action_name;
                 return true;
             }
         }
-        ErrorHandler.getInstance(this.requestId).process(ErrorCodes.ERROR_WRONG_ADRESS, 'data:[' + requestInstance.getStringData() + ']');
+        this.error(ErrorCodes.ERROR_WRONG_ADRESS, 'data:[' + this.getStringData() + ']');
     }
 
 
@@ -288,10 +282,10 @@ class Security extends Component {
      */
     run_controller()
     {
-        let controller_object = this.get_controller();
-        let action_name = this.get_action();
+        let _controller_object = this.get_controller();
+        let _action_name = this.get_action();
 
-        return controller_object[action_name]();
+        return _controller_object[_action_name]();
     }
 
 
@@ -307,20 +301,20 @@ class Security extends Component {
     app_operations(param)
     {
         if (BaseFunctions.is_not_empty(Config.operations[param])) {
-            let operations = Config.operations[param];
-            for (let index in operations) {
-                let operation = operations[index];
-                let operation_component = require(operation.class);
+            let _operations = Config.operations[param];
+            for (let _index in _operations) {
+                let _operation = _operations[_index];
+                let _operation_component = require(_operation.class);
                 // If traditional class
-                if (BaseFunctions.isClass(operation_component)) {
-                    operation_component.getInstance(this.requestId)[operation.method]();
+                if (BaseFunctions.isClass(_operation_component)) {
+                    _operation_component.getInstance(this.requestId)[_operation.method]();
                 } else {
                     // Otherwise it is a simple common object with methods
-                    operation_component[operation.method]();
+                    _operation_component[_operation.method]();
                 }
             }
         } else {
-            ErrorHandler.getInstance(this.requestId).process(ErrorCodes.ERROR_FUNCTION_ARGUMENTS, 'param [' + param + ']');
+            this.error(ErrorCodes.ERROR_FUNCTION_ARGUMENTS, 'param [' + param + ']');
         }
     }
 
@@ -331,20 +325,18 @@ class Security extends Component {
      */
     validate_get_vars()
     {
-        let requestInstance = Request.getInstance(this.requestId);
-        let errorHandlerInstance = ErrorHandler.getInstance(this.requestId);
-        let get_variables = requestInstance.getData();
+        let _get_variables = this.getData();
 
-        for (let config_get_name in Config.get_vars) {
+        for (let _config_get_name in Config.get_vars) {
 
-            let config_get_rules = Config.get_vars[config_get_name].rules;
-            let get_value = get_variables[config_get_name];
+            let _config_get_rules = Config.get_vars[_config_get_name].rules;
+            let get_value = _get_variables[_config_get_name];
 
-            for (let index in config_get_rules) {
-                let rule = config_get_rules[index];
-                if (!this.validate(rule, get_value)) {
-                    errorHandlerInstance.process(ErrorCodes.ERROR_GET_VAR_IS_INVALID,
-                    'name[' + config_get_name + '], value[' + get_value + '], rule[' + BaseFunctions.toString(rule) + '], data[' + requestInstance.getStringData() + ']');
+            for (let _index in _config_get_rules) {
+                let _rule = _config_get_rules[_index];
+                if (!this.validate(_rule, get_value)) {
+                    this.error(ErrorCodes.ERROR_GET_VAR_IS_INVALID,
+                    'name[' + _config_get_name + '], value[' + get_value + '], rule[' + BaseFunctions.toString(_rule) + '], data[' + this.getStringData() + ']');
                 }
             }
         }
@@ -364,9 +356,12 @@ class Security extends Component {
      */
     get_db()
     {
-        if (Config.db.type === 'mysql') {
-            return DBaseMysql.getInstance(this.requestId);
+        if (!this.db_model) {
+            if (Config.db.type === 'mysql') {
+                this.db_model = DBaseMysql.getInstance(this.requestId);
+            }
         }
+        return this.db_model;
     }
 
 
@@ -378,9 +373,9 @@ class Security extends Component {
     /*
      * Run primary methods
      */
-    execute(data)
-    {console.log('execute');
-        this.init(data);
+    execute()
+    {console.log('\n\n\n------------->>>>>>>>>>>>>>>>>>>execute :request id = '+this.requestId+'');
+        this.init();
 
         this.validate_get_vars();
 
@@ -388,12 +383,12 @@ class Security extends Component {
 
         this.set_controller_and_action();
 
-        let result = this.run_controller();
+        let _result = this.run_controller();
 
         this.app_operations('after');
 
-        console.log('//execute');
-        return result;
+        console.log('<<<<<<<<<<<<<<<<<<<<<<<<<<<----------execute :request id = '+this.requestId+'\n\n\n');
+        return _result;
     }
 
 
@@ -404,50 +399,64 @@ class Security extends Component {
     /*
      * Run application
      */
-    run(data)
+    static run(data, token)
     {
+        let _applicationObject;
 
-        this.db_model = this.get_db();
+        return new Promise((resolve, reject) => {
+            console.log('# Promise started');
+            _applicationObject = Application.getInstance(
+                RequestsPool.init(data, token)
+            );
+            resolve(true);
+        })
+        .then(res => {
+            console.log('# then 1');
+            _applicationObject.get_db();
+            _applicationObject.db_model.begin_transaction();
+            _applicationObject.execute();
+            _applicationObject.db_model.commit();
+            console.log('> applicationObject executed');
+        })
+        .catch(e => {
+            console.log('# catch 1');
+            console.log('\n\n              --------------->>>>>>>>> CATCHED');
 
-        try {
+            if (_applicationObject) {
+                _applicationObject.db_model.rollback();
+            }
 
-            this.db_model.begin_transaction();
+            let _errorMessage = '';
 
-            this.execute(data);
-
-            this.db_model.commit();
-
-        } catch (e) {
-
-            let errorHandlerInstance = ErrorHandler.getInstance(this.requestId);
-            let responceInstance = Responce.getInstance(this.requestId);
-
-            this.db_model.rollback();
-
-            let errorMessage = '';
-
-            if (!errorHandlerInstance.getErrorCode()) {
-                console.log('code error');
+            if (!e.syntCode) {
+                console.log('system error!');
                 console.log(e);
             }
             if (Config.debug === 1) {
-                errorMessage = errorHandlerInstance.getLogMessage();
-                console.log('error: ' + errorMessage);
+                _errorMessage = e.syntMessage;
+                console.log('error: ' + _errorMessage);
             } else {
-                errorMessage = errorHandlerInstance.getErrorCode();
+                _errorMessage = e.syntCode;
             }
+            SocketsPool.sendPrivate(token, {context: _errorMessage}, 'error-catch');
+            console.log('<<<<<<<<<<<<<<<<---------------              CATCHED\n\n\n');
+        })
+        .then(res => {
+            console.log('# then 2');
 
-
-
-            responceInstance.sendPrivate({
-                    status:'error',
-                    data: errorMessage
-                }
-            );
-        }
+            // Only if object managed to preserve in requests pool
+            if (_applicationObject) {
+                RequestsPool.remove(_applicationObject.requestId);
+                console.log('> RequestsPool removed');
+            }
+        })
+        .catch(e => {
+            console.log('# catch 2');
+            console.log(e.syntMessage ? e.syntMessage : e);
+        });
     }
 };
 
-Security.instanceId = BaseFunctions.unique_id();
+Application.instanceId = BaseFunctions.unique_id();
 
-module.exports = Security;
+module.exports = Application;

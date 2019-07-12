@@ -1,29 +1,20 @@
 /*
  * File application/express/components/base/Request.js
- * const Request = require('application/express/components/base/Request');
+ *
  *
  * Request component
  */
 
-const ErrorHandler = require('application/express/components/ErrorHandler');
+
 const ErrorCodes = require('application/express/settings/ErrorCodes');
 const Component = require('application/express/vendor/Component');
 const BaseFunctions = require('application/express/functions/BaseFunctions');
 
 
 
-class Request extends Component {
+module.exports =  {
 
-    constructor() {
-        super();
-        this.data={};
-//        this.request;
-//        this.query_vars;
-//        this.full_url;
-//        this.query_url;
-//        this.pathname;
 
-    }
 
     init(data) {
         this.data = BaseFunctions.clone(data);
@@ -43,7 +34,7 @@ class Request extends Component {
         } else if (required === false) {
             return undefined;
         } else {
-            ErrorHandler.getInstance(this.requestId).process(ErrorCodes.ERROR_UNDEFINED_REQUEST_VARIABLE, '[' + name + ']');
+            this.error(ErrorCodes.ERROR_REQUEST_VARIABLE_NOT_FOUND, '[' + name + ']');
         }
     }
 

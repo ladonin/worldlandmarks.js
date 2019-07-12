@@ -1,3 +1,12 @@
+/*
+ * File src/modules/controller/Controller.js
+ * import Controller from 'src/modules/controller/Controller';
+ *
+ * Works with controller's data
+ */
+
+
+
 import Consts from 'src/settings/Constants';
 import ErrorHandler from 'src/modules/error_handler/ErrorHandler';
 import ErrorCodes from 'src/settings/ErrorCodes';
@@ -38,61 +47,66 @@ function checkConrtollerName(name) {
     if ((Consts.CONTROLLER_NAME_MAP === name)
             || (Consts.CONTROLLER_NAME_MAIN === name)
             || (Consts.CONTROLLER_NAME_CATALOG === name)
-            || (Consts.CONTROLLER_NAME_ARTICLE === name))
+            || (Consts.CONTROLLER_NAME_ARTICLE === name)
+            || (Consts.CONTROLLER_NAME_ERRORS === name))
     {
         return true;
     }
-    ErrorHandler.getInstance(this.requestId).process(ErrorCodes.ERROR_WRONG_CONTROLLER_NAME, '[' + name + ']');
+    ///////////////this.error(ErrorCodes.ERROR_WRONG_CONTROLLER_NAME, '[' + name + ']'); //ATTENTION - обратите внимание
     return false;
 }
 
-/*
- *
- * setControllerName: set controller name
- *
- * @param string name - controller name
- * @return void
- *
- *
- * getControllerName: get controller name
- *
- * @return string
- *
- *
- * setActionName: set controller's action name
- *
- * @param string name - action name
- * @return void
- *
- *
- * getActionName: get controller's action name
- *
- * @return string
- *
- *
- * isMapPage: are we on map page now?
- *
- * @return boolean
- *
- *
- *
- */
+
 export default {
-    setControllerName:(name) => {
+
+    /*
+     * Set controller name
+     *
+     * @param string name - controller name
+     */
+    setControllerName: (name) => {
+
+        if (!name) {
+            name = Consts.CONTROLLER_NAME_MAIN;
+        }
+
         if (checkConrtollerName(name)) {
             controllerName = name;
         }
     },
-    getControllerName:() => controllerName,
 
+    /*
+     * Get controller name
+     *
+     * @return string
+     */
+    getControllerName: () => controllerName,
 
-    setActionName:(name) => {
+    /*
+     * Set controller's action name
+     *
+     * @param string name - action name
+     */
+    setActionName: (name) => {
+        if (!name) {
+            name = Consts.ACTION_NAME_INDEX;
+        }
         actionName = name;
     },
-    getActionName:() => actionName,
 
+    /*
+     * Get controller's action name
+     *
+     * @return string
+     */
+    getActionName: () => actionName,
 
-    isMapPage:()=> (controllerName === Consts.CONTROLLER_NAME_MAP)
+    /*
+     * Define are we on map page now?
+     *
+     * @return boolean
+     */
+    isMapPage: () => (controllerName === Consts.CONTROLLER_NAME_MAP)
 }
 
 

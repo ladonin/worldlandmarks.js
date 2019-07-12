@@ -6,7 +6,7 @@
  */
 
 const DBaseMysql = require('application/express/vendor/dbases/Mysql');
-
+const BaseFunctions = require('application/express/functions/BaseFunctions');
 
 class Users_Registered extends DBaseMysql
 {
@@ -41,10 +41,27 @@ class Users_Registered extends DBaseMysql
         return this.insert();
     }
 
+
+
+
+    method()
+    {
+
+
+        return this.get_by_id(1);
+    }
+
+
+
+
+
+
 }
 
 
 
 
 
+Users_Registered.instanceId = BaseFunctions.unique_id();
 
+module.exports = Users_Registered;

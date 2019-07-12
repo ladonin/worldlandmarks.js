@@ -20,13 +20,6 @@ var1 и var2 переименовал в controller и action
 
 
 
-
-
-
-
-ErrorHandler.process(ErrorCodes.ERROR_DB_NO_CONNECT, 'mysql: ' +  err.sqlMessage);
-
-
 //ATTENTION - обратите внимание
 
 #???????????????????????????? - то, что возможно не нужно
@@ -39,22 +32,26 @@ nextTTTTTTTTTTTT - продолжать с этого момента
 
 
 
-//if (process.env.NODE_ENV === Consts.PROCESS_PROD) {
+import { withRouter } from 'react-router-dom';
+    constructor() {
+        super();
+        this.goTo = this.goTo.bind(this);
+    }
+    goTo(event) {
+        this.props.history.push(event.target.dataset.url);
+    }
+ onClick={this.goTo} data-url="catalog"
+export default withRouter(MainLinks);
 
+
+
+
+
+
+//if (process.env.NODE_ENV === Consts.PROCESS_PROD) {
 
 field['value'] = field['value'].replace(/\[strong\](.+?)\[\/strong\]/g, '<strong>$1</strong>');
 //монструозная регулярка
                         field['value'] = field['value'].replace(/\[p\]((?:.*?[\n\r]?.*?)*?)\[\/p\][\n\r]*/gm, function(matches, part1) {
                             return '<p class="text_form_tag_p">'+part1.replace(/[\r\n]*/g, '')+'</p>';
                         });
-
-
-
-
-
-
-
-
-let errorHandlerInstance = ErrorHandler.getInstance(this.requestId);
-let responceInstance = Responce.getInstance(this.requestId);
-let requestInstance = Request.getInstance(this.requestId);

@@ -5,12 +5,12 @@
  * Base database component for MySql
  */
 
-const syncMySql = require('sync-mysql');
+//const syncMySql = require('sync-mysql');
 const asyncMySql = require('mysql2');
-
+const Deasync = require('deasync');
 const MySqlConfig = require('application/express/settings/gitignore/MySql');
 const Functions = require('application/express/functions/BaseFunctions');
-const ErrorHandler = require('application/express/components/ErrorHandler');
+
 const ErrorCodes = require('application/express/settings/ErrorCodes');
 const Consts = require('application/express/settings/Constants');
 const Service = require('application/express/components/base/Service');
@@ -47,7 +47,7 @@ class DBase_Mysql extends Model
         this.fields_initial_data;
 
 
-        this.syncConnection;
+        //this.syncConnection;
         this.asyncConnection;
         this.createConnections();
     }
@@ -75,14 +75,14 @@ class DBase_Mysql extends Model
          *
          * @type object
          */
-        this.syncConnection = new syncMySql(MySqlConfig.connect);
-
-        // Checking sync connection
-        try {
-            this.syncConnection.query("SELECT 1");
-        } catch (e) {
-            ErrorHandler.getInstance(this.requestId).process(ErrorCodes.ERROR_DB_NO_CONNECT, 'mysql: ' + e.code);
-        }
+//        this.syncConnection = new syncMySql(MySqlConfig.connect);
+//
+//        // Checking sync connection
+//        try {
+//            this.syncConnection.query("SELECT 1");
+//        } catch (e) {
+//            this.error(ErrorCodes.ERROR_DB_NO_CONNECT, 'mysql: ' + e.code);
+//        }
 
         /*
          * DB async connection
@@ -115,9 +115,9 @@ class DBase_Mysql extends Model
      *
      * @return resource/object
      */
-    get_connection(async = false)
+    get_connection()//async = false
     {
-        return async === true ? this.asyncConnection : this.syncConnection;
+        return this.asyncConnection;//async === true ? this.asyncConnection : this.syncConnection;
     }
 
     /*
@@ -143,10 +143,10 @@ class DBase_Mysql extends Model
      * @return promise
      */
     query_async(sql, values = []) {
-        return this.get_connection(true)
+        return this.get_connection()//true
                 .query(sql, values)
                 .catch(err => {
-                    ErrorHandler.getInstance(this.requestId).process(
+                    this.error(
                             ErrorCodes.ERROR_MYSQL
                             + ': ' + err.code
                             + ': request[' + sql + '], values[' + Functions.toString(values) + ']',
@@ -167,18 +167,19 @@ class DBase_Mysql extends Model
      * @return array of objects or empty array
      */
     query_sync(sql, values = []) {
-        let result = [];
-        try {
-            result = this.get_connection().query(sql, values);
-        } catch (e) {
-            ErrorHandler.getInstance(this.requestId).process(
-                    ErrorCodes.ERROR_MYSQL
-                    + ': ' + e.code
-                    + ': request[' + sql + '], values[' + Functions.toString(values) + ']',
-                    Consts.LOG_MYSQL_TYPE
-                    );
-        }
-        return result;
+        let _result = [];
+        let _done = false;
+
+        this.query_async(sql, values).then((res) => {
+                    _done = true;
+                    _result = res[0];
+                });
+
+        Deasync.loopWhile(function () {
+            return !_done;
+        });
+
+        return _result;
     }
 
 
@@ -234,36 +235,36 @@ class DBase_Mysql extends Model
             // Convert special tags into html tags
             if (Functions.in_array("spec_tags", field['processing'])) {
 
-                let tags = Service.get_text_form_tags();
+                let _tags = Service.get_text_form_tags();
 
-                for (var index in tags) {
-                    let tag = tags[index];
+                for (let _index in _tags) {
+                    let _tag = _tags[_index];
 
-                    if (tag['code'] === Consts.FORM_TEXT_TAG_CODE_B) {
+                    if (_tag['code'] === Consts.FORM_TEXT_TAG_CODE_B) {
 
                         field['value'] = field['value'].replace(/\[b\](.+?)\[\/b\]/g, '<b>$1</b>');
 
-                    } else if (tag['code'] === Consts.FORM_TEXT_TAG_CODE_P) {
+                    } else if (_tag['code'] === Consts.FORM_TEXT_TAG_CODE_P) {
 
                         // Also remove new lines in and after paragraph
                         field['value'] = field['value'].replace(/\[p\]((?:.*?[\n\r]?.*?)*?)\[\/p\][\n\r]*/gm, function (matches, part1) {
                             return '<p class="text_form_tag_p">' + part1.replace(/[\r\n]*/g, '') + '</p>';
                         });
 
-                    } else if (tag['code'] === Consts.FORM_TEXT_TAG_CODE_STRONG) {
+                    } else if (_tag['code'] === Consts.FORM_TEXT_TAG_CODE_STRONG) {
 
                         field['value'] = field['value'].replace(/\[strong\](.+?)\[\/strong\]/g, '<strong>$1</strong>');
 
-                    } else if (tag['code'] === Consts.FORM_TEXT_TAG_CODE_A) {
+                    } else if (_tag['code'] === Consts.FORM_TEXT_TAG_CODE_A) {
 
-                        let follow = ' rel="nofollow"';
+                        let _follow = ' rel="nofollow"';
                         if (User.is_admin()) {
-                            follow = '';
+                            _follow = '';
                         }
-                        field['value'] = field['value'].replace(/\[a\=(.+?)\](.+?)\[\/a\]/g, '<a href="$1"' + follow + '>$2</a>');
-                        field['value'] = field['value'].replace(/\[a\=(.+?)\]\[\/a\]/g, '<a href="$1"' + follow + '>$1</a>');
+                        field['value'] = field['value'].replace(/\[a\=(.+?)\](.+?)\[\/a\]/g, '<a href="$1"' + _follow + '>$2</a>');
+                        field['value'] = field['value'].replace(/\[a\=(.+?)\]\[\/a\]/g, '<a href="$1"' + _follow + '>$1</a>');
 
-                    } else if (tag['code'] === Consts.FORM_TEXT_TAG_CODE_IMAGE_ADVANCED) {
+                    } else if (_tag['code'] === Consts.FORM_TEXT_TAG_CODE_IMAGE_ADVANCED) {
 
                         field['value'] = field['value'].replace(/\[img url=\"(.+?)\" style=\"(.+?)\"]/g, '<img src="$1" style="$2"/>');
 
@@ -321,13 +322,13 @@ class DBase_Mysql extends Model
      */
     get_by_id(idValue, async = false)
     {
-        let id = Functions.toInt(idValue);
+        let _id = Functions.toInt(idValue);
 
-        if (!id) {
-            ErrorHandler.getInstance(this.requestId).process(ErrorCodes.ERROR_FUNCTION_ARGUMENTS, 'id [ ' + Functions.toString(idValue) + ']');
+        if (!_id) {
+            this.error(ErrorCodes.ERROR_FUNCTION_ARGUMENTS, 'id [ ' + Functions.toString(idValue) + ']');
         }
 
-        return query("SELECT * FROM " + this.table_name + " WHERE id = " + id, [], async);
+        return this.query("SELECT * FROM " + this.table_name + " WHERE id = " + _id, [], async);
     }
 
     /*
@@ -340,8 +341,8 @@ class DBase_Mysql extends Model
     filter_all_fields(filter_type = Consts.FILTER_TYPE_ALL)
     {
         // Check all model fields
-        for (let key in this.fields) {
-            this.filter(key, this.fields[key]['value'], filter_type);
+        for (let _key in this.fields) {
+            this.filter(_key, this.fields[_key]['value'], filter_type);
         }
         return true;
     }
@@ -354,42 +355,42 @@ class DBase_Mysql extends Model
     update(idValue)
     {
 
-        let id = Functions.toInt(idValue);
+        let _id = Functions.toInt(idValue);
 
-        if (!id) {
-            ErrorHandler.getInstance(this.requestId).process(ErrorCodes.ERROR_FUNCTION_ARGUMENTS, 'id [ ' + Functions.toString(idValue) + ']');
+        if (!_id) {
+            this.error(ErrorCodes.ERROR_FUNCTION_ARGUMENTS, 'id [ ' + Functions.toString(idValue) + ']');
         }
 
         this.filter_all_fields(Consts.FILTER_TYPE_WITHOUT_REQUIRED);
 
         array_values = [];
 
-        let sql = 'update ' + this.table_name + " set modified='" + Functions.get_current_time() + "'";
+        let _sql = 'update ' + this.table_name + " set modified='" + Functions.get_current_time() + "'";
 
-        for (let field_name in this.fields) {
+        for (let _field_name in this.fields) {
 
-            let field = this.fields[field_name];
+            let _field = this.fields[_field_name];
 
             // Field (column) will be updated ONLY if we set a value to field
-            if (Functions.isSet(field['value'])) {
+            if (Functions.isSet(_field['value'])) {
 
                 /*
                  * Rule 'none' tells that we should not update this field by hand
                  * For example - 'created' field (if specified in model fields)
                  */
-                if (Functions.in_array('none', field['rules'])) {
+                if (Functions.in_array('none', _field['rules'])) {
                     continue;
                 }
 
-                sql += ',' + field_name + '=?';
+                _sql += ',' + _field_name + '=?';
 
-                this.processing_value(field);
-                array_values.push(field['value']);
+                this.processing_value(_field);
+                array_values.push(_field['value']);
             }
         }
-        sql += ' where id = ' + Functions.toInt(id);
+        _sql += ' where id = ' + Functions.toInt(_id);
 
-        this.query(sql, array_values);
+        this.query(_sql, array_values);
 
         // Reset field to initial values
         this.reset_fields();
@@ -408,36 +409,36 @@ class DBase_Mysql extends Model
 
         array_values = [];
 
-        let sql = 'insert into ' + this.table_name;
-        let sql_fields = 'created,modified';
-        let sql_values = Functions.get_current_time() + ',' + Functions.get_current_time();
+        let _sql = 'insert into ' + this.table_name;
+        let _sql_fields = 'created,modified';
+        let _sql_values = Functions.get_current_time() + ',' + Functions.get_current_time();
 
-        for (let field_name in this.fields) {
-            let field = this.fields[field_name];
+        for (let _field_name in this.fields) {
+            let _field = this.fields[_field_name];
 
             /*
              * Rule 'none' tells that we should not set this field by hand
              * For example - 'created' field (if specified in model fields)
              */
-            if (Functions.in_array('none', field['rules'])) {
+            if (Functions.in_array('none', _field['rules'])) {
                 continue;
             }
 
-            sql_fields += ',' + field_name;
-            sql_values += ',?';
+            _sql_fields += ',' + _field_name;
+            _sql_values += ',?';
 
-            this.processing_value(field);
-            array_values.push(Functions.isSet(field['value']) ? field['value'] : null);
+            this.processing_value(_field);
+            array_values.push(Functions.isSet(_field['value']) ? _field['value'] : null);
         }
 
-        sql += '(' + sql_fields + ') values (' + sql_values + ')';
+        _sql += '(' + _sql_fields + ') values (' + _sql_values + ')';
 
-        let result = this.query(sql, array_values);
+        let _result = this.query(_sql, array_values);
 
         // Reset field to initial values
         this.reset_fields();
 
-        return result.insertId;
+        return _result.insertId;
     }
 
     /*
@@ -449,16 +450,16 @@ class DBase_Mysql extends Model
      */
     delete(idValue)
     {
-        let id = Functions.toInt(idValue);
+        let _id = Functions.toInt(idValue);
 
-        if (!id) {
-            ErrorHandler.getInstance(this.requestId).process(ErrorCodes.ERROR_FUNCTION_ARGUMENTS, 'id [ ' + Functions.toString(idValue) + ']');
+        if (!_id) {
+            this.error(ErrorCodes.ERROR_FUNCTION_ARGUMENTS, 'id [ ' + Functions.toString(idValue) + ']');
         }
 
-        sql = 'DELETE FROM ' + this.table_name + ' WHERE id = ' + id;
-        let result = this.query(sql);
+        sql = 'DELETE FROM ' + this.table_name + ' WHERE id = ' + _id;
+        let _result = this.query(sql);
 
-        return result.affectedRows;
+        return _result.affectedRows;
 
     }
 
@@ -472,13 +473,13 @@ class DBase_Mysql extends Model
     set_values_to_fields(data)
     {
 
-        for (var field_name in data) {
-            let field_value = data[field_name];
-            this.filter(field_name, field_value, Consts.FILTER_TYPE_WITHOUT_REQUIRED);
-            if (!field_value && Functions.is_not_empty(this.fields[field_name]['default_value'])) {
-                field_value = this.fields[field_name]['default_value'];
+        for (let _field_name in data) {
+            let _field_value = data[_field_name];
+            this.filter(_field_name, _field_value, Consts.FILTER_TYPE_WITHOUT_REQUIRED);
+            if (!_field_value && Functions.is_not_empty(this.fields[_field_name]['default_value'])) {
+                _field_value = this.fields[_field_name]['default_value'];
             }
-            this.fields[field_name]['value'] = field_value;
+            this.fields[_field_name]['value'] = _field_value;
         }
         return true;
     }
@@ -534,20 +535,20 @@ class DBase_Mysql extends Model
      */
     get_by_condition(condition = 1, order = '', group = '', select = '*', limit = false, need_result = true, where_values = [], async = false)
     {
-        let sql = 'SELECT ' + select + ' FROM ' + this.table_name + ' WHERE ' + condition;
+        let _sql = 'SELECT ' + select + ' FROM ' + this.table_name + ' WHERE ' + condition;
 
         if (group) {
-            sql += ' GROUP BY ' + group + ' ';
+            _sql += ' GROUP BY ' + group + ' ';
         }
         if (order) {
-            sql += ' ORDER BY ' + order + ' ';
+            _sql += ' ORDER BY ' + order + ' ';
         }
         if (limit) {
             // LIMIT = 1 or LIMIT > 1 or LIMIT = LIMIT + OFFSET
-            sql += ' limit ' + limit;
+            _sql += ' limit ' + limit;
         }
 
-        return this.fetch_query(sql, need_result, where_values, async);
+        return this.fetch_query(_sql, need_result, where_values, async);
     }
 
     /*
@@ -562,10 +563,10 @@ class DBase_Mysql extends Model
      */
     fetch_query(sql, need_result = true, where_values = [], async = false) {
 
-        let result = this.query(sql, where_values, async);
+        let _result = this.query(sql, where_values, async);
 
         function process_error() {
-            ErrorHandler.getInstance(this.requestId).process(
+            this.error(
                     ErrorCodes.ERROR_MYSQL
                     + ': request[' + sql + '], where_values[' + Functions.toString(where_values) + ']',
                     Consts.LOG_MYSQL_TYPE
@@ -576,7 +577,7 @@ class DBase_Mysql extends Model
             if (async === true) {
                 // Async query
                 // We have promise
-                result.then((res) => {
+                _result.then((res) => {
                     if (!res.length) {
                         process_error();
                     } else {
@@ -585,12 +586,12 @@ class DBase_Mysql extends Model
                 });
             } else {
                 // Sync query
-                if (!result.length) {
+                if (!_result.length) {
                     process_error();
                 }
             }
         }
-        return result;
+        return _result;
     }
 
     /*

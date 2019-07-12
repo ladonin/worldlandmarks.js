@@ -1,6 +1,36 @@
+/*
+ * File src/settings/Config.js
+ * import Config from 'src/settings/Config';
+ */
+
+
 import Consts from 'src/settings/Constants';
 
 export default {
+        apiServer: {
+            socketUrl: 'http://192.168.56.1:3001'
+        }
+    }
+
+
+
+        /*
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     'generic': {
         'site_name': Consts.SITE_NAME,
         'need_photos_for_placemarks': true,
@@ -244,3 +274,4 @@ export default {
         ]
     }
 };
+*/

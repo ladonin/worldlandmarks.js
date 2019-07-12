@@ -13,8 +13,11 @@
     "react-device-detect": "^1.6.2",
     "react-dom": "^16.8.6",
     "react-localization": "^1.0.13",
+    "react-redux": "^7.1.0",
     "react-router-dom": "^5.0.0",
     "react-scripts": "2.1.8",
+    "redux": "^4.0.1",
+    "redux-logger": "^3.0.6",
     "socket.io-client": "^2.2.0",
     "typescript": "^3.4.5",
     "websocket": "^1.0.28"

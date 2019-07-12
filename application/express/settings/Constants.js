@@ -7,7 +7,7 @@
 
 const CommonConsts = require('application/common/settings/Constants');
 
-let Consts = {
+let _Consts = {
     ERROR_WRONG_ADRESS: 1,
     ERROR_DB_NO_CONNECT: 2,
     ERROR_USER_NOT_VERIFICATED: 3,
@@ -103,7 +103,7 @@ let Consts = {
     SITEMAP_CATEGORIES_NAME: 'sitemap_categories',
     MODULE_NAME_SERVICE: 'service',
 
-    FTP_DEFAULT_SERVER_NAME: 'default_server',
+
 
     COOKIE_NAME_SITE_LANGUAGE: 'site_language',
 
@@ -194,9 +194,20 @@ let Consts = {
 
 // - добавляется и в базу (как простые данные пользователя, у которого роль админ) и в константу (можно потом брать хеш не из константы, а из базы)
     SUPER_ADMIN_PASSWORD_HASH: '$6$$J/xCAtPslyQ7xy3SLwmDo.SMr0fnyyddNZI2ag6iMNnn7hMwetjqOzp198eeINWOP6yoS3QdmkJIhmJHUQ.dB/',
+
+
+
+
+
+    SOCKET_ROOM_REGISTERED:'registered',
+    SOCKET_ROOM_UNREGISTERED:'unregistered',
+    SOCKET_ROOM_DEFAULT:'default',
+
+
+
 }
 
-module.exports = Object.assign(CommonConsts, Consts);
+module.exports = Object.assign(CommonConsts, _Consts);
 
 
 
