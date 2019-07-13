@@ -5,7 +5,7 @@
  */
 
 const BaseFunctions = require('application/express/functions/BaseFunctions');
-const Language = require('application/express/components/base/Language');
+const Language = require('application/express/core/Language');
 const ErrorCodes = require('application/express/settings/ErrorCodes');
 const Consts = require('application/express/settings/Constants');
 

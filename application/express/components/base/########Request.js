@@ -7,7 +7,7 @@
 
 
 const ErrorCodes = require('application/express/settings/ErrorCodes');
-const Component = require('application/express/vendor/Component');
+const Component = require('application/express/core/Component');
 const BaseFunctions = require('application/express/functions/BaseFunctions');
 
 
@@ -26,7 +26,7 @@ module.exports =  {
     }
 
     /*
-     * @return string - value of specific query variable
+     * @return {string} - value of specific query variable
      */
     get(name, required = true) {
         if (this.data.hasOwnProperty(name)) {
@@ -44,7 +44,7 @@ module.exports =  {
    }
 
     /*
-     * @return object - copy of request query data {name1:value1, name2:value2}
+     * @return {object} - copy of request query data {name1:value1, name2:value2}
      */
     getData() {
         return BaseFunctions.clone(this.data)
@@ -54,25 +54,25 @@ module.exports =  {
 //        this.query_vars[name] = value;
 //    }
 //    /*
-//     * @return string - before '?' sign
+//     * @return {string} - before '?' sign
 //     */
 //    getPathName() {
 //        return this.pathname;
 //    }
 //    /*
-//     * @return string
+//     * @return {string}
 //     */
 //    getFullUrl() {
 //        return this.full_url;
 //    }
 //    /*
-//     * @return string - after '?' sign
+//     * @return {string} - after '?' sign
 //     */
 //    getQueryUrl() {
 //        return this.query_url;
 //    }
 //    /*
-//     * @return object
+//     * @return {object}
 //     * Attention: use with caution
 //     */
 //    getRequest() {

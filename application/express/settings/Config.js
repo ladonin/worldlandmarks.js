@@ -60,7 +60,7 @@ module.exports = {
         // Before
         before: [
             {
-                class: 'application/express/components/Account',
+                class: 'application/express/components/Accounts',
                 method: 'authentication'
             },
             //{

@@ -1,19 +1,19 @@
 /*
- * File application/express/components/User.js
- * const User = require('application/express/components/User');
+ * File application/express/core/Users.js
+ * const Users = require('application/express/core/Users');
  *
- * User component - keeps user data and some arbitrary methods
+ * Users class - keeps user data
  */
 
 
-const Component = require('application/express/vendor/Component');
+const Core = require('application/express/core/Core');
 const AccessConfig = require('application/express/settings/gitignore/Access');
 
 const Consts = require('application/express/settings/Constants');
 const BaseFunctions = require('application/express/functions/BaseFunctions');
 
 
-class User extends Component
+class Users extends Core
 {
 
     constructor(){
@@ -54,7 +54,7 @@ class User extends Component
     /*
      * Admin access authorization via GET vars
      *
-     * @return boolean
+     * @return {boolean}
      */
     admin_access_authentication()
     {
@@ -66,7 +66,7 @@ class User extends Component
 }
 
 
-User.instanceId = BaseFunctions.unique_id();
+Users.instanceId = BaseFunctions.unique_id();
 
 
-module.exports = User;
+module.exports = Users;

@@ -7,7 +7,7 @@
 
 
 const ErrorCodes = require('application/express/settings/ErrorCodes');
-const Component = require('application/express/vendor/Component');
+const Component = require('application/express/core/Component');
 const BaseFunctions = require('application/express/functions/BaseFunctions');
 
 

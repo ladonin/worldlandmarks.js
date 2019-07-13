@@ -1,6 +1,6 @@
 /*
- * File src/app/controllers/AbstractAction.js
- * import AbstractAction from 'src/app/controllers/AbstractAction';
+ * File src/app/abstract/AbstractAction.js
+ * import AbstractAction from 'src/app/abstract/AbstractAction';
  *
  * Common action component
  */

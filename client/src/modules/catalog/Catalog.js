@@ -269,7 +269,7 @@ abstract class Catalog extends \vendor\Module
         $db_model_adress = self::get_model(MY_MODEL_NAME_DB_GEOCODE_COLLECTION);
         $language_component = components\Language::get_instance();
 
-        $language = $language_component->get_language();
+        $language = $language_component->getLanguage();
 
         $condition = "language='" . $language . "' AND country_code != ''";
         $order = "country ASC";
@@ -293,7 +293,7 @@ abstract class Catalog extends \vendor\Module
             $map_db_model_geocode = self::get_model(MY_MODEL_NAME_DB_GEOCODE_COLLECTION);
             $data_db_model = components\Map::get_db_model('data');
             $language_model = components\Language::get_instance();
-            $language = $language_model->get_language();
+            $language = $language_model->getLanguage();
             $conn = $data_db_model->get_connect();
 
             $config = self::get_config();
@@ -340,7 +340,7 @@ abstract class Catalog extends \vendor\Module
             $map_db_model_geocode = self::get_model(MY_MODEL_NAME_DB_GEOCODE_COLLECTION);
             $data_db_model = components\Map::get_db_model('data');
             $language_model = components\Language::get_instance();
-            $language = $language_model->get_language();
+            $language = $language_model->getLanguage();
             $conn = $data_db_model->get_connect();
 
             $config = self::get_config();
@@ -394,7 +394,7 @@ abstract class Catalog extends \vendor\Module
         $language_component = components\Language::get_instance();
         $countries_component = components\Countries::get_instance();
 
-        $language = $language_component->get_language();
+        $language = $language_component->getLanguage();
 
         $country_code = $countries_component->get_country_code_from_url($country);
 
@@ -544,7 +544,7 @@ abstract class Catalog extends \vendor\Module
         $language_component = components\Language::get_instance();
         $countries_component = components\Countries::get_instance();
 
-        $language = $language_component->get_language();
+        $language = $language_component->getLanguage();
 
         $country_code = $countries_component->get_country_code_from_url($country);
 
@@ -617,7 +617,7 @@ abstract class Catalog extends \vendor\Module
     /* когда добавим новый язык, тогда пройдемся по всем записям и будем впоследствии добавлять их и на новом языке
       protected function prepare_country_data(array $data, $country_code) {
       $language_component = components\Language::get_instance();
-      $language = $language_component->get_language();
+      $language = $language_component->getLanguage();
       $db_model_adress = self::get_model(MY_MODEL_NAME_DB_GEOCODE_COLLECTION);
 
 
@@ -660,7 +660,7 @@ abstract class Catalog extends \vendor\Module
         $map_db_model_data = components\Map::get_db_model('data');
         $map_module = self::get_module(MY_MODULE_NAME_MAP);
         $language_model = components\Language::get_instance();
-        $language = $language_model->get_language();
+        $language = $language_model->getLanguage();
         $connect = $map_db_model_data->get_connect();
 
         $config = self::get_config();
@@ -748,7 +748,7 @@ abstract class Catalog extends \vendor\Module
         $state_code = $this->get_get_var(MY_CATALOG_STATE_VAR_NAME);
         $id_placemark = (int) $this->get_get_var(MY_ID_VAR_NAME);
 
-        $language = $language_component->get_language();
+        $language = $language_component->getLanguage();
 
         $connect = $data_db_model->get_connect();
         $return = array();
@@ -918,7 +918,7 @@ abstract class Catalog extends \vendor\Module
 
         $country_component = components\Countries::get_instance();
         $language_component = components\Language::get_instance();
-        $language = $language_component->get_language();
+        $language = $language_component->getLanguage();
 
         $state = $country_component->translate_state_names($language, $country_code, $state, $state_code);
         $country = $country_component->prepare_country_name($country);

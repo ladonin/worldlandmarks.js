@@ -1,0 +1,17 @@
+Language.getInstance(this.requestId)
+Language.getInstance(this.requestId).getText('site/title/' + action, params);
+
+
+this.db.getBySql(_sql);
+this.error(Consts.ERROR_FUNCTION_ARGUMENTS, 'country code [' + code + ']', undefined, false);
+this.getFromRequest(name, required = true)
+
+
+
+
+* @param {boolean} needResult - is result required
+
+
+
+const Cache = require('application/express/components/base/Cache');
+const Language = require('application/express/components/base/Language');

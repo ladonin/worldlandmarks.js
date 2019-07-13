@@ -5,8 +5,8 @@
  */
 
 
-const Controller = require('application/express/vendor/Controller');
-const User = require('application/express/components/User');
+const Controller = require('application/express/core/Controller');
+const Users = require('application/express/core/Users');
 
 
 
@@ -14,7 +14,7 @@ class Admin_Access extends Controller
 {
     autorize()
     {
-        if (User.admin_access_authentication() == false) {
+        if (Users.admin_access_authentication() == false) {
             return false;
         }
         return true;
@@ -36,7 +36,7 @@ use \components\app\image;
 
 $access_settings = require_once(MY_APPLICATION_DIR . 'config' . MY_DS . 'ignore' . MY_DS . 'access.php');
 
-final class Admin_Access extends \vendor\controller
+final class Admin_Access extends \core\controller
 {
 
 

@@ -1,102 +1,86 @@
 /*
- * File application/express/vendor/Component.js
- * const Component = require('application/express/vendor/Component');
+ * File application/express/core/Component.js
+ * const Component = require('application/express/core/Component');
  *
  * Base component
- * Available validation rules see in 'application/express/vendor/Model.js'
+ * Available validation rules see in 'application/express/core/Model.js'
  */
 const BaseFunctions = require('application/express/functions/BaseFunctions');
-const RequestsPool = require('application/express/vendor/RequestsPool');
+const RequestsPool = require('application/express/core/RequestsPool');
 const ErrorCodes = require('application/express/settings/ErrorCodes');
 const Consts = require('application/express/settings/Constants');
 const Messages = require('application/express/settings/Messages');
 const Config = require('application/express/settings/Config');
+const DBase = require('application/express/core/DBase');
+const Core = require('application/express/core/Core');
+const Language = require('application/express/core/Language');
+const Service = require('application/express/core/Service');
 
-
-
-
-
-
-
-
-
-
-
-
-
-class Component {
+class Component extends Core {
 
     constructor() {
-        // For instances pool
-        this.requestId;
+        super();
+
+        /*
+         * Language name of current request
+         *
+         * @type {string}
+         */
+        this.language;
+
+        /*
+         * Service name of current request
+         *
+         * @type {string}
+         */
+        this.service;
     }
 
+
     /*
-     * Get object from pool
-     * If absent - create and return
-     * NOTE: this.instanceId - is a static property of a class inheriting Component
+     * Get language name of current request
      *
-     * @param integer reqId - request id
-     *
-     * @returns object - instance of requested class
+     * @returns {string}
      */
-    static getInstance(reqId) {
-        let _instanceId = this.instanceId;
-        if (RequestsPool.checkInstance(reqId, _instanceId) === false) {
-            RequestsPool.register(reqId, new this(), _instanceId);
+    getLanguage(){
+        if (!this.language) {
+            this.language = Language.getInstance(this.requestId).getLanguage();
         }
-        return RequestsPool.getObject(reqId, _instanceId);
+        return this.language;
     }
 
     /*
-     * Call error with request url in message
+     * Get the text from the glossary translated into the specified language
      *
-     * @param object errorCode - error data {code, name}
-     * @param string message - error message
-     * @param string log_type - type of error (application or db) - where error log will be saved
-     * @param boolean writeToLog - some errors must not be written to log to avoid error spaming
+     * @param {string} id - identifier
+     * @param {object} vars - additional variables on which part of the text can be replaced
      *
+     * @returns {string}
      */
-    error(errorCode, message = '', log_type = Consts.LOG_APPLICATION_TYPE, writeToLog = true) {
-        BaseFunctions.processError(errorCode, message, RequestsPool.getRequestData(this.requestId), log_type, writeToLog);
+    getText(adress, vars){
+        Language.getInstance(this.requestId).getText(adress, vars);
     }
 
     /*
-     * @return string - value of specific query variable
+     * Get service name of current request
+     *
+     * @returns {string}
      */
-    getFromRequest(name, required = true) {
-        let _data = RequestsPool.getRequestData(this.requestId);
-        if (_data.hasOwnProperty(name)) {
-            return BaseFunctions.toString(_data[name]);
-        } else if (required === false) {
-            return undefined;
-        } else {
-            this.error(ErrorCodes.ERROR_REQUEST_VARIABLE_NOT_FOUND, '[' + name + ']');
+    getServiceName(){
+        if (!this.service) {
+            this.service = Service.getInstance(this.requestId).getServiceName();
         }
+        return this.service;
     }
 
-    /*
-     * @return object - copy of request query data {name1:value1, name2:value2}
-     */
-    getData() {
-        let _data = RequestsPool.getRequestData(this.requestId);
-        return BaseFunctions.clone(_data)
-    }
-
-    /*
-     * @return string - string presentation of request object
-     */
-    getStringData() {
-        return BaseFunctions.toString(this.getData());
-    }
 
     /*
      * Check variables values by their set rules
      *
-     * @param string rule - rule value: 'string' or {max:100}
+     * @param {string} rule - rule value: 'string' or {max:100}
      * @param mixed value
      *
-     * @return boolean
+     * @return {boolean}
      */
     validate(rule, value)
     {
@@ -225,46 +209,7 @@ class Component {
         return true;
     }
 
-//#???????????????????????????? - то, что возможно не нужно
-    /*
-     * Запись основных GET переменных без query string
-     *
-     * @param string $url - url (var1, var2, var3, var4)
 
-     protected function set_self_url_without_query_string($url)
-     {
-     if (is_null(self::$self_url_without_query_string)) {
-     self::$self_url_without_query_string = $url;
-     }
-     }
-     * Получение основных GET переменных без query string
-     *
-     * @return string
-
-     public static function get_self_url_without_query_string()
-     {
-     return self::$self_url_without_query_string;
-     }
-
-
-
-
-     * Редирект по указанному url
-     *
-     * @param string $url - путь редиректа
-
-     public static function redirect($url)
-     {
-     $url = trim($url, '/');
-     \header('Location: ' . MY_DOMEN . MY_DS . $url, true, 301);
-     exit();
-     }
-
-
-
-
-
-     */
 
 
 

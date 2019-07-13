@@ -18,15 +18,15 @@ const Fs = require('fs');
 const ImageMagick = require('imagemagick');
 const Deasync = require('deasync');
 const _lang = require('lodash/lang');
-const Language = require('application/express/components/base/Language');
-
+const Language = require('application/express/core/Language');
+const Service = require('application/express/core/Service');
 
 /*
  * Check whether array is empty or not
  *
- * @param array arr
+ * @param {array} arr
  *
- * @return boolean
+ * @return {boolean}
  */
 function array_is_empty(arr)
 {
@@ -40,7 +40,7 @@ function array_is_empty(arr)
  * @param float x - x coordinate
  * @param float y - y coordinate
  *
- * @return boolean
+ * @return {boolean}
  */
 function check_coords(x = null, y = null, error_call = true)
 {
@@ -56,9 +56,9 @@ function check_coords(x = null, y = null, error_call = true)
 /*
  * Get image dimentions
  *
- * @param string path - image path
+ * @param {string} path - image path
  *
- * @return object - image's dimentions
+ * @return {object} - image's dimentions
  */
 function getImageDimentions(path) {
     try {
@@ -71,7 +71,7 @@ function getImageDimentions(path) {
 /*
  * Check if file exists
  *
- * @return boolean
+ * @return {boolean}
  */
 function check_local_file(path) {
     if (!Fs.existsSync(path)) {
@@ -83,14 +83,14 @@ function check_local_file(path) {
 /*
  * Create image with specified parameters
  *
- * @param string path_to - destination path
- * @param string source - source path
- * @param integer neww - destination width (default 0)
- * @param integer newh - destination height (default 0)
+ * @param {string} path_to - destination path
+ * @param {string} source - source path
+ * @param {integer} neww - destination width (default 0)
+ * @param {integer} newh - destination height (default 0)
  *   If one or both sizes are not specified, then using special calculations (see code)
- * @param integer quality - destination quality (default 100)
+ * @param {integer} quality - destination quality (default 100)
  *
- * @return boolean - result
+ * @return {boolean} - result
  */
 function image_resize(path_to, source, neww = 0, newh = 0, quality = 100)
 {
@@ -144,9 +144,9 @@ function image_resize(path_to, source, neww = 0, newh = 0, quality = 100)
 /*
  * Change image to .jpeg extention if necessary
  *
- * @param string source - source image path
+ * @param {string} source - source image path
  *
- * @return string - path to .jpeg image
+ * @return {string} - path to .jpeg image
  */
 function change_image_to_jpeg(source)
 {
@@ -186,9 +186,9 @@ function change_image_to_jpeg(source)
 /*
  * Return a value with guarantee it is not empty
  *
- * @param string val
+ * @param {string} val
  *
- * @return string
+ * @return {string}
  */
 function pass_through(val)
 {
@@ -200,9 +200,9 @@ function pass_through(val)
 /*
  * Check whether array is empty or not (inversion)
  *
- * @param array arr
+ * @param {array} arr
  *
- * @return boolean
+ * @return {boolean}
  */
 function array_is_not_empty(arr)
 {
@@ -214,9 +214,9 @@ function array_is_not_empty(arr)
 /*
  * Split text with commas into an array
  *
- * @param string str
+ * @param {string} str
  *
- * @return string
+ * @return {string}
  */
 function get_array_from_string(str)
 {
@@ -253,10 +253,10 @@ function checkOnString(val) {
 /*
  * Get image type (extension)
  *
- * @param string path - image's path
- * @param boolean by_url - detect by path or by file itself
+ * @param {string} path - image's path
+ * @param {boolean} by_url - detect by path or by file itself
  *
- * @return string - image's type
+ * @return {string} - image's type
  */
 function get_image_type(path, by_url = false)
 {
@@ -268,16 +268,25 @@ function get_image_type(path, by_url = false)
 }
 
 
-
+/*
+ * Get service name
+ *
+ * @param {integer} reqId - request id
+ *
+ * @return {string}
+ */
+function getServiceName(reqId){
+    return Service.getInstance(reqId).getServiceName();
+}
 
 
 /*
  * Translate state name on user's language
  *
- * @param string state_name - state name
- * @param string state_code - state url code
+ * @param {string} state_name - state name
+ * @param {string} state_code - state url code
  *
- * @return string - translated state name
+ * @return {string} - translated state name
 
 function auto_translate_state(state_name, state_code, requestId)
 {
@@ -331,7 +340,8 @@ module.exports = {
     getImageDimentions,
     check_coords,
     array_is_empty,
-    get_image_type
+    get_image_type,
+    getServiceName
 };
 
 

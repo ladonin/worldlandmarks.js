@@ -1,6 +1,6 @@
 /*
- * File application/express/vendor/RequestsPool.js
- * const RequestsPool = require('application/express/vendor/RequestsPool');
+ * File application/express/core/RequestsPool.js
+ * const RequestsPool = require('application/express/core/RequestsPool');
  *
  * Request instances pool component
  * Each url request has its own collection of instances
@@ -35,8 +35,8 @@ function errorProcess(errorCode, errorMessage = '', reqId = false) {
 /*
  * Check request id
  *
- * @param integer reqId - request id
- * @param string errorMessage - message for adding to error message
+ * @param {integer} reqId - request id
+ * @param {string} errorMessage - message for adding to error message
  */
 function checkReqId(reqId, errorMessage = '') {//console.log(instances_pool);
     if (!_instances_pool.hasOwnProperty(reqId)) {//console.log('-----------------');console.log(instances_pool);console.log(reqId);
@@ -48,9 +48,9 @@ function checkReqId(reqId, errorMessage = '') {//console.log(instances_pool);
 /*
  * Check object in request
  *
- * @param integer reqId - request id
- * @param integer objectId - object id
- * @param string errorMessage - message for adding to error message
+ * @param {integer} reqId - request id
+ * @param {integer} objectId - object id
+ * @param {string} errorMessage - message for adding to error message
  */
 function checkObject(reqId, objectId, errorMessage = '') {
 
@@ -66,8 +66,8 @@ module.exports = {
     /*
      * Create new request pool for instances
      *
-     * @param object data - request data
-     * @param string token - socket token of current request
+     * @param {object} data - request data
+     * @param {string} token - socket token of current request
      *
      * @return integer - key of object pool in which all objects (controller, models, other components) are keeped
      */
@@ -79,9 +79,9 @@ module.exports = {
     /*
      * Get copy of request data
      *
-     * @param integer reqId - request id
+     * @param {integer} reqId - request id
      *
-     * @return object
+     * @return {object}
      */
     getRequestData(reqId) {
         checkReqId(reqId, 'for getRequestData');
@@ -91,9 +91,9 @@ module.exports = {
     /*
      * Get socket token of current request
      *
-     * @param integer reqId - request id
+     * @param {integer} reqId - request id
      *
-     * @return string - token
+     * @return {string} - token
      */
     getSocketToken(reqId) {
         checkReqId(reqId, 'for getSocketToken');
@@ -106,7 +106,7 @@ module.exports = {
     /*
      * Remove current request with all objects in it (usually in the end of request)
      *
-     * @param integer reqId - request id
+     * @param {integer} reqId - request id
      */
     remove(reqId) {
         checkReqId(reqId, 'for clean');
@@ -115,9 +115,9 @@ module.exports = {
     /*
      * Register one new object for current request
      *
-     * @param integer reqId - request id
-     * @param object object - object for register
-     * @param integer objectId - object id
+     * @param {integer} reqId - request id
+     * @param {object} object - object for register
+     * @param {integer} objectId - object id
      */
     register(reqId, object, objectId) {
         let _message = 'for register object';
@@ -151,10 +151,10 @@ module.exports = {
     /*
      * Check is instance already exists or not
      *
-     * @param integer reqId - request id
-     * @param integer objectId - object id
+     * @param {integer} reqId - request id
+     * @param {integer} objectId - object id
      *
-     * @return boolean
+     * @return {boolean}
      */
     checkInstance(reqId, objectId) {
         checkReqId(reqId, 'check instance');
@@ -166,10 +166,10 @@ module.exports = {
     /*
      * Get current object of current request
      *
-     * @param integer reqId - request id
-     * @param integer objectId - object id
+     * @param {integer} reqId - request id
+     * @param {integer} objectId - object id
      *
-     * @return object
+     * @return {object}
      */
     getObject(reqId, objectId) {
         checkObject(reqId, objectId, 'for get object');

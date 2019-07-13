@@ -1,13 +1,13 @@
 /*
- * File application/express/vendor/SocketsPool.js
- * const SocketsPool = require('application/express/vendor/SocketsPool');
+ * File application/express/core/SocketsPool.js
+ * const SocketsPool = require('application/express/core/SocketsPool');
  *
  * Sockets pool component - keeps all sockets
  */
 
 
 const ErrorCodes = require('application/express/settings/ErrorCodes');
-const Component = require('application/express/vendor/Component');
+const Component = require('application/express/core/Component');
 const BaseFunctions = require('application/express/functions/BaseFunctions');
 const Constants = require('application/express/settings/Constants');
 
@@ -33,8 +33,8 @@ const TOKEN_LENGTH = 10;
 /*
  * Check token
  *
- * @param string token
- * @returns boolean
+ * @param {string} token
+ * @returns {boolean}
  */
 function checkToken(token) {
     if (BaseFunctions.isUndefined(_sockets[token])) {
@@ -52,7 +52,7 @@ module.exports = {
     /*
      * Set io once (when the application starts)
      *
-     * @param object - io
+     * @param {object} - io
      */
     setIO(io) {
         if (_socketIo === false) {
@@ -65,7 +65,7 @@ module.exports = {
     /*
      * Set socket to pool (at client connection)
      *
-     * @param object socket
+     * @param {object} socket
      */
     setSocket(socket) {
 
@@ -93,8 +93,8 @@ module.exports = {
     /*
      * Set/update socket data parameter
      *
-     * @param string token - socket token
-     * @param string name - data parameter name
+     * @param {string} token - socket token
+     * @param {string} name - data parameter name
      * @param mix value - data parameter value
      */
     setSocketDataParam(token, name, value) {
@@ -106,8 +106,8 @@ module.exports = {
     /*
      * Remove socket data parameter
      *
-     * @param string token - socket token
-     * @param string name - data parameter name
+     * @param {string} token - socket token
+     * @param {string} name - data parameter name
      */
     removeSocketDataParam(token, name) {
 
@@ -118,7 +118,7 @@ module.exports = {
     /*
      * Remove socket from pool
      *
-     * @param string token - socket token
+     * @param {string} token - socket token
      */
     removeSocket(socket) {
         let _token = socket.handshake.query.token;
@@ -129,9 +129,9 @@ module.exports = {
     /*
      * Send message to specific socket
      *
-     * @param string token - socket token
-     * @param object data - data to send
-     * @param string eventName - event name
+     * @param {string} token - socket token
+     * @param {object} data - data to send
+     * @param {string} eventName - event name
      *
      */
     sendPrivate(token, data, eventName) {
@@ -144,8 +144,8 @@ module.exports = {
     /*
      * Get socket data parameter from pool
      *
-     * @param string token - socket token
-     * @param string name - data parameter name
+     * @param {string} token - socket token
+     * @param {string} name - data parameter name
      *
      * @return mix - data parameter value
      */
@@ -158,8 +158,8 @@ module.exports = {
     /*
      * Get socket header property
      *
-     * @param string token - socket token
-     * @param string name - header property name
+     * @param {string} token - socket token
+     * @param {string} name - header property name
      *
      * @return mix - header property value
      */

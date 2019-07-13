@@ -4,8 +4,8 @@ var io = require('socket.io')(server);
 
 
 const Application = require('application/express/components/base/Application');
-const RequestsPool = require('application/express/vendor/RequestsPool');
-const SocketsPool = require('application/express/vendor/SocketsPool');
+const RequestsPool = require('application/express/core/RequestsPool');
+const SocketsPool = require('application/express/core/SocketsPool');
 
 
 SocketsPool.setIO(io);

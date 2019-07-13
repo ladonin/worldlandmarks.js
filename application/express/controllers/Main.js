@@ -5,14 +5,14 @@
  */
 const Deasync = require('deasync');
 const BaseFunctions = require('application/express/functions/BaseFunctions');
-const Language = require('application/express/components/base/Language');
+const Language = require('application/express/core/Language');
 const ErrorCodes = require('application/express/settings/ErrorCodes');
 const Consts = require('application/express/settings/Constants');
 
 const AbstractController = require('application/express/controllers/AbstractController');
 
 
-
+const DBase = require('application/express/core/DBase');
 
 
 class Main extends AbstractController {
@@ -26,8 +26,24 @@ class Main extends AbstractController {
      */
     action_index() {
         console.log('+++' + this.requestId);
-        console.log('index action ' + Language.getInstance(this.requestId).get_text('site/description/catalog/sitemap_categories/category', {category: '111111111111111'}));
+        console.log('index action ' + this.getText('site/description/catalog/sitemap_categories/category', {category: '111111111111111'}));
         //this.error(ErrorCodes.ERROR_REQUEST_VARIABLE_NOT_FOUND, 'action_index111111111111');
+
+
+
+
+        console.log(DBase.getInstance(this.requestId).getDb().getBySql("insert into users values(NULL, 'vhervehve','hgjhj',345435,345335)", [] , false));
+
+
+
+
+
+
+
+
+
+
+
 
 
         this.data = {};
@@ -65,9 +81,9 @@ class Main extends AbstractController {
 
 
 
-        const UsersRegistered = require('application/express/models/dbase/mysql/UsersRegistered');
+        const UsersRegisteredModel = require('application/express/models/dbase/mysql/UsersRegistered');
 
-        //console.log(UsersRegistered.getInstance(this.requestId).method());
+        //console.log(UsersRegisteredModel.getInstance(this.requestId).method());
 
 
 
@@ -152,7 +168,7 @@ class Main extends AbstractController {
 
 /*
 
- const Controller = require('application/express/vendor/Controller');
+ const Controller = require('application/express/core/Controller');
 
  class Main extends Controller
  {

@@ -7,7 +7,7 @@ const Deasync = require('deasync');
 
 
 const BaseFunctions = require('application/express/functions/BaseFunctions');
-const Language = require('application/express/components/base/Language');
+const Language = require('application/express/core/Language');
 const ErrorCodes = require('application/express/settings/ErrorCodes');
 const Consts = require('application/express/settings/Constants');
 
@@ -23,9 +23,40 @@ class Catalog extends AbstractController {
      * Action index
      */
     action_index() {
-        console.log('+++' + this.requestId);
-        console.log('index action ' + Language.getInstance(this.requestId).get_text('site/description/catalog/sitemap_categories/category', {category: '111111111111111'}));
-        //this.error(ErrorCodes.ERROR_REQUEST_VARIABLE_NOT_FOUND, 'action_index111111111111');
+
+        $seo_module = self::get_module(MY_MODULE_NAME_SEO);
+        $catalog_module = self::get_module(MY_MODULE_NAME_CATALOG);
+        $security = \modules\base\Security\Security::get_instance();
+
+        $this->data['title'] = $seo_module->get_title('catalog/index');
+        $this->data['keywords'] = $seo_module->get_keywords('catalog/index');
+        $this->data['description'] = $seo_module->get_description('catalog/index');
+
+        $this->data['data'] = $catalog_module->get_countries_data();
+        // ЧПУ
+        $this->data['scroll_url'] = MY_DOMEN . '/' . $security->get_controller() . '/' . 'scroll';
+        $this->data['current_url'] = MY_DOMEN . '/' . $security->get_controller() . '/';
+
+        return $this->data;
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+        this.addDynamicData({errorMessage: 'errorMessageerrorMessageerrorMessageerrorMessage'});////ATTENTION - обратите внимание
+
+
+
+
 
 
         this.data = {};

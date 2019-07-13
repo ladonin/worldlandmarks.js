@@ -1,13 +1,13 @@
 /*
- * File application/express/vendor/Controller.js
- * const Controller = require('application/express/vendor/Controller');
+ * File application/express/core/Controller.js
+ * const Controller = require('application/express/core/Controller');
  *
  * Basic controller
  */
 
-const Component = require('application/express/vendor/Component');
-const RequestsPool = require('application/express/vendor/RequestsPool');
-const SocketsPool = require('application/express/vendor/SocketsPool');
+const Component = require('application/express/core/Component');
+const RequestsPool = require('application/express/core/RequestsPool');
+const SocketsPool = require('application/express/core/SocketsPool');
 
 
 
@@ -31,7 +31,7 @@ class Controller extends Component {
     /*
      * Flush result
      *
-     * @return object
+     * @return {object}
      */
     sendbySocket(eventName = 'api') {
         let _token = RequestsPool.getSocketToken(this.requestId);

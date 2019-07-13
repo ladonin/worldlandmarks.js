@@ -1,5 +1,6 @@
 нет вьюх и лэйаутов
-
+cataolg_page_article_items_list cataolg_page_article_item
+в world-landmarks.ru фраза 'смотреть все' (для статей) только на русском
 
 snapshot_fields_data() в конце каждого конструктора исходной модели
 при сбрасывании fields тоже клонирование, а не передача по ссылке
@@ -40,7 +41,7 @@ import { withRouter } from 'react-router-dom';
     goTo(event) {
         this.props.history.push(event.target.dataset.url);
     }
- onClick={this.goTo} data-url="catalog"
+onClick={this.goTo} data-url="catalog"
 export default withRouter(MainLinks);
 
 

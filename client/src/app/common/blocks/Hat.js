@@ -10,19 +10,14 @@ import {BrowserView, MobileView, isBrowser, isMobile} from "react-device-detect"
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 
+import AbstractBlock from 'src/app/abstract/AbstractBlock';
 import Consts from 'src/settings/Constants';
 
-class Hat extends Component {
+class Hat extends AbstractBlock {
 
     constructor() {
         super();
-        this.goTo = this.goTo.bind(this);
     }
-
-    goTo(event) {
-        this.props.history.push(event.target.dataset.url);
-    }
-
 
     render() {
         return (

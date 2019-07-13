@@ -115,9 +115,9 @@ function isString(val) {
 /*
  * Repace double quotes on single
  *
- * @param string text
+ * @param {string} text
  *
- * @return string
+ * @return {string}
  */
 function prepare_double_quotes(text)
 {
@@ -130,9 +130,9 @@ function prepare_double_quotes(text)
 /*
  * Check whether variable is empty or not (inversion)
  *
- * @param string val
+ * @param {string} val
  *
- * @return boolean
+ * @return {boolean}
  */
 function is_not_empty(val)
 {
@@ -149,9 +149,9 @@ function is_not_empty(val)
 /*
  * Check whether variable is empty or not
  *
- * @param string val
+ * @param {string} val
  *
- * @return boolean
+ * @return {boolean}
  */
 function is_empty(val)
 {
@@ -162,7 +162,7 @@ function is_empty(val)
 /*
  * Prepare all array elements into integer form
  *
- * @param array arr
+ * @param {array} arr
  *
  * @return array - prepared array
  */
@@ -177,11 +177,11 @@ function prepare_int_array(arr)
 /*
  * Validate date
  *
- * @param string day
- * @param string month
- * @param string year
+ * @param {string} day
+ * @param {string} month
+ * @param {string} year
  *
- * @return boolean
+ * @return {boolean}
  */
 function validate_date(day, month, year)
 {
@@ -204,9 +204,9 @@ function get_current_time() {
 /*
  * Delete HTML tags
  *
- * @param string str - text with html tags
+ * @param {string} str - text with html tags
  *
- * @return string - stripped text without html tags
+ * @return {string} - stripped text without html tags
  */
 function strip_tags(str) {
     return str.replace(/<\/?[^>]+>/gi, '');
@@ -215,9 +215,9 @@ function strip_tags(str) {
 /*
  * Escape HTML tags from a string
  *
- * @param string text - text with html tags
+ * @param {string} text - text with html tags
  *
- * @return string - text with escaped html tags
+ * @return {string} - text with escaped html tags
  */
 function escapeHtml(text) {
     return text
@@ -241,7 +241,7 @@ function escapeHtml(text) {
 /*
  * Generate comfortable to remember password
  *
- * @return string password
+ * @return {string} password
  */
 function create_password()
 {
@@ -293,9 +293,9 @@ function create_password()
 /*
  * Rename either image's extension to jpeg
  *
- * @param string name - image name with any extension
+ * @param {string} name - image name with any extension
  *
- * @return string - image name with .jpeg extension
+ * @return {string} - image name with .jpeg extension
  */
 function prepare_image_name_to_jpeg(name)
 {
@@ -305,9 +305,9 @@ function prepare_image_name_to_jpeg(name)
 /*
  * Detect either type is image or not
  *
- * @param string type - verifiable type
+ * @param {string} type - verifiable type
  *
- * @return boolean
+ * @return {boolean}
  */
 function is_image_type(type)
 {
@@ -318,9 +318,9 @@ function is_image_type(type)
  * Detect if value exists in array
  *
  * @param mix value - value
- * @param array arr - array
+ * @param {array} arr - array
  *
- * @return boolean
+ * @return {boolean}
  */
 function in_array(value, arr)
 {
@@ -333,9 +333,9 @@ function in_array(value, arr)
  * Detect if value exists in object
  *
  * @param mix value - value
- * @param object object - object
+ * @param {object} object - object
  *
- * @return boolean
+ * @return {boolean}
  */
 function inObject(value, obj)
 {
@@ -347,7 +347,7 @@ function inObject(value, obj)
  *
  * @param current date with time
  *
- * @return string
+ * @return {string}
  */
 function getDate()
 {
@@ -359,7 +359,7 @@ function getDate()
 /*
  * Return unique word
  *
- * @return string
+ * @return {string}
  */
 function get_unique()
 {
@@ -387,9 +387,9 @@ function get_unique()
 /*
  * Return url flag's picture
  *
- * @param string country_code - country code
+ * @param {string} country_code - country code
  *
- * @return string
+ * @return {string}
  */
 function get_flag_url(country_code)
 {
@@ -399,11 +399,11 @@ function get_flag_url(country_code)
 /*
  * Return random placemark's photo
  *
- * @param array photos - placemark's photos
- * @param string prefix - size photo's prefix
- * @param boolean return_sizes - return array of url and sizes or just string url
+ * @param {array} photos - placemark's photos
+ * @param {string} prefix - size photo's prefix
+ * @param {boolean} return_sizes - return array of url and sizes or just string url
  *
- * @return string/array
+ * @return {string}/array
  */
 function get_random_placemark_photo(photos, prefix, return_sizes = false)
 {
@@ -427,10 +427,10 @@ function get_random_placemark_photo(photos, prefix, return_sizes = false)
 /*
  * Cutting text with saving word integrity
  *
- * @param string text - text for cutting
- * @param integer length - cutting length
+ * @param {string} text - text for cutting
+ * @param {integer} length - cutting length
  *
- * @return string - cutted text
+ * @return {string} - cutted text
  */
 function get_cutted_text(text, length, dots = true)
 {
@@ -464,12 +464,12 @@ function get_cutted_text(text, length, dots = true)
 /*
  * Call error
  *
- * @param object errorCode - error data {code, name}
- * @param string message - error message
- * @param object requestData - whole request data
- * @param string log_type - type of error (application or db ) - where error log will be saved
- * @param boolean writeToLog - some errors must not be written to log to avoid error spaming
- * @param boolean outerCall - means that we call this function directly, not from component,
+ * @param {object} errorCode - error data {code, name}
+ * @param {string} message - error message
+ * @param {object} requestData - whole request data
+ * @param {string} log_type - type of error (application or db ) - where error log will be saved
+ * @param {boolean} writeToLog - some errors must not be written to log to avoid error spaming
+ * @param {boolean} outerCall - means that we call this function directly, not from component,
  *  therefore this error will not be catched,
  *  whole site will be turned off,
  *  only for system places,

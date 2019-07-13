@@ -10,7 +10,7 @@ const Consts = require('application/express/settings/Constants');
 const Messages = require('application/express/settings/Messages');
 const Config = require('application/express/settings/Config');
 const BaseFunctions = require('application/express/functions/BaseFunctions');
-const Component = require('application/express/vendor/Component');
+const Component = require('application/express/core/Component');
 
 
 

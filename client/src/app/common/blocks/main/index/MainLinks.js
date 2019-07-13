@@ -5,19 +5,17 @@
  * MainLinks block component
  */
 
-import React, { Component } from 'react';
+import React from 'react';
 import { withRouter } from 'react-router-dom';
 import {BrowserView, MobileView, isBrowser, isMobile} from "react-device-detect";
 import Consts from 'src/settings/Constants';
 
-class MainLinks extends Component {
+import AbstractBlock from 'src/app/abstract/AbstractBlock';
+
+
+class MainLinks extends AbstractBlock {
     constructor() {
         super();
-        this.goTo = this.goTo.bind(this);
-    }
-
-    goTo(event) {
-        this.props.history.push(event.target.dataset.url);
     }
 
     render() {

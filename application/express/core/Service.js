@@ -1,20 +1,20 @@
 /*
- * File application/express/components/base/Service.js
- * const Service = require('application/express/components/base/Service');
+ * File application/express/core/Service.js
+ * const Service = require('application/express/core/Service');
  *
- * Basic component for working with services
+ * Basic class for working with services
  */
 
 const BaseFunctions = require('application/express/functions/BaseFunctions');
-const Component = require('application/express/vendor/Component');
+const Core = require('application/express/core/Core');
 const Config = require('application/express/settings/Config.js');
 const Functions = require('application/express/functions/BaseFunctions');
 const ErrorCodes = require('application/express/settings/ErrorCodes');
-const User = require('application/express/components/User');
+const Users = require('application/express/core/Users');
 const Consts = require('application/express/settings/Constants');
 
 
-class Service extends Component
+class Service extends Core
 {
     constructor() {
         super();
@@ -48,7 +48,7 @@ class Service extends Component
     /*
      * Get all service data from config
      *
-     * @return string
+     * @return {string}
      */
     get_data()
     {
@@ -56,7 +56,7 @@ class Service extends Component
             return this.data;
         }
 
-        this.data = Config.services[this.get_service_name()];
+        this.data = Config.services[this.getServiceName()];
 
         return this.data;
     }
@@ -64,7 +64,7 @@ class Service extends Component
     /*
      * Get path to sevice
      *
-     * @return string
+     * @return {string}
      */
     get_path()
     {
@@ -72,7 +72,7 @@ class Service extends Component
             return this.path;
         }
 
-        this.path = Consts.SERVICES_DIR + this.get_service_name() + '/';
+        this.path = Consts.SERVICES_DIR + this.getServiceName() + '/';
 
         return this.path;
     }
@@ -85,9 +85,9 @@ class Service extends Component
     /*
      * Return service name from url
      *
-     * @return string
+     * @return {string}
      */
-    get_service_name()
+    getServiceName()
     {
         if (this.name !== false) {
             return this.name;
@@ -108,85 +108,85 @@ class Service extends Component
     /*
      * Get email's 'from' for sending messages
      *
-     * @param integer number - email's number in config list
+     * @param {integer} number - email's number in config list
      *
-     * @return string
+     * @return {string}
      */
     get_email_from(number)
     {
         if (Functions.isSet(this.get_data().config.email[number])) {
             return this.data.config.email[number]['from'];
         }
-        this.error(ErrorCodes.ERROR_SERVICE_CONFIG_ABSENT, 'service=[' + this.get_service_name() + '] email-' + number + '-from');
+        this.error(ErrorCodes.ERROR_SERVICE_CONFIG_ABSENT, 'service=[' + this.getServiceName() + '] email-' + number + '-from');
     }
 
     /*
      * Get email's 'name' for sending messages
      *
-     * @param integer number - email's number in config list
+     * @param {integer} number - email's number in config list
      *
-     * @return string
+     * @return {string}
      */
     get_email_name(number)
     {
         if (Functions.isSet(this.get_data().config.email[number])) {
             return this.data.config.email[number]['name'];
         }
-        this.error(ErrorCodes.ERROR_SERVICE_CONFIG_ABSENT, 'service=[' + this.get_service_name + '] email-' + number + '-name');
+        this.error(ErrorCodes.ERROR_SERVICE_CONFIG_ABSENT, 'service=[' + this.getServiceName + '] email-' + number + '-name');
     }
 
     /*
      * Get site name of service
      *
-     * @return string
+     * @return {string}
      */
     get_site_name()
     {
         if (Functions.isSet(this.get_data().config.generic.site_name)) {
             return this.data.config.generic.site_name;
         }
-        this.error(ErrorCodes.ERROR_SERVICE_CONFIG_ABSENT, 'service=[' + this.get_service_name + '] generic-site_name');
+        this.error(ErrorCodes.ERROR_SERVICE_CONFIG_ABSENT, 'service=[' + this.getServiceName + '] generic-site_name');
     }
 
     /*
      * Get all service words according with language
      *
-     * @param string language
+     * @param {string} language
      *
-     * @return object
+     * @return {object}
      */
     get_words(language)
     {
         if (Functions.isSet(this.get_data().text[language])) {
             return this.data.text[language];
         }
-        this.error(ErrorCodes.ERROR_SERVICE_CONFIG_ABSENT, 'service=[' + this.get_service_name() + '] language [' + language + ']');
+        this.error(ErrorCodes.ERROR_SERVICE_CONFIG_ABSENT, 'service=[' + this.getServiceName() + '] language [' + language + ']');
     }
 
     /*
      * Get ftp data (login, directory etc.)
      *
-     * @return object
+     * @return {object}
      */
     get_ftp_data()
     {
         if (Functions.isSet(this.get_data().config.ftp)) {
             return this.data.config.ftp;
         }
-        this.error(ErrorCodes.ERROR_SERVICE_CONFIG_ABSENT, 'service=[' + this.get_service_name() + '] ftp');
+        this.error(ErrorCodes.ERROR_SERVICE_CONFIG_ABSENT, 'service=[' + this.getServiceName() + '] ftp');
     }
 
     /*
      * Get all languages available in service with data
      *
-     * @return array of objects
+     * @return {array of objects}
      */
     get_languages()
     {
         if (Functions.isSet(this.get_data().config.languages)) {
             return this.data.config.languages;
         }
-        this.error(ErrorCodes.ERROR_SERVICE_CONFIG_ABSENT, 'service=[' + this.get_service_name() + '] languages');
+        this.error(ErrorCodes.ERROR_SERVICE_CONFIG_ABSENT, 'service=[' + this.getServiceName() + '] languages');
     }
 
 
@@ -217,13 +217,13 @@ class Service extends Component
     /*
      * Get available text form tags
      *
-     * @return array of objects
+     * @return {array of objects}
      */
     get_text_form_tags()
     {
         if (Functions.isSet(this.get_data().config.text_form.tags)) {
 
-            if (User.is_admin()) {
+            if (Users.is_admin()) {
                 // Set of tags for admin
                 return this.data.config.text_form.tags;
             } else {
@@ -244,7 +244,7 @@ class Service extends Component
     /*
      * Determines is text links entered by form will be turned into real links for admin
      *
-     * @return boolean
+     * @return {boolean}
      */
     is_available_to_process_links_in_text_for_admin()
     {
@@ -257,7 +257,7 @@ class Service extends Component
     /*
      * Determines - are placemarks require photos
      *
-     * @return boolean
+     * @return {boolean}
      */
     is_need_photos_for_placemarks()
     {
@@ -270,7 +270,7 @@ class Service extends Component
     /*
      * Determines is text links entered by form will be turned into real links for another users
      *
-     * @return boolean
+     * @return {boolean}
      */
     is_available_to_process_links_in_text_for_free_users()
     {
@@ -283,7 +283,7 @@ class Service extends Component
     /*
      * Get all categories codes with id
      *
-     * @return array of objects
+     * @return {array of objects}
      */
     get_categories_codes()
     {
@@ -296,7 +296,7 @@ class Service extends Component
     /*
      * Get categories with locals for create selection form to create/update placemark (point)
      *
-     * @return array of objects
+     * @return {array of objects}
      */
     get_categories_add_new_point_form_options()
     {
@@ -340,7 +340,7 @@ class Service extends Component
     /*
      * Determines should placemarks be loaded on map automatically or not
      *
-     * @return boolean
+     * @return {boolean}
      */
     is_map_autofill_enabled()
     {
@@ -353,7 +353,7 @@ class Service extends Component
     /*
      * Get map ballon dimentions (size, position)
      *
-     * @return object
+     * @return {object}
      */
     get_baloon_dimentions()
     {
@@ -366,7 +366,7 @@ class Service extends Component
     /*
      * Determines whether everyone can add placemarks
      *
-     * @return object
+     * @return {object}
      */
     is_all_can_add_placemarks()
     {
@@ -461,7 +461,7 @@ class Service extends Component
      * Determines should we add category photo as main while create placemark
      * Category photo will became main placemark's photo in list instead of first loaded photo
      *
-     * @return boolean
+     * @return {boolean}
      */
     is_add_category_photo_as_first_in_placemark_view()
     {
@@ -474,7 +474,7 @@ class Service extends Component
     /*
      * Determines should we show 'main' (index) page
      *
-     * @return boolean
+     * @return {boolean}
      */
     is_show_main_pages()
     {
@@ -487,7 +487,7 @@ class Service extends Component
     /*
      * Determines should we show 'catalog' page
      *
-     * @return boolean
+     * @return {boolean}
      */
     is_show_catalog_pages()
     {
@@ -500,7 +500,7 @@ class Service extends Component
     /*
      * Determines should we show 'search' page
      *
-     * @return boolean
+     * @return {boolean}
      */
     is_show_search_pages()
     {
@@ -513,7 +513,7 @@ class Service extends Component
     /*
      * Determines should we show 'articles' page
      *
-     * @return boolean
+     * @return {boolean}
      */
     is_show_article_pages()
     {
@@ -527,7 +527,7 @@ class Service extends Component
      * Determines should we show placemark's title everywhere
      * In case if placemarks are loaded by admin with correct title this config should be equals 'true'
      *
-     * @return boolean
+     * @return {boolean}
      */
     is_use_titles()
     {
@@ -540,7 +540,7 @@ class Service extends Component
     /*
      * Get path to sevice css/js files
      *
-     * @return string
+     * @return {string}
      */
     get_frontend_path()
     {
@@ -550,7 +550,7 @@ class Service extends Component
     /*
      * Get path to sevice view blocks
      *
-     * @return string
+     * @return {string}
      */
     get_blocks_path()
     {
@@ -560,9 +560,9 @@ class Service extends Component
     /*
      * Determines whether pased photo is category photo
      *
-     * @param string - photo's name with extension
+     * @param {string} - photo's name with extension
      *
-     * @return boolean
+     * @return {boolean}
      */
     is_photo_by_category(photo)
     {
@@ -581,7 +581,7 @@ class Service extends Component
      * Determines should we show placemarks relevant to viewed placemark
      * Placed in the bottom
      *
-     * @return boolean
+     * @return {boolean}
      */
     is_show_relevant_placemarks()
     {
@@ -595,7 +595,7 @@ class Service extends Component
      * Determines should we show another placemarks appropriate for main category of viewed placemark
      * Placed in the bottom
      *
-     * @return boolean
+     * @return {boolean}
      */
     is_show_another_placemarks()
     {

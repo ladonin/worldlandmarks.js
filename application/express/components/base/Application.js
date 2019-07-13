@@ -7,14 +7,13 @@
 
 const BaseFunctions = require('application/express/functions/BaseFunctions');
 const Config = require('application/express/settings/Config.js');
-const Component = require('application/express/vendor/Component');
-const DBaseMysql = require('application/express/vendor/dbases/Mysql');
-const RequestsPool = require('application/express/vendor/RequestsPool');
-const SocketsPool = require('application/express/vendor/SocketsPool');
+const Component = require('application/express/core/Component');
+const RequestsPool = require('application/express/core/RequestsPool');
+const SocketsPool = require('application/express/core/SocketsPool');
 
 const ErrorCodes = require('application/express/settings/ErrorCodes');
 const Consts = require('application/express/settings/Constants');
-
+const DBase = require('application/express/core/DBase');
 
 class Application extends Component {
     constructor(){
@@ -35,15 +34,6 @@ class Application extends Component {
          */
         this.action;
 
-
-
-        /*
-         * Database connection model
-         *
-         * @type resource
-         */
-        this.db_model;
-
     }
 
 
@@ -55,7 +45,7 @@ class Application extends Component {
     /*
      * Get controller name
      *
-     * @return string
+     * @return {string}
      */
     get_controller()
     {
@@ -66,7 +56,7 @@ class Application extends Component {
     /*
      * Get action name
      *
-     * @return string
+     * @return {string}
      */
     get_action()
     {
@@ -143,16 +133,16 @@ class Application extends Component {
      * #???????????????????????????? - то, что возможно не нужно
      * Change view file
      *
-     * @param string controller - controller name
-     * @param string action - action name
+     * @param {string} controller - controller name
+     * @param {string} action - action name
      */
 
 
     /*#???????????????????????????? - то, что возможно не нужно
      * Change view data
      *
-     * @param string controller - controller name
-     * @param string action - action name
+     * @param {string} controller - controller name
+     * @param {string} action - action name
      */
     /*change_view_file(controller, action)
     {
@@ -169,8 +159,8 @@ class Application extends Component {
      * #???????????????????????????? - то, что возможно не нужно
      * Change layout data
      *
-     * @param string controller - controller name
-     * @param string action - action name
+     * @param {string} controller - controller name
+     * @param {string} action - action name
      */
     /*change_layout_file(controller, action)
     {
@@ -185,7 +175,7 @@ class Application extends Component {
      * #???????????????????????????? - то, что возможно не нужно
      * Получить путь до view файла
      *
-     * @return string
+     * @return {string}
 
     protected function get_view_file()
     {
@@ -195,7 +185,7 @@ class Application extends Component {
 
      * Получить название view файла, без расширения и пути
      *
-     * @return string
+     * @return {string}
 
     protected function get_view_name()
     {
@@ -209,7 +199,7 @@ class Application extends Component {
 
      * Получить путь до layout файла
      *
-     * @return string
+     * @return {string}
 
     protected function get_layout_file()
     {
@@ -220,7 +210,7 @@ class Application extends Component {
 
      * Получить название layout файла, без расширения и пути
      *
-     * @return string
+     * @return {string}
 
     protected function get_layout_name()
     {
@@ -278,7 +268,7 @@ class Application extends Component {
     /*
      * Controller runner
      *
-     * @return object - controller execution result
+     * @return {object} - controller execution result
      */
     run_controller()
     {
@@ -296,7 +286,7 @@ class Application extends Component {
     /*
      * Run operations before or after controller running
      *
-     * @param string ('before'/'after') param - determine which operations will be performed
+     * @param {string} ('before'/'after') param - determine which operations will be performed
      */
     app_operations(param)
     {
@@ -350,18 +340,16 @@ class Application extends Component {
 
 
     /*
-     * Get db - mysql, redis etc.
+     * Set db according with congig settings
      *
-     * @return string
+     * @return {object}
      */
-    get_db()
+    setDb()
     {
-        if (!this.db_model) {
-            if (Config.db.type === 'mysql') {
-                this.db_model = DBaseMysql.getInstance(this.requestId);
-            }
+        if (!this.db) {
+            this.db = DBase.getInstance(this.requestId).getDb()
         }
-        return this.db_model;
+        return this.db;
     }
 
 
@@ -412,10 +400,10 @@ class Application extends Component {
         })
         .then(res => {
             console.log('# then 1');
-            _applicationObject.get_db();
-            _applicationObject.db_model.begin_transaction();
+            _applicationObject.setDb();
+            _applicationObject.db.begin_transaction();
             _applicationObject.execute();
-            _applicationObject.db_model.commit();
+            _applicationObject.db.commit();
             console.log('> applicationObject executed');
         })
         .catch(e => {
@@ -423,7 +411,7 @@ class Application extends Component {
             console.log('\n\n              --------------->>>>>>>>> CATCHED');
 
             if (_applicationObject) {
-                _applicationObject.db_model.rollback();
+                _applicationObject.db.rollback();
             }
 
             let _errorMessage = '';

@@ -1,6 +1,6 @@
 /*
- * File src/app/controllers/AbstractController.js
- * import AbstractController from 'src/app/controllers/AbstractController';
+ * File src/app/abstract/AbstractController.js
+ * import AbstractController from 'src/app/abstract/AbstractController';
  *
  * Common controller component
  */

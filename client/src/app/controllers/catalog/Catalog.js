@@ -8,7 +8,7 @@
 import React, { Component } from 'react';
 
 
-import AbstractController from 'src/app/controllers/AbstractController';
+import AbstractController from 'src/app/abstract/AbstractController';
 import Consts from 'src/settings/Constants';
 import Controller from 'src/modules/controller/Controller';
 

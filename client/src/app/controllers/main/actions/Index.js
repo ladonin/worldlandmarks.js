@@ -7,7 +7,7 @@
 
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
-import AbstractAction from 'src/app/controllers/AbstractAction';
+import AbstractAction from 'src/app/abstract/AbstractAction';
 
 
 // Components
@@ -22,7 +22,6 @@ class MainIndex extends AbstractAction {
     constructor() {
         super();
     }
-
 
     render() {
         return (

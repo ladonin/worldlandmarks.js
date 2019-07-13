@@ -4,8 +4,8 @@
  *
  * Common class for all controllers
  */
-const Controller = require('application/express/vendor/Controller');
-const Language = require('application/express/components/base/Language');
+const Controller = require('application/express/core/Controller');
+const Language = require('application/express/core/Language');
 const Constants = require('application/express/settings/Constants');
 
 class AbstractController extends Controller {
@@ -17,7 +17,7 @@ class AbstractController extends Controller {
     /*
      * Flush result
      *
-     * @return object
+     * @return {object}
      */
     sendMe(actionName = null, eventName = 'api') {
         if (actionName) {
@@ -29,7 +29,7 @@ class AbstractController extends Controller {
     /*
      * Add dynamic data to controller's responce (data from dbase, etc)
      *
-     * @param object data - added data
+     * @param {object} data - added data
      */
     addDynamicData(data) {
         this.data[Constants.REDUX_ACTION_TYPE_UPDATE_DYNAMIC_TEXT] = {...this.data[Constants.REDUX_ACTION_TYPE_UPDATE_DYNAMIC_TEXT], ...data};
@@ -38,14 +38,13 @@ class AbstractController extends Controller {
     /*
      * Add additional static text to controller's responce according with controller and action name
      *
-     * @param string actionName - controller's action name
+     * @param {string} actionName - controller's action name
      */
     addStaticText(actionName) {
 
         let _controllerName = this.constructor.name.toLowerCase();
 
         let _path = _controllerName + '_' + actionName;
-        let _languageInstance = Language.getInstance(this.requestId);
         let _mergedObjectStaticText = {};
 
         if ((_path === 'errors_error404')
@@ -54,13 +53,13 @@ class AbstractController extends Controller {
                 ) {
 
             _mergedObjectStaticText[Constants.REDUX_ACTION_TYPE_UPDATE_STATIC_TEXT] = {
-                'domain_name': _languageInstance.get_text('domain_name'),
-                'hat/logo/under_text': _languageInstance.get_text('hat/logo/under_text'),
+                'domain_name': this.getText('domain_name'),
+                'hat/logo/under_text': this.getText('hat/logo/under_text'),
+                'see_all': this.getText('see_all'),
             }
 
         }
         this.data = {...this.data, ..._mergedObjectStaticText};
     }
-
 }
 module.exports = AbstractController;

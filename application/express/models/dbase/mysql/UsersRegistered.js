@@ -1,67 +1,64 @@
 /*
  * File application/express/models/dbase/mysql/UsersRegistered.js
- * const UsersRegistered = require('application/express/models/dbase/mysql/UsersRegistered');
+ * const UsersRegisteredModel = require('application/express/models/dbase/mysql/UsersRegistered');
  *
  * Users registered MySql db model
  */
 
-const DBaseMysql = require('application/express/vendor/dbases/Mysql');
+const DBaseMysql = require('application/express/core/dbases/Mysql');
 const BaseFunctions = require('application/express/functions/BaseFunctions');
 
-class Users_Registered extends DBaseMysql
+class UsersRegistered extends DBaseMysql
 {
 
-
-    constructor(){
+    constructor() {
         super();
 
-        this.table_name = 'users_registered';
+        this.tableName;
 
         this.fields = {
-            role:{
-                'rules':['numeric', 'required'],
+            role: {
+                'rules': ['numeric', 'required'],
                 //'processing':['htmlspecialchars'],
             },
-            name:{
-                'rules':['word', 'required'],
+            name: {
+                'rules': ['word', 'required'],
                 //'processing':['htmlspecialchars'],
             },
-            password_hash:{
-                'rules':['hash', 'required'],
+            password_hash: {
+                'rules': ['hash', 'required'],
                 //'processing':['htmlspecialchars'],
             },
         };
-        this.snapshot_fields_data();
-}
+        this.snapshotFieldsData();
+    }
 
-    add_new_user(data)
+    getTableName() {
+        if (!this.tableName) {
+            this.tableName = 'users_registered';
+        }
+        return this.tableName;
+    }
+
+    /*
+     * Add new user
+     *
+     * @param {object} - new user data
+     *
+     * @return {integer} - new record id
+     */
+    addNewUser(data)
     {
-        this.set_values_to_fields(data);
+        this.setValuesToFields(data);
 
         return this.insert();
     }
-
-
-
-
-    method()
-    {
-
-
-        return this.get_by_id(1);
-    }
-
-
-
-
-
-
 }
 
 
 
 
 
-Users_Registered.instanceId = BaseFunctions.unique_id();
+UsersRegistered.instanceId = BaseFunctions.unique_id();
 
-module.exports = Users_Registered;
+module.exports = UsersRegistered;

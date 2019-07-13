@@ -1,20 +1,20 @@
 /*
- * Module application/express/components/base/Language.js
- * const Language = require('application/express/components/base/Language');
+ * File application/express/core/Language.js
+ * const Language = require('application/express/core/Language');
  *
  * Responsible for language of rendered text in views
  */
 
 const Consts = require('application/express/settings/Constants');
-const Component = require('application/express/vendor/Component');
-const Service = require('application/express/components/base/Service');
+const Core = require('application/express/core/Core');
+const Service = require('application/express/core/Service');
 const BaseFunctions = require('application/express/functions/BaseFunctions');
 const Config = require('application/express/settings/Config');
 const ErrorCodes = require('application/express/settings/ErrorCodes');
-const SocketsPool = require('application/express/vendor/SocketsPool');
-const RequestsPool = require('application/express/vendor/RequestsPool');
+const SocketsPool = require('application/express/core/SocketsPool');
+const RequestsPool = require('application/express/core/RequestsPool');
 
-class Language extends Component {
+class Language extends Core {
 
     constructor() {
         super();
@@ -46,34 +46,34 @@ class Language extends Component {
 
     getBaseWord(adress) {
         if (this.base_words === false) {
-            this.base_words = Config.text[this.get_language()];
+            this.base_words = Config.text[this.getLanguage()];
         }
         return this.base_words[adress];
     }
 
     getServiceWord(adress) {
         if (this.service_words === false) {
-            this.service_words = Service.getInstance(this.requestId).get_words(this.get_language());
+            this.service_words = Service.getInstance(this.requestId).get_words(this.getLanguage());
         }
         return this.service_words[adress];
     }
 
     /*
-     * Get text from locales array by its identifier
+     * Get the text from the glossary translated into the specified language
      *
-     * @param string id - identifier
-     * @param object vars - additional variables on which part of the text can be replaced
+     * @param {string} id - identifier
+     * @param {object} vars - additional variables on which part of the text can be replaced
      *
-     * @return string - found prepared text
+     * @return {string} - found prepared text
      */
-    get_text(adress, vars = null)
+    getText(adress, vars = null)
     {
 
         let _text = BaseFunctions.isSet(this.getBaseWord(adress)) ? this.getBaseWord(adress) : this.getServiceWord(adress);
         if (BaseFunctions.isUndefined(_text)) {
             this.error(
                     ErrorCodes.ERROR_LANGUAGE_WORD_NOT_FOUND,
-                    'language[' + this.get_language() + '], word[' + adress + ']');
+                    'language[' + this.getLanguage() + '], word[' + adress + ']');
         }
 
 // If also need to prepare some vars in it
@@ -93,7 +93,7 @@ class Language extends Component {
      *
      * Check language according with available languages
      *
-     * @param string language
+     * @param {string} language
      *
      * @return bool
      */
@@ -109,9 +109,9 @@ class Language extends Component {
     /*
      * Get language
      *
-     * @return string
+     * @return {string}
      */
-    get_language() {
+    getLanguage() {
         // If set
         if (this.language !== false) {
             return this.language;
@@ -141,7 +141,7 @@ class Language extends Component {
     /*
      * Get client language via browser's header
      *
-     * @return string/null
+     * @return {string}/null
      */
     getClientLanguage()
     {
@@ -192,7 +192,7 @@ module.exports = Language;
 
  * Записать язык в сессию
  *
- * @param string $language - код языка
+ * @param {string} $language - код языка
 
  public function set_language_in_session($language)
  {
