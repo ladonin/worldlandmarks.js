@@ -88,6 +88,36 @@ module.exports = {
         return BaseFunctions.clone(_instances_pool[reqId].request);
     },
 
+
+    /*
+     * Set prepared controller and action names for current request
+     *
+     * @param {integer} reqId - request id
+     * @param {string} controllerName - controller name
+     * @param {string} actionName - actoin name
+     */
+    setControllerAndActionNames(reqId, controllerName, actionName) {
+        checkReqId(reqId, 'for setControllerAndAction');
+        _instances_pool[reqId].controller = controllerName;
+        _instances_pool[reqId].action = actionName;
+    },
+
+    /*
+     * Get prepared controller name for current request
+     *
+     * @param {integer} reqId - request id
+     *
+     * @return {object} - controller and acion names
+     */
+    getControllerAndActionNames(reqId) {
+        checkReqId(reqId, 'for getControllerAndActionNames');
+        return {
+            controller:_instances_pool[reqId].controller,
+            action:_instances_pool[reqId].action
+        }
+    },
+
+
     /*
      * Get socket token of current request
      *

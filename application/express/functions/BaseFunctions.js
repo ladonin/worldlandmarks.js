@@ -506,6 +506,69 @@ function processError(errorCode, message = '', requestData = 'not set', log_type
 
 
 
+/*
+ * Convert the text into one word in English
+ *
+ * @param {string} text - convertable text
+ * @param {string} defaultValue - default value if passed text is empty
+ *
+ * @return {string} - converted text
+ */
+function prepareToOneWord(text, defaultValue = Consts.UNDEFINED_VALUE)
+{
+    if (!text) {
+        text = defaultValue;
+    }
+
+    text = prepareStrangeLetters(text);
+    text = prepareToDirName(text);
+    text = text.toLowerCase();
+    text = text.replace(/[,\(\)\']*/g,'');
+
+    return text;
+}
+
+
+/*
+ * Convert text to one word that can be used as a directory name
+ *
+ * @param {string} text - convertable text
+ *
+ * @return {string} - converted text
+ */
+function prepareToDirName(text)
+{
+    text = trim(text);
+    text = text.replace(/[\'\"]/g,'');
+    text = text.replace(/[ \-\.\,\|«»]/g,'_');
+
+    return text;
+}
+
+/*
+ * Convert foreigner letters into english
+ *
+ * @param {string} text - convertable text
+ *
+ * @return {string} - converted text
+ */
+function prepareStrangeLetters(text)
+{
+    let _lettersFrom = ['ö', 'ü', 'ß', 'ć', 'ț', 'ș', 'í', 'ó', 'á', 'ñ', 'ô', 'Î', 'Ō', 'é','č', 'ž', 'ō','É'];
+    let _lettersTo = ['o', 'u', 'ss', 't', 't', 's', 'i', 'o', 'a', 'n', 'o', 'i', 'o', 'e', 'c', 'z', 'o', 'e'];
+
+    for (let _index in _lettersFrom) {
+
+        let _letterFrom = _lettersFrom[_index];
+        let _letterTo = _lettersTo[_index];
+        let _re = new RegExp(_letterFrom, 'g');
+        text = text.replace(_re, _letterTo);
+    }
+    return text;
+}
+
+
+
 
 module.exports = {
     deleteFile,
@@ -544,7 +607,10 @@ module.exports = {
     isInteger,
     inObject,
     isString,
-    processError
+    processError,
+    prepareToOneWord,
+    prepareStrangeLetters,
+    prepareToDirName
 };
 
 

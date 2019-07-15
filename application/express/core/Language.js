@@ -159,14 +159,6 @@ class Language extends Core {
 
         return null;
     }
-
-
-
-
-
-
-
-
 }
 
 
@@ -183,7 +175,7 @@ module.exports = Language;
 
 
 
-//is_available_language($language) #???????????????????????????? - то, что возможно не нужно
+//is_available_language($language)  => checkLanguage
 
 
 /*

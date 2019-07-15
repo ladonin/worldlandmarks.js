@@ -251,12 +251,17 @@ class Application extends Component {
             let _Controller = require(_controller_path);
             let _controller_object = _Controller.getInstance(this.requestId);
 
-            let _action_name = 'action_' + this.getFromRequest('action').toLowerCase();
+            let _action_name = this.getFromRequest('action').toLowerCase();
+            let _action_name_prepared = 'action_' + _action_name;
 
             // If action exists
-            if (BaseFunctions.isMethod(_controller_object[_action_name])) {
+            if (BaseFunctions.isMethod(_controller_object[_action_name_prepared])) {
                 this.controller = _controller_object;
-                this.action = _action_name;
+                this.action = _action_name_prepared;
+
+                // All ok, controller and action are valid
+                RequestsPool.setControllerAndActionNames(this.requestId, _controller_name, _action_name);
+
                 return true;
             }
         }

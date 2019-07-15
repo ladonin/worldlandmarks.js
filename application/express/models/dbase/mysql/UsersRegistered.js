@@ -47,7 +47,7 @@ class UsersRegistered extends DBaseMysql
      *
      * @return {integer} - new record id
      */
-    addNewUser(data)
+    add(data)
     {
         this.setValuesToFields(data);
 

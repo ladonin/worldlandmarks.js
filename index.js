@@ -6,6 +6,53 @@ var io = require('socket.io')(server);
 const Application = require('application/express/components/base/Application');
 const RequestsPool = require('application/express/core/RequestsPool');
 const SocketsPool = require('application/express/core/SocketsPool');
+const fetch = require('node-fetch');
+
+
+
+const Deasync = require('deasync');
+console.log(11);
+        let finished = false;
+
+let metaDataProperty;let featureMember;
+
+fetch('https://geocode-maps.yandex.ru/1.x/?format=json&apikey=1sd62fc59-a05d-4471-a962-68edaf8c3dbe&geocode=19.611347,0.760241&lang=en')
+  .then(function(response) {
+return response.json();
+   })
+  .then(function(data) {
+
+      console.log(data);
+      if (data.error) {
+          console.log(data.error.message);
+
+      }
+
+    
+    finished = true;
+console.log(22);
+  }).catch( console.log );
+
+        // Wait for convertation to be finished
+        Deasync.loopWhile(function () {
+            return !finished;
+        });
+console.log(33);
+console.log(metaDataProperty);
+
+console.log(featureMember);
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 SocketsPool.setIO(io);

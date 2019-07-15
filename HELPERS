@@ -3,10 +3,12 @@ Language.getInstance(this.requestId).getText('site/title/' + action, params);
 
 
 this.db.getBySql(_sql);
-this.error(Consts.ERROR_FUNCTION_ARGUMENTS, 'country code [' + code + ']', undefined, false);
+this.error(ErrorCodes.ERROR_FUNCTION_ARGUMENTS, 'country code [' + code + ']', undefined, false);
 this.getFromRequest(name, required = true)
 
-
+this.getLanguage()
+this.getText(adress, vars)
+this.getServiceName()
 
 
 * @param {boolean} needResult - is result required
@@ -14,4 +16,25 @@ this.getFromRequest(name, required = true)
 
 
 const Cache = require('application/express/components/base/Cache');
+const ErrorCodes = require('application/express/settings/ErrorCodes');
 const Language = require('application/express/components/base/Language');
+
+
+
+
+
+
+
+for (var index in arr) {
+    arr[index] = toInt(arr[index]);
+}
+
+
+
+
+
+
+
+
+
+

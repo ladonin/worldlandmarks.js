@@ -69,7 +69,7 @@ class ArticlesModel extends DBaseMysql
      *
      * @return {integer} - new record id
      */
-    addArticle(data)
+    add(data)
     {
         this.setValuesToFields(data);
         return this.insert();
@@ -80,7 +80,7 @@ class ArticlesModel extends DBaseMysql
      *
      * @param {object} data - article's new data with id
      */
-    updateArticle(data)
+    update(data)
     {
         let _id = data.id;
         delete data.id;

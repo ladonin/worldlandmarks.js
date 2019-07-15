@@ -11,6 +11,7 @@ const Consts = require('application/express/settings/Constants');
 const ErrorCodes = require('application/express/settings/ErrorCodes');
 const Language = require('application/express/core/Language');
 const Countries = require('application/express/components/Countries');
+const RequestsPool = require('application/express/core/RequestsPool');
 
 class Seo extends Component {
 
@@ -28,7 +29,7 @@ class Seo extends Component {
      */
     getTitle(action, params = {})
     {
-        return  this..getText('site/title/' + action, params);
+        return  this.getText('site/title/' + action, params);
     }
 
     /*
@@ -40,21 +41,15 @@ class Seo extends Component {
      */
     getKeywords(action)
     {
+        let {controller, action} = RequestsPool.getControllerAndActionNames(this.requestId);
 
 
-         this.getText('site/title/' + action, params);
-
-
-
-
-
-
-
-        $country_component = components\Countries::get_instance();
-        $controller_name = get_controller_name();
-        $action_name = get_action_name();
-        $service_module = self::get_module(MY_MODULE_NAME_SERVICE);
         $data_db_model = components\Map::get_db_model('data');
+
+
+
+
+        
 
         if ($controller_name === MY_CONTROLLER_NAME_CATALOG) {
 
@@ -62,9 +57,9 @@ class Seo extends Component {
                 return Countries->get_country_name_by_get_var();
             } else if ($action_name === MY_ACTION_NAME_STATE) {
 
-                $country_code = $country_component->get_country_code_from_url();
+                $country_code = Countries->get_country_code_from_url();
                 $state_code = $this->get_get_var(MY_CATALOG_STATE_VAR_NAME);
-                $country_data = $country_component->get_state_and_country_name_by_code($country_code, $state_code);
+                $country_data = Countries->get_state_and_country_name_by_code($country_code, $state_code);
 
                 return $country_data['country'] . ',' . $country_data['state'];
             } else if ($action_name === MY_ACTION_NAME_PLACEMARK) {

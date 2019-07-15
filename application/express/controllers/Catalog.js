@@ -3,8 +3,6 @@
  *
  * Controller catalog/* pages
  */
-const Deasync = require('deasync');
-
 
 const BaseFunctions = require('application/express/functions/BaseFunctions');
 const Language = require('application/express/core/Language');

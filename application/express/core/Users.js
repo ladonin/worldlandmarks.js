@@ -58,7 +58,7 @@ class Users extends Core
      */
     admin_access_authentication()
     {
-        if (this.getFromRequest(Consts.ADMIN_PASSWORD_VAR_NAME) !== AccessConfig['admin_password']) {
+        if (this.getFromRequest(Consts.ADMIN_PASSWORD_VAR_NAME) !== AccessConfig['adminPassword']) {
             return false;
         }
         return true;
