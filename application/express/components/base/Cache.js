@@ -47,8 +47,8 @@ module.exports = {
  *
 countriesNameByCode[code]= name
 countriesDataByCode[code]= data
-
-
-
+stateIdByCode[code]= id
+countriesTranslateStates[language][countryCode][stateCode][stateName] = translation
+countriesTranslateCities[language][countryCode][stateCode][cityName] = translation
 
  */

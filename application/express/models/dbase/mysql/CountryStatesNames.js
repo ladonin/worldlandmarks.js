@@ -38,7 +38,7 @@ class CountryStatesNamesModel extends DBaseMysql
      */
     getTableName() {
         if (!this.tableName) {
-            this.tableName = 'country_states_google_names';
+            this.tableName = 'country_states_names';
         }
         return this.tableName;
     }
@@ -54,13 +54,14 @@ class CountryStatesNamesModel extends DBaseMysql
     {
         if (data['state_id'] && data['name'] && data['language']) {
             let _result =  this.getByCondition(
-                    "state_id = '" + data['state_id'] + "' AND name = '" + data['name'] + "' AND language = '" + data['language'] + "'",
+                    "state_id = ? AND name = ? AND language = ?",
                     '',
                     '',
                     'count(*) as c',
+                    [data['state_id'], data['name'], data['language']],
                     1,
                     false);
-            if (_result[0]['c'] == 0) {
+            if (_result[0]['c'] === 0) {
                 return this.add(data);
             }
         }

@@ -28,7 +28,7 @@ class Articles extends Component {
         let _group = '';
         let _need_result = false;
 
-        return ArticlesModel.getInstance(this.requestId).getByCondition(_condition, _order, _group, _select, limit, _need_result);
+        return ArticlesModel.getInstance(this.requestId).getByCondition(_condition, _order, _group, _select, undefined, limit, _need_result);
     }
 }
 

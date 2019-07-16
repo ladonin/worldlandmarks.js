@@ -20,7 +20,9 @@ ERROR_USER_NOT_VERIFICATED - в catch в application.run() сделать про
 
 var1 и var2 переименовал в controller и action
 
-
+переименовал таблицы
+1. country_states_cities_google_translates => country_states_cities_translations
+2. country_states_google_names => country_states_names
 
 
 //ATTENTION - обратите внимание

@@ -12,8 +12,8 @@ const ErrorCodes = require('application/express/settings/ErrorCodes');
 const CountriesNamesReplaces = require('application/express/settings/countries/CountriesNamesReplaces');
 const CountriesModel = require('application/express/models/dbase/mysql/Countries');
 const CountryNameModel = require('application/express/models/dbase/mysql/CountryName');
-
-const Cache = require('application/express/components/base/Cache');
+const CountryStatesModel = require('application/express/models/dbase/mysql/CountryStates');
+const CountryStatesCitiesTranslationsModel = require('application/express/models/dbase/mysql/CountryStatesCitiesTranslations');
 
 class Countries extends Component {
 
@@ -82,17 +82,17 @@ class Countries extends Component {
             return this.getText('countries/undefined/name');
         }
 
-        if (_result = Cache.get('countriesNameByCode', _serviceName, _language)[code]) {
+        if (_result = this.cache.get('countriesNameByCode', _serviceName, _language)[code]) {
             return _result;
         }
 
         let _countryName = CountryNameModel.getInstance(this.requestId).getCountryNameByCode(code, _language, false);
 
         if (!_countryName) {
-           this.error(ErrorCodes.ERROR_COUNTRY_NAME_WAS_NOT_FOUND, 'country code [' + code + ']');
+            this.error(ErrorCodes.ERROR_COUNTRY_NAME_WAS_NOT_FOUND, 'country code [' + code + ']');
         }
 
-        Cache.get('countriesNameByCode', _serviceName, _language)[code] = _countryName;
+        this.cache.get('countriesNameByCode', _serviceName, _language)[code] = _countryName;
 
         return _countryName;
     }
@@ -107,32 +107,154 @@ class Countries extends Component {
     getCountryDataByCode(code)
     {
 
-       if (!countryCode)) {
-           this.error(ErrorCodes.ERROR_FUNCTION_ARGUMENTS, 'country code [' + code + ']');
-       }
+        if (!code) {
+            this.error(ErrorCodes.ERROR_FUNCTION_ARGUMENTS, 'country code [' + code + ']');
+        }
 
-       let _result;
-       let _language = this.getLanguage();
-       let _serviceName = this.getServiceName();
+        let _result;
+        let _language = this.getLanguage();
+        let _serviceName = this.getServiceName();
 
-       if (_result = Cache.get('countriesDataByCode', _serviceName, _language)[code]) {
-           return _result;
-       }
+        if (_result = this.cache.get('countriesDataByCode', _serviceName, _language)[code]) {
+            return _result;
+        }
 
-       let _countryData = CountriesModel.getInstance(this.requestId).getCountryDataByCode(code, false);
-       if (!_countryData)) {
-          this.error(ErrorCodes.ERROR_COUNTRY_DATA_WAS_NOT_FOUND, 'country code [' + code + ']');
-       }
+        let _countryData = CountriesModel.getInstance(this.requestId).getCountryDataByCode(code, false);
+        if (!_countryData) {
+            this.error(ErrorCodes.ERROR_COUNTRY_DATA_WAS_NOT_FOUND, 'country code [' + code + ']');
+        }
 
-       Cache.get('countriesDataByCode', _serviceName, _language)[code] = _countryData;
+        this.cache.get('countriesDataByCode', _serviceName, _language)[code] = _countryData;
 
-       return _countryData;
+        return _countryData;
     }
 
+//get_all_countries_list getAllCountriesList => this.getCountries
+////ATTENTION - обратите внимание
+//сначала назывался get_all_countries_list,
+// запрашивал MY_MODEL_NAME_DB_GEOCODE_COLLECTION.get_countries, там делал запрос в таблицу countries
+// в итоге все запросы (MY_MODEL_NAME_DB_GEOCODE_COLLECTION.get_countries и this.getAllCountriesList) идут в новый метод this.getCountries
+//getAllCountriesList() => this.getCountries
 
 
 
+    /*
+     * Get all countries
+     *
+     * @return {array of objects}
+     */
+    getCountries()
+    {
+        let _language = this.getLanguage();
 
+        return this.getByCondition(
+                "language = ? AND country_code!=? AND country_code!=''",
+                'country',
+                '',
+                'DISTINCT country, country_code',
+                [_language, Consts.UNDEFINED_VALUE],
+                undefined,
+                false);
+    }
+
+// //ATTENTION - обратите внимание get_all_countries_codes => CountriesModel.getAllCountriesCodes
+
+
+// //ATTENTION - обратите внимание translateStateNames => translateStateName
+
+// //ATTENTION - обратите внимание translateStateName => getTranslationOfStateName
+// //ATTENTION - обратите внимание translateCityNames => getTranslationOfCityName
+
+
+
+    /*
+     * Get translation of state name
+     *
+     * @param {string} language - on what language will be translated
+     * @param {string} countryCode - country code
+     * @param {string} stateName - state name
+     * @param {string} stateCode - state code
+     *
+     * @return string - translated state name
+     */
+    getTranslationOfStateName(language, countryCode, stateName, stateCode)
+    {
+        let _result;
+        let _language = this.getLanguage();
+        let _serviceName = this.getServiceName();
+
+        if (_result = this.cache.get('countriesTranslateStates', _serviceName, _language)[language][countryCode][stateCode][stateName]) {
+            return _result;
+        }
+
+        let _datas = CountryStatesCitiesTranslationsModel.getInstance(this.requestId).getStateTranslation(countryCode, stateName, language, false);
+
+        if (_datas.length === 1) {
+            if ((!_datas[0]['url_code']) || (_datas[0]['url_code'] === stateCode)) {
+                _result = _datas[0]['translate'];
+            }
+        } else {
+            for (let _index in _datas) {
+
+                let _data = _datas[_index];
+                if (_data['url_code'] === stateCode) {
+                    _result = _data['translate'];
+                }
+            }
+        }
+        if (!_result) {
+            // Default
+            _result = stateName;
+        }
+
+        this.cache.get('countriesTranslateStates', _serviceName, _language)[language][countryCode][stateCode][stateName] = _result;
+
+        return _result;
+    }
+
+    /*
+     * Get translation of city name
+     * Example: (for russian language):
+     *     'Matale' (translates to)=> 'Матале'
+     *
+     * @param {string} countryCode - country code
+     * @param {string} cityName - city name
+     * @param {string} stateCode - state code
+     * @param {string} language - on what language will be translated
+     *
+     * @return {string} - подготовленное имя города
+     */
+    getTranslationOfCityName(countryCode, cityName, stateCode, language)
+    {
+        let _result;
+        let _language = this.getLanguage();
+        let _serviceName = this.getServiceName();
+
+        if (_result = this.cache.get('countriesTranslateCities', _serviceName, _language)[language][countryCode][stateCode][cityName]) {
+            return _result;
+        }
+
+        let _data = CountryStatesCitiesTranslationsModel.getInstance(this.requestId).getCityTranslation(countryCode, stateCode, cityName, language, true, false);
+
+        if (!_data['translate']) {
+            // It means that country have no states (small country) (or API thinks so)
+            // Then try to get translation for city without relation to state
+            _data = CountryStatesCitiesTranslationsModel.getInstance(this.requestId).getCityTranslation(countryCode, stateCode, cityName, language, false, false);
+        }
+
+        if (_data['translate']) {
+            _result = _data['translate'];
+        }
+
+        if (!_result) {
+            // Default
+            _result = cityName;
+        }
+
+        this.cache.get('countriesTranslateCities', _serviceName, _language)[language][countryCode][stateCode][cityName] = _result;
+
+        return _result;
+    }
 
 }
 
@@ -173,64 +295,6 @@ module.exports = Countries;
  }
 
 
- public function get_all_countries_codes()
- {
- $conn = \core\DBase_Mysql::model()->get_connect();
- $sql = "SELECT c.local_code FROM country";
- return $conn->query($sql, \PDO::FETCH_ASSOC)->fetchAll();
- }
-
-
- public function get_all_countries_list()
- {
- $result = self::get_model(MY_MODEL_NAME_DB_GEOCODE_COLLECTION)->get_countries();
-
- return $result;
- }
-
-
-
-
-
- public function translate_state_names($language, $country_code, $state_name, $state_code)
- {
- if (my_is_not_empty($result = @$this->countries_translate_states_requested_data[$language][$country_code][$state_code][$state_name])) {
- return $result;
- }
-
- // Дефолтное значение
- $result = $state_name;
-
- $conn = \core\DBase_Mysql::model()->get_connect();
- $sql = "SELECT ct.*, cs.url_code
- FROM country c
- LEFT JOIN country_states_cities_google_translates ct on c.id = ct.country_id
- LEFT JOIN country_states cs on cs.id = ct.only_for_state
- WHERE c.local_code = \"".$country_code."\" AND ct.google_name = \"".$state_name."\" AND language = '".$language."' AND is_city=0";
- $datas = $conn->query($sql, \PDO::FETCH_ASSOC)->fetchAll();
- if (count($datas) === 1) {
- if ((!$datas[0]['url_code']) || ($datas[0]['url_code'] === $state_code)) {
- $result = $datas[0]['translate'];
- }
- } else {
- foreach($datas as $data) {
- if ($data['url_code'] === $state_code) {
- $result = $data['translate'];
- }
- }
- }
-
-
- if (!$result) {
- // Дефолтное значение
- $result = $city_name;
- }
-
-
- $this->countries_translate_states_requested_data[$language][$country_code][$state_code][$state_name] = $result;
-
- return $result;
- }
 
 
 
@@ -241,62 +305,12 @@ module.exports = Countries;
 
 
 
- * Подготавливает имя города:
- * Пример (если у пользователя русский язык):
- *     'Matale' (преобразует в)=> 'Матале'
- *
- * @param {string} $country_code - код страны
- * @param {string} $state_name - имя города
- * @param {string} $state_code - код региона
- * @param {string} $language - язык
- *
- * @return {string} - подготовленное имя города
-
- public function translate_city_names($country_code, $city_name, $state_code, $language)
- {
- if (my_is_not_empty($result = @$this->countries_translate_cities_requested_data[$language][$country_code][$state_code][$city_name])) {
- return $result;
- }
-
- // Дефолтное значение
- $result = $city_name;
-
- $conn = \core\DBase_Mysql::model()->get_connect();
 
 
 
- $sql = "SELECT ct.translate
- FROM country c
- LEFT JOIN country_states_cities_google_translates ct on c.id = ct.country_id
- LEFT JOIN country_states cs on cs.id = ct.only_for_state
- WHERE cs.url_code = '" . $state_code . "' AND c.local_code = '" . $country_code . "' AND ct.google_name = \"" . $city_name . "\" AND language = '" . $language . "' AND is_city=1 LIMIT 1";
-
- $data = $conn->query($sql, \PDO::FETCH_ASSOC)->fetch();
 
 
- if (!$data['translate']) {
- // значит страна без штатов (или гугл думает что в ней нет штатов) и надо подобрать перевод для города не относящегося к штату
- $sql = "SELECT ct.translate
- FROM country c
- LEFT JOIN country_states_cities_google_translates ct on c.id = ct.country_id
- LEFT JOIN country_states cs on cs.id = ct.only_for_state
- WHERE c.local_code = '" . $country_code . "' AND ct.google_name = \"" . $city_name . "\" AND language = '" . $language . "' AND is_city=1 LIMIT 1";
 
- $data = $conn->query($sql, \PDO::FETCH_ASSOC)->fetch();
-
- }
-
-
- if ($data['translate']) {
- $result = $data['translate'];
- } else {
- // Дефолтное значение
- $result = $city_name;
- }
-
- $this->countries_translate_cities_requested_data[$language][$country_code][$state_code][$city_name] = $result;
- return $result;
- }
 
 
 
@@ -485,39 +499,7 @@ module.exports = Countries;
 
 
 
- public function get_state_id_by_code($state_code = null, $need_result = true)
- {
 
- if ($state_code == MY_UNDEFINED_VALUE) {
- return null;
- }
-
- if (my_is_empty(@$state_code)) {
- self::concrete_error(array(MY_ERROR_FUNCTION_ARGUMENTS, 'state_code:' . $state_code));
- }
-
-
- if (my_is_not_empty($result = @$this->countries_state_id_by_code_requested_data[$state_code])) {
- return $result;
- }
-
- $connect = \core\DBase_Mysql::model()->get_connect();
-
- $sql = "SELECT id
- FROM country_states
- WHERE url_code = ".$connect->quote($state_code);
-
- $data = $connect->query($sql, \PDO::FETCH_ASSOC)->fetch();
-
- $result = isset($data['id']) ? $data['id'] : null;
-
- if (my_is_empty($result) && $need_result) {
- self::concrete_error(array(MY_ERROR_COUNTRY_STATE_ID_WAS_NOT_FOUND, 'state_code:' . $state_code));
- }
-
- $this->countries_state_id_by_code_requested_data[$state_code] = $result;
- return $result;
- }
 
 
 
@@ -544,7 +526,7 @@ module.exports = Countries;
 
  $sql = "SELECT csgn.name
  FROM country_states cs
- LEFT JOIN country_states_google_names csgn on cs.id = csgn.state_id
+ LEFT JOIN country_states_names csgn on cs.id = csgn.state_id
  WHERE cs.url_code = '".$state_code."' AND csgn.language = '".$language."'";
 
  $data = $connect->query($sql, \PDO::FETCH_ASSOC)->fetch();

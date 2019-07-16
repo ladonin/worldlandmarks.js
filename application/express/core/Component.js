@@ -15,6 +15,7 @@ const DBase = require('application/express/core/DBase');
 const Core = require('application/express/core/Core');
 const Language = require('application/express/core/Language');
 const Service = require('application/express/core/Service');
+const Cache = require('application/express/components/base/Cache');
 
 class Component extends Core {
 
@@ -34,7 +35,10 @@ class Component extends Core {
          * @type {string}
          */
         this.service;
+
+        this.cache = Cache;
     }
+
 
 
     /*

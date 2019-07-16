@@ -17,6 +17,7 @@ const Service = require('application/express/core/Service');
 const Countries = require('application/express/components/Countries');
 const CountryStatesNamesModel = require('application/express/models/dbase/mysql/CountryStatesNames');
 const CountryStatesModel = require('application/express/models/dbase/mysql/CountryStates');
+const States = require('application/express/components/States');
 
 class GeocodeCollectionModel extends DBaseMysql
 {
@@ -144,7 +145,7 @@ class GeocodeCollectionModel extends DBaseMysql
         if (language) {
             condition += " AND language='" + language + "'";
         }
-        let _results = this.getByCondition(_condition, '', '', '*', false, false);
+        let _results = this.getByCondition(_condition, '', '', '*', undefined, undefined, false);
 
         for (let _index in  _results) {
             let _result = _results[_index];
@@ -256,7 +257,7 @@ class GeocodeCollectionModel extends DBaseMysql
     add(coords, id)
     {
         let _result = [];
-        let languages = Service.getInstance(this.requestId).getLanguagesCodes();
+        let _languages = Service.getInstance(this.requestId).getLanguagesCodes();
 
         // Initially prepare adress in English
         let _dataEn = this.prepareAddress(coords, id, Consts.LANGUAGE_EN);
@@ -270,80 +271,68 @@ class GeocodeCollectionModel extends DBaseMysql
 
         let _countryCodeEn = _dataEn['country_code'] ? _dataEn['country_code'] : Consts.UNDEFINED_VALUE;
 
-        let countryId = Countries.getCountryDataByCode(_countryCodeEn);
+        let countryId = Countries.getCountryDataByCode(_countryCodeEn)['id'];
 
 
+        if (_dataEn['state_code'] != Consts.UNDEFINED_VALUE) {
+            // Try to add new state
+            CountryStatesModel.addOnce({
+                'url_code':_dataEn['state_code'],
+                'country_id':countryId
+            });
 
+            let _stateId = States.getStateIdByCode(_dataEn['state_code']);
 
-
-
-
-
-        $country_id = $country_id['id'];
-
-        if ($data_en['state_code'] != MY_UNDEFINED_VALUE) {
-            // Новый код области/штата, undefined не пишется
-            CountryStatesModel->add_once(array(
-                'url_code' => $data_en['state_code'],
-                'country_id' => $country_id
-                )
-            );
-
-            $state_id = Countries->get_state_id_by_code($data_en['state_code']);
-
-            // Названия областей - добавляются данные только существующей области - для английского языка
-            CountryStatesNamesModel->add_once(array(
-                'state_id' => $state_id,
-                'name' => $administrative_area_level_1_en,
-                'language' => MY_LANGUAGE_EN
-                )
-            );
+            // Try to add new state name - defined and in English
+            CountryStatesNamesModel.addOnce({
+                'state_id':stateId,
+                'name':administrativeAreaLevel1En,
+                'language':Consts.LANGUAGE_EN
+            });
         }
 
-        //берем все языки, что указали для сервиса
-        foreach ($languages_data as $language_data) {
+        //For other languages
+        for (let index in _languages) {
+            let _language = _languages[index];
 
-            $language = $language_data['code'];
-            // передаем остальным языкам английские данные, чтобы из них сформировать код страны и штата
-            if ($language !== MY_LANGUAGE_EN) {
-                $data = $this->prepare_address($coords, $data_id, $language, array(
-                    'country' => $country_en,
-                    'administrative_area_level_1' => $administrative_area_level_1_en));
-
-
-                  $this->set_values_to_fields($data);
+            if (_language !== Consts.LANGUAGE_EN) {
+                let _data = this.prepareAddress(coords, id, _language, {
+                    'country':countryEn,
+                    'administrative_area_level_1':_administrativeAreaLevel1En
+                });
 
 
-                $result[] = $this->insert();
-
-                if ($data_en['state_code'] != MY_UNDEFINED_VALUE) {
-                    // Названия областей - добавляются данные только существующей области - для других языков
+            this.setValuesToFields(_data);
 
 
-                    if ($data['administrative_area_level_1'] == MY_UNDEFINED_VALUE) {
-                        $data['administrative_area_level_1'] = $administrative_area_level_1_en;
+             _result.push(this.insert());
+
+                if (_dataEn['state_code'] != Consts.UNDEFINED_VALUE) {
+
+
+                    if (_data['administrative_area_level_1'] == Consts.UNDEFINED_VALUE) {
+                        _data['administrative_area_level_1'] = _administrativeAreaLevel1En;
                     }
 
-
-                    $country_states_google_names_model->add_once(array(
-                        'state_id' => $state_id,
-                        'name' => $data['administrative_area_level_1'],
-                        'language' => $language
-                        )
+                    // Try to add new state name - defined and in nonenglish language
+                    CountryStatesNamesModel.addOnce({
+                        'state_id':stateId,
+                        'name':_data['administrative_area_level_1'],
+                        'language':_language
+                    }
                     );
                 }
-
             }
         }
 
-        return $result;
+        return _result;
     }
 
 
 
 
 
-
+// //ATTENTION - обратите внимание get_countries => CountriesModel.getCountries
 
 
 
@@ -443,22 +432,7 @@ abstract class Model extends \vendor\DBase_Mysql
     }
 
 
-    /*
-     * Возвращает все существующие в сервисе страны
-     *
-     * @return array
-     */
-    public function get_countries()
-    {
-        $data_db_model = components\Map::get_db_model('data');
 
-        $language_model = components\Language::get_instance();
-        $language = $language_model->get_language();
-
-        $condition = "language = '" . $language . "' AND country_code!='" . MY_UNDEFINED_VALUE . "' AND country_code!=''";
-        $result = $this->get_by_condition($condition, 'country', '', 'DISTINCT country, country_code');
-        return $result;
-    }
 
     /*
      * Обновляет все геоданные метки

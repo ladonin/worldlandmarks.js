@@ -407,14 +407,14 @@ class DBaseMysql extends Model
      * @param {string} order - presentation of 'ORDER BY' condition
      * @param {string} group - presentation of 'GROUP BY' condition
      * @param {string} select - presentation of 'SELECT'
+     * @param {array} where_values - values to be escaped for 'WHERE' condition
      * @param {string} limit -  presentation of 'LIMIT'
      * @param {boolean} need_result - is result required
-     * @param {array} where_values - values to be escaped for 'WHERE' condition
      * //@param {boolean} async - whether we use async query or sync
      *
      * @return {array of objects / promise} - fetched data
      */
-    getByCondition(condition = 1, order = '', group = '', select = '*', limit = false, need_result = true, where_values = [])//, async = false
+    getByCondition(condition = 1, order = '', group = '', select = '*', where_values = [], limit = false, need_result = true)//, async = false
     {
         let _sql = 'SELECT ' + select + ' FROM ' + this.table_name + ' WHERE ' + condition;
 

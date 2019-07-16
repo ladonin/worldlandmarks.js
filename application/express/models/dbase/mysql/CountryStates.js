@@ -18,11 +18,11 @@ class CountryStatesModel extends DBaseMysql
         this.tableName;
 
         this.fields = {
-            url_code:{
-                'rules':['required'],
+            url_code: {
+                'rules': ['required'],
             },
-            country_id:{
-                'rules':['numeric', 'required'],
+            country_id: {
+                'rules': ['numeric', 'required'],
             }
         };
 
@@ -53,10 +53,11 @@ class CountryStatesModel extends DBaseMysql
         if (data['url_code'] !== Consts.UNDEFINED_VALUE) {
             if (data['url_code'] && data['country_id']) {
                 let _result = this.getByCondition(
-                        "url_code = '" + data['url_code'] + "' AND country_id = '" + data['country_id'] + "'",
+                        "url_code = ? AND country_id = ?",
                         '',
                         '',
                         'count(*) as c',
+                        [data['url_code'],data['country_id']],
                         1,
                         false);
                 if (_result[0]['c'] === 0) {
@@ -66,6 +67,20 @@ class CountryStatesModel extends DBaseMysql
         }
         return false;
     }
+
+    /*
+     * Get state id by state code
+     *
+     * @param {string} code - state code
+     *
+     * @return {integer}
+     */
+    getStateIdByCode(code, needResult = true)
+    {
+        let _data = this.getBySql("SELECT id FROM country_states WHERE url_code = ?", [code], needResult);
+        return _data[0].id ? _data[0].id : null;
+    }
+
 }
 
 CountryStatesModel.instanceId = BaseFunctions.unique_id();

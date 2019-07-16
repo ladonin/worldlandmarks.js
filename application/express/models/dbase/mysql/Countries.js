@@ -17,48 +17,24 @@ class CountriesModel extends DBaseMysql
 
         this.tableName;
 
- /*       this.fields = {
-            title:{
-                'rules':['required'],
-                'processing':['strip_tags'],
+        this.fields = {
+            code2: {
+                'rules': ['required'],
             },
-            content:{
-                'rules':['required'],
-                'processing':['strip_tags', 'new_line', 'urls', 'spec_tags'],
-            },
-            content_plain:{
-                'rules':['required'],
-                'processing':['strip_tags'],
-            },
-            seo_description:{
-                'rules':[],
-                'processing':['strip_tags'],
-            },
-            country_id:{
-                'rules':['required', 'numeric'],
-            },
-            categories:{
-                'rules':['required'],
-                'processing':['strip_tags'],
-            },
-            keywords:{
-                'rules':[],
-                'processing':['strip_tags'],
-            },
+            local_code: {
+                'rules': ['required'],
+            }
         };
-*/
+
         this.snapshotFieldsData();
     }
 
     getTableName() {
         if (!this.tableName) {
-           ///////////////// this.tableName = this.getServiceName() + '_articles';
+            this.tableName = 'country';
         }
         return this.tableName;
     }
-
-
-
 
     /*
      * Get country data by country code
@@ -68,9 +44,19 @@ class CountriesModel extends DBaseMysql
      *
      * @return {object} - country data
      */
-    getCountryDataByCode(code, needResult = true){
+    getCountryDataByCode(code, needResult = true) {
         let _data = this.getBySql("SELECT * FROM country WHERE local_code = ?", [code], needResult);
         return _data[0].id ? _data[0] : null;
+    }
+
+    /*
+     * Get all countries codes
+     *
+     * @return {array of objects}
+     */
+    getAllCountriesCodes()
+    {
+        return this.getBySql("SELECT c.local_code FROM country");
     }
 
 }
