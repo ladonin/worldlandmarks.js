@@ -13,7 +13,10 @@ const MapDataModel = require('application/express/models/dbase/mysql/MapData');
 const Language = require('application/express/components/base/Language');
 const Map = require('application/express/components/Map');
 const ErrorCodes = require('application/express/settings/ErrorCodes');
-
+const Service = require('application/express/core/Service');
+const Countries = require('application/express/components/Countries');
+const CountryStatesNamesModel = require('application/express/models/dbase/mysql/CountryStatesNames');
+const CountryStatesModel = require('application/express/models/dbase/mysql/CountryStates');
 
 class GeocodeCollectionModel extends DBaseMysql
 {
@@ -242,66 +245,54 @@ class GeocodeCollectionModel extends DBaseMysql
         return _data;
     }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     /*
-     * Добавляем записи одной метки на всех доступных языках
+     * Add record for one placemark in all available languages
      *
-     * @param array $coords - координаты метки
-     * @param integer $data_id - id метки
+     * @param {object} coords - placemark coordinates
+     * @param {integer} id - placemark id
      *
-     * @return array - добавленные данные
+     * @return {object} - added data
      */
-    public function add($coords, $data_id)
+    add(coords, id)
     {
+        let _result = [];
+        let languages = Service.getInstance(this.requestId).getLanguagesCodes();
 
-        $result = array();
+        // Initially prepare adress in English
+        let _dataEn = this.prepareAddress(coords, id, Consts.LANGUAGE_EN);
+        this.setValuesTofields(dataEn);
 
-        $languages_data = self::get_module(MY_MODULE_NAME_SERVICE)->get_languages();
-        $country_component = components\Countries::get_instance();
-        $country_states_google_names_model = self::get_model(MY_MODEL_NAME_DB_COUNTRY_STATES_GOOGLE_NAMES);
-        $country_states_model = self::get_model(MY_MODEL_NAME_DB_COUNTRY_STATES);
+        _result.push(this.insert());
 
-        //английский язык нужен обязательно вначале, чтобы подготовить данные для кода страны и т.д. неанглийских языков
-        $data_en = $this->prepare_address($coords, $data_id, MY_LANGUAGE_EN);
-        $this->set_values_to_fields($data_en);
-        $result[] = $this->insert();
+        let _administrativeAreaLevel1En = _dataEn['administrative_area_level_1'] ? _dataEn['administrative_area_level_1'] : Consts.UNDEFINED_VALUE;
 
-        $administrative_area_level_1_en = isset($data_en['administrative_area_level_1']) ? $data_en['administrative_area_level_1'] : MY_UNDEFINED_VALUE;
-        $country_en = isset($data_en['country']) ? $data_en['country'] : MY_UNDEFINED_VALUE;
-        $country_code_en = isset($data_en['country_code']) ? $data_en['country_code'] : MY_UNDEFINED_VALUE;
-        $country_id = $country_component->get_country_data_by_code($country_code_en);
+        let _countryEn = _dataEn['country'] ? _dataEn['country'] : Consts.UNDEFINED_VALUE;
+
+        let _countryCodeEn = _dataEn['country_code'] ? _dataEn['country_code'] : Consts.UNDEFINED_VALUE;
+
+        let countryId = Countries.getCountryDataByCode(_countryCodeEn);
+
+
+
+
+
+
+
+
         $country_id = $country_id['id'];
 
         if ($data_en['state_code'] != MY_UNDEFINED_VALUE) {
             // Новый код области/штата, undefined не пишется
-            $country_states_model->add_once(array(
+            CountryStatesModel->add_once(array(
                 'url_code' => $data_en['state_code'],
                 'country_id' => $country_id
                 )
             );
 
-            $state_id = $country_component->get_state_id_by_code($data_en['state_code']);
+            $state_id = Countries->get_state_id_by_code($data_en['state_code']);
 
             // Названия областей - добавляются данные только существующей области - для английского языка
-            $country_states_google_names_model->add_once(array(
+            CountryStatesNamesModel->add_once(array(
                 'state_id' => $state_id,
                 'name' => $administrative_area_level_1_en,
                 'language' => MY_LANGUAGE_EN
@@ -357,33 +348,6 @@ class GeocodeCollectionModel extends DBaseMysql
 
 
 
-
-
-    /*
-     * Add new article
-     *
-     * @param {object} data - new article data
-     *
-     * @return {integer} - new record id
-     */
-    add(data)
-    {
-        this.setValuesToFields(data);
-        return this.insert();
-    }
-
-    /*
-     * Update existed article
-     *
-     * @param {object} data - article's new data with id
-     */
-    update(data)
-    {
-        let _id = data.id;
-        delete data.id;
-        this.setValuesToFields(data);
-        this.update(_id);
-    }
 }
 
 GeocodeCollectionModel.instanceId = BaseFunctions.unique_id();

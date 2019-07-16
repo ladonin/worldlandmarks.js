@@ -7,7 +7,6 @@
 
 const DBaseMysql = require('application/express/core/dbases/Mysql');
 const BaseFunctions = require('application/express/functions/BaseFunctions');
-const StrictFunctions = require('application/express/functions/StrictFunctions');
 
 
 class ArticlesModel extends DBaseMysql
@@ -60,32 +59,6 @@ class ArticlesModel extends DBaseMysql
             this.tableName = this.getServiceName() + '_articles';
         }
         return this.tableName;
-    }
-
-    /*
-     * Add new article
-     *
-     * @param {object} data - new article data
-     *
-     * @return {integer} - new record id
-     */
-    add(data)
-    {
-        this.setValuesToFields(data);
-        return this.insert();
-    }
-
-    /*
-     * Update existed article
-     *
-     * @param {object} data - article's new data with id
-     */
-    update(data)
-    {
-        let _id = data.id;
-        delete data.id;
-        this.setValuesToFields(data);
-        this.update(_id);
     }
 }
 

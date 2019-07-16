@@ -57,45 +57,21 @@ class CountriesModel extends DBaseMysql
         return this.tableName;
     }
 
-//    addArticle(data)
-//    {
-//        this.setValuesToFields(data);
-//        return this.insert();
-//    }
-//
-//    updateArticle(data)
-//    {
-//        let _id = data.id;
-//        delete data.id;
-//        this.setValuesToFields(data);
-//        return this.update(_id);
-//    }
+
 
 
     /*
-     * Get country name by country code
+     * Get country data by country code
      *
      * @param {string} code - country code
-     * @param {string} language - in what language country name will be get
      * @param {boolean} needResult - is result required
      *
-     * @return {string} - country name
+     * @return {object} - country data
      */
-    getCountryNameByCode(code, language, needResult = true){
-
-        let _sql = "SELECT cn.name as name FROM country c \n\
-                    LEFT JOIN country_name cn on c.id = cn.country_id  \n\
-                    WHERE c.local_code = '" + code + "' AND cn.language='" + language + "'";
-
-        let _data = this.getBySql(_sql, undefined, needResult);
-
-        if (!_data.length || !_data[0].name) {
-            this.error(ErrorCodes.ERROR_COUNTRY_NAME_WAS_NOT_FOUND, 'country code [' + code + ']', undefined, false);
-        }
-
-        return _data[0].name;
+    getCountryDataByCode(code, needResult = true){
+        let _data = this.getBySql("SELECT * FROM country WHERE local_code = ?", [code], needResult);
+        return _data[0].id ? _data[0] : null;
     }
-
 
 }
 

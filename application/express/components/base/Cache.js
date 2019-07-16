@@ -44,9 +44,9 @@ module.exports = {
 
 /*
  * Stored objects:
- * 
+ *
 countriesNameByCode[code]= name
-
+countriesDataByCode[code]= data
 
 
 

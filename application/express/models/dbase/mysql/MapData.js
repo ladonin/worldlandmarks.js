@@ -73,25 +73,13 @@ class MapDataModel extends DBaseMysql
         }
 
 
-    /*
-     * Add new placemark to dbase
-     *
-     * @param {object} data - placemark data
-     *
-     * @return {integer} - new record id
-     */
-    add(data)
-    {
-        this.setValuesToFields(data);
-        return this.insert();
-    }
 
     /*
      * Update placemark
      *
      * @param {object} data - placemark's new data with id
      */
-    update(data)
+    change(data)
     {
         let _id = data.id;
         delete data.id;

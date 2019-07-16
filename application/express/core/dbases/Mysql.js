@@ -490,6 +490,39 @@ class DBaseMysql extends Model
     {
         return this.fetchQuery(sql, whereValues, needResult);//, async
     }
+
+
+
+
+
+
+
+    /*
+     * Add new record
+     *
+     * @param {object} data - new record data
+     *
+     * @return {integer} - new record id
+     */
+    add(data)
+    {
+        this.setValuesToFields(data);
+        return this.insert();
+    }
+
+    /*
+     * Update existed record
+     *
+     * @param {object} data - record's new data with id
+     */
+    change(data)
+    {
+        let _id = data.id;
+        delete data.id;
+        this.setValuesToFields(data);
+        this.update(_id);
+    }
+
 }
 
 DBaseMysql.instanceId = Functions.unique_id();

@@ -34,7 +34,7 @@ class Map extends Component {
      */
     getPointContentById(id)
     {
-        let _result = this.get_point_content_by_ids([id], true, null, self::get_module(MY_MODULE_NAME_SERVICE)->is_show_relevant_placemarks(), self::get_module(MY_MODULE_NAME_SERVICE)->is_show_another_placemarks());
+        let _result = this.getPointContentByIds([id], true, null, self::get_module(MY_MODULE_NAME_SERVICE)->is_show_relevant_placemarks(), self::get_module(MY_MODULE_NAME_SERVICE)->is_show_another_placemarks());
 
 
 
@@ -127,8 +127,11 @@ class Map extends Component {
 
 
 
-
             $map_db_model_geocode = self::get_model(MY_MODEL_NAME_DB_GEOCODE_COLLECTION);
+
+
+
+
             $photos_db_model = components\Map::get_db_model('photos');
             $data_db_model = components\Map::get_db_model('data');
             $language_model = components\Language::get_instance();

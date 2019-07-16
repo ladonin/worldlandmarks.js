@@ -39,20 +39,6 @@ class UsersRegistered extends DBaseMysql
         }
         return this.tableName;
     }
-
-    /*
-     * Add new user
-     *
-     * @param {object} - new user data
-     *
-     * @return {integer} - new record id
-     */
-    add(data)
-    {
-        this.setValuesToFields(data);
-
-        return this.insert();
-    }
 }
 
 

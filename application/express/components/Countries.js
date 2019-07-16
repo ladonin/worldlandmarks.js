@@ -11,6 +11,7 @@ const Consts = require('application/express/settings/Constants');
 const ErrorCodes = require('application/express/settings/ErrorCodes');
 const CountriesNamesReplaces = require('application/express/settings/countries/CountriesNamesReplaces');
 const CountriesModel = require('application/express/models/dbase/mysql/Countries');
+const CountryNameModel = require('application/express/models/dbase/mysql/CountryName');
 
 const Cache = require('application/express/components/base/Cache');
 
@@ -85,12 +86,54 @@ class Countries extends Component {
             return _result;
         }
 
-        let _countryName = CountriesModel.getInstance(this.requestId).getCountryNameByCode(code, _language, false);
+        let _countryName = CountryNameModel.getInstance(this.requestId).getCountryNameByCode(code, _language, false);
+
+        if (!_countryName) {
+           this.error(ErrorCodes.ERROR_COUNTRY_NAME_WAS_NOT_FOUND, 'country code [' + code + ']');
+        }
 
         Cache.get('countriesNameByCode', _serviceName, _language)[code] = _countryName;
 
         return _countryName;
     }
+
+    /*
+     * Get country data by country code
+     *
+     * @param {string} code - country code
+     *
+     * @return {object}
+     */
+    getCountryDataByCode(code)
+    {
+
+       if (!countryCode)) {
+           this.error(ErrorCodes.ERROR_FUNCTION_ARGUMENTS, 'country code [' + code + ']');
+       }
+
+       let _result;
+       let _language = this.getLanguage();
+       let _serviceName = this.getServiceName();
+
+       if (_result = Cache.get('countriesDataByCode', _serviceName, _language)[code]) {
+           return _result;
+       }
+
+       let _countryData = CountriesModel.getInstance(this.requestId).getCountryDataByCode(code, false);
+       if (!_countryData)) {
+          this.error(ErrorCodes.ERROR_COUNTRY_DATA_WAS_NOT_FOUND, 'country code [' + code + ']');
+       }
+
+       Cache.get('countriesDataByCode', _serviceName, _language)[code] = _countryData;
+
+       return _countryData;
+    }
+
+
+
+
+
+
 }
 
 Countries.instanceId = BaseFunctions.unique_id();
@@ -412,32 +455,7 @@ module.exports = Countries;
 
 
 
- public function get_country_data_by_code($country_code = null)
- {
 
- if (my_is_empty(@$country_code)) {
- self::concrete_error(array(MY_ERROR_FUNCTION_ARGUMENTS, 'country_code:' . $country_code));
- }
-
- if (my_is_not_empty($result = @$this->countries_data_by_code_requested_data[$country_code])) {
- return $result;
- }
-
- $connect = \core\DBase_Mysql::model()->get_connect();
-
- $sql = "SELECT *
- FROM country
- WHERE local_code = ".$connect->quote($country_code);
- $data = $connect->query($sql, \PDO::FETCH_ASSOC)->fetch();
- $result = isset($data['id']) ? $data : null;
-
- if (my_is_empty($result)) {
- self::concrete_error(array(MY_ERROR_COUNTRY_DATA_WAS_NOT_FOUND, 'country_code:' . $country_code));
- }
-
- $this->countries_data_by_code_requested_data[$country_code] = $result;
- return $result;
- }
 
 
  public function get_country_data_by_id($id = null)
