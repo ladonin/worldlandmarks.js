@@ -98,10 +98,10 @@ class CountryStatesModel extends DBaseMysql
      */
     isAdministrativeCenter(countryCode, stateCode)
     {
-        let _sql = "SELECT cs.is_administrative_center \n\
-                    FROM country c \n\
-                    LEFT JOIN country_states cs on c.id = cs.country_id \n\
-                    WHERE c.local_code = ? AND cs.url_code=?";
+        let _sql = `SELECT cs.is_administrative_center
+                    FROM country c
+                    LEFT JOIN country_states cs on c.id = cs.country_id
+                    WHERE c.local_code = ? AND cs.url_code=?`;
 
         let _data = this.getBySql(_sql, [countryCode, stateCode]);
         return _data[0].is_administrative_center === 1 ? true : false;

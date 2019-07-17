@@ -166,7 +166,7 @@ function is_empty(val)
  *
  * @return array - prepared array
  */
-function prepare_int_array(arr)
+function prepareToIntArray(arr)
 {
     for (var index in arr) {
         arr[index] = toInt(arr[index]);
@@ -584,7 +584,7 @@ module.exports = {
     prepare_double_quotes,
     is_not_empty,
     is_empty,
-    prepare_int_array,
+    prepareToIntArray,
     toInt,
     toString,
     validate_date,

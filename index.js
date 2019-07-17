@@ -28,7 +28,28 @@ io.on('connection', function (socket) {
 
 
 
+ var MySql = require('sync-mysql');
 
+
+
+ var connection = new MySql({
+ host: 'localhost',
+ user: 'root',
+ password: '111',
+ database: 'wlandmarks',
+ });
+
+let r = "AO";
+let  fro = "FROM";
+ let result = [];
+ try{
+ result = connection.query(`SELECT * ${fro}
+
+country where code2 = '${r}'`);
+ } catch(e){console.log(9999999999);
+ console.log(e.code);
+ }
+ console.log(result);
 
 
 //Application.getInstance(RequestsPool.init(data)).run();
@@ -176,25 +197,7 @@ app.get('/api/2', function (req, res) {
 
 
 
- var MySql = require('sync-mysql');
 
-
-
- var connection = new MySql({
- host: 'localhost',
- user: 'root',
- password: '111',
- database: 'wlandmarks',
- });
-
-
- let result = [];
- try{
- result = connection.query("SELECT * FROM country where id = ? or id = ?", [1,9]);
- } catch(e){console.log(9999999999);
- console.log(e.code);
- }
- console.log(result);
 
 
 

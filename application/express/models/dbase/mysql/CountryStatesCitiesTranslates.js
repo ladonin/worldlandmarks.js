@@ -66,11 +66,11 @@ class CountryStatesCitiesTranslationsModel extends DBaseMysql
      */
     translateStateName(language, countryCode, stateName)
     {
-        let _sql = "SELECT ct.*, cs.url_code \n\
-            FROM country c \n\
-            LEFT JOIN country_states_cities_google_translates ct on c.id = ct.country_id \n\
-            LEFT JOIN country_states cs on cs.id = ct.only_for_state \n\
-            WHERE c.local_code = ? AND ct.google_name = ? AND language = ? AND is_city=0";
+        let _sql = `SELECT ct.*, cs.url_code
+            FROM country c
+            LEFT JOIN country_states_cities_google_translates ct on c.id = ct.country_id
+            LEFT JOIN country_states cs on cs.id = ct.only_for_state
+            WHERE c.local_code = ? AND ct.google_name = ? AND language = ? AND is_city=0`;
 
         return this.getBySql(_sql, [countryCode, stateName, language], false);
     }

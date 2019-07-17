@@ -13,6 +13,11 @@ const BaseFunctions = require('application/express/functions/BaseFunctions');
 const Consts = require('application/express/settings/Constants');
 const ErrorCodes = require('application/express/settings/ErrorCodes');
 const AccessConfig = require_once('application/express/settings/gitignore/Access');
+const Service = require('application/express/core/Service');
+const GeocodeCollectionModel = require('application/express/models/dbase/mysql/GeocodeCollection');
+const MapPhotosModel = require('application/express/models/dbase/mysql/MapPhotos');
+const MapDataModel = require('application/express/models/dbase/mysql/MapData');
+const Users = require('application/express/core/Users');
 
 class Map extends Component {
 
@@ -34,11 +39,14 @@ class Map extends Component {
      */
     getPointContentById(id)
     {
-        let _result = this.getPointContentByIds([id], true, null, self::get_module(MY_MODULE_NAME_SERVICE)->is_show_relevant_placemarks(), self::get_module(MY_MODULE_NAME_SERVICE)->is_show_another_placemarks());
-
-
-
-        return $result[$id];
+        let _result = this.getPointContentByIds(
+                [id],
+                true,
+                undefined,
+                Service.getInstance(this.requestId).isShowRelevantPlacemarks(),
+                Service.getInstance(this.requestId).isShowAnotherPlacemarks()
+        );
+        return _result[id];
     }
 
 
@@ -100,14 +108,14 @@ class Map extends Component {
 
 
 
+//ATTENTION - обратите внимание
 
-
-
-
+//getPointContentByIds => getPointsBigDataByIds
+// getPointsByIds => getPointsShortDataByIds
 
 
     /*
-     * Get placemarks full data by ids
+     * Get placemarks big data by ids
      *
      * @param {array} ids - placemarks ids
      * @param {boolean} needPlainText - whether placemark description (plain text) is necessary
@@ -117,92 +125,196 @@ class Map extends Component {
      *
      * @return {object} - placemark data
      */
-    getPointContentByIds(ids, needPlainText = true, order = null, needRelevant = false, needAnother = false)
+    getPointsBigDataByIds(ids, needPlainText = true, order = null, needRelevant = false, needAnother = false)
     {
         if (!ids) {
             return [];
         }
 
-        if (ids.length > 0) {
+        let _language = this.getLanguage();
+
+        let _result = MapDataModel.getInstance(this.requestId).getPointsBigDataByIds(ids, _language, order, needPlainText, true);
+
+        return this.prepareResult(_result, needRelevant, needAnother);
+    }
 
 
 
-            $map_db_model_geocode = self::get_model(MY_MODEL_NAME_DB_GEOCODE_COLLECTION);
+    /*
+     * Get a short points information by their ids
+     *
+     * @param {array} ids - points ids
+     *
+     * @return {array of objects}
+     */
+    getPointsShortDataByIds(ids)
+    {
+        if (!ids.length) {
+            return [];
+        }
+
+        let _result = MapDataModel.getInstance(this.requestId).getPointsShortDataByIds(ids)
+
+        return this.prepareResult(_result);
+    }
 
 
 
 
+    /*
+     * Check whether placemarks can be changed by user
+     *
+     * @return {boolean}
+     */
+    isAvailableToChange()
+    {
+        if (Service.getInstance(this.requestId).isAllCanAddPlacemarks()) {
+            return true;
+        }
+
+        if (Users.getInstance(this.requestId).isAdmin()) {
+            return true;
+        }
+        return false;
+    }
+
+
+
+
+
+//ATTENTION - обратите внимание
+// getPointsByCoords => getPointsShortDataByCoords
+
+
+    /*
+     * Get placemarks short data by coordinates
+     *
+     * @param {object} coords - coordinates
+     *
+     * @return {array of object} - placemarks
+     */
+    getPointsShortDataByCoords(coords)
+    {
+        let _result = this.getPointsByCoordsNaked(coords);
+        if (!_result || !_result.length) {
+            return [];
+        }
+        return this.prepareResult(_result);
+    }
+
+
+
+
+
+
+
+
+    public function getPointsByCoordsNaked(array $data)
+    {
+        $config = self::get_config();
+        if (isset($data['X1']) && isset($data['X2']) && isset($data['Y1']) && isset($data['Y2']) && isset($data['zoom'])) {
             $photos_db_model = components\Map::get_db_model('photos');
             $data_db_model = components\Map::get_db_model('data');
-            $language_model = components\Language::get_instance();
-            $language = $language_model->get_language();
-
+            $max_map_load_size = self::get_module(MY_MODULE_NAME_SERVICE)->get_max_map_load_size();
             $conn = $photos_db_model->get_connect();
-// делаем массив безопасным
-            $ids = my_prepare_int_array($ids);
-            $ids_list = implode(",", $ids);
-            $config = self::get_config();
 
-            $comment_plain = '';
-            if (needPlainText) {
-                $comment_plain = 'c.comment_plain as c_comment_plain,';
+            $x1 = (float) $data['X1'];
+            $x2 = (float) $data['X2'];
+            $y1 = (float) $data['Y1'];
+            $y2 = (float) $data['Y2'];
+
+// определяем старый и новый масштабы
+            $data['zoom'] = (int) $data['zoom'];
+
+// если НЕ передаются старые координаты, значит это первый запрос
+///////////////////$data['old_X1'] - отключили и не передаем пока - потому что "Г" поиск решили пока не исполоьзовать (см ниже)
+
+            if (!isset($data['old_X1']) || !isset($_SESSION['old_zoom'])) {
+                $_SESSION['old_zoom'] = $data['zoom'];
+            }
+
+            $old_zoom = $_SESSION['old_zoom'];
+
+            $_SESSION['old_zoom'] = $data['zoom'];
+
+// Если область охвата слишком большая
+            if ((($x1 < $x2) && (abs($x2 - $x1) > $max_map_load_size)) || ((($x1 > 0) && ($x2 < 0)) && (abs((180 - $x1) + abs(-180 - $x2)) > $max_map_load_size)) || (abs($y1 - $y2) > $max_map_load_size)) {
+                return MY_TOO_BIG_MAP_REQUEST_AREA_CODE;
             }
 
             $sql = "SELECT
-                    c.id as c_id,
-                    c.x as c_x,
-                    c.y as c_y,
-                    c.comment as c_comment,
-                    $comment_plain
-                    c.title as c_title,
-                    c.category as c_category,
-                    c.subcategories as c_subcategories,
-                    c.relevant_placemarks as c_relevant_placemarks,
-                    c.created as c_created,
-                    c.modified as c_modified,
-
-                    geo.formatted_address as g_formatted_address,
-                    geo.administrative_area_level_1 as g_administrative_area_level_1,
-                    geo.administrative_area_level_2 as g_administrative_area_level_2,
-                    geo.country_code as g_country_code,
-                    geo.country as g_country,
-                    geo.state_code as g_state_code,
-                    geo.locality as g_locality,
-                    geo.street as g_street,
+                    t.id as c_id,
+                    t.x as c_x,
+                    t.y as c_y,
+                    t.title as c_title,
+                    t.category as c_category,
+                    t.subcategories as c_subcategories,
+                    t.relevant_placemarks as c_relevant_placemarks,
 
                     ph.id as ph_id,
                     ph.path as ph_path,
                     ph.width as ph_width,
-                    ph.height as ph_height,
-                    ph.created as ph_created,
-                    ph.modified as ph_modified
+                    ph.height as ph_height
 
-                    FROM " . $data_db_model->get_table_name() . " c "
-                    . "LEFT JOIN (SELECT * FROM " . $photos_db_model->get_table_name() . " ORDER by id DESC) ph ON ph.map_data_id=c.id "
-                    . "LEFT JOIN " . $map_db_model_geocode->get_table_name() . " geo on geo.map_data_id = c.id AND geo.language='" . $language . "' "
-                    . "WHERE c.id IN (" . $ids_list . ") ";
+                    FROM (SELECT * FROM " . $data_db_model->get_table_name() . " WHERE ";
 
-            $inner_order='c_id, ph_id DESC';
-            if ($order) {
-                $sql .= "ORDER by $order,$inner_order";
-            }else{
-                $sql .= "ORDER by $inner_order";
+            if (($x1 > 0) && ($x2 < 0)) {
+
+                $sql .= "((x BETWEEN $x1 AND 180) OR  (x BETWEEN -180 AND $x2)) ";
+            } else {
+
+                $sql .= "(x BETWEEN $x1 AND $x2) ";
             }
+
+            $sql .= "AND (y BETWEEN $y2 AND $y1)) t "
+                    . "LEFT JOIN (
+SELECT * FROM
+(SELECT MAX(id) phh2_id FROM landmarks_map_photos GROUP BY map_data_id) phh2
+JOIN landmarks_map_photos on phh2.phh2_id=landmarks_map_photos.id
+) ph ON ph.map_data_id=t.id";
+// "Г" поиск сильно нагружает базу
+            if (!1 && ($old_zoom >= $data['zoom']) && (my_is_not_empty(@$data['old_X1']))) {
+                if (my_is_not_empty(@$data['old_X2']) && my_is_not_empty(@$data['old_Y1']) && my_is_not_empty(@$data['old_Y2'])) {
+
+                    $old_X1 = set_amendment((float) $data['old_X1'], 'x1', $data);
+                    $old_X2 = set_amendment((float) $data['old_X2'], 'x2', $data);
+                    $old_Y1 = set_amendment((float) $data['old_Y1'], 'y1', $data);
+                    $old_Y2 = set_amendment((float) $data['old_Y2'], 'y2', $data);
+// Если масштаб не менялся на приближение (например из большой неподгружаемой зоны входим в зону видимости в рамках старой зоны - надо подгрузить все метки без фильтра)
+// всегда
+                    if (1 || (($y1 - $y2) >= ($old_Y1 - $old_Y2))) {
+                        $sql .= "LEFT JOIN (SELECT * FROM " . $data_db_model->get_table_name() . " WHERE ";
+                        if (($old_X1 > 0) && ($old_X2 < 0)) {
+                            $sql .= "((x BETWEEN $old_X1 AND 180) OR (x BETWEEN -180 AND $old_X2)) ";
+                        } else {
+                            $sql .= "(x BETWEEN $old_X1 AND $old_X2) ";
+                        }
+                        $sql .= "AND (y BETWEEN $old_Y2 AND $old_Y1)) t_old ON t.id = t_old.id WHERE t_old.id iS NULL ";
+                    }
+                } else {
+                    self::concrete_error(array(MY_ERROR_FUNCTION_ARGUMENTS, 'old data:' . json_encode($data)));
+                }
+            }
+
+            //что больше не выбираем
+            $loaded_ids_from_session = $this->get_loaded_ids_string_from_session();
+            if ($loaded_ids_from_session) {
+                $sql .= " WHERE t.id NOT IN (" . $loaded_ids_from_session . ")";
+            }
+
+            $sql .= " GROUP by c_id";
 
             $result = $conn->query($sql, \PDO::FETCH_ASSOC)->fetchAll();
 
-            if (!my_array_is_not_empty(@$result)) {
+            if (!is_array($result)) {
                 self::concrete_error(array(MY_ERROR_MYSQL, 'request:' . $sql), MY_LOG_MYSQL_TYPE);
             }
 
-            $result = $this->prepare_result($result, needRelevant, needAnother);
-
-
-
+            $this->set_loaded_ids_to_session($result);
 
             return $result;
         } else {
-            self::concrete_error(array(MY_ERROR_FUNCTION_ARGUMENTS, 'ids:' . json_encode($ids)));
+            self::concrete_error(array(MY_ERROR_FUNCTION_ARGUMENTS, 'data:' . json_encode($data)));
         }
     }
 
@@ -246,108 +358,12 @@ abstract class Map extends \vendor\Module
 
 
 
-    /*
-      public function add_photos_for_point(array $photos_array, $data_id)
-      {
-      $map_module = self::get_module(MY_MODULE_NAME_MAP);
-      $map_module->add_photos_for_point($photos_array, $data_id);
-      }
-     */
-    /*
-      public function delete_photo_files($data_id, $photo)
-      {
-      $map_module = self::get_module(MY_MODULE_NAME_MAP);
-      $map_module->delete_photo_files($data_id, $photo);
-      }
-     */
 
 
 
-    /*
-      public function delete_photo_db($id_data = null, $path = null)
-      {
-      $map_module = self::get_module(MY_MODULE_NAME_MAP);
-      return $map_module->delete_photo_db($id_data, $path);
-      }
-
-      public function delete_photos($id_data = null)
-      {
-      $map_module = self::get_module(MY_MODULE_NAME_MAP);
-      return $map_module->delete_photos($id_data);
-      }
-
-      public function prepare_photos_for_insert(array $photos_array)
-      {
-      $map_module = self::get_module(MY_MODULE_NAME_MAP);
-      return $map_module->prepare_photos_for_insert($photos_array);
-      }
-
-      public function create_new_point()
-      {
-      $map_module = self::get_module(MY_MODULE_NAME_MAP);
-      $map_module->create_new_point();
-      }
-
-      public function delete_point()
-      {
-      $map_module = self::get_module(MY_MODULE_NAME_MAP);
-      $map_module->delete_point();
-      } */
-
-    /* public function get_points_list()
-      {
-      $map_module = self::get_module(MY_MODULE_NAME_MAP);
-      return $map_module->get_points_list();
-      }
-
-      public function update_current_point()
-      {
-      $map_module = self::get_module(MY_MODULE_NAME_MAP);
-      $map_module->update_current_point();
-      }
-
-      public function get_photos_by_data_id($id)
-      {
-
-      $map_module = self::get_module(MY_MODULE_NAME_MAP);
-      $result = $map_module->get_photos_by_data_id($id);
 
 
 
-      return $result;
-      }
-
-      public function get_points_by_ids(array $ids)
-      {
-      $module = self::get_module(MY_MODULE_NAME_MAP);
-
-      return $module->get_points_by_ids($ids);
-      } */
-
-
-    public function is_available_to_change()
-    {
-
-        if (self::get_module(MY_MODULE_NAME_SERVICE)->is_all_can_add_placemarks() === true) {
-            return true;
-        }
-        $account_module = self::get_module(MY_MODULE_NAME_ACCOUNT);
-        if ($account_module->is_admin()) {
-            return true;
-        }
-        return false;
-    }
-
-
-    public function get_points_by_coords(array $coords)
-    {
-        $result = $this->get_points_by_coords_naked($coords);
-// если не пустой то подготавливаеи
-        $result = is_array($result) && $result ? $this->prepare_result($result) : $result;
-
-
-        return $result;
-    }
 
 
 
@@ -408,7 +424,7 @@ abstract class Map extends \vendor\Module
                 'width' => $photo['width'],
                 'height' => $photo['height'],
             );
-            $map_db_model_photos->add_new_photo($data_photos);
+            $map_db_model_photos->add_new_photo($data_photos);//add()
         }
 /////////////////////////////////return true;
 // Переносим фотки в папку
@@ -550,114 +566,7 @@ abstract class Map extends \vendor\Module
     }
 
 
-    public function get_points_by_coords_naked(array $data)
-    {
-        $config = self::get_config();
-        if (isset($data['X1']) && isset($data['X2']) && isset($data['Y1']) && isset($data['Y2']) && isset($data['zoom'])) {
-            $photos_db_model = components\Map::get_db_model('photos');
-            $data_db_model = components\Map::get_db_model('data');
-            $max_map_load_size = self::get_module(MY_MODULE_NAME_SERVICE)->get_max_map_load_size();
-            $conn = $photos_db_model->get_connect();
 
-            $x1 = (float) $data['X1'];
-            $x2 = (float) $data['X2'];
-            $y1 = (float) $data['Y1'];
-            $y2 = (float) $data['Y2'];
-
-// определяем старый и новый масштабы
-            $data['zoom'] = (int) $data['zoom'];
-
-// если НЕ передаются старые координаты, значит это первый запрос
-///////////////////$data['old_X1'] - отключили и не передаем пока - потому что "Г" поиск решили пока не исполоьзовать (см ниже)
-
-            if (!isset($data['old_X1']) || !isset($_SESSION['old_zoom'])) {
-                $_SESSION['old_zoom'] = $data['zoom'];
-            }
-
-            $old_zoom = $_SESSION['old_zoom'];
-
-            $_SESSION['old_zoom'] = $data['zoom'];
-
-// Если область охвата слишком большая
-            if ((($x1 < $x2) && (abs($x2 - $x1) > $max_map_load_size)) || ((($x1 > 0) && ($x2 < 0)) && (abs((180 - $x1) + abs(-180 - $x2)) > $max_map_load_size)) || (abs($y1 - $y2) > $max_map_load_size)) {
-                return MY_TOO_BIG_MAP_REQUEST_AREA_CODE;
-            }
-
-            $sql = "SELECT
-                    t.id as c_id,
-                    t.x as c_x,
-                    t.y as c_y,
-                    t.title as c_title,
-                    t.category as c_category,
-                    t.subcategories as c_subcategories,
-                    t.relevant_placemarks as c_relevant_placemarks,
-
-                    ph.id as ph_id,
-                    ph.path as ph_path,
-                    ph.width as ph_width,
-                    ph.height as ph_height
-
-                    FROM (SELECT * FROM " . $data_db_model->get_table_name() . " WHERE ";
-
-            if (($x1 > 0) && ($x2 < 0)) {
-
-                $sql .= "((x BETWEEN $x1 AND 180) OR  (x BETWEEN -180 AND $x2)) ";
-            } else {
-
-                $sql .= "(x BETWEEN $x1 AND $x2) ";
-            }
-
-            $sql .= "AND (y BETWEEN $y2 AND $y1)) t "
-                    . "LEFT JOIN (
-SELECT * FROM
-(SELECT MAX(id) phh2_id FROM landmarks_map_photos GROUP BY map_data_id) phh2
-JOIN landmarks_map_photos on phh2.phh2_id=landmarks_map_photos.id
-) ph ON ph.map_data_id=t.id";
-// "Г" поиск сильно нагружает базу
-            if (!1 && ($old_zoom >= $data['zoom']) && (my_is_not_empty(@$data['old_X1']))) {
-                if (my_is_not_empty(@$data['old_X2']) && my_is_not_empty(@$data['old_Y1']) && my_is_not_empty(@$data['old_Y2'])) {
-
-                    $old_X1 = set_amendment((float) $data['old_X1'], 'x1', $data);
-                    $old_X2 = set_amendment((float) $data['old_X2'], 'x2', $data);
-                    $old_Y1 = set_amendment((float) $data['old_Y1'], 'y1', $data);
-                    $old_Y2 = set_amendment((float) $data['old_Y2'], 'y2', $data);
-// Если масштаб не менялся на приближение (например из большой неподгружаемой зоны входим в зону видимости в рамках старой зоны - надо подгрузить все метки без фильтра)
-// всегда
-                    if (1 || (($y1 - $y2) >= ($old_Y1 - $old_Y2))) {
-                        $sql .= "LEFT JOIN (SELECT * FROM " . $data_db_model->get_table_name() . " WHERE ";
-                        if (($old_X1 > 0) && ($old_X2 < 0)) {
-                            $sql .= "((x BETWEEN $old_X1 AND 180) OR (x BETWEEN -180 AND $old_X2)) ";
-                        } else {
-                            $sql .= "(x BETWEEN $old_X1 AND $old_X2) ";
-                        }
-                        $sql .= "AND (y BETWEEN $old_Y2 AND $old_Y1)) t_old ON t.id = t_old.id WHERE t_old.id iS NULL ";
-                    }
-                } else {
-                    self::concrete_error(array(MY_ERROR_FUNCTION_ARGUMENTS, 'old data:' . json_encode($data)));
-                }
-            }
-
-            //что больше не выбираем
-            $loaded_ids_from_session = $this->get_loaded_ids_string_from_session();
-            if ($loaded_ids_from_session) {
-                $sql .= " WHERE t.id NOT IN (" . $loaded_ids_from_session . ")";
-            }
-
-            $sql .= " GROUP by c_id";
-
-            $result = $conn->query($sql, \PDO::FETCH_ASSOC)->fetchAll();
-
-            if (!is_array($result)) {
-                self::concrete_error(array(MY_ERROR_MYSQL, 'request:' . $sql), MY_LOG_MYSQL_TYPE);
-            }
-
-            $this->set_loaded_ids_to_session($result);
-
-            return $result;
-        } else {
-            self::concrete_error(array(MY_ERROR_FUNCTION_ARGUMENTS, 'data:' . json_encode($data)));
-        }
-    }
 
 
     public function get_points_by_limit_naked($limit = null)
@@ -767,56 +676,7 @@ JOIN landmarks_map_photos on phh2.phh2_id=landmarks_map_photos.id
     }
 
 
-    public function get_points_by_ids(array $ids)
-    {
-        if (!$ids) {
-            return array();
-        }
-        $photos_db_model = components\Map::get_db_model('photos');
-        $data_db_model = components\Map::get_db_model('data');
 
-        $conn = $photos_db_model->get_connect();
-        $config = self::get_config();
-
-        foreach ($ids as &$id) {
-            $id = (int) $id;
-        }
-
-        $ids_list = implode(',', $ids);
-// берем только одну фотку
-        $sql = "SELECT
-                    c.id as c_id,
-                    c.x as c_x,
-                    c.y as c_y,
-                    c.title as c_title,
-                    c.category as c_category,
-                    c.subcategories as c_subcategories,
-                    c.relevant_placemarks as c_relevant_placemarks,
-
-                    ph.id as ph_id,
-                    ph.path as ph_path,
-                    ph.width as ph_width,
-                    ph.height as ph_height
-
-                    FROM " . $data_db_model->get_table_name() . " c "
-                . "LEFT JOIN (
-SELECT * FROM
-(SELECT MAX(id) phh2_id FROM landmarks_map_photos GROUP BY map_data_id) phh2
-JOIN landmarks_map_photos on phh2.phh2_id=landmarks_map_photos.id
-) ph ON ph.map_data_id=c.id "
-                . "WHERE c.id IN ($ids_list) "
-                . "GROUP by c_id "
-                . "ORDER by c_title ASC";
-
-        $result = $conn->query($sql, \PDO::FETCH_ASSOC)->fetchAll();
-
-        if (!my_array_is_not_empty(@$result)) {
-            self::concrete_error(array(MY_ERROR_MYSQL, 'request:' . $sql), MY_LOG_MYSQL_TYPE);
-        }
-
-        $result = $this->prepare_result($result);
-        return $result;
-    }
 
 
 

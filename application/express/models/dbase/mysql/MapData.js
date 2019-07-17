@@ -7,8 +7,10 @@
 
 const DBaseMysql = require('application/express/core/dbases/Mysql');
 const BaseFunctions = require('application/express/functions/BaseFunctions');
-//const StrictFunctions = require('application/express/functions/StrictFunctions');
-//const ErrorCodes = require('application/express/settings/ErrorCodes');
+const GeocodeCollectionModel = require('application/express/models/dbase/mysql/GeocodeCollection');
+const MapPhotosModel = require('application/express/models/dbase/mysql/MapPhotos');
+
+
 
 class MapDataModel extends DBaseMysql
 {
@@ -99,25 +101,72 @@ class MapDataModel extends DBaseMysql
 
 
 
-
-
-
-
-
-
-
     /*
-     * Get placemarks data by its ids
+     * Get placemarks big data by ids
      *
-     * @param {array} ids - ids list
+     * @param {array} ids - placemarks ids
+     * @param {string} language - language
+     * @param {string} order - fetch order
+     * @param {boolean} needPlainText - whether placemark description (plain text) is necessary
+     * @param {boolean} needResult - is result required
      *
-     * @return {array of objects} - found placemarks data
+     * @return {array of objects} - placemarks data
      */
-    getPointsByIds(ids)
+    getPointsBigDataByIds(ids, language, order, needPlainText, needResult = true)
     {
-        $module = self::get_module(MY_MODULE_NAME_MAP);
+        ids = BaseFunctions.prepareToIntArray(ids);
+        let _idsList = ids.join(',');
+        let _commentPlain = '';
 
-        return $module->get_points_by_ids($ids);
+        if (needPlainText) {
+            _commentPlain = 'c.comment_plain as c_comment_plain,';
+        }
+
+        let _sql = `SELECT
+                c.id as c_id,
+                c.x as c_x,
+                c.y as c_y,
+                c.comment as c_comment,
+                ${_commentPlain}
+                c.title as c_title,
+                c.category as c_category,
+                c.subcategories as c_subcategories,
+                c.relevant_placemarks as c_relevant_placemarks,
+                c.created as c_created,
+                c.modified as c_modified,
+
+                geo.formatted_address as g_formatted_address,
+                geo.administrative_area_level_1 as g_administrative_area_level_1,
+                geo.administrative_area_level_2 as g_administrative_area_level_2,
+                geo.country_code as g_country_code,
+                geo.country as g_country,
+                geo.state_code as g_state_code,
+                geo.locality as g_locality,
+                geo.street as g_street,
+
+                ph.id as ph_id,
+                ph.path as ph_path,
+                ph.width as ph_width,
+                ph.height as ph_height,
+                ph.created as ph_created,
+                ph.modified as ph_modified
+
+                FROM ${this.getTableName()} c
+                LEFT JOIN (SELECT * FROM ${MapPhotosModel.getInstance(this.requestId).getTableName()} ORDER by id DESC) ph ON ph.map_data_id=c.id
+                LEFT JOIN ${GeocodeCollectionModel.getInstance(this.requestId).getTableName()} geo on geo.map_data_id = c.id AND geo.language=?
+                WHERE c.id IN (${_idsList}) `;
+
+        let _innerOrder='c_id, ph_id DESC';
+
+        if (order) {
+            _sql += `ORDER by ${order},${_innerOrder}`;
+        } else {
+            _sql += `ORDER by ${_innerOrder}`;
+        }
+
+        let _result = this.getBySql(_sql, [language], needResult);
+
+        return _result;
     }
 
 
@@ -131,7 +180,63 @@ class MapDataModel extends DBaseMysql
 
 
 
-    //getPointContentById(id) => Map.getPointContentById
+    /*
+     * Get placemarks short data by ids
+     *
+     * @param {array} ids - placemarks ids
+     * @param {boolean} needResult - is result required
+     *
+     * @return {array of objects} - placemarks data
+     */
+    getPointsShortDataByIds(ids, needResult = true)
+    {
+        ids = BaseFunctions.prepareToIntArray(ids);
+        let _idsList = ids.join(',');
+
+        // Get only first photo
+        let _sql = `SELECT
+                    c.id as c_id,
+                    c.x as c_x,
+                    c.y as c_y,
+                    c.title as c_title,
+                    c.category as c_category,
+                    c.subcategories as c_subcategories,
+                    c.relevant_placemarks as c_relevant_placemarks,
+
+                    ph.id as ph_id,
+                    ph.path as ph_path,
+                    ph.width as ph_width,
+                    ph.height as ph_height
+
+                    FROM ${this.getTableName()} c
+                    LEFT JOIN (
+                        SELECT * FROM (SELECT MAX(id) phh2_id FROM landmarks_map_photos GROUP BY map_data_id) phh2
+                        JOIN landmarks_map_photos on phh2.phh2_id=landmarks_map_photos.id
+                    ) ph ON ph.map_data_id=c.id
+                    WHERE c.id IN (${_idsList})
+                    GROUP by c_id
+                    ORDER by c_title ASC`;
+
+        return this.getBySql(_sql);
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
     /*
@@ -148,6 +253,31 @@ class MapDataModel extends DBaseMysql
 
         return $module->get_points_by_coords($coords);
     }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//ATTENTION - обратите внимание
+// getPointsByIds => MY_MODULE_NAME_MAP.getPointsByIds
+//getPointContentById(id) => Map.getPointContentById
+
+
+
 
     /*
      * Получаем пачку меток для постепенного наполнения ими карты

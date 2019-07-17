@@ -14,7 +14,7 @@ class Admin_Access extends Controller
 {
     autorize()
     {
-        if (Users.admin_access_authentication() == false) {
+        if (Users.getInstance(this.requestId).checkAdminAccess() == false) {
             return false;
         }
         return true;
@@ -42,7 +42,7 @@ final class Admin_Access extends \core\controller
 
     protected function autorize()
     {
-        if (components\User::admin_access_authentication() == false) {
+        if (components\User::checkAdminAccess() == false) {
             echo "incorrect password\n";
             unset($_SESSION['admin_access_autorize']);
             return false;

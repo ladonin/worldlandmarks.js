@@ -225,7 +225,7 @@ abstract class Article extends \core\Module
     public function get_articles_data($ids = array(), $ignore = false, $random = false, $limit = 10)
     {
 
-        $ids = my_prepare_int_array($ids);
+        $ids = my_prepareToIntArray($ids);
         $article_model = self::get_model(MY_MODEL_NAME_DB_ARTICLES);
         $ids = implode(',', $ids);
         $condition = $ids ? ("id " . ($ignore === true ? "NOT" : "") . " IN ($ids)") : '';

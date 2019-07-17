@@ -2,7 +2,7 @@
  * File application/express/core/Users.js
  * const Users = require('application/express/core/Users');
  *
- * Users class - keeps user data
+ * Users class - store user data
  */
 
 
@@ -42,7 +42,7 @@ class Users extends Core
 
     }
 
-    is_admin()
+    isAdmin()
     {
         if ((this.id) && (this.role === Consts.ACCOUNT_ROLE_ADMIN_CODE)) {
             return true;
@@ -52,11 +52,11 @@ class Users extends Core
 
 
     /*
-     * Admin access authorization via GET vars
+     * Check whether the user has admin access or not via GET vars
      *
      * @return {boolean}
      */
-    admin_access_authentication()
+    checkAdminAccess()
     {
         if (this.getFromRequest(Consts.ADMIN_PASSWORD_VAR_NAME) !== AccessConfig['adminPassword']) {
             return false;

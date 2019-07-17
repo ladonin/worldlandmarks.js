@@ -368,7 +368,7 @@ class Service extends Core
      *
      * @return {object}
      */
-    is_all_can_add_placemarks()
+    isAllCanAddPlacemarks()
     {
         if (Functions.isSet(this.get_data().config.security.all_can_add_placemarks)) {
             return this.data.config.security.all_can_add_placemarks;
@@ -583,7 +583,7 @@ class Service extends Core
      *
      * @return {boolean}
      */
-    is_show_relevant_placemarks()
+    isShowRelevantPlacemarks()
     {
         if (Functions.isSet(this.get_data().config.generic.show_relevant_placemarks)) {
             return this.data.config.generic.show_relevant_placemarks;
@@ -597,7 +597,7 @@ class Service extends Core
      *
      * @return {boolean}
      */
-    is_show_another_placemarks()
+    isShowAnotherPlacemarks()
     {
         if (Functions.isSet(this.get_data().config.generic.show_another_placemarks)) {
             return this.data.config.generic.show_another_placemarks;

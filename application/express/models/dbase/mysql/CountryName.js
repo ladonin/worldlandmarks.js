@@ -55,9 +55,9 @@ class CountryNameModel extends DBaseMysql
      */
     getCountryNameByCode(code, language, needResult = true){
 
-        let _sql = "SELECT cn.name as name FROM country c \n\
-                    LEFT JOIN country_name cn on c.id = cn.country_id  \n\
-                    WHERE c.local_code = ? AND cn.language = ?";
+        let _sql = `SELECT cn.name as name FROM country c
+                    LEFT JOIN country_name cn on c.id = cn.country_id
+                    WHERE c.local_code = ? AND cn.language = ?`;
 
         let _data = this.getBySql(_sql, [code, language], needResult);
 

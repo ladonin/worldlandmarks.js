@@ -122,7 +122,7 @@ class Model extends Core {
             // Convert special tags into html tags
             if (Functions.in_array("spec_tags", field['processing'])) {
 
-                let _tags = Service.get_text_form_tags();
+                let _tags = Service.getInstance(this.requestId).get_text_form_tags();
 
                 for (let _index in _tags) {
                     let _tag = _tags[_index];
@@ -145,7 +145,7 @@ class Model extends Core {
                     } else if (_tag['code'] === Consts.FORM_TEXT_TAG_CODE_A) {
 
                         let _follow = ' rel="nofollow"';
-                        if (Users.is_admin()) {
+                        if (Users.getInstance(this.requestId).isAdmin()) {
                             _follow = '';
                         }
                         field['value'] = field['value'].replace(/\[a\=(.+?)\](.+?)\[\/a\]/g, '<a href="$1"' + _follow + '>$2</a>');
@@ -168,8 +168,8 @@ class Model extends Core {
             // Convert text urls into links
             if (Functions.in_array("urls", field['processing'])) {
 
-                if (((Users.is_admin() || Users.admin_access_authentication()) && Service.is_available_to_process_links_in_text_for_admin())
-                        || Service.is_available_to_process_links_in_text_for_free_users()) {
+                if (((Users.getInstance(this.requestId).isAdmin() || Users.getInstance(this.requestId).checkAdminAccess()) && Service.getInstance(this.requestId).is_available_to_process_links_in_text_for_admin())
+                        || Service.getInstance(this.requestId).is_available_to_process_links_in_text_for_free_users()) {
 
                     // Mask already existed links
                     field['value'] = field['value'].replace(/<a href=\"(https|http)/g, '<a href="$1_mask');
