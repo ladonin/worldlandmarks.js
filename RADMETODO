@@ -25,6 +25,17 @@ var1 и var2 переименовал в controller и action
 2. country_states_google_names => country_states_names
 
 
+
+
+в базе данных country_code и state_code - сделать ссылками на основную таблицу и заменить на country_id и state_id
+
+
+
+
+
+
+
+
 //ATTENTION - обратите внимание
 
 #???????????????????????????? - то, что возможно не нужно

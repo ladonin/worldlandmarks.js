@@ -9,6 +9,7 @@ const DBaseMysql = require('application/express/core/dbases/Mysql');
 const BaseFunctions = require('application/express/functions/BaseFunctions');
 const StrictFunctions = require('application/express/functions/StrictFunctions');
 const ErrorCodes = require('application/express/settings/ErrorCodes');
+const Consts = require('application/express/settings/Constants');
 
 class CountriesModel extends DBaseMysql
 {
@@ -58,6 +59,48 @@ class CountriesModel extends DBaseMysql
     {
         return this.getBySql("SELECT c.local_code FROM country");
     }
+
+    /*
+     * Check country code
+     *
+     * @param {string} code - country code
+     *
+     * @return {boolean}
+     */
+    checkCountryCode(code)
+    {
+        let _result = this.getBySql("SELECT 1 as exist FROM country c WHERE c.local_code = ?", [code]);
+
+        return _result.length ? true : false;
+    }
+
+
+
+
+    /*
+     * Get all countries
+     *
+     * @return {array of objects}
+     */
+    getCountries()
+    {
+        let _language = this.getLanguage();
+
+        return this.getByCondition(
+                "language = ? AND country_code!=? AND country_code!=''",
+                'country',
+                '',
+                'DISTINCT country, country_code',
+                [_language, Consts.UNDEFINED_VALUE],
+                undefined,
+                false);
+    }
+
+
+
+
+
+
 
 }
 

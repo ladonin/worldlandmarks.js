@@ -94,6 +94,18 @@ class MapDataModel extends DBaseMysql
         this.update(_id);
     }
 
+
+
+
+
+
+
+
+
+
+
+
+
     /*
      * Get placemarks data by its ids
      *
@@ -107,6 +119,16 @@ class MapDataModel extends DBaseMysql
 
         return $module->get_points_by_ids($ids);
     }
+
+
+
+
+
+
+
+
+
+
 
 
     //getPointContentById(id) => Map.getPointContentById

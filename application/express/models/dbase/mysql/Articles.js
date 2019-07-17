@@ -60,6 +60,27 @@ class ArticlesModel extends DBaseMysql
         }
         return this.tableName;
     }
+
+
+    /*
+     * Get last articles
+     *
+     * @param {integer} limit - max count of returned articles
+     *
+     * @return {array of objects}
+     */
+    getLastArticles(limit = 10)
+    {
+        let _condition = '';
+        let _order = 'id DESC';
+        let _select = '*';
+        let _group = '';
+        let _need_result = false;
+
+        return this.getByCondition(_condition, _order, _group, _select, undefined, limit, _need_result);
+    }
+
+
 }
 
 ArticlesModel.instanceId = BaseFunctions.unique_id();

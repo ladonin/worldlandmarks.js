@@ -148,33 +148,6 @@ class Seo extends Component {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    getLastArticles(limit = 10)
-    {
-        let _condition = '';
-        let _order = 'id DESC';
-        let _select = '*';
-        let _group = '';
-        let _need_result = false;
-
-        return ArticlesModel.getInstance(this.requestId).getByCondition(_condition, _order, _group, _select, undefined, limit, _need_result);
-    }
-}
-
 Seo.instanceId = BaseFunctions.unique_id();
 
 module.exports = Seo;

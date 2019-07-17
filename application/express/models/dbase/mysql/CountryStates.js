@@ -81,6 +81,34 @@ class CountryStatesModel extends DBaseMysql
         return _data[0].id ? _data[0].id : null;
     }
 
+
+
+
+
+
+
+    /*
+     * Check - is the state administrative center. For example - Moscow, Saint Perersburg, Wien, Bern, London.
+     * It is not state but stands on one level
+     *
+     * @param {string} countryCode - country code
+     * @param {string} stateCode - state code
+     *
+     * @return {boolean}
+     */
+    isAdministrativeCenter(countryCode, stateCode)
+    {
+        let _sql = "SELECT cs.is_administrative_center \n\
+                    FROM country c \n\
+                    LEFT JOIN country_states cs on c.id = cs.country_id \n\
+                    WHERE c.local_code = ? AND cs.url_code=?";
+
+        let _data = this.getBySql(_sql, [countryCode, stateCode]);
+        return _data[0].is_administrative_center === 1 ? true : false;
+    }
+
+
+
 }
 
 CountryStatesModel.instanceId = BaseFunctions.unique_id();

@@ -67,6 +67,40 @@ class CountryStatesNamesModel extends DBaseMysql
         }
         return false;
     }
+
+
+
+    /*
+     * Get state name by state code
+     *
+     * @param {string} code - state code
+     * @param {string} language - in what language state name will be get
+     * @param {boolean} needResult - is result required
+     *
+     * @return {string} - state name
+     */
+    getStateNameByCode(code, language, needResult = true){
+
+        let _sql = "SELECT csn.name \n\
+                    FROM country_states cs \n\
+                    LEFT JOIN country_states_names csn on cs.id = csn.state_id \n\
+                    WHERE cs.url_code = ? AND csn.language = ?";
+
+        let _data = this.getBySql(_sql, [code, language], needResult);
+
+        return _data[0].name ? _data[0].name : null;
+    }
+
+
+
+
+
+
+
+
+
+
+
 }
 
 CountryStatesNamesModel.instanceId = BaseFunctions.unique_id();

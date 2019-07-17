@@ -211,7 +211,7 @@ class DBaseMysql extends Model
             this.error(ErrorCodes.ERROR_FUNCTION_ARGUMENTS, 'id [ ' + Functions.toString(idValue) + ']');
         }
 
-        return this.query("SELECT * FROM " + this.table_name + " WHERE id = " + _id, []);//, async
+        return this.query("SELECT * FROM " + this.table_name + " WHERE id = " + _id, [])[0];//, async
     }
 
     /*

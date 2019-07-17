@@ -1,5 +1,5 @@
 /*
- * Module application/express/components/base/Cache.js
+ * File application/express/components/base/Cache.js
  * const Cache = require('application/express/components/base/Cache');
  *
  * Cache component - stores information separately for each service and language
@@ -45,10 +45,20 @@ module.exports = {
 /*
  * Stored objects:
  *
-countriesNameByCode[code]= name
-countriesDataByCode[code]= data
-stateIdByCode[code]= id
-countriesTranslateStates[language][countryCode][stateCode][stateName] = translation
-countriesTranslateCities[language][countryCode][stateCode][cityName] = translation
+countriesNameByCode[code] = {string}
+countriesDataByCode[code] = {object}
+stateIdByCode[code] = {integer}
+countriesTranslateStates[language][countryCode][stateCode][stateName] = {string}
+countriesTranslateCities[language][countryCode][stateCode][cityName] = {string}
+administrativeCenters[countryCode][stateCode] = {boolean}
+countriesHaveStates[countryCode] = {boolean}
+countriesCodes[countryCode] = {string}
+countriesParams[countryCode] = {object}
+stateNameByCode[stateCode] = {string}
+translateStateNames[language][countryCode][stateCode][stateName] = {string}
+countriesDataById[id] = {object}
+
+
+
 
  */

@@ -14,6 +14,9 @@ const CountriesModel = require('application/express/models/dbase/mysql/Countries
 const CountryNameModel = require('application/express/models/dbase/mysql/CountryName');
 const CountryStatesModel = require('application/express/models/dbase/mysql/CountryStates');
 const CountryStatesCitiesTranslationsModel = require('application/express/models/dbase/mysql/CountryStatesCitiesTranslations');
+const CountryParamsModel = require('application/express/models/dbase/mysql/CountryParams');
+const CountryStatesNamesModel = require('application/express/models/dbase/mysql/CountryStatesNames');
+const CountryStatesCitiesTranslationsModel = require('application/express/models/dbase/mysql/CountryStatesCitiesTranslations');
 
 class Countries extends Component {
 
@@ -138,24 +141,7 @@ class Countries extends Component {
 
 
 
-    /*
-     * Get all countries
-     *
-     * @return {array of objects}
-     */
-    getCountries()
-    {
-        let _language = this.getLanguage();
 
-        return this.getByCondition(
-                "language = ? AND country_code!=? AND country_code!=''",
-                'country',
-                '',
-                'DISTINCT country, country_code',
-                [_language, Consts.UNDEFINED_VALUE],
-                undefined,
-                false);
-    }
 
 // //ATTENTION - обратите внимание get_all_countries_codes => CountriesModel.getAllCountriesCodes
 
@@ -256,290 +242,277 @@ class Countries extends Component {
         return _result;
     }
 
+    /*
+     * Check - is the state administrative center. For example - Moscow, Saint Perersburg, Wien, Bern, London.
+     * It is not state but stands on one level
+     *
+     * @param {string} countryCode - country code
+     * @param {string} stateCode - state code
+     *
+     *@return {boolean}
+     */
+    isAdministrativeCenter(countryCode, stateCode)
+    {
+        if ((countryCode === Consts.UNDEFINED_VALUE) || (stateCode === Consts.UNDEFINED_VALUE)) {
+            return false;
+        }
+        let _result;
+        let _language = this.getLanguage();
+        let _serviceName = this.getServiceName();
+
+        if (_result = this.cache.get('administrativeCenters', _serviceName, _language)[countryCode][stateCode]) {
+            return _result;
+        }
+
+        _result = CountryStatesModel.getInstance(this.requestId).isAdministrativeCenter(countryCode, stateCode);
+
+        this.cache.get('administrativeCenters', _serviceName, _language)[countryCode][stateCode] = _result;
+
+        return _result;
+    }
+
+    /*
+     * Check if country has states
+     *
+     * @param {string} countryCode - country code
+     *
+     *@return {boolean}
+     */
+    hasStates(countryCode)
+    {
+        if (countryCode === Consts.UNDEFINED_VALUE) {
+            return false;
+        }
+
+        let _result;
+        let _language = this.getLanguage();
+        let _serviceName = this.getServiceName();
+
+        if (_result = this.cache.get('countriesHaveStates', _serviceName, _language)[countryCode]) {
+            return _result;
+        }
+
+        _result = CountryParamsModel.getInstance(this.requestId).hasStates(countryCode);
+
+        this.cache.get('countriesHaveStates', _serviceName, _language)[countryCode] = _result;
+
+        return _result;
+    }
+
+    /*
+     * Get country code by request url
+     *
+     * @return {string}
+     */
+    getCountryCodeFromUrl()
+    {
+
+        let _countryCode = this.getFromRequest(Consts.CATALOG_COUNTRY_VAR_NAME);
+        let _result;
+        let _language = this.getLanguage();
+        let _serviceName = this.getServiceName();
+
+        if (_countryCode === Consts.UNDEFINED_VALUE) {
+            return _countryCode;
+        }
+
+        if (_result = this.cache.get('countriesCodes', _serviceName, _language)[countryCode]) {
+            return _result;
+        }
+
+        let _exist = CountriesModel.getInstance(this.requestId).checkCountryCode(code);
+
+        if (_exist === true) {
+            this.cache.get('countriesCodes', _serviceName, _language)[countryCode] = _countryCode;
+            return _countryCode;
+        }
+        this.error(ErrorCodes.ERROR_FUNCTION_ARGUMENTS, 'country code [' + _countryCode + ']', undefined, false);
+    }
+
+    /*
+     * Get country parameters by country code
+     *
+     * @param {string} countryCode - country code
+     *
+     *@return {object}
+     */
+    getCountryParamsByCode(countryCode)
+    {
+
+        let _result;
+        let _language = this.getLanguage();
+        let _serviceName = this.getServiceName();
+
+        if (_result = this.cache.get('countriesParams', _serviceName, _language)[countryCode]) {
+            return _result;
+        }
+
+        let _countryData = this.getCountryDataByCode(countryCode);
+        let _countryId = _countryData['id'];
+
+        let _data = CountryParamsModel.getInstance(this.requestId).getParams(_countryId, false);
+
+        if (_data) {
+            this.cache.get('countriesParams', _serviceName, _language)[countryCode] = _data;
+            return _data;
+        }
+
+        this.error(ErrorCodes.ERROR_FUNCTION_ARGUMENTS, 'country code [' + countryCode + ']', undefined, false);
+    }
+
+    /*
+     * Get state name by request url
+     *
+     * @param {boolean} needResult - is result required
+     *
+     * @return {string}
+     */
+    getStateNameByGetVar(needResult = true)
+    {
+
+        let _stateCode = this.getFromRequest(Consts.CATALOG_STATE_VAR_NAME);
+
+        return this.getStateNameByCode(_stateCode, needResult);
+    }
+
+    /*
+     * Get state name by state code
+     *
+     * @param {string} stateCode - state code
+     * @param {boolean} needResult - is result required
+     *
+     * @return {string}
+     */
+    getStateNameByCode(stateCode, needResult = true)
+    {
+        if (!stateCode) {
+            this.error(ErrorCodes.ERROR_FUNCTION_ARGUMENTS, 'state code [' + stateCode + ']', undefined, false);
+        }
+
+        let _result;
+        let _language = this.getLanguage();
+        let _serviceName = this.getServiceName();
+
+        if (_result = this.cache.get('stateNameByCode', _serviceName, _language)[stateCode]) {
+            return _result;
+        }
+
+        let _countryCode = this.getFromRequest(Consts.CATALOG_COUNTRY_VAR_NAME);
+        let _stateName = CountryStatesNamesModel.getInstance(this.requestId).getStateNameByCode(stateCode, _language, false)
+
+        if (!_stateName && needResult) {
+            this.error(ErrorCodes.ERROR_COUNTRY_STATE_NAME_WAS_NOT_FOUND, 'state code [' + stateCode + ']', undefined, false);
+        }
+
+        _stateName = this.translateStateNames(_language, _countryCode, _stateName, stateCode);
+
+        this.cache.get('stateNameByCode', _serviceName, _language)[stateCode] = _stateName;
+
+        return _stateName;
+    }
+
+    /*
+     * Get state name by state code
+     *
+     * @param {string} language - language
+     * @param {string} countryCode - country code
+     * @param {string} stateName - state name
+     * @param {string} stateCode - state code
+     *
+     * @return {string}
+     */
+    translateStateNames(language, countryCode, stateName, stateCode)
+    {
+        let _result;
+        let _language = this.getLanguage();
+        let _serviceName = this.getServiceName();
+
+        if (_result = this.cache.get('translateStateNames', _serviceName, _language)[language][countryCode][stateCode][stateName]) {
+            return _result;
+        }
+
+        let _datas = CountryStatesCitiesTranslationsModel.getInstance(this.requestId).translateStateName(language, countryCode, stateName)
+
+        if (_datas.length === 1) {
+            if ((!_datas[0]['url_code']) || (_datas[0]['url_code'] === stateCode)) {
+                _result = _datas[0]['translate'];
+            }
+        } else {
+            for (let _index in _datas) {
+                if (_datas[_index]['url_code'] === stateCode) {
+                    _result = _datas[_index]['translate'];
+                }
+            }
+        }
+
+        if (!_result) {
+            // Default
+            _result = stateName;
+        }
+
+        this.cache.get('translateStateNames', _serviceName, _language)[language][countryCode][stateCode][stateName] = _result;
+        return _result;
+    }
+
+    /*
+     * Get state and country names by their codes
+     *
+     * @param {string} countryCode - country code
+     * @param {string} stateCode - state code
+     *
+     * @return {string}
+     */
+    getStateAndCountryNameByCode(countryCode, stateCode)
+    {
+        if (!countryCode) {
+            this.error(ErrorCodes.ERROR_FUNCTION_ARGUMENTS, 'country code [' + countryCode + ']', undefined, false);
+        }
+        if (!stateCode) {
+            this.error(ErrorCodes.ERROR_FUNCTION_ARGUMENTS, 'state code [' + stateCode + ']', undefined, false);
+        }
+
+        return {
+            'state': this.getStateNameByCode(stateCode),
+            'country': this.getCountryNameByCode(countryCode),
+        };
+    }
+
+    /*
+     * Get state and country names by their codes
+     *
+     * @param {string} countryCode - country code
+     * @param {string} stateCode - state code
+     *
+     * @return {string}
+     */
+    getСountryDataById(id)
+    {
+        id = parseInt(id);
+
+        if (!id) {
+            this.error(ErrorCodes.ERROR_FUNCTION_ARGUMENTS, 'country id [' + id + ']', undefined, false);
+        }
+
+        let _result;
+        let _language = this.getLanguage();
+        let _serviceName = this.getServiceName();
+
+        if (_result = this.cache.get('countriesDataById', _serviceName, _language)[id]) {
+            return _result;
+        }
+
+        _result = CountriesModel.getInstance(this.requestId).getById(id);
+
+        if (!_result) {
+            this.error(ErrorCodes.ERROR_COUNTRY_DATA_WAS_NOT_FOUND, 'country id [' + id + ']', undefined, false);
+        }
+
+        this.cache.get('countriesDataById', _serviceName, _language)[id] = _result;
+        return _result;
+    }
 }
 
 Countries.instanceId = BaseFunctions.unique_id();
 module.exports = Countries;
 
 
-/*
-
-
-
-
-
-
- <?php
-
- namespace components\app;
-
- use \core\component;
- use \components\app as components;
-
- final class Countries extends Component
- {
-
- use \core\traits\patterns\t_singleton;
-
- // можно искать через базу данных адресов, но лучше не насиловать базу и явно прописать их, это ведь константы
- protected $countries_data;
- protected $countries_names_replaces;
-
-
-
-
-
- private function __construct()
- {
-
- }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
- public function is_administrative_center($country_code, $state_code)
- {
- if (($country_code == MY_UNDEFINED_VALUE) || ($state_code == MY_UNDEFINED_VALUE)) {
- // например в случае, если гугл не знает местопложения и country_code или state_code от этого стал undefined
- return false;
- }
-
- if (my_is_not_empty($result = @$this->countries_states_is_administrative_center_requested_data[$country_code][$state_code])) {
- return $result;
- }
-
- $conn = \core\DBase_Mysql::model()->get_connect();
- $sql = "SELECT cs.is_administrative_center
- FROM country c
- LEFT JOIN country_states cs on c.id = cs.country_id
- WHERE c.local_code = '".$country_code."' AND cs.url_code='".$state_code."'";
-
- $data = $conn->query($sql, \PDO::FETCH_ASSOC)->fetch();
-
- $result = isset($data['is_administrative_center']) ? (boolean)$data['is_administrative_center'] : false;
- $this->countries_states_is_administrative_center_requested_data[$country_code][$state_code] = $result;
-
- return $result;
- }
-
-
-
-
-
-
-
-
- public function has_states($country_code)
- {
- if ($country_code == MY_UNDEFINED_VALUE) {
- // например в случае, если гугл не знает местопложения и country_code от этого стал undefined
- return false;
- }
-
- if (my_is_not_empty($result = @$this->countries_has_states_requested_data[$country_code])) {
- return $result;
- }
-
- $conn = \core\DBase_Mysql::model()->get_connect();
- $sql = "SELECT cp.has_states
- FROM country c
- LEFT JOIN country_params cp on c.id = cp.country_id
- WHERE c.local_code = '".$country_code."'";
-
- $data = $conn->query($sql, \PDO::FETCH_ASSOC)->fetch();
-
- $result = isset($data['has_states']) ? (boolean)$data['has_states'] : false;
- $this->countries_has_states_requested_data[$country_code] = $result;
-
- return $result;
- }
-
-
- public function get_country_code_from_url()
- {
-
- $country_code = $this->get_get_var(MY_CATALOG_COUNTRY_VAR_NAME);
-
- if ($country_code == MY_UNDEFINED_VALUE) {
- return $country_code;
- }
-
- if (my_is_not_empty($result = @$this->countries_code_requested_data[$country_code])) {
- return $result;
- }
-
- $conn = \core\DBase_Mysql::model()->get_connect();
- $sql = "SELECT count(*) as count
- FROM country c
- WHERE c.local_code = '".$country_code."'";
-
- $data = $conn->query($sql, \PDO::FETCH_ASSOC)->fetch();
-
- if ($data['count'] > 0) {
- $this->countries_code_requested_data[$country_code] = $country_code;
- return $country_code;
- }
-
- self::concrete_error(array(MY_ERROR_FUNCTION_ARGUMENTS, 'country_code:' . $country_code));
- }
-
-
- public function get_country_params_by_code($country_code)
- {
- if (my_is_not_empty($result = @$this->countries_params_requested_data[$country_code])) {
- return $result;
- }
-
- $country_data = $this->get_country_data_by_code($country_code);
- $country_id = $country_data['id'];
-
-
- $conn = \core\DBase_Mysql::model()->get_connect();
- $sql = "SELECT *
- FROM country_params cp
- WHERE cp.country_id = '".$country_id."'";
-
- $data = $conn->query($sql, \PDO::FETCH_ASSOC)->fetch();
-
- if ($data) {
- $this->countries_params_requested_data[$country_code] = $data;
- return $data;
- }
- }
-
-
-
-
-
-
- public function get_state_name_by_get_var($need_result = true)
- {
- $state = $this->get_get_var(MY_CATALOG_STATE_VAR_NAME);
- $language_component = components\Language::get_instance();
- $language = $language_component->getLanguage();
- $result = $this->get_state_name_by_code($state, $need_result);
- return $result;
- }
-
-
- public function get_state_and_country_name_by_code($country_code = null, $state_code = null)
- {
- if (my_is_empty(@$state_code)) {
- self::concrete_error(array(MY_ERROR_FUNCTION_ARGUMENTS, 'state_code:' . $state_code));
- }
- if (my_is_empty(@$country_code)) {
- self::concrete_error(array(MY_ERROR_FUNCTION_ARGUMENTS, 'country_code:' . $country_code));
- }
- return array(
- 'state' => $this->get_state_name_by_code($state_code),
- 'country' => $this->get_country_name_by_code($country_code),
- );
- }
-
-
- }
-
-
-
-
-
-
-
-
-
-
- public function get_country_data_by_id($id = null)
- {
-
- if (my_is_empty((int)$id)) {
- self::concrete_error(array(MY_ERROR_FUNCTION_ARGUMENTS, 'id:' . $id));
- }
-
- $id = (int)$id;
-
- if (my_is_not_empty($result = @$this->countries_data_by_id_requested_data[$id])) {
- return $result;
- }
-
- $data = self::get_model(MY_MODEL_NAME_DB_COUNTRY)->get_by_id($id);
-
- $result = isset($data['id']) ? $data : null;
-
- if (my_is_empty($result)) {
- self::concrete_error(array(MY_ERROR_COUNTRY_DATA_WAS_NOT_FOUND, 'id:' . $id));
- }
-
- $this->countries_data_by_id_requested_data[$id] = $result;
- return $result;
- }
-
-
-
-
-
-
-
-
-
- public function get_state_name_by_code($state_code = null, $need_result = true)
- {
-
- if (my_is_empty(@$state_code)) {
- self::concrete_error(array(MY_ERROR_FUNCTION_ARGUMENTS, 'state_code:' . $state_code));
- }
-
-
- if (my_is_not_empty($result = @$this->countries_state_name_by_code_requested_data[$state_code])) {
- return $result;
- }
-
-
- $language_component = components\Language::get_instance();
- $language = $language_component->getLanguage();
- $connect = \core\DBase_Mysql::model()->get_connect();
- $country_code = $this->get_get_var(MY_CATALOG_COUNTRY_VAR_NAME);
-
-
- $sql = "SELECT csgn.name
- FROM country_states cs
- LEFT JOIN country_states_names csgn on cs.id = csgn.state_id
- WHERE cs.url_code = '".$state_code."' AND csgn.language = '".$language."'";
-
- $data = $connect->query($sql, \PDO::FETCH_ASSOC)->fetch();
-
- $result = isset($data['name']) ? $data['name'] : null;
-
- if (my_is_empty($result) && $need_result) {
- self::concrete_error(array(MY_ERROR_COUNTRY_STATE_NAME_WAS_NOT_FOUND, 'state_code:' . $state_code));
- }
-
- $result = $this->translate_state_names($language, $country_code, $result, $state_code);
- $this->countries_state_name_by_code_requested_data[$state_code] = $result;
- return $result;
- }
- }
- */

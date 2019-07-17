@@ -103,7 +103,7 @@ class GeocodeCollectionModel extends DBaseMysql
      */
     addOnOneLanguage(id, language, enData)
     {
-        let _data = MapDataModel.getById(id);
+        let _data = MapDataModel.getInstance(this.requestId).getById(id);
 
         _data = this.prepareAddress(
                 {

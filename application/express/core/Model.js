@@ -12,6 +12,7 @@ const Consts = require('application/express/settings/Constants');
 const Functions = require('application/express/functions/BaseFunctions');
 const Service = require('application/express/core/Service');
 const Users = require('application/express/core/Users');
+const Validator = require('application/express/components/base/Validator');
 
 class Model extends Core {
 
@@ -80,7 +81,7 @@ class Model extends Core {
 
                 if ((filter_type === Consts.FILTER_TYPE_ALL) || ((filter_type === Consts.FILTER_TYPE_ONLY_REQUIRED) && _rule === 'required')
                         || ((filter_type === Consts.FILTER_TYPE_WITHOUT_REQUIRED) && _rule !== 'required')) {
-                    _result = this.validate(_rule, value);
+                    _result = Validator.validate(_rule, value);
                     if (!_result) {
                         if (with_rollback === true) {
                             this.error(ErrorCodes.ERROR_MODEL_FILTER, 'wrong value: name[' + name + '], value[' + value + '], rule[' + JSON.stringify(_rule) + ']');

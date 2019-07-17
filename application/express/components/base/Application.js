@@ -14,6 +14,7 @@ const SocketsPool = require('application/express/core/SocketsPool');
 const ErrorCodes = require('application/express/settings/ErrorCodes');
 const Consts = require('application/express/settings/Constants');
 const DBase = require('application/express/core/DBase');
+const Validator = require('application/express/components/base/Validator');
 
 class Application extends Component {
     constructor(){
@@ -329,9 +330,10 @@ class Application extends Component {
 
             for (let _index in _config_get_rules) {
                 let _rule = _config_get_rules[_index];
-                if (!this.validate(_rule, get_value)) {
+                if (!Validator.validate(_rule, get_value)) {
                     this.error(ErrorCodes.ERROR_GET_VAR_IS_INVALID,
-                    'name[' + _config_get_name + '], value[' + get_value + '], rule[' + BaseFunctions.toString(_rule) + '], data[' + this.getStringData() + ']');
+                    'name[' + _config_get_name + '], value[' + get_value + '], rule[' + BaseFunctions.toString(_rule) + '], data[' + this.getStringData() + ']',
+                            undefined, false);
                 }
             }
         }
