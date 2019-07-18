@@ -217,38 +217,131 @@ class Map extends Component {
      */
     getPointsByCoordsNaked(data)
     {
-        if (BaseFunctions.isSet(data['X1']) && data['X2'] && data['Y1'] && data['Y2'] && data['zoom']) {
+        if (BaseFunctions.isSet(data['X1'])
+                && BaseFunctions.isSet(data['X2'])
+                && BaseFunctions.isSet(data['Y1'])
+                && BaseFunctions.isSet(data['Y2'])
+                && BaseFunctions.isSet(data['zoom'])) {
 
-            $photos_db_model = components\Map::get_db_model('photos');
-            $data_db_model = components\Map::get_db_model('data');
-            $max_map_load_size = self::get_module(MY_MODULE_NAME_SERVICE)->get_max_map_load_size();
-            $conn = $photos_db_model->get_connect();
+            let _maxMapLoadSize = Service.getInstance(this.requestId).getMaxMapLoadSize();
 
-            $x1 = (float) $data['X1'];
-            $x2 = (float) $data['X2'];
-            $y1 = (float) $data['Y1'];
-            $y2 = (float) $data['Y2'];
+            let _x1 = parseFloat(data['X1']);
+            let _x2 = parseFloat(data['X2']);
+            let _y1 = parseFloat(data['Y1']);
+            let _y2 = parseFloat(data['Y2']);
 
-// определяем старый и новый масштабы
-            $data['zoom'] = (int) $data['zoom'];
+            data['zoom'] = parseInt(data['zoom']);
 
-// если НЕ передаются старые координаты, значит это первый запрос
-///////////////////$data['old_X1'] - отключили и не передаем пока - потому что "Г" поиск решили пока не исполоьзовать (см ниже)
 
-            if (!isset($data['old_X1']) || !isset($_SESSION['old_zoom'])) {
-                $_SESSION['old_zoom'] = $data['zoom'];
+            // If old coordinates are not passed in means that in first request
+            if (!BaseFunctions.isSet(_data['old_X1']) || !this.getSocketData()['old_zoom']) {
+                this.getSocketData()['old_zoom'] = data['zoom'];
             }
 
-            $old_zoom = $_SESSION['old_zoom'];
+            let _oldZoom = this.getSocketData()['old_zoom'];
+            this.getSocketData()['old_zoom'] = data['zoom'];
 
-            $_SESSION['old_zoom'] = $data['zoom'];
-
-// Если область охвата слишком большая
-            if ((($x1 < $x2) && (abs($x2 - $x1) > $max_map_load_size)) || ((($x1 > 0) && ($x2 < 0)) && (abs((180 - $x1) + abs(-180 - $x2)) > $max_map_load_size)) || (abs($y1 - $y2) > $max_map_load_size)) {
-                return MY_TOO_BIG_MAP_REQUEST_AREA_CODE;
+            // If area is too big
+            if (((_x1 < _x2) && (Math.abs(_x2 - _x1) > _maxMapLoadSize))
+                    || (((_x1 > 0) && (_x2 < 0)) && (Math.abs((180 - _x1) + Math.abs(-180 - _x2)) > _maxMapLoadSize))
+                    || (Math.abs(_y1 - _y2) > _maxMapLoadSize)) {
+                return Consts.TOO_BIG_MAP_REQUEST_AREA_CODE;
             }
 
-            $sql = "SELECT
+            let _result = MapDataModel.getInstance(this.requestId).getPointsByCoordsNaked(_x1, _x2, _y1, _y2);
+
+            this.setLoadedIdsToSession(_result);
+
+            return _result;
+        } else {
+            this.error(ErrorCodes.ERROR_FUNCTION_ARGUMENTS, 'data [' + BaseFunctions.toString(data) + ']', undefined, false);
+        }
+    }
+
+    /*
+     * Get already sent placemarks from socket session
+     *
+     * @return {string} - list of ids of already sent placemarks
+     */
+    getLoadedIdsStringFromSession()
+    {
+        if (this.getSocketData()['map_placemarks_loaded_ids'].length) {
+            return this.getSocketData()['map_placemarks_loaded_ids'].join(',');
+        } else {
+            return '';
+        }
+    }
+
+
+    /*
+     * Write already sent placemarks into socket session in order not to send them again
+     *
+     * @param {array of objects} placemarks - placemarks to be saved in socket session
+     */
+    setLoadedIdsToSession(placemarks)
+    {
+        if (placemarks.length) {
+
+            if (!BaseFunctions.isArray(this.getSocketData()['map_placemarks_loaded_ids'])) {
+                this.getSocketData()['map_placemarks_loaded_ids'] = [];
+            }
+
+            for (let index in placemarks) {
+                let _placemark = placemarks[index];
+
+                if (!_placemark['c_id']) {
+                    this.error(ErrorCodes.ERROR_FUNCTION_ARGUMENTS, 'placemarks [' + BaseFunctions.toString(placemarks) + ']', undefined, false);
+                }
+
+                this.getSocketData()['map_placemarks_loaded_ids'].push(_placemark['c_id']);
+            }
+        }
+    }
+
+    /*
+     * Get limited collection of any prepared placemarks in random order
+     *
+     * @return {array of objects}
+     */
+    getPointsByLimit()
+    {
+        let _result = this.getPointsByLimitNaked();
+
+        _result = _result ? this.prepareResult(_result) : _result;
+
+        return _result;
+    }
+
+
+
+    /*
+     * Get limited collection of any placemarks in random order
+     *
+     * @param {integer} limit - collection limit
+     *
+     * @return {array of objects}
+     */
+    getPointsByLimitNaked(limit)
+    {
+        if (!limit) {
+            limit = Service.getInstance(this.requestId).getMapAutofillLimit();
+        }
+
+
+
+
+
+
+
+
+
+        $photos_db_model = components\Map::get_db_model('photos');
+        $data_db_model = components\Map::get_db_model('data');
+        $conn = $photos_db_model->get_connect();
+        $config = self::get_config();
+
+
+        $sql = "SELECT
                     t.id as c_id,
                     t.x as c_x,
                     t.y as c_y,
@@ -262,92 +355,47 @@ class Map extends Component {
                     ph.width as ph_width,
                     ph.height as ph_height
 
-                    FROM (SELECT * FROM " . $data_db_model->get_table_name() . " WHERE ";
+                    FROM " . $data_db_model->get_table_name() . " t ";
 
-            if (($x1 > 0) && ($x2 < 0)) {
 
-                $sql .= "((x BETWEEN $x1 AND 180) OR  (x BETWEEN -180 AND $x2)) ";
-            } else {
 
-                $sql .= "(x BETWEEN $x1 AND $x2) ";
-            }
-
-            $sql .= "AND (y BETWEEN $y2 AND $y1)) t "
-                    . "LEFT JOIN (
+        $sql .= "LEFT JOIN (
 SELECT * FROM
 (SELECT MAX(id) phh2_id FROM landmarks_map_photos GROUP BY map_data_id) phh2
 JOIN landmarks_map_photos on phh2.phh2_id=landmarks_map_photos.id
 ) ph ON ph.map_data_id=t.id";
-// "Г" поиск сильно нагружает базу
-            if (!1 && ($old_zoom >= $data['zoom']) && (my_is_not_empty(@$data['old_X1']))) {
-                if (my_is_not_empty(@$data['old_X2']) && my_is_not_empty(@$data['old_Y1']) && my_is_not_empty(@$data['old_Y2'])) {
-
-                    $old_X1 = set_amendment((float) $data['old_X1'], 'x1', $data);
-                    $old_X2 = set_amendment((float) $data['old_X2'], 'x2', $data);
-                    $old_Y1 = set_amendment((float) $data['old_Y1'], 'y1', $data);
-                    $old_Y2 = set_amendment((float) $data['old_Y2'], 'y2', $data);
-// Если масштаб не менялся на приближение (например из большой неподгружаемой зоны входим в зону видимости в рамках старой зоны - надо подгрузить все метки без фильтра)
-// всегда
-                    if (1 || (($y1 - $y2) >= ($old_Y1 - $old_Y2))) {
-                        $sql .= "LEFT JOIN (SELECT * FROM " . $data_db_model->get_table_name() . " WHERE ";
-                        if (($old_X1 > 0) && ($old_X2 < 0)) {
-                            $sql .= "((x BETWEEN $old_X1 AND 180) OR (x BETWEEN -180 AND $old_X2)) ";
-                        } else {
-                            $sql .= "(x BETWEEN $old_X1 AND $old_X2) ";
-                        }
-                        $sql .= "AND (y BETWEEN $old_Y2 AND $old_Y1)) t_old ON t.id = t_old.id WHERE t_old.id iS NULL ";
-                    }
-                } else {
-                    self::concrete_error(array(MY_ERROR_FUNCTION_ARGUMENTS, 'old data:' . json_encode($data)));
-                }
-            }
-
-            //что больше не выбираем
-            $loaded_ids_from_session = $this->get_loaded_ids_string_from_session();
-            if ($loaded_ids_from_session) {
-                $sql .= " WHERE t.id NOT IN (" . $loaded_ids_from_session . ")";
-            }
-
-            $sql .= " GROUP by c_id";
-
-            $result = $conn->query($sql, \PDO::FETCH_ASSOC)->fetchAll();
-
-            if (!is_array($result)) {
-                self::concrete_error(array(MY_ERROR_MYSQL, 'request:' . $sql), MY_LOG_MYSQL_TYPE);
-            }
-
-            $this->set_loaded_ids_to_session($result);
-
-            return $result;
-        } else {
-            self::concrete_error(array(MY_ERROR_FUNCTION_ARGUMENTS, 'data:' . json_encode($data)));
+        //что больше не выбираем
+        $loaded_ids_from_session = $this->get_loaded_ids_string_from_session();
+        if ($loaded_ids_from_session) {
+            $sql .= " WHERE t.id NOT IN (" . $loaded_ids_from_session . ")";
         }
+
+        $sql .= " GROUP by c_id ORDER by RAND() DESC LIMIT " . $this->get_filling_bunch_last_id_from_session() . ',' . $limit;
+
+        $result = $conn->query($sql, \PDO::FETCH_ASSOC)->fetchAll();
+        if (!is_array($result)) {
+            self::concrete_error(array(MY_ERROR_MYSQL, 'request:' . $sql), MY_LOG_MYSQL_TYPE);
+        }
+
+        $this->set_loaded_ids_to_session($result);
+
+        return $result;
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 }
 
 Map.instanceId = BaseFunctions.unique_id();
 
 module.exports = Map;
+
+
+
+
+
+
+
+
+
 
 
 <?php
@@ -375,15 +423,7 @@ abstract class Map extends \vendor\Module
 
 
 
-    public function get_points_by_limit()
-    {
-        $result = $this->get_points_by_limit_naked();
-// если не пустой то подготавливаеи
-        $result = $result ? $this->prepare_result($result) : $result;
 
-
-        return $result;
-    }
 
 
 
@@ -575,59 +615,7 @@ abstract class Map extends \vendor\Module
 
 
 
-    public function get_points_by_limit_naked($limit = null)
-    {
-        if (!$limit) {
-            //если не передали, то берем из настроек сервиса
-            $limit = self::get_module(MY_MODULE_NAME_SERVICE)->get_map_autofill_limit();
-        }
 
-        $photos_db_model = components\Map::get_db_model('photos');
-        $data_db_model = components\Map::get_db_model('data');
-        $conn = $photos_db_model->get_connect();
-        $config = self::get_config();
-
-
-        $sql = "SELECT
-                    t.id as c_id,
-                    t.x as c_x,
-                    t.y as c_y,
-                    t.title as c_title,
-                    t.category as c_category,
-                    t.subcategories as c_subcategories,
-                    t.relevant_placemarks as c_relevant_placemarks,
-
-                    ph.id as ph_id,
-                    ph.path as ph_path,
-                    ph.width as ph_width,
-                    ph.height as ph_height
-
-                    FROM " . $data_db_model->get_table_name() . " t ";
-
-
-
-        $sql .= "LEFT JOIN (
-SELECT * FROM
-(SELECT MAX(id) phh2_id FROM landmarks_map_photos GROUP BY map_data_id) phh2
-JOIN landmarks_map_photos on phh2.phh2_id=landmarks_map_photos.id
-) ph ON ph.map_data_id=t.id";
-        //что больше не выбираем
-        $loaded_ids_from_session = $this->get_loaded_ids_string_from_session();
-        if ($loaded_ids_from_session) {
-            $sql .= " WHERE t.id NOT IN (" . $loaded_ids_from_session . ")";
-        }
-
-        $sql .= " GROUP by c_id ORDER by RAND() DESC LIMIT " . $this->get_filling_bunch_last_id_from_session() . ',' . $limit;
-
-        $result = $conn->query($sql, \PDO::FETCH_ASSOC)->fetchAll();
-        if (!is_array($result)) {
-            self::concrete_error(array(MY_ERROR_MYSQL, 'request:' . $sql), MY_LOG_MYSQL_TYPE);
-        }
-
-        $this->set_loaded_ids_to_session($result);
-
-        return $result;
-    }
 
 
     protected function get_filling_bunch_last_id_from_session()
@@ -650,30 +638,10 @@ JOIN landmarks_map_photos on phh2.phh2_id=landmarks_map_photos.id
     }
 
 
-    protected function get_loaded_ids_string_from_session()
-    {
-        if (my_array_is_not_empty(@$_SESSION['map']['placemarks']['loaded']['ids'])) {
-
-            return implode(',', $_SESSION['map']['placemarks']['loaded']['ids']);
-        } else {
-            return '';
-        }
-    }
 
 
-    // Пишем в сессию найденные метки, чтобы потом их не грузить снова
-    protected function set_loaded_ids_to_session($result = array())
-    {
-        if ($result) {
-            foreach ($result as $data) {
-                if (!isset($data['c_id'])) {
-                    self::concrete_error(array(MY_ERROR_FUNCTION_ARGUMENTS, 'result:' . json_encode($result)));
-                    return;
-                }
-                $_SESSION['map']['placemarks']['loaded']['ids'][$data['c_id']] = $data['c_id'];
-            }
-        }
-    }
+
+
 
 
     protected function clear_loaded_ids_from_session()

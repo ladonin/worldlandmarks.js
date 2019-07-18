@@ -10,7 +10,7 @@ const RequestsPool = require('application/express/core/RequestsPool');
 const Consts = require('application/express/settings/Constants');
 const BaseFunctions = require('application/express/functions/BaseFunctions');
 const ErrorCodes = require('application/express/settings/ErrorCodes');
-
+const SocketsPool = require('application/express/core/SocketsPool');
 
 class Core {
 
@@ -43,7 +43,7 @@ class Core {
     /*
      * @return {object} - copy of request query data {name1:value1, name2:value2}
      */
-    getData() {
+    getRequestData() {
         let _data = RequestsPool.getRequestData(this.requestId);
         return BaseFunctions.clone(_data)
     }
@@ -52,11 +52,26 @@ class Core {
      * @return {string} - string presentation of request object
      */
     getStringData() {
-        return BaseFunctions.toString(this.getData());
+        return BaseFunctions.toString(this.getRequestData());
     }
 
+    /*
+     * Get socket data from pool
+     *
+     * @return {object}
+     */
+    getSocketData() {
+        return SocketsPool.getSocketData(RequestsPool.getSocketToken(this.requestId));
+    }
 
-
+    /*
+     * Remove socket data parameter
+     *
+     * @param {string} name - data parameter name
+     */
+    removeSocketDataParameter(name) {
+       SocketsPool.removeSocketDataParam(RequestsPool.getSocketToken(this.requestId), name);
+    }
 
     /*
      * Call error with request url in message

@@ -315,7 +315,7 @@ class Service extends Core
      *
      * @return number
      */
-    get_map_autofill_limit()
+    getMapAutofillLimit()
     {
 
         if (Functions.isSet(this.get_data().config.map.autofill.individual_limit)) {
@@ -410,7 +410,7 @@ class Service extends Core
      *
      * @return integer
      */
-    get_max_map_load_size()
+    getMaxMapLoadSize()
     {
         if (Functions.isSet(this.get_data().config.generic.max_map_load_size)) {
             return this.data.config.generic.max_map_load_size;

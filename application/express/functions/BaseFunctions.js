@@ -497,7 +497,7 @@ function processError(errorCode, message = '', requestData = 'not set', log_type
             _filename = 'db.log';
         }
         Fs.appendFileSync("log/" + _filename, _logMessage);
-    } else if ((Config.debug === 1) && (outerCall === true)){
+    } else if ((Config.debug === 1) && (outerCall === true)) {
         console.log(_logMessage);
     }
 
@@ -523,7 +523,7 @@ function prepareToOneWord(text, defaultValue = Consts.UNDEFINED_VALUE)
     text = prepareStrangeLetters(text);
     text = prepareToDirName(text);
     text = text.toLowerCase();
-    text = text.replace(/[,\(\)\']*/g,'');
+    text = text.replace(/[,\(\)\']*/g, '');
 
     return text;
 }
@@ -539,8 +539,8 @@ function prepareToOneWord(text, defaultValue = Consts.UNDEFINED_VALUE)
 function prepareToDirName(text)
 {
     text = trim(text);
-    text = text.replace(/[\'\"]/g,'');
-    text = text.replace(/[ \-\.\,\|«»]/g,'_');
+    text = text.replace(/[\'\"]/g, '');
+    text = text.replace(/[ \-\.\,\|«»]/g, '_');
 
     return text;
 }
@@ -554,7 +554,7 @@ function prepareToDirName(text)
  */
 function prepareStrangeLetters(text)
 {
-    let _lettersFrom = ['ö', 'ü', 'ß', 'ć', 'ț', 'ș', 'í', 'ó', 'á', 'ñ', 'ô', 'Î', 'Ō', 'é','č', 'ž', 'ō','É'];
+    let _lettersFrom = ['ö', 'ü', 'ß', 'ć', 'ț', 'ș', 'í', 'ó', 'á', 'ñ', 'ô', 'Î', 'Ō', 'é', 'č', 'ž', 'ō', 'É'];
     let _lettersTo = ['o', 'u', 'ss', 't', 't', 's', 'i', 'o', 'a', 'n', 'o', 'i', 'o', 'e', 'c', 'z', 'o', 'e'];
 
     for (let _index in _lettersFrom) {
@@ -568,6 +568,23 @@ function prepareStrangeLetters(text)
 }
 
 
+
+
+///*
+// * Check coordinate on validity
+// *
+// * @param {string/integer/float} coordinate - x or y
+// *
+// * @return {boolaen}
+// */
+//function checkCoordinate(coord)
+//{
+//    coord = toFloat(coord);
+//    if (coord || coord === 0) {
+//        return true;
+//    }
+//    return false;
+//}
 
 /*
  * Lead value to float
@@ -583,6 +600,7 @@ function toFloat(value)
 
 
 module.exports = {
+    //checkCoordinate,
     toFloat,
     deleteFile,
     unique_id,

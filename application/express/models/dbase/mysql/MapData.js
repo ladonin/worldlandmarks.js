@@ -9,7 +9,7 @@ const DBaseMysql = require('application/express/core/dbases/Mysql');
 const BaseFunctions = require('application/express/functions/BaseFunctions');
 const GeocodeCollectionModel = require('application/express/models/dbase/mysql/GeocodeCollection');
 const MapPhotosModel = require('application/express/models/dbase/mysql/MapPhotos');
-
+const Map = require('application/express/components/Map');
 
 
 class MapDataModel extends DBaseMysql
@@ -89,12 +89,6 @@ class MapDataModel extends DBaseMysql
     {
         let _id = data.id;
         delete data.id;
-
-        // If coordinates are not set
-        if ((!data.x && data.x !== 0 && data.x !== '0') || (!data.y && data.y !== 0 && data.y !== '0')) {
-            delete data.x;
-            delete data.y;
-        }
 
         this.setValuesToFields(data);
         this.update(_id);
@@ -223,6 +217,89 @@ class MapDataModel extends DBaseMysql
 
         return this.getBySql(_sql);
     }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    /*
+     * Get placemarks short data by ids
+     *
+     * @param {float} _x1 - x1 coordinate
+     * @param {float} _x2 - x2 coordinate
+     * @param {float} _y1 - y1 coordinate
+     * @param {float} _y2 - y2 coordinate
+     *
+     * @return {array of objects} - placemarks data
+     */
+    getPointsByCoordsNaked(_x1, _x2, _y1, _y2)
+    {
+        let _sql = `SELECT
+                t.id as c_id,
+                t.x as c_x,
+                t.y as c_y,
+                t.title as c_title,
+                t.category as c_category,
+                t.subcategories as c_subcategories,
+                t.relevant_placemarks as c_relevant_placemarks,
+
+                ph.id as ph_id,
+                ph.path as ph_path,
+                ph.width as ph_width,
+                ph.height as ph_height
+
+                FROM (SELECT * FROM ${this.getTableName()} WHERE `;
+
+        if ((_x1 > 0) && (_x2 < 0)) {
+
+            _sql += `((x BETWEEN ${_x1} AND 180) OR (x BETWEEN -180 AND ${_x2})) `;
+        } else {
+
+            _sql += `(x BETWEEN ${_x1} AND ${_x2}) `;
+        }
+
+        _sql += `AND (y BETWEEN ${_y2} AND ${_y1})) t LEFT JOIN (
+                SELECT * FROM
+                (SELECT MAX(id) phh2_id FROM landmarks_map_photos GROUP BY map_data_id) phh2
+                JOIN landmarks_map_photos on phh2.phh2_id=landmarks_map_photos.id
+                ) ph ON ph.map_data_id=t.id`;
+
+        // What is already sent
+        let _loadedIdsFromSession = Map.getInstance(this.requestId).getLoadedIdsStringFromSession();
+        if (_loadedIdsFromSession) {
+            _sql += ` WHERE t.id NOT IN (${_loadedIdsFromSession})`;
+        }
+
+        _sql += " GROUP by c_id";
+
+        return this.getBySql(_sql, false);
+    }
+
 
 
 

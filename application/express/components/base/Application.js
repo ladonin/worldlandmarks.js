@@ -321,7 +321,7 @@ class Application extends Component {
      */
     validate_get_vars()
     {
-        let _get_variables = this.getData();
+        let _get_variables = this.getRequestData();
 
         for (let _config_get_name in Config.get_vars) {
 

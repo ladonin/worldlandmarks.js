@@ -91,19 +91,6 @@ module.exports = {
     },
 
     /*
-     * Set/update socket data parameter
-     *
-     * @param {string} token - socket token
-     * @param {string} name - data parameter name
-     * @param mix value - data parameter value
-     */
-    setSocketDataParam(token, name, value) {
-
-        checkToken(token);
-        _sockets[token].data[name] = value;
-    },
-
-    /*
      * Remove socket data parameter
      *
      * @param {string} token - socket token
@@ -142,17 +129,15 @@ module.exports = {
     },
 
     /*
-     * Get socket data parameter from pool
+     * Get socket data from pool
      *
      * @param {string} token - socket token
-     * @param {string} name - data parameter name
      *
      * @return mix - data parameter value
      */
-    getSocketDataParam(token, name) {
-
+    getSocketData(token) {
         checkToken(token);
-        return BaseFunctions.clone(_sockets[token].data[name]);
+        return _sockets[token].data;
     },
 
     /*
