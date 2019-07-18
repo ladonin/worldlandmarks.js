@@ -21,11 +21,15 @@ class MapDataModel extends DBaseMysql
 
         this.fields = {
             x:{
+                // Preparing value before validating
+                preparing:['to_float'],
                 rules:['numeric', 'required'],
                 //processing:['htmlspecialchars'],
             },
-                y:{
-                    rules:['numeric', 'required'],
+            y:{
+                // Preparing value before validating
+                preparing:['to_float'],
+                rules:['numeric', 'required'],
                 //processing:['htmlspecialchars'],
             },
             comment:{

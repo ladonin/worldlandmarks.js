@@ -569,8 +569,21 @@ function prepareStrangeLetters(text)
 
 
 
+/*
+ * Lead value to float
+ *
+ * @param {mix} value
+ *
+ * @return {float}
+ */
+function toFloat(value)
+{
+    return parseFloat(value);
+}
+
 
 module.exports = {
+    toFloat,
     deleteFile,
     unique_id,
     clone,

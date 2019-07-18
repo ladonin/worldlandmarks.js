@@ -189,13 +189,13 @@ class Map extends Component {
     /*
      * Get placemarks short data by coordinates
      *
-     * @param {object} coords - coordinates
+     * @param {object} data - coordinates with zoom
      *
      * @return {array of object} - placemarks
      */
-    getPointsShortDataByCoords(coords)
+    getPointsShortDataByCoords(data)
     {
-        let _result = this.getPointsByCoordsNaked(coords);
+        let _result = this.getPointsByCoordsNaked(data);
         if (!_result || !_result.length) {
             return [];
         }
@@ -208,11 +208,17 @@ class Map extends Component {
 
 
 
-
-    public function getPointsByCoordsNaked(array $data)
+    /*
+     * Get placemarks unprepared short data by coordinates
+     *
+     * @param {object} coords - coordinates with zoom
+     *
+     * @return {array of object} - placemarks
+     */
+    getPointsByCoordsNaked(data)
     {
-        $config = self::get_config();
-        if (isset($data['X1']) && isset($data['X2']) && isset($data['Y1']) && isset($data['Y2']) && isset($data['zoom'])) {
+        if (BaseFunctions.isSet(data['X1']) && data['X2'] && data['Y1'] && data['Y2'] && data['zoom']) {
+
             $photos_db_model = components\Map::get_db_model('photos');
             $data_db_model = components\Map::get_db_model('data');
             $max_map_load_size = self::get_module(MY_MODULE_NAME_SERVICE)->get_max_map_load_size();

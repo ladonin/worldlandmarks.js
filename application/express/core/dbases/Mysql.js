@@ -353,9 +353,9 @@ class DBaseMysql extends Model
      */
     setValuesToFields(data)
     {
-
         for (let _field_name in data) {
-            let _field_value = data[_field_name];
+
+            let _field_value = this.preparingValue(data[_field_name]);
             this.filter(_field_name, _field_value, Consts.FILTER_TYPE_WITHOUT_REQUIRED);
             if (!_field_value && Functions.is_not_empty(this.fields[_field_name]['default_value'])) {
                 _field_value = this.fields[_field_name]['default_value'];

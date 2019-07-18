@@ -97,6 +97,30 @@ class Model extends Core {
     }
 
 
+
+
+
+    /*
+     * Preparing field value according its 'preparing' settings
+     *
+     * @param {object} field - field data with possible 'preparing' property
+     * @param {mix} value - value to be prepared, in this case value is not in 'fields' yet
+     *
+     * @return {mix} - prepared value
+     */
+    preparingValue(field, value) {
+
+        if (Functions.is_not_empty(field['preparing']) && Functions.is_not_empty(value)) {
+
+            // Lead to float value
+            if (Functions.in_array("to_float", field['processing'])) {
+                value = Functions.toFloat(value);
+            }
+
+        }
+        return value;
+    }
+
     /*
      * Processing field value according its 'processing' settings
      *

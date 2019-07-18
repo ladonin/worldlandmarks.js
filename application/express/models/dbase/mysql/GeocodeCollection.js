@@ -173,7 +173,7 @@ class GeocodeCollectionModel extends DBaseMysql
         if ((language !== Consts.LANGUAGE_EN) && (!enData['country'] || !enData['administrative_area_level_1'])) {
             this.error(ErrorCodes.ERROR_MAP_API_HAS_NOT_ENGLISH, 'for language [' + language + ']');
         }
-        if (!data.x || !data.y) {
+        if (!BaseFunctions.isSet(data.x) || !BaseFunctions.isSet(data.y)) {
             this.error(ErrorCodes.ERROR_FUNCTION_ARGUMENTS, 'data [' + BaseFunctions.toString(data) + ']');
         }
         if (!id) {
