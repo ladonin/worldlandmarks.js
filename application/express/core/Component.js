@@ -11,7 +11,6 @@ const ErrorCodes = require('application/express/settings/ErrorCodes');
 const Consts = require('application/express/settings/Constants');
 const Messages = require('application/express/settings/Messages');
 const Config = require('application/express/settings/Config');
-const DBase = require('application/express/core/DBase');
 const Core = require('application/express/core/Core');
 const Language = require('application/express/core/Language');
 const Service = require('application/express/core/Service');

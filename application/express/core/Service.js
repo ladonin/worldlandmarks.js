@@ -254,12 +254,19 @@ class Service extends Core
         this.error(ErrorCodes.ERROR_SERVICE_CONFIG_ABSENT, 'text_form-auto_process_links-admin');
     }
 
+
+
+//ATTENTION - обратите внимание
+// is_need_photos_for_placemarks => wherherNeedPhotosForPlacemarks
+
+
+
     /*
      * Determines - are placemarks require photos
      *
      * @return {boolean}
      */
-    is_need_photos_for_placemarks()
+    wherherNeedPhotosForPlacemarks()
     {
         if (Functions.isSet(this.get_data().config.generic.need_photos_for_placemarks)) {
             return this.data.config.generic.need_photos_for_placemarks;

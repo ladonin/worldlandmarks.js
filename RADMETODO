@@ -28,7 +28,7 @@ var1 и var2 переименовал в controller и action
 
 
 в базе данных country_code и state_code - сделать ссылками на основную таблицу и заменить на country_id и state_id
-
+is_ методы заменить на wherher_
 
 
 

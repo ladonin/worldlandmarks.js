@@ -271,12 +271,12 @@ class GeocodeCollectionModel extends DBaseMysql
 
         let _countryCodeEn = _dataEn['country_code'] ? _dataEn['country_code'] : Consts.UNDEFINED_VALUE;
 
-        let countryId = Countries.getCountryDataByCode(_countryCodeEn)['id'];
+        let countryId = Countries.getInstance(this.requestId).getCountryDataByCode(_countryCodeEn)['id'];
 
 
         if (_dataEn['state_code'] != Consts.UNDEFINED_VALUE) {
             // Try to add new state
-            CountryStatesModel.addOnce({
+            CountryStatesModel.getInstance(this.requestId).addOnce({
                 'url_code':_dataEn['state_code'],
                 'country_id':countryId
             });
@@ -284,7 +284,7 @@ class GeocodeCollectionModel extends DBaseMysql
             let _stateId = States.getStateIdByCode(_dataEn['state_code']);
 
             // Try to add new state name - defined and in English
-            CountryStatesNamesModel.addOnce({
+            CountryStatesNamesModel.getInstance(this.requestId).addOnce({
                 'state_id':stateId,
                 'name':administrativeAreaLevel1En,
                 'language':Consts.LANGUAGE_EN
@@ -315,7 +315,7 @@ class GeocodeCollectionModel extends DBaseMysql
                     }
 
                     // Try to add new state name - defined and in nonenglish language
-                    CountryStatesNamesModel.addOnce({
+                    CountryStatesNamesModel.getInstance(this.requestId).addOnce({
                         'state_id':stateId,
                         'name':_data['administrative_area_level_1'],
                         'language':_language

@@ -13,7 +13,7 @@ const AbstractController = require('application/express/controllers/AbstractCont
 
 
 const DBase = require('application/express/core/DBase');
-
+const DBaseMysql = require('application/express/core/dbases/Mysql');
 
 class Main extends AbstractController {
 
@@ -32,9 +32,7 @@ class Main extends AbstractController {
 
 
 
-        console.log(DBase.getInstance(this.requestId).getDb().getBySql("insert into users values(NULL, 'vhervehve','hgjhj',345435,345335)", [] , false));
-
-
+        console.log(DBaseMysql.getInstance(this.requestId).getBySql("insert into users values(NULL, 'vhervehve','hgjhj',345435,345335)", [] , false));
 
 
 

@@ -5,16 +5,11 @@
  * Base database component for MySql
  */
 
-const syncMySql = require('sync-mysql');
-//const asyncMySql = require('mysql2');
-//const Deasync = require('deasync');
-const MySqlConfig = require('application/express/settings/gitignore/MySql');
 const Functions = require('application/express/functions/BaseFunctions');
-
 const ErrorCodes = require('application/express/settings/ErrorCodes');
 const Consts = require('application/express/settings/Constants');
 const Model = require('application/express/core/Model');
-
+const DBase = require('application/express/core/DBase');
 
 
 class DBaseMysql extends Model
@@ -43,56 +38,9 @@ class DBaseMysql extends Model
          * @type object
          */
         this.fields_initial_data;
-
-
-        this.syncConnection;
-        //this.asyncConnection;
-
-        this.createConnections();
     }
 
-    createConnections() {
 
-        //######################### Create connections #################################
-        //##                                                                          ##
-        //##                                                                          ##
-
-        // You can use only one of two connections per request
-        //
-        // If your request requires only fetching data from db (SELECT queries)
-        // then you can use either async or sync conneection
-        //
-        // If your request also make changes in db,
-        // then you should use ONLY sync connection to provide correct transaction work
-        //
-        // Connection by default is sync
-
-        /*
-         * DB sync connection
-         * Use in requests where needed db changes
-         *
-         * @type object
-         */
-        this.syncConnection = new syncMySql(MySqlConfig.connect);
-
-        // Checking sync connection
-        try {
-            this.syncConnection.query("SELECT 1");
-        } catch (e) {
-            this.error(ErrorCodes.ERROR_DB_NO_CONNECT, 'mysql: ' + e.code);
-        }
-
-//        /*
-//         * DB async connection
-//         *
-//         * @type resource
-//         */
-//        this.asyncConnection = asyncMySql.createPool(MySqlConfig.connect).promise();
-
-        //##                                                                          ##
-        //##                                                                          ##
-        //##############################################################################
-    }
 
 ////ATTENTION - обратите внимание
     snapshotFieldsData() {
@@ -110,9 +58,9 @@ class DBaseMysql extends Model
      *
      * @return resource/object
      */
-    get_connection()//async = false
+    getConnection()//async = false
     {
-        return this.syncConnection;//async === true ? this.asyncConnection : this.syncConnection;
+        return DBase.getInstance(this.requestId).getDbConnection();//async === true ? this.asyncConnection : this.syncConnection;
     }
 
     /*
@@ -138,7 +86,7 @@ class DBaseMysql extends Model
      * @return promise
      */
 //    query_async(sql, values = []) {
-//        return this.get_connection()//true
+//        return this.getConnection()//true
 //                .query(sql, values)
 //                .catch(err => {
 //                    this.error(
@@ -163,7 +111,7 @@ class DBaseMysql extends Model
      */
     query_sync(sql, values = []) {
         try {
-            return this.get_connection().query(sql, values);
+            return this.getConnection().query(sql, values);
         } catch (e) {
             this.error(
                     ErrorCodes.ERROR_MYSQL,
@@ -172,26 +120,7 @@ class DBaseMysql extends Model
     }
     }
 
-    /*
-     * Begin sync transaction
-     */
-    begin_transaction() {
-        this.query('START TRANSACTION;');
-    }
 
-    /*
-     * Commit sync transaction
-     */
-    commit() {
-        this.query('COMMIT;');
-    }
-
-    /*
-     * Rollback sync transaction
-     */
-    rollback() {
-        this.query('ROLLBACK;');
-    }
 
 
 

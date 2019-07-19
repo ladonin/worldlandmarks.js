@@ -250,14 +250,15 @@ class MapDataModel extends DBaseMysql
     /*
      * Get placemarks short data by ids
      *
-     * @param {float} _x1 - x1 coordinate
-     * @param {float} _x2 - x2 coordinate
-     * @param {float} _y1 - y1 coordinate
-     * @param {float} _y2 - y2 coordinate
+     * @param {float} x1 - x1 coordinate
+     * @param {float} x2 - x2 coordinate
+     * @param {float} y1 - y1 coordinate
+     * @param {float} y2 - y2 coordinate
+     * @param {string} ignore - placemarks list to be ignored
      *
      * @return {array of objects} - placemarks data
      */
-    getPointsByCoordsNaked(_x1, _x2, _y1, _y2)
+    getPointsByCoordsNaked(x1, x2, y1, y2, ignore)
     {
         let _sql = `SELECT
                 t.id as c_id,
@@ -275,27 +276,64 @@ class MapDataModel extends DBaseMysql
 
                 FROM (SELECT * FROM ${this.getTableName()} WHERE `;
 
-        if ((_x1 > 0) && (_x2 < 0)) {
+        if ((x1 > 0) && (x2 < 0)) {
 
-            _sql += `((x BETWEEN ${_x1} AND 180) OR (x BETWEEN -180 AND ${_x2})) `;
+            _sql += `((x BETWEEN ${x1} AND 180) OR (x BETWEEN -180 AND ${x2})) `;
         } else {
 
-            _sql += `(x BETWEEN ${_x1} AND ${_x2}) `;
+            _sql += `(x BETWEEN ${x1} AND ${x2}) `;
         }
 
-        _sql += `AND (y BETWEEN ${_y2} AND ${_y1})) t LEFT JOIN (
+        _sql += `AND (y BETWEEN ${y2} AND ${y1})) t LEFT JOIN (
                 SELECT * FROM
                 (SELECT MAX(id) phh2_id FROM landmarks_map_photos GROUP BY map_data_id) phh2
                 JOIN landmarks_map_photos on phh2.phh2_id=landmarks_map_photos.id
                 ) ph ON ph.map_data_id=t.id`;
 
-        // What is already sent
-        let _loadedIdsFromSession = Map.getInstance(this.requestId).getLoadedIdsStringFromSession();
-        if (_loadedIdsFromSession) {
-            _sql += ` WHERE t.id NOT IN (${_loadedIdsFromSession})`;
+        if (ignore) {
+            _sql += ` WHERE t.id NOT IN (${ignore})`;
         }
 
         _sql += " GROUP by c_id";
+
+        return this.getBySql(_sql, false);
+    }
+
+    /*
+     * Get limited collection of any placemarks in random order
+     *
+     * @param {integer} limit - collection limit
+     * @param {string} ignore - list of placemarks ids to be ignored in fetching
+     *
+     * @return {array of objects} - placemarks data
+     */
+    getPointsByLimitNaked(limit, ignore)
+    {
+        let _sql = `SELECT
+                    t.id as c_id,
+                    t.x as c_x,
+                    t.y as c_y,
+                    t.title as c_title,
+                    t.category as c_category,
+                    t.subcategories as c_subcategories,
+                    t.relevant_placemarks as c_relevant_placemarks,
+
+                    ph.id as ph_id,
+                    ph.path as ph_path,
+                    ph.width as ph_width,
+                    ph.height as ph_height
+
+                    FROM ${this.getTableName()} t
+                    LEFT JOIN (
+                        SELECT * FROM
+                        (SELECT MAX(id) phh2_id FROM landmarks_map_photos GROUP BY map_data_id) phh2
+                        JOIN landmarks_map_photos on phh2.phh2_id=landmarks_map_photos.id
+                        ) ph ON ph.map_data_id=t.id`;
+        if (ignore) {
+            _sql += ` WHERE t.id NOT IN (${ignore})`;
+        }
+
+        _sql += ` GROUP by c_id ORDER by RAND() LIMIT ${limit}`;
 
         return this.getBySql(_sql, false);
     }
@@ -305,50 +343,8 @@ class MapDataModel extends DBaseMysql
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    /*
-     * Получаем основные данные меток по диапазону координат
-     *
-     * @param array $coords - координаты
-     *
-     * @return array - данные найденных меток
-     */
-    function get_points_by_coords(array $coords)
-    {
-
-        $module = self::get_module(MY_MODULE_NAME_MAP);
-
-        return $module->get_points_by_coords($coords);
-    }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+//ATTENTION - обратите внимание
+//get_points_by_coords => MY_MODULE_NAME_MAP.getPointsShortDataByCoords
 
 
 
@@ -357,20 +353,10 @@ class MapDataModel extends DBaseMysql
 // getPointsByIds => MY_MODULE_NAME_MAP.getPointsByIds
 //getPointContentById(id) => Map.getPointContentById
 
+// get_points_bunch => MY_MODULE_NAME_MAP.get_points_bunch
 
 
 
-    /*
-     * Получаем пачку меток для постепенного наполнения ими карты
-     *
-     * @return array - данные найденных меток
-     */
-    function get_points_bunch()
-    {
-        $module = self::get_module(MY_MODULE_NAME_MAP);
-        $limit=self::get_module(MY_MODULE_NAME_SERVICE)->get_map_autofill_limit();
-        return $module->get_points_by_limit($limit);
-    }
 
 
 

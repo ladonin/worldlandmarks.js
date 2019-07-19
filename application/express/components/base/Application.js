@@ -346,21 +346,6 @@ class Application extends Component {
 
 
 
-    /*
-     * Set db according with congig settings
-     *
-     * @return {object}
-     */
-    setDb()
-    {
-        if (!this.db) {
-            this.db = DBase.getInstance(this.requestId).getDb()
-        }
-        return this.db;
-    }
-
-
-
 
 
 
@@ -407,10 +392,9 @@ class Application extends Component {
         })
         .then(res => {
             console.log('# then 1');
-            _applicationObject.setDb();
-            _applicationObject.db.begin_transaction();
+            DBase.getInstance(_applicationObject.requestId).begin_transaction();
             _applicationObject.execute();
-            _applicationObject.db.commit();
+            DBase.getInstance(_applicationObject.requestId).commit();
             console.log('> applicationObject executed');
         })
         .catch(e => {
@@ -418,7 +402,7 @@ class Application extends Component {
             console.log('\n\n              --------------->>>>>>>>> CATCHED');
 
             if (_applicationObject) {
-                _applicationObject.db.rollback();
+                DBase.getInstance(_applicationObject.requestId).rollback();
             }
 
             let _errorMessage = '';

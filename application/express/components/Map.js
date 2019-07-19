@@ -28,7 +28,104 @@ class Map extends Component {
          * Example: https://geocode-maps.yandex.ru/1.x/?format=json&apikey=APIKEY&geocode=19.611347,0.760241&lang=en
          */
         this.GEOCODE_SERVICE_URL = 'https://geocode-maps.yandex.ru/1.x/?';
+
+
+
     }
+
+
+
+
+
+
+
+
+
+
+
+
+    static private $_main_module_name = 'map';
+    private static $_name = null;
+
+
+    // Get map name by get parameter
+    static public function get_name()
+    {
+        if (self::$_name) {
+            return self::$_name;
+        }
+
+        $config = self::get_config();
+        $get_vars = self::get_module(MY_MODULE_NAME_SECURITY)->get_get_vars();
+        $map_name = my_is_not_empty(@$get_vars[MY_SERVICE_VAR_NAME]) ? $get_vars[MY_SERVICE_VAR_NAME] : null;
+
+        if (!$map_name) {
+            self::concrete_error(array(MY_ERROR_MAP_WRONG_GET_VALUE, 'map_name:' . $map_name), MY_LOG_APPLICATION_TYPE, true);
+        } else if (!is_dir(MY_SERVICES_DIR . $map_name)) {
+            //если нет такой папки в сервисах
+            self::concrete_error(array(MY_ERROR_MAP_WRONG_GET_VALUE, 'unknown value - map_name:' . $map_name), MY_LOG_APPLICATION_TYPE, true);
+        }
+
+        self::$_name = $map_name;
+
+        return self::$_name;
+    }
+
+
+    static public function get_db_model($type)
+    {
+
+        $model_path = '\\models\\dbase\\' . get_db_type() . '\\map_' . $type;
+
+        if (my_is_method_and_class_enable($model_path, 'model')) {
+            $map_model = $model_path::model();
+            return $map_model;
+        }
+        //если нет такой модели
+        self::concrete_error(array(MY_ERROR_FUNCTION_ARGUMENTS, 'get_db_model() argument value:' . $type));
+    }
+
+
+    static public function module()
+    {
+        $config = self::get_config();
+        $get_vars = self::get_module(MY_MODULE_NAME_SECURITY)->get_get_vars();
+        $map_name = my_is_not_empty(@$get_vars[MY_SERVICE_VAR_NAME]) ? $get_vars[MY_SERVICE_VAR_NAME] : null;
+
+        if (!$map_name) {
+            self::concrete_error(array(MY_ERROR_MAP_WRONG_GET_VALUE, 'map_name:' . $map_name));
+        }
+
+        foreach ($config['app_modules'] as $module_name => $params) {
+            if (($params['query_name'] === $map_name) && ($params['main_module_name'] === self::$_main_module_name)) {
+                return self::get_module($module_name);
+            }
+        }
+        self::concrete_error(array(MY_ERROR_UNDEFINED_MODULE_NAME, 'unknown module name:' . $map_name));
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     /*
      * Get placemark full data by id
@@ -248,9 +345,12 @@ class Map extends Component {
                 return Consts.TOO_BIG_MAP_REQUEST_AREA_CODE;
             }
 
-            let _result = MapDataModel.getInstance(this.requestId).getPointsByCoordsNaked(_x1, _x2, _y1, _y2);
+            // What is already sent
+            let _alreadySentIdsFromSession = this.getAlreadySentIdsStringFromSession();
 
-            this.setLoadedIdsToSession(_result);
+            let _result = MapDataModel.getInstance(this.requestId).getPointsByCoordsNaked(_x1, _x2, _y1, _y2, _alreadySentIdsFromSession);
+
+            this.setAlreadySentIdsToSession(_result);
 
             return _result;
         } else {
@@ -263,7 +363,7 @@ class Map extends Component {
      *
      * @return {string} - list of ids of already sent placemarks
      */
-    getLoadedIdsStringFromSession()
+    getAlreadySentIdsStringFromSession()
     {
         if (this.getSocketData()['map_placemarks_loaded_ids'].length) {
             return this.getSocketData()['map_placemarks_loaded_ids'].join(',');
@@ -278,7 +378,7 @@ class Map extends Component {
      *
      * @param {array of objects} placemarks - placemarks to be saved in socket session
      */
-    setLoadedIdsToSession(placemarks)
+    setAlreadySentIdsToSession(placemarks)
     {
         if (placemarks.length) {
 
@@ -327,60 +427,200 @@ class Map extends Component {
             limit = Service.getInstance(this.requestId).getMapAutofillLimit();
         }
 
+        let _alreadySentIdsFromSession = this.getAlreadySentIdsStringFromSession();
 
+        let _result = MapDataModel.getInstance(this.requestId).getPointsByLimitNaked(limit, _alreadySentIdsFromSession)
 
+        this.setAlreadySentIdsToSession(_result);
 
-
-
-
-
-
-        $photos_db_model = components\Map::get_db_model('photos');
-        $data_db_model = components\Map::get_db_model('data');
-        $conn = $photos_db_model->get_connect();
-        $config = self::get_config();
-
-
-        $sql = "SELECT
-                    t.id as c_id,
-                    t.x as c_x,
-                    t.y as c_y,
-                    t.title as c_title,
-                    t.category as c_category,
-                    t.subcategories as c_subcategories,
-                    t.relevant_placemarks as c_relevant_placemarks,
-
-                    ph.id as ph_id,
-                    ph.path as ph_path,
-                    ph.width as ph_width,
-                    ph.height as ph_height
-
-                    FROM " . $data_db_model->get_table_name() . " t ";
-
-
-
-        $sql .= "LEFT JOIN (
-SELECT * FROM
-(SELECT MAX(id) phh2_id FROM landmarks_map_photos GROUP BY map_data_id) phh2
-JOIN landmarks_map_photos on phh2.phh2_id=landmarks_map_photos.id
-) ph ON ph.map_data_id=t.id";
-        //что больше не выбираем
-        $loaded_ids_from_session = $this->get_loaded_ids_string_from_session();
-        if ($loaded_ids_from_session) {
-            $sql .= " WHERE t.id NOT IN (" . $loaded_ids_from_session . ")";
-        }
-
-        $sql .= " GROUP by c_id ORDER by RAND() DESC LIMIT " . $this->get_filling_bunch_last_id_from_session() . ',' . $limit;
-
-        $result = $conn->query($sql, \PDO::FETCH_ASSOC)->fetchAll();
-        if (!is_array($result)) {
-            self::concrete_error(array(MY_ERROR_MYSQL, 'request:' . $sql), MY_LOG_MYSQL_TYPE);
-        }
-
-        $this->set_loaded_ids_to_session($result);
-
-        return $result;
+        return _result;
     }
+
+
+    /*
+     * Get bunch of random points
+     *
+     * @return {array of objects}
+     */
+    getPointsBunch()
+    {
+        let _limit = Service.getInstance(this.requestId).getMapAutofillLimit();
+
+        return this.getPointsByLimit(_limit);
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// addPhotosForPoint => addPhotosToPoint
+
+
+
+
+
+
+
+    addPhotosToPoint(photos, pointId)
+    {
+
+        if (Service.getInstance(this.requestId).wherherNeedPhotosForPlacemarks() === false && !photos.length) {
+            return true;
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        $folder = $map_name = components\Map::get_name();
+
+
+
+
+
+
+        if (!my_array_is_not_empty(photos)) {
+            self::concrete_error(array(MY_ERROR_FUNCTION_ARGUMENTS, 'photos_array:' . json_encode($photos_array)));
+        }
+        if (my_is_empty(pointId)) {
+            self::concrete_error(array(MY_ERROR_FUNCTION_ARGUMENTS, 'data_id:' . pointId));
+        }
+
+
+
+
+
+
+
+
+
+        $config = self::get_config();
+        $map_db_model_photos = components\Map::get_db_model('photos');
+// Добавляем новые фотки
+        foreach ($photos_array as $photo) {
+            $data_photos = array(
+                'map_data_id' => pointId,
+                'path' => $photo['path'],
+                'width' => $photo['width'],
+                'height' => $photo['height'],
+            );
+            $map_db_model_photos->add_new_photo($data_photos);//add()
+        }
+
+
+
+
+
+
+
+
+
+
+/////////////////////////////////return true;
+// Переносим фотки в папку
+        $dir_name_without_root = 'map' . MY_DS . $folder . MY_DS . pointId;
+        $dir_name = MY_FILES_DIR . $dir_name_without_root;
+        @mkdir($dir_name, 0755);
+        foreach ($photos_array as $photo) {
+// создаем экземпляр для первого габарита
+            $use_old_image = false;
+
+// Для каждого размера
+            foreach ($config['allows']['sizes']['images']['widths'] as $key => $width) {
+                $photo_name = $key . '_' . $photo['path'];
+                $photo_path = $dir_name . MY_DS . $photo_name;
+
+                if (!\image_resize($photo_path, MY_TEMP_FILES_DIR . $photo['path'], $width, 0, 100, $use_old_image)) {
+                    self::concrete_error(array(MY_ERROR_LOADING_FILE, "dirname: '" . $dir_name . "', photo:'" . $photo['path'] . "'"));
+                }
+                chmod($photo_path, 0755);
+
+                // Если храним файлы на ftp сервере, то переносим их туда
+                if ($config['files_upload_storage']['server'] === MY_FTP_NAME) {
+                    Ftp_Client::connect();
+                    Ftp_Client::make_dir($dir_name_without_root);
+                    Ftp_Client::replace_to_ftp($dir_name, $photo_name, $dir_name_without_root . MY_DS . $photo_name);
+                }
+// дальше используем первый экземпляр для других размеров этой же картинки
+                $use_old_image = true;
+            }
+            @unlink(MY_TEMP_FILES_DIR . $photo['path']);
+        }
+
+
+
+
+
+
+
+        // если перенеся все файлы на ftp папка пуста, то удаляем её
+        if ($config['files_upload_storage']['server'] === MY_FTP_NAME) {
+            if (is_dir_empty($dir_name)) {
+                rmdir($dir_name);
+            }
+        }
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 }
 
@@ -444,71 +684,6 @@ abstract class Map extends \vendor\Module
 
 
 
-
-    public function add_photos_for_point(array $photos_array, $data_id)
-    {
-        if (self::get_module(MY_MODULE_NAME_SERVICE)->is_need_photos_for_placemarks() === false && my_array_is_empty(@$photos_array)) {
-            return true;
-        }
-
-
-        $folder = $map_name = components\Map::get_name();
-
-        if (!my_array_is_not_empty(@$photos_array)) {
-            self::concrete_error(array(MY_ERROR_FUNCTION_ARGUMENTS, 'photos_array:' . json_encode($photos_array)));
-        }
-        if (my_is_empty(@$data_id)) {
-            self::concrete_error(array(MY_ERROR_FUNCTION_ARGUMENTS, 'data_id:' . $data_id));
-        }
-        $config = self::get_config();
-        $map_db_model_photos = components\Map::get_db_model('photos');
-// Добавляем новые фотки
-        foreach ($photos_array as $photo) {
-            $data_photos = array(
-                'map_data_id' => $data_id,
-                'path' => $photo['path'],
-                'width' => $photo['width'],
-                'height' => $photo['height'],
-            );
-            $map_db_model_photos->add_new_photo($data_photos);//add()
-        }
-/////////////////////////////////return true;
-// Переносим фотки в папку
-        $dir_name_without_root = 'map' . MY_DS . $folder . MY_DS . $data_id;
-        $dir_name = MY_FILES_DIR . $dir_name_without_root;
-        @mkdir($dir_name, 0755);
-        foreach ($photos_array as $photo) {
-// создаем экземпляр для первого габарита
-            $use_old_image = false;
-
-// Для каждого размера
-            foreach ($config['allows']['sizes']['images']['widths'] as $key => $width) {
-                $photo_name = $key . '_' . $photo['path'];
-                $photo_path = $dir_name . MY_DS . $photo_name;
-
-                if (!\image_resize($photo_path, MY_TEMP_FILES_DIR . $photo['path'], $width, 0, 100, $use_old_image)) {
-                    self::concrete_error(array(MY_ERROR_LOADING_FILE, "dirname: '" . $dir_name . "', photo:'" . $photo['path'] . "'"));
-                }
-                chmod($photo_path, 0755);
-
-                // Если храним файлы на ftp сервере, то переносим их туда
-                if ($config['files_upload_storage']['server'] === MY_FTP_NAME) {
-                    Ftp_Client::connect();
-                    Ftp_Client::make_dir($dir_name_without_root);
-                    Ftp_Client::replace_to_ftp($dir_name, $photo_name, $dir_name_without_root . MY_DS . $photo_name);
-                }
-// дальше используем первый экземпляр для других размеров этой же картинки
-                $use_old_image = true;
-            }
-            @unlink(MY_TEMP_FILES_DIR . $photo['path']);
-        }
-        // если перенеся все файлы на ftp папка пуста, то удаляем её
-        if ($config['files_upload_storage']['server'] === MY_FTP_NAME) {
-            if (is_dir_empty($dir_name)) {
-                rmdir($dir_name);
-            }
-        }
-    }
 
 
     public function delete_photo_files($data_id, $photo)
@@ -618,24 +793,10 @@ abstract class Map extends \vendor\Module
 
 
 
-    protected function get_filling_bunch_last_id_from_session()
-    {
-        if (my_is_empty(@$_SESSION['map']['placemarks']['fill']['bunch']['last_id'])) {
-            return 0;
-        } else {
-            return $_SESSION['map']['placemarks']['fill']['bunch']['last_id'];
-        }
-    }
 
 
-    protected function set_filling_bunch_last_id_from_session($value)
-    {
-        if ($value < $_SESSION['map']['placemarks']['fill']['bunch']['last_id'] || $value < 1) {
-            self::concrete_error(array(MY_ERROR_FUNCTION_ARGUMENTS, 'value:' . $value . ', SESSION:' . $_SESSION['map']['placemarks']['fill']['bunch']['last_id']));
-            return;
-        }
-        $_SESSION['map']['placemarks']['fill']['bunch']['last_id'] = (int) $value;
-    }
+
+
 
 
 
