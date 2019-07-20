@@ -68,3 +68,48 @@ field['value'] = field['value'].replace(/\[strong\](.+?)\[\/strong\]/g, '<strong
                         field['value'] = field['value'].replace(/\[p\]((?:.*?[\n\r]?.*?)*?)\[\/p\][\n\r]*/gm, function(matches, part1) {
                             return '<p class="text_form_tag_p">'+part1.replace(/[\r\n]*/g, '')+'</p>';
                         });
+
+
+
+
+
+
+
+// если ftp  опять бужет не работать
+const Deasync = require('deasync');
+const jsftp = require("jsftp");
+const Ftp = new jsftp({
+  host: "140706.selcdn.ru",
+  port: 21, // defaults to 21
+  user: "40679", // defaults to "anonymous"
+  pass: "XrhbDnXv" // defaults to "@anonymous"
+});
+let _finished = false;
+Ftp.ls('/mapstore/s/s/', (err, res) => {
+  console.log(res);_finished = true;
+});
+// Wait for convertation to be finished
+Deasync.loopWhile(function () {
+    return !_finished;
+});
+let arr = ['/mapstore/s/s/11111111.jpg','/mapstore/s/s/2222222222.jpg','/mapstore/s/s/3333333333333333333333.jpg'];
+for (let index in arr) {
+    let file = arr[index];
+_finished = false;
+
+Ftp.put("application/../files/2.jpg", file, err => {
+  if (!err) {
+    console.log("File transferred successfully!");
+  }_finished = true;
+});
+// Wait for convertation to be finished
+Deasync.loopWhile(function () {
+    return !_finished;
+});
+}
+Ftp.get("/mapstore/s/s/1.txt", "application/../files/file62.txt", err => {
+  if (err) {
+    return console.error("There was an error retrieving the file.");
+  }
+  console.log("File copied successfully!");
+});

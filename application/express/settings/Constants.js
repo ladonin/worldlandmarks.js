@@ -7,6 +7,14 @@
 
 const CommonConsts = require('application/common/settings/Constants');
 
+
+
+const DOCROOT = 'application/../';
+const FILES_DIR = DOCROOT + 'files/';
+
+
+
+
 let _Consts = {
 
 
@@ -23,6 +31,16 @@ let _Consts = {
     LOG_APPLICATION_TYPE:'app',
 
     NO_PHOTO_NAME: 'no_photo.jpg',
+
+
+
+
+
+    FILES_DIR: FILES_DIR,
+    TEMP_FILES_DIR: FILES_DIR + 'temp/',
+
+
+
 
     FTP_DEFAULT_SERVER_NAME:'default_server',
     FTP_NAME: 'ftp',

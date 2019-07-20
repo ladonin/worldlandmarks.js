@@ -132,13 +132,12 @@ function image_resize(path_to, source, neww = 0, newh = 0, quality = 100)
         _finished = true;
     });
 
-    // Wait for convertation to be finished
+    // Wait for process to be finished
     Deasync.loopWhile(function () {
         return !_finished;
     });
     // Delete source image
     deleteFile(source);
-    return true;
 }
 
 /*
@@ -173,7 +172,7 @@ function change_image_to_jpeg(source)
                     _finished = true;
                 }
         );
-        // Wait for convertation to be finished
+        // Wait for process to be finished
         Deasync.loopWhile(function () {
             return !_finished;
         });

@@ -138,7 +138,7 @@ class Main extends AbstractController {
                 }
         );
 
-        // Wait for convertation to be finished
+        // Wait for process to be finished
         Deasync.loopWhile(function () {
             return !finished;
         });

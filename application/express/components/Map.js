@@ -7,6 +7,7 @@
 
 const Fetch = require('node-fetch');
 const Deasync = require('deasync');
+var Fs = require('fs');
 
 const Component = require('application/express/core/Component');
 const BaseFunctions = require('application/express/functions/BaseFunctions');
@@ -18,6 +19,9 @@ const GeocodeCollectionModel = require('application/express/models/dbase/mysql/G
 const MapPhotosModel = require('application/express/models/dbase/mysql/MapPhotos');
 const MapDataModel = require('application/express/models/dbase/mysql/MapData');
 const Users = require('application/express/core/Users');
+const Config = require('application/express/settings/Config');
+const StrictFunctions = require('application/express/functions/StrictFunctions');
+const Ftp = require('application/express/components/base/Ftp');
 
 class Map extends Component {
 
@@ -36,95 +40,10 @@ class Map extends Component {
 
 
 
-
-
-
-
-
-
-
-
-    static private $_main_module_name = 'map';
-    private static $_name = null;
-
-
-    // Get map name by get parameter
-    static public function get_name()
-    {
-        if (self::$_name) {
-            return self::$_name;
-        }
-
-        $config = self::get_config();
-        $get_vars = self::get_module(MY_MODULE_NAME_SECURITY)->get_get_vars();
-        $map_name = my_is_not_empty(@$get_vars[MY_SERVICE_VAR_NAME]) ? $get_vars[MY_SERVICE_VAR_NAME] : null;
-
-        if (!$map_name) {
-            self::concrete_error(array(MY_ERROR_MAP_WRONG_GET_VALUE, 'map_name:' . $map_name), MY_LOG_APPLICATION_TYPE, true);
-        } else if (!is_dir(MY_SERVICES_DIR . $map_name)) {
-            //если нет такой папки в сервисах
-            self::concrete_error(array(MY_ERROR_MAP_WRONG_GET_VALUE, 'unknown value - map_name:' . $map_name), MY_LOG_APPLICATION_TYPE, true);
-        }
-
-        self::$_name = $map_name;
-
-        return self::$_name;
-    }
-
-
-    static public function get_db_model($type)
-    {
-
-        $model_path = '\\models\\dbase\\' . get_db_type() . '\\map_' . $type;
-
-        if (my_is_method_and_class_enable($model_path, 'model')) {
-            $map_model = $model_path::model();
-            return $map_model;
-        }
-        //если нет такой модели
-        self::concrete_error(array(MY_ERROR_FUNCTION_ARGUMENTS, 'get_db_model() argument value:' . $type));
-    }
-
-
-    static public function module()
-    {
-        $config = self::get_config();
-        $get_vars = self::get_module(MY_MODULE_NAME_SECURITY)->get_get_vars();
-        $map_name = my_is_not_empty(@$get_vars[MY_SERVICE_VAR_NAME]) ? $get_vars[MY_SERVICE_VAR_NAME] : null;
-
-        if (!$map_name) {
-            self::concrete_error(array(MY_ERROR_MAP_WRONG_GET_VALUE, 'map_name:' . $map_name));
-        }
-
-        foreach ($config['app_modules'] as $module_name => $params) {
-            if (($params['query_name'] === $map_name) && ($params['main_module_name'] === self::$_main_module_name)) {
-                return self::get_module($module_name);
-            }
-        }
-        self::concrete_error(array(MY_ERROR_UNDEFINED_MODULE_NAME, 'unknown module name:' . $map_name));
-    }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+//ATTENTION - обратите внимание
+// get_name => this.getServiceName()
+//get_db_model => сразу берем из require
+// module() => и модуль и компонент один файл
 
 
     /*
@@ -179,7 +98,7 @@ class Map extends Component {
                 _finished = true;
             });
 
-        // Wait for convertation to be finished
+        // Wait for process to be finished
         Deasync.loopWhile(function () {
             return !finished;
         });
@@ -450,140 +369,88 @@ class Map extends Component {
     }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 // addPhotosForPoint => addPhotosToPoint
 
 
-
-
-
-
-
+    /*
+     * Add photos to point (writes to base & uploads files)
+     *
+     * @param {array of objects} photos - photos data
+     * @param {integer} pointId - placemark id
+     */
     addPhotosToPoint(photos, pointId)
     {
-
         if (Service.getInstance(this.requestId).wherherNeedPhotosForPlacemarks() === false && !photos.length) {
             return true;
         }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        $folder = $map_name = components\Map::get_name();
-
-
-
-
-
-
-        if (!my_array_is_not_empty(photos)) {
-            self::concrete_error(array(MY_ERROR_FUNCTION_ARGUMENTS, 'photos_array:' . json_encode($photos_array)));
+        if (!photos.length) {
+            this.error(ErrorCodes.ERROR_FUNCTION_ARGUMENTS, 'photos [' + BaseFunctions.toString(photos) + ']', undefined, false);
         }
-        if (my_is_empty(pointId)) {
-            self::concrete_error(array(MY_ERROR_FUNCTION_ARGUMENTS, 'data_id:' . pointId));
+        if (!pointId) {
+            this.error(ErrorCodes.ERROR_FUNCTION_ARGUMENTS, 'point id [' + BaseFunctions.toString(pointId) + ']', undefined, false);
         }
 
+        // Add new photos
+        for (let _index in photos) {
+            let _photo = photos[index];
 
-
-
-
-
-
-
-
-        $config = self::get_config();
-        $map_db_model_photos = components\Map::get_db_model('photos');
-// Добавляем новые фотки
-        foreach ($photos_array as $photo) {
-            $data_photos = array(
-                'map_data_id' => pointId,
-                'path' => $photo['path'],
-                'width' => $photo['width'],
-                'height' => $photo['height'],
-            );
-            $map_db_model_photos->add_new_photo($data_photos);//add()
+            let _dataPhotos = {
+                'map_data_id': pointId,
+                'path': _photo['path'],
+                'width': _photo['width'],
+                'height': _photo['height'],
+            };
+            MapPhotosModel.getInstance(this.requestId).add(_dataPhotos);//add()
         }
 
+        // Will move photos to this directory
+        let _dirNameWithoutRoot = 'map/' + this.getServiceName() + '/' + pointId;
 
+        let _dirName = Consts.FILES_DIR + _dirNameWithoutRoot;
+        if (!Fs.existsSync(_dirName)){
+            Fs.mkdirSync(_dirName, 0o755);
+        }
 
+        for (let _index in photos) {
+            let _photo = photos[index];
 
+            // For each size
+            for (let _sizeIndex in Config['restrictions']['sizes']['images']['widths']) {
+                let _width = Config['restrictions']['sizes']['images']['widths'][_sizeIndex];
 
+                let _photoName = _sizeIndex + '_' + _photo['path'];
 
+                // Our local photos storage
+                let _photoPath = _dirName + '/' + _photoName;
 
+                // Prepare photo from temporary loaded according with settings in config
+                StrictFunctions.image_resize(_photoPath, Consts.TEMP_FILES_DIR + _photo['path'],_width, 0, 100);
+                Fs.chmod(_photoPath, 0o755);
 
+                // If we store files on an ftp server, then move them there
+                if (Config['files_upload_storage']['server'] === Consts.FTP_NAME) {
 
+                    let _sourceFile = _dirName + '/' + _photoName;
+                    let _destFile = _dirNameWithoutRoot + '/' + _photoName;
 
-/////////////////////////////////return true;
-// Переносим фотки в папку
-        $dir_name_without_root = 'map' . MY_DS . $folder . MY_DS . pointId;
-        $dir_name = MY_FILES_DIR . $dir_name_without_root;
-        @mkdir($dir_name, 0755);
-        foreach ($photos_array as $photo) {
-// создаем экземпляр для первого габарита
-            $use_old_image = false;
+                    // Send file to ftp with creating a directory
+                    Ftp.createDirSync(_dirNameWithoutRoot);
+                    Ftp.putFileSync(_sourceFile, _destFile);
 
-// Для каждого размера
-            foreach ($config['allows']['sizes']['images']['widths'] as $key => $width) {
-                $photo_name = $key . '_' . $photo['path'];
-                $photo_path = $dir_name . MY_DS . $photo_name;
-
-                if (!\image_resize($photo_path, MY_TEMP_FILES_DIR . $photo['path'], $width, 0, 100, $use_old_image)) {
-                    self::concrete_error(array(MY_ERROR_LOADING_FILE, "dirname: '" . $dir_name . "', photo:'" . $photo['path'] . "'"));
+                    // Remove source file from local
+                    Fs.unlinkSync(_sourceFile);
                 }
-                chmod($photo_path, 0755);
-
-                // Если храним файлы на ftp сервере, то переносим их туда
-                if ($config['files_upload_storage']['server'] === MY_FTP_NAME) {
-                    Ftp_Client::connect();
-                    Ftp_Client::make_dir($dir_name_without_root);
-                    Ftp_Client::replace_to_ftp($dir_name, $photo_name, $dir_name_without_root . MY_DS . $photo_name);
-                }
-// дальше используем первый экземпляр для других размеров этой же картинки
-                $use_old_image = true;
             }
-            @unlink(MY_TEMP_FILES_DIR . $photo['path']);
+            // Remove temp file
+            Fs.unlinkSync(Consts.TEMP_FILES_DIR + _photo['path']);
         }
 
+        // In the end if we used ftp we shoulr remove source directory from local
+        if (Config['files_upload_storage']['server'] === Consts.FTP_NAME) {
 
-
-
-
-
-
-        // если перенеся все файлы на ftp папка пуста, то удаляем её
-        if ($config['files_upload_storage']['server'] === MY_FTP_NAME) {
-            if (is_dir_empty($dir_name)) {
-                rmdir($dir_name);
+            if (Fs.existsSync(_dirName)) {
+                Fs.rmdirSync(_dirName);
             }
         }
     }
