@@ -17,21 +17,17 @@ io.on('connection', function (socket) {
         Application.run(data, _token)
     });
 
-
     socket.on('disconnect', (reason) => {
       SocketsPool.removeSocket(socket);
     });
 
-
     //socket.emit('news', {hello: 'world'});
 });
 
-var Fs = require('fs');
-if (Fs.existsSync('application/expredss')) {console.log(99999);}
 
 
 //Application.getInstance(RequestsPool.init(data)).run();
-server.listen(30011);
+server.listen(3001);
 // WARNING: app.listen(80) will NOT work here!
 
 app.get('/api/1', function (req, res) {

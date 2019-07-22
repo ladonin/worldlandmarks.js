@@ -22,6 +22,8 @@ const Users = require('application/express/core/Users');
 const Config = require('application/express/settings/Config');
 const StrictFunctions = require('application/express/functions/StrictFunctions');
 const Ftp = require('application/express/components/base/Ftp');
+const SizeOf = require('image-size');
+const UsersModel = require('application/express/models/dbase/mysql/Users');
 
 class Map extends Component {
 
@@ -406,8 +408,8 @@ class Map extends Component {
 
         // Will move photos to this directory
         let _dirNameWithoutRoot = 'map/' + this.getServiceName() + '/' + pointId;
-
         let _dirName = Consts.FILES_DIR + _dirNameWithoutRoot;
+
         if (!Fs.existsSync(_dirName)){
             Fs.mkdirSync(_dirName, 0o755);
         }
@@ -425,6 +427,7 @@ class Map extends Component {
                 let _photoPath = _dirName + '/' + _photoName;
 
                 // Prepare photo from temporary loaded according with settings in config
+                // Prepared photo put into placemark directory
                 StrictFunctions.image_resize(_photoPath, Consts.TEMP_FILES_DIR + _photo['path'],_width, 0, 100);
                 Fs.chmod(_photoPath, 0o755);
 
@@ -455,6 +458,181 @@ class Map extends Component {
         }
     }
 
+    /*
+     * Delete all size photos of current photo of placemark
+     *     For example: one photo has several variants - small, middle, big, original - all of them must be deleted
+     *     1_{photo name.jpeg}, 2_{photo name.jpeg}, 3_{photo name.jpeg}, 4_{photo name.jpeg}, etc.
+     *
+     * @param {integer} placemarkId - placemark id
+     * @param {string} photoName - photo name without size prefix '{size prefix}_{photo name with .jpeg}' and with extension
+     *     For example - gv3401u6bu448bku3y.jpeg
+     */
+    deletePhotoFiles(placemarkId, photoName)
+    {
+        if (!photoName) {
+            this.error(ErrorCodes.ERROR_FUNCTION_ARGUMENTS, 'photo name [' + photoName + ']', undefined, false);
+        }
+        if (!placemarkId) {
+            this.error(ErrorCodes.ERROR_FUNCTION_ARGUMENTS, 'placemark id [' + placemarkId + ']', undefined, false);
+        }
+
+        let _dirNameWithoutRoot = 'map/' + this.getServiceName() + '/' + placemarkId;
+        let _dirName = Consts.FILES_DIR + _dirNameWithoutRoot;
+
+        // For each size
+        for (let _sizeIndex in Config['restrictions']['sizes']['images']['widths']) {
+
+            if (!Service.getInstance(this.requestId).isPhotoByCategory(photoName)) {
+
+                if (Config['files_upload_storage']['server'] === Consts.FTP_NAME) {
+                    // Delete file from ftp
+                    Ftp.removeFileSync(_dirNameWithoutRoot + '/' + _sizeIndex + '_' + photoName);
+                } else {
+                    // Delete file from local
+                    Fs.unlinkSync(_dirName + '/' + _sizeIndex + '_' + photoName);
+                }
+            }
+        }
+
+        if (Config['files_upload_storage']['server'] === Consts.FTP_NAME) {
+            // Try to delete directory if empty
+            Ftp.removeDirSync(_dirNameWithoutRoot);
+        }
+    }
+
+    /*
+     * Delete placemark photo from database
+     *
+     * @param {integer} placemarkId - placemark id
+     * @param {string} photoName - photo name without prefix and with extension
+     */
+    deletePhotoDb(placemarkId = null, photoName = null)
+    {
+        if (Service.getInstance(this.requestId).isPhotoByCategory(photoName)) {
+            return true;
+        }
+
+        if (!placemarkId) {
+            this.error(ErrorCodes.ERROR_FUNCTION_ARGUMENTS, 'placemark id [' + placemarkId + ']', undefined, false);
+        }
+        if (!photoName) {
+            this.error(ErrorCodes.ERROR_FUNCTION_ARGUMENTS, 'photo name [' + photoName + ']', undefined, false);
+        }
+
+        let _needResult = Service.getInstance(this.requestId).wherherNeedPhotosForPlacemarks() === true ? true : false;
+
+        return MapPhotosModel.getInstance(this.requestId).delete(placemarkId, photoName);
+    }
+
+
+
+
+
+
+//ATTENTION - обратите внимание
+// preparePhotosForInsert => createPhotosDataForInsert
+
+
+
+    /*
+     * Create object with photos data for insert operation
+     *
+     * @param {array} photos - photos names
+     *
+     * @return {array of objects}
+     */
+    createPhotosDataForInsert(photos)
+    {
+        let _result = [];
+
+        for (let _index in photos) {
+            let _photoName = photos[index];
+            let _photoPath = Consts.TEMP_FILES_DIR + _photoName;
+
+            if (!_photoName || !Fs.existsSync(_photoPath)) {
+                return _result;
+            }
+
+            let _dimensions = SizeOf(_photoPath);
+
+            _result.push({
+                'path':_photoName,
+                'width':_dimensions.width,
+                'height':_dimensions.height,
+            });
+        }
+
+        return _result;
+    }
+
+
+    /*
+     * Get all photos by placemark id
+     *
+     * @param {integer} id - palcemark id
+     *
+     * @return {array of objects}
+     */
+    getPhotosByDataId(id)
+    {
+        let _needResult = Service.getInstance(this.requestId).wherherNeedPhotosForPlacemarks() === true ? true : false;
+        return MapPhotosModel.getInstance(this.requestId).getPhotosByDataId(id, needResult)
+    }
+
+//ATTENTION - обратите внимание
+//clearLoadedIdsFromSession
+
+    /*
+     * Clear all already sent placemarks from socket session
+     */
+    clearAlreadySentIdsFromSession()
+    {
+        this.getSocketData()['map_placemarks_loaded_ids'] = [];
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+    /*
+     * Check wheither user can change placemark
+     *
+     * @param {string} password - users password
+     * @param {integer} dataId - placemark id (in db it called data_id)
+     *
+     * @return {boolean}
+     */
+    authenticateByPasswordAndDataId(password, dataId)
+    {
+        // Checking on superadmin password
+        if (BaseFunctions.hashEqualsToValue(password, Consts.SUPER_ADMIN_PASSWORD_HASH)) {
+            return true;
+        }
+
+        // Try to find a user created placemark
+        let _data = MapDataModel.getInstance(this.requestId).getById(dataId);
+
+        if (_data['user_id']) {
+            let _userId = _data['user_id'];
+
+            // Search his password hash
+            let _user = UsersModel.getInstance(this.requestId).getById(_userId);
+
+            if (BaseFunctions.hashEqualsToValue(password, _user['password_hash'])) {
+                return true;
+            }
+        }
+
+        return false;
+    }
 
 
 
@@ -473,8 +651,310 @@ class Map extends Component {
 
 
 
+    /*
+     * Delete placemark
+     */
+    deletePoint()
+    {
+        let _requestData = this.getFromRequest('data');
+        let _dataId = BaseFunctions.toInt(_requestData['id']);
+
+        if (_dataId && _requestData['password']) {
+            let _password = _requestData['password'];
+        } else {
+            this.error(ErrorCodes.ERROR_FORM_NOT_PASSED, 'data id [' + _dataId + '], password[' + _requestData['password'] + ']', undefined, false);
+        }
+
+        // Check password
+        if (!_password) {
+            this.error(ErrorCodes.ERROR_PASSWORD_NOT_PASSED, undefined, undefined, false);
+        }
+        if (!this.authenticateByPasswordAndDataId(_password, _dataId)) {
+            this.error(ErrorCodes.ERROR_WRONG_PASSWORD, undefined, undefined, false);
+        }
+
+        // Delete photos from DBase and from files
+        this.deletePhotos(_dataId);
+
+        // Delete placemark from DBase
+        MapDataModel.getInstance(this.requestId).delete(_dataId);
+
+        // Delete placemark geodata
+        GeocodeCollectionModel.getInstance(this.requestId).deleteAdresses(_dataId);
+
+        return {
+            'status':Consts.SUCCESS_CODE,
+            'message':this.getText('success/point/deleted'),
+            'data':{
+                'id':_dataId
+            }
+        };
+    }
 
 
+
+
+
+
+
+
+
+
+
+
+    /*
+     * Delete photos from DBASE and from files of current placemark
+     *
+     * @param {integer} dataId - placemark id
+     */
+    deletePhotos(dataId)
+    {
+        dataId = BaseFunctions.toInt(dataId);
+
+        if (!dataId) {
+            this.error(ErrorCodes.ERROR_FUNCTION_ARGUMENTS, 'data id [' + dataId + ']', undefined, false);
+        }
+
+        let _result = MapPhotosModel.getInstance(this.requestId).getPhotosByDataId(dataId, false);
+
+        for (let _index in _result) {
+            let _photo = _result[index];
+
+            // From DBase
+            MapPhotosModel.getInstance(this.requestId).delete(_photo['id']);
+
+            // From files
+            this.deletePhotoFiles(dataId, _photo['path']);
+        }
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   updateCurrentPoint()
+    {
+
+        $config = self::get_config();
+
+
+        $map_db_model_data = components\Map::get_db_model('data');
+        $map_form_model_data = self::get_model(MY_MODEL_NAME_FORM_ADD_NEW_POINT);
+        $map_db_model_photos = components\Map::get_db_model('photos');
+        $map_db_model_geocode_collection = self::get_model(MY_MODEL_NAME_DB_GEOCODE_COLLECTION);
+
+
+
+
+
+
+
+// определяем POST данные
+        $form_data = $_POST['add_new_point_form'];
+
+        $data = array();
+        $photos = array();
+        $data_photos = array();
+
+//если title не используем, то задаем его пустым (он не передается в форме, но надо все же его инициализировать)
+        if (!self::get_module(MY_MODULE_NAME_SERVICE)->is_use_titles()) {
+            $form_data['title'] = '';
+        }
+
+
+
+
+
+
+
+
+
+
+// проверка post данных
+        if ($map_form_model_data->check_select_type_field('category', @$form_data['category'], false) && my_is_not_empty(@$form_data['id']) && (int) $form_data['id'] && (isset($form_data['x'])) && (isset($form_data['y'])) && (isset($form_data['comment'])) && (isset($form_data['title'])) && (isset($form_data['password']))) {
+
+            $form_data['id'] = (int) $form_data['id'];
+            $password = $form_data['password'];
+
+            if ($form_data['x'] || $form_data['y']){
+                my_check_coords($form_data['x'], $form_data['y']);
+            }
+            $data = array(
+                'id' => $form_data['id'],
+                'x' => $form_data['x'],
+                'y' => $form_data['y'],
+                'comment' => $form_data['comment'],
+                'comment_plain' => $form_data['comment'],
+                'title' => $form_data['title'],
+                'category' => $form_data['category'],
+            );
+        } else {
+            self::concrete_error(array(MY_ERROR_FORM_WRONG_DATA, 'POST array:' . json_encode($_POST)));
+        }
+
+
+
+
+
+
+
+
+
+
+// проверяем приложенный пароль
+
+        if (!$password) {
+            echo my_pass_through(@self::trace('errors/update_point/empty_password'));
+            self::rollback();
+        }
+
+        if (!$this->authenticate_by_password_and_data_id($password, $form_data['id'])) {
+            echo my_pass_through(@self::trace('errors/update_point/wrong_password'));
+            self::rollback();
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// проверяем приложенные фото
+        if (my_is_not_empty(@$form_data['photos'])) {
+            $photos_new_array = explode(' ', trim($form_data['photos']));
+
+// подготавливаем данные фоток для вставки
+            if (!$photos_new_prepared = $this->prepare_photos_for_insert($photos_new_array)) {
+                self::concrete_error(array(MY_ERROR_FORM_WRONG_DATA, 'photos: [' . $form_data['photos'] . ']'));
+            }
+
+// сколько новых
+            $photos_new_count = count($photos_new_array);
+        } else {
+            $photos_new_count = 0;
+        }
+
+
+
+        // сколько всего было до этого
+        $photos_existed = $map_db_model_photos->get_by_data_id($form_data['id']);
+        $photos_existed_count = count($photos_existed);
+
+
+
+//если удаляем часть фоток
+        if (my_array_is_not_empty(@$form_data['delete_photos'])) {
+// сколько фоток удаляем
+            $photos_deleted_count = count($form_data['delete_photos']);
+        } else {
+            $photos_deleted_count = 0;
+        }
+// считаем сколько всего фоток в итоге с учетом удаленных и новых
+        $photos_count = $photos_existed_count + $photos_new_count - $photos_deleted_count;
+
+
+
+// Если фоток получается больше положенного
+        if ($photos_count > $config['allows']['max_upload_files_per_point']) {
+            self::concrete_error(array(MY_ERROR_FORM_UPDATE_POINT_A_LOT_OF_PHOTOS,
+                'photos new: [' . $form_data['photos'] . '],'
+                . 'photos delete: [' . json_encode(@$form_data['delete_photos']) . ']'
+                . 'photos existed: [' . json_encode($photos_existed) . ']'
+            ));
+        }
+
+        if (($photos_count === 0) && (self::get_module(MY_MODULE_NAME_SERVICE)->is_need_photos_for_placemarks() === true)) {
+            self::concrete_error(array(MY_ERROR_FORM_UPDATE_POINT_WITH_NO_PHOTOS,
+                'photos new: [' . $form_data['photos'] . '],'
+                . 'photos delete: [' . json_encode(@$form_data['delete_photos']) . ']'
+                . 'photos existed: [' . json_encode($photos_existed) . ']'
+            ));
+        }
+
+
+
+
+
+
+
+        //предварительно обновляем адрес - работаем еще со старыми координатами
+        $map_db_model_geocode_collection->update_record(array('x' => $data['x'], 'y' => $data['y']), $data['id']);
+        // обновляем метку
+        $map_db_model_data->update_point($data);
+
+
+
+
+
+
+
+
+
+
+        // удаляем фотки, которые указали
+        if ($photos_deleted_count) {
+            foreach ($form_data['delete_photos'] as $name => $value) {
+                // из базы
+                $this->delete_photo_db($form_data['id'], $name);
+
+                // из директории
+                $this->delete_photo_files($form_data['id'], $name);
+            }
+        }
+
+
+
+
+
+
+
+
+
+        //если добавили новые фотки
+        if ($photos_new_count) {
+
+            // Добавляем новые фотки
+            $this->add_photos_for_point($photos_new_prepared, $form_data['id']);
+        }
+
+
+
+
+
+
+
+
+        
+
+        $result = array(
+            'status' => MY_SUCCESS_CODE,
+            'message' => my_pass_through(@self::trace('success/new_point/updated')),
+            'data' => array(
+                'id' => $form_data['id']
+            )
+        );
+        echo json_encode($result);
+    }
 
 
 
@@ -525,406 +1005,6 @@ abstract class Map extends \vendor\Module
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    /*
-      public function prepare_result(array $result)
-      {
-      $map_module = self::get_module(MY_MODULE_NAME_MAP);
-      return $map_module->prepare_result($result);
-      }
-     */
-
-
-
-
-
-
-    public function delete_photo_files($data_id, $photo)
-    {
-        $folder = $map_name = components\Map::get_name();
-        $config = self::get_config();
-        if (my_is_empty(@$photo)) {
-            self::concrete_error(array(MY_ERROR_FUNCTION_ARGUMENTS, 'photo:' . $photo));
-        }
-        if (my_is_empty(@$data_id)) {
-            self::concrete_error(array(MY_ERROR_FUNCTION_ARGUMENTS, 'data_id:' . $data_id));
-        }
-
-// Папка расположения фотки
-        $dir_name = 'map' . MY_DS . $folder . MY_DS . $data_id;
-        $dir_name_root = MY_FILES_DIR . $dir_name;
-// Для каждого размера
-        foreach ($config['allows']['sizes']['images']['widths'] as $key => $width) {
-            if (!self::get_module(MY_MODULE_NAME_SERVICE)->is_photo_by_category($photo)) {
-
-                // Если храним файлы на ftp сервере, то переносим их туда
-                if ($config['files_upload_storage']['server'] === MY_FTP_NAME) {
-                    Ftp_Client::connect();
-                    Ftp_Client::delete_file_from_ftp($dir_name . MY_DS . $key . '_' . $photo);
-                } else {
-                    @unlink($dir_name_root . MY_DS . $key . '_' . $photo);
-                }
-            }
-        }
-        if ($config['files_upload_storage']['server'] === MY_FTP_NAME) {
-            Ftp_Client::delete_dir_from_ftp($dir_name);
-        }
-    }
-
-
-    public function delete_photo_db($id_data = null, $path = null)
-    {
-        if (self::get_module(MY_MODULE_NAME_SERVICE)->is_photo_by_category($path)) {
-            return true;
-        }
-        if (!$id_data) {
-            self::concrete_error(array(MY_ERROR_FUNCTION_ARGUMENTS, 'id_data:' . $id_data));
-        }
-        if (!$path) {
-            self::concrete_error(array(MY_ERROR_FUNCTION_ARGUMENTS, 'path:' . $path));
-        }
-
-        $need_result = self::get_module(MY_MODULE_NAME_SERVICE)->is_need_photos_for_placemarks() === true ? true : false;
-
-
-
-        $map_db_model_photos = components\Map::get_db_model('photos');
-        $path = $map_db_model_photos->get_connect()->quote($path);
-
-        $where = 'map_data_id=' . (int) $id_data . ' AND path=' . $path;
-
-        $result = $map_db_model_photos->get_by_condition($where, $order = '', $group = '', $select = '*', $limit = false, $need_result);
-
-
-        $photos_db_model = components\Map::get_db_model('photos');
-
-        return $photos_db_model->delete($result[0]['id']);
-    }
-
-
-    public function prepare_photos_for_insert(array $photos_array)
-    {
-
-        $photos = array();
-
-// подготавливаем данные фоток для вставки
-        foreach ($photos_array as $photo) {
-            $photo_path = MY_TEMP_FILES_DIR . $photo;
-            if (!file_exists($photo_path) || !$photo) {
-                return array();
-            }
-
-            $image_info = getimagesize($photo_path);
-            $photos[] = array(
-                'path' => $photo,
-                'width' => $image_info[0],
-                'height' => $image_info[1],
-            );
-        }
-
-        return $photos;
-    }
-
-
-    public function get_photos_by_data_id($id)
-    {
-        if (!$id = (int) $id) {
-            self::concrete_error(array(MY_ERROR_FUNCTION_ARGUMENTS, 'id:' . $id));
-        }
-
-        $need_result = self::get_module(MY_MODULE_NAME_SERVICE)->is_need_photos_for_placemarks() === true ? true : false;
-
-        $map_db_model_photos = components\Map::get_db_model('photos');
-        //берем, начиная с последних, то есть последняяфотка будет главной теперь
-        return $map_db_model_photos->get_by_condition("map_data_id = $id", 'id DESC', '', '*', false, $need_result);
-    }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    protected function clear_loaded_ids_from_session()
-    {
-        unset($_SESSION['map']['placemarks']['loaded']['ids']);
-    }
-
-
-
-
-
-
-
-
-    protected function authenticate_by_password_and_data_id($password, $data_id)
-    {
-//проверка на суперадминский пароль
-        if (hash_equals_to_value($password, MY_SUPER_ADMIN_PASSWORD_HASH)) {
-            return true;
-        }
-
-// ищем id юзера по редактируемой метке
-        $map_db_model_data = components\Map::get_db_model('data');
-        $data = $map_db_model_data->get_by_condition('id = ' . $data_id, '', '', '*', 1);
-
-        if (my_is_not_empty(@$data['user_id'])) {
-            $user_id = $data['user_id'];
-
-// ищем его хеш
-            $users_model = self::get_model(MY_MODEL_NAME_DB_USERS);
-            $user = $users_model->get_by_condition('id=' . $user_id, '', '', '*', 1);
-
-// сверяем пароли
-            if (hash_equals_to_value($password, $user['password_hash'])) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-
-    public function delete_point()
-    {
-        $config = self::get_config();
-        $map_db_model_data = components\Map::get_db_model('data');
-        $map_db_model_photos = components\Map::get_db_model('photos');
-        $map_db_model_geocode_collection = self::get_model(MY_MODEL_NAME_DB_GEOCODE_COLLECTION);
-// определяем POST данные
-        $form_data = $_POST['add_new_point_form'];
-
-
-// проверка post данных
-        if (my_is_not_empty(@$form_data['id']) && (isset($form_data['password']))) {
-
-            $data_id = (int) $form_data['id'];
-            $password = $form_data['password'];
-        } else {
-            self::concrete_error(array(MY_ERROR_FORM_NOT_PASSED,
-                'id: ' . @$form_data['id']
-                . ', password: ' . @$form_data['password']
-            ));
-        }
-
-
-// проверяем приложенный пароль
-        if (!$password) {
-            echo my_pass_through(@self::trace('errors/update_point/empty_password'));
-            self::rollback();
-        }
-        if (!$this->authenticate_by_password_and_data_id($password, $data_id)) {
-            echo my_pass_through(@self::trace('errors/update_point/wrong_password'));
-            self::rollback();
-        }
-
-// удаляем фотографии из базы и дериктории
-        $this->delete_photos($data_id);
-
-// удаляем метку из базы
-        $map_db_model_data->delete($data_id);
-
-//удаляем адреса меток
-        $map_db_model_geocode_collection->delete_adresses($data_id);
-
-        $result = array(
-            'status' => MY_SUCCESS_CODE,
-            'message' => my_pass_through(@self::trace('success/point/deleted')),
-            'data' => array(
-                'id' => $data_id
-            )
-        );
-        echo json_encode($result);
-    }
-
-
-    public function delete_photos($data_id = null)
-    {
-        if (!$data_id) {
-            self::concrete_error(array(MY_ERROR_FUNCTION_ARGUMENTS, 'id_data:' . $data_id));
-        }
-// удаляем фотки из базы и из директории
-        $map_db_model_photos = components\Map::get_db_model('photos');
-        $where = 'map_data_id=' . (int) $data_id;
-        $result = $map_db_model_photos->get_by_condition($where);
-
-        foreach ($result as $photo) {
-// из базы
-            $map_db_model_photos->delete($photo['id']);
-// из директории
-            $this->delete_photo_files($data_id, $photo['path']);
-        }
-    }
-
-
-    public function update_current_point()
-    {
-
-        $config = self::get_config();
-        $map_db_model_data = components\Map::get_db_model('data');
-        $map_form_model_data = self::get_model(MY_MODEL_NAME_FORM_ADD_NEW_POINT);
-        $map_db_model_photos = components\Map::get_db_model('photos');
-        $map_db_model_geocode_collection = self::get_model(MY_MODEL_NAME_DB_GEOCODE_COLLECTION);
-
-// определяем POST данные
-        $form_data = $_POST['add_new_point_form'];
-
-        $data = array();
-        $photos = array();
-        $data_photos = array();
-
-//если title не используем, то задаем его пустым (он не передается в форме, но надо все же его инициализировать)
-        if (!self::get_module(MY_MODULE_NAME_SERVICE)->is_use_titles()) {
-            $form_data['title'] = '';
-        }
-
-// проверка post данных
-        if ($map_form_model_data->check_select_type_field('category', @$form_data['category'], false) && my_is_not_empty(@$form_data['id']) && (int) $form_data['id'] && (isset($form_data['x'])) && (isset($form_data['y'])) && (isset($form_data['comment'])) && (isset($form_data['title'])) && (isset($form_data['password']))) {
-
-            $form_data['id'] = (int) $form_data['id'];
-            $password = $form_data['password'];
-
-            if ($form_data['x'] || $form_data['y']){
-                my_check_coords($form_data['x'], $form_data['y']);
-            }
-            $data = array(
-                'id' => $form_data['id'],
-                'x' => $form_data['x'],
-                'y' => $form_data['y'],
-                'comment' => $form_data['comment'],
-                'comment_plain' => $form_data['comment'],
-                'title' => $form_data['title'],
-                'category' => $form_data['category'],
-            );
-        } else {
-            self::concrete_error(array(MY_ERROR_FORM_WRONG_DATA, 'POST array:' . json_encode($_POST)));
-        }
-
-// проверяем приложенный пароль
-
-        if (!$password) {
-            echo my_pass_through(@self::trace('errors/update_point/empty_password'));
-            self::rollback();
-        }
-
-        if (!$this->authenticate_by_password_and_data_id($password, $form_data['id'])) {
-            echo my_pass_through(@self::trace('errors/update_point/wrong_password'));
-            self::rollback();
-        }
-
-
-
-
-
-
-
-
-// проверяем приложенные фото
-        if (my_is_not_empty(@$form_data['photos'])) {
-            $photos_new_array = explode(' ', trim($form_data['photos']));
-
-// подготавливаем данные фоток для вставки
-            if (!$photos_new_prepared = $this->prepare_photos_for_insert($photos_new_array)) {
-                self::concrete_error(array(MY_ERROR_FORM_WRONG_DATA, 'photos: [' . $form_data['photos'] . ']'));
-            }
-
-// сколько новых
-            $photos_new_count = count($photos_new_array);
-        } else {
-            $photos_new_count = 0;
-        }
-
-
-// сколько всего было до этого
-        $photos_existed = $map_db_model_photos->get_by_data_id($form_data['id']);
-        $photos_existed_count = count($photos_existed);
-
-//если удаляем часть фоток
-        if (my_array_is_not_empty(@$form_data['delete_photos'])) {
-// сколько фоток удаляем
-            $photos_deleted_count = count($form_data['delete_photos']);
-        } else {
-            $photos_deleted_count = 0;
-        }
-// считаем сколько всего фоток в итоге с учетом удаленных и новых
-        $photos_count = $photos_existed_count + $photos_new_count - $photos_deleted_count;
-
-
-// Если фоток получается больше положенного
-        if ($photos_count > $config['allows']['max_upload_files_per_point']) {
-            self::concrete_error(array(MY_ERROR_FORM_UPDATE_POINT_A_LOT_OF_PHOTOS,
-                'photos new: [' . $form_data['photos'] . '],'
-                . 'photos delete: [' . json_encode(@$form_data['delete_photos']) . ']'
-                . 'photos existed: [' . json_encode($photos_existed) . ']'
-            ));
-        }
-
-        if (($photos_count === 0) && (self::get_module(MY_MODULE_NAME_SERVICE)->is_need_photos_for_placemarks() === true)) {
-            self::concrete_error(array(MY_ERROR_FORM_UPDATE_POINT_WITH_NO_PHOTOS,
-                'photos new: [' . $form_data['photos'] . '],'
-                . 'photos delete: [' . json_encode(@$form_data['delete_photos']) . ']'
-                . 'photos existed: [' . json_encode($photos_existed) . ']'
-            ));
-        }
-
-        //предварительно обновляем адрес - работаем еще со старыми координатами
-        $map_db_model_geocode_collection->update_record(array('x' => $data['x'], 'y' => $data['y']), $data['id']);
-        // обновляем метку
-        $map_db_model_data->update_point($data);
-
-        // удаляем фотки, которые указали
-        if ($photos_deleted_count) {
-            foreach ($form_data['delete_photos'] as $name => $value) {
-                // из базы
-                $this->delete_photo_db($form_data['id'], $name);
-
-                // из директории
-                $this->delete_photo_files($form_data['id'], $name);
-            }
-        }
-        //если добавили новые фотки
-        if ($photos_new_count) {
-
-            // Добавляем новые фотки
-            $this->add_photos_for_point($photos_new_prepared, $form_data['id']);
-        }
-
-        $result = array(
-            'status' => MY_SUCCESS_CODE,
-            'message' => my_pass_through(@self::trace('success/new_point/updated')),
-            'data' => array(
-                'id' => $form_data['id']
-            )
-        );
-        echo json_encode($result);
-    }
 
 
     public function create_new_point()

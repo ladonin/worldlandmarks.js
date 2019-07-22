@@ -48,6 +48,71 @@ class MapPhotosModel extends DBaseMysql
 
 // //ATTENTION - обратите внимание
 //get_by_data_id => MY_MODULE_NAME_MAP.get_photos_by_data_id()
+
+
+
+
+
+    /*
+     * Delete placemark's photo
+     *
+     * @param {integer} placemarkId - placemark id
+     * @param {string} photoName - photo name without prefix and with extension
+     * @param {boolean} mustBeDeleted - is delete required
+     *
+     * @return {integer} - number of deleted rows
+     */
+    delete(placemarkId, photoName, mustBeDeleted = true) {
+
+        let _result = this.getByCondition(
+                condition = 'map_data_id=' + BaseFunctions.toInt(placemarkId) + ' AND path=?',
+                order = '',
+                group = '',
+                select = 'id',
+                where_values = [photoName],
+                limit = false,
+                mustBeDeleted
+            );
+
+        return this.delete(_result[0]['id']);
+    }
+
+
+    /*
+     * Get all photos by placemark id starting with last photo
+     *
+     * @param {integer} id - palcemark id
+     * @param {boolean} needResult - is result required
+     *
+     * @return {array of objects}
+     */
+    getPhotosByDataId(id, needResult)
+    {
+        // Order by DESC because the last photo will be main now
+        return this.getByCondition(
+            condition = "map_data_id = ?",
+            order = 'id DESC',
+            group = '',
+            select = '*',
+            where_values = [id],
+            limit = false,
+            needResult
+        );
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 }
 
 MapPhotosModel.instanceId = BaseFunctions.unique_id();

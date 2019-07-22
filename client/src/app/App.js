@@ -88,11 +88,11 @@ class App extends Component {
     }
 
                                     rr(){
-                                         Socket.getSocket().emit('api', { controller: 'main', action: 'index', service:'landmarks', language:Language.getName()});
+                                         Socket.getSocket().emit('api', {data:{a:1,b:2}, controller: 'main', action: 'index', service:'landmarks', language:Language.getName()});
                                     }
 
     componentDidMount(){
-
+Socket.getSocket().emit('api', {data:{a:1,b:2}, controller: 'main', action: 'index', service:'landmarks', language:Language.getName()});
     }
   render() {console.log('App render');
     const App = () => (

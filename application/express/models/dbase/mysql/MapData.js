@@ -215,7 +215,7 @@ class MapDataModel extends DBaseMysql
                     GROUP by c_id
                     ORDER by c_title ASC`;
 
-        return this.getBySql(_sql);
+        return this.getBySql(_sql, needResult);
     }
 
 

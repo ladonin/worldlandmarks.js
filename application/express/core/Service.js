@@ -571,7 +571,7 @@ class Service extends Core
      *
      * @return {boolean}
      */
-    is_photo_by_category(photo)
+    isPhotoByCategory(photo)
     {
         let _categories = this.get_categories_codes();
         for (let _index in _categories) {

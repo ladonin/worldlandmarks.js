@@ -25,14 +25,14 @@ class Main extends AbstractController {
      * Action index
      */
     action_index() {
-        console.log('+++' + this.requestId);
-        console.log('index action ' + this.getText('site/description/catalog/sitemap_categories/category', {category: '111111111111111'}));
+       // console.log('+++' + this.requestId);
+        //console.log('index action ' + this.getText('site/description/catalog/sitemap_categories/category', {category: '111111111111111'}));
         //this.error(ErrorCodes.ERROR_REQUEST_VARIABLE_NOT_FOUND, 'action_index111111111111');
 
 
+console.log(this.getFromRequest('data'));
 
-
-        console.log(DBaseMysql.getInstance(this.requestId).getBySql("insert into users values(NULL, 'vhervehve','hgjhj',345435,345335)", [] , false));
+      //  console.log(DBaseMysql.getInstance(this.requestId).getBySql("insert into users values(NULL, 'vhervehve','hgjhj',345435,345335)", [] , false));
 
 
 

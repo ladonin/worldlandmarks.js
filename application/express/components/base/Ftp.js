@@ -97,7 +97,7 @@ module.exports = {
      *
      * @param {string} fileName - file name
      */
-    removeDirSync(fileName) {
+    removeFileSync(fileName) {
         let _finished = false;
         Ftp.raw("dele", fileName, (err, data) => {
             _finished = true;

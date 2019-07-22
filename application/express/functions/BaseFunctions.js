@@ -19,7 +19,7 @@ const Consts = require('application/express/settings/Constants');
 const Config = require('application/express/settings/Config.js');
 const Fs = require('fs');
 const Messages = require('application/express/settings/Messages');
-
+const Pbkdf2 = require('pbkdf2')
 
 
 
@@ -599,7 +599,60 @@ function toFloat(value)
 }
 
 
+
+
+
+/*
+ * Crypt a value
+ *
+ * @param {string} value - value to be crypting
+ *
+ * @return {string} - value's hash
+ */
+function crypt(value){
+    return Pbkdf2.pbkdf2Sync(value, Consts.HASH_SALT, 1, 32, 'sha256').toString('hex');
+}
+
+
+
+
+
+
+/*
+ * Checks eguality value to hash
+ *
+ * @param {string} value
+ * @param {string} hash
+ *
+ * @return boolean
+ */
+function hashEqualsToValue(value, hash)
+{
+    let _hashCompared = crypt(value);
+
+    return _hashCompared === hash;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 module.exports = {
+    crypt,
+    hashEqualsToValue,
     //checkCoordinate,
     toFloat,
     deleteFile,

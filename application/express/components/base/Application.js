@@ -417,7 +417,7 @@ class Application extends Component {
             } else {
                 _errorMessage = e.syntCode;
             }
-            SocketsPool.sendPrivate(token, {context: _errorMessage}, 'error-catch');
+            SocketsPool.sendPrivate(token, {message: _errorMessage}, 'error-catch');
             console.log('<<<<<<<<<<<<<<<<---------------              CATCHED\n\n\n');
         })
         .then(res => {

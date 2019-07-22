@@ -20,7 +20,9 @@ const Socket = socket(Config.apiServer.socketUrl, {
 
 Socket.on('error-catch', function (data) {
     console.log('on error-catch');
-    console.log(data.context);////ATTENTION - обратите внимание
+    console.log(data.message);////ATTENTION - обратите внимание
+    //ERROR_PASSWORD_NOT_PASSED => trace('errors/update_point/empty_password')
+    //ERROR_WRONG_PASSWORD => trace('errors/update_point/wrong_password')
 });
 
 
