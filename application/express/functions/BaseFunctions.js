@@ -73,6 +73,15 @@ function isInteger(val) {
 }
 
 
+
+
+function isFloat(val){
+    return Number(val) === val && val % 1 !== 0;
+}
+
+
+
+
 function isArray(val) {
     return LodashLang.isArray(val);
 }
@@ -322,7 +331,7 @@ function is_image_type(type)
  *
  * @return {boolean}
  */
-function in_array(value, arr)
+function inArray(value, arr)
 {
     return arr.includes(value)
 }
@@ -651,6 +660,7 @@ function hashEqualsToValue(value, hash)
 
 
 module.exports = {
+    isFloat,
     crypt,
     hashEqualsToValue,
     //checkCoordinate,
@@ -678,7 +688,7 @@ module.exports = {
     create_password,
     prepare_image_name_to_jpeg,
     is_image_type,
-    in_array,
+    inArray,
     getDate,
     get_unique,
     get_flag_url,

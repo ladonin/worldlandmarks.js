@@ -217,7 +217,7 @@ function array_is_not_empty(arr)
  *
  * @return {string}
  */
-function get_array_from_string(str)
+function getArrayFromString(str, separator = ',')
 {
     if (str === '') {
         return [];
@@ -227,7 +227,7 @@ function get_array_from_string(str)
         this.error(ErrorCodes.ERROR_FUNCTION_ARGUMENTS, 'not a string type: ' + typeof (str));
     }
 
-    return trim(str, ',').split(',');
+    return trim(str, ',').split(separator);
 }
 function checkOnArray(val) {
     if (!isArray(val)) {
@@ -330,7 +330,7 @@ module.exports = {
     checkOnString,
     isString,
     checkOnArray,
-    get_array_from_string,
+    getArrayFromString,
     array_is_not_empty,
     pass_through,
     change_image_to_jpeg,

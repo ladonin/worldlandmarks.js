@@ -257,7 +257,7 @@ class Service extends Core
 
 
 //ATTENTION - обратите внимание
-// is_need_photos_for_placemarks => wherherNeedPhotosForPlacemarks
+// is_need_photos_for_placemarks => whetherNeedPhotosForPlacemarks
 
 
 
@@ -266,7 +266,7 @@ class Service extends Core
      *
      * @return {boolean}
      */
-    wherherNeedPhotosForPlacemarks()
+    whetherNeedPhotosForPlacemarks()
     {
         if (Functions.isSet(this.get_data().config.generic.need_photos_for_placemarks)) {
             return this.data.config.generic.need_photos_for_placemarks;
@@ -288,17 +288,61 @@ class Service extends Core
     }
 
     /*
-     * Get all categories codes with id
+     * Get all categories data - code and id
      *
      * @return {array of objects}
      */
-    get_categories_codes()
+    getCategories()
     {
         if (Functions.isSet(this.get_data().config.categories.categories_codes)) {
             return this.data.config.categories.categories_codes;
         }
         this.error(ErrorCodes.ERROR_SERVICE_CONFIG_ABSENT, 'categories-categories_codes');
     }
+
+
+
+    /*
+     * Get all categories ids
+     *
+     * @return {array}
+     */
+    getCategoriesIds()
+    {
+        if (Functions.isSet(this.get_data().config.categories.categories_codes)) {
+            return this.data.config.categories.categories_codes.map(function(data) {return data.id;});
+        }
+        this.error(ErrorCodes.ERROR_SERVICE_CONFIG_ABSENT, 'categories-categories_codes');
+    }
+
+
+
+
+    /*
+     * Check category id
+     *
+     * @return {boolean} or exception if false
+     */
+    checkCategoryId(id)
+    {
+        let _categories = this.getCategories();
+
+        for (let _index in _categories){
+
+            let _category =_categories[_index];
+            if (_category.id === id) {
+                return true;
+            }
+        }
+        this.error(ErrorCodes.ERROR_WRONG_CATEGORY_ID, 'id['+id+']');
+    }
+
+
+
+
+
+
+
 
     /*
      * Get categories with locals for create selection form to create/update placemark (point)
@@ -307,7 +351,7 @@ class Service extends Core
      */
     get_categories_add_new_point_form_options()
     {
-        let _categories = this.get_categories_codes();
+        let _categories = this.getCategories();
         let _result = [];
         _result.push(['none', 'form/map_new_point/category/' + Consts.NONE_CATEGORY_CODE, 'selected']);
         for (let _index in _categories) {
@@ -531,12 +575,12 @@ class Service extends Core
     }
 
     /*
-     * Determines should we show placemark's title everywhere
+     * Determines whether should we show placemark's title everywhere
      * In case if placemarks are loaded by admin with correct title this config should be equals 'true'
      *
      * @return {boolean}
      */
-    is_use_titles()
+    whetherUseTitles()
     {
         if (Functions.isSet(this.get_data().config.generic.use_titles)) {
             return this.data.config.generic.use_titles;
@@ -573,7 +617,7 @@ class Service extends Core
      */
     isPhotoByCategory(photo)
     {
-        let _categories = this.get_categories_codes();
+        let _categories = this.getCategories();
         for (let _index in _categories) {
             let _category = _categories[_index];
             if (photo === _category.code + '.jpg') {

@@ -47,7 +47,7 @@ class MapPhotosModel extends DBaseMysql
     }
 
 // //ATTENTION - обратите внимание
-//get_by_data_id => MY_MODULE_NAME_MAP.get_photos_by_data_id()
+//get_by_data_id => MY_MODULE_NAME_MAP.getPhotosByDataId()
 
 
 

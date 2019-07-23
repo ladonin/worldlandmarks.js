@@ -24,13 +24,13 @@ var1 и var2 переименовал в controller и action
 1. country_states_cities_google_translates => country_states_cities_translations
 2. country_states_google_names => country_states_names
 
-
+landmarks_map_data.comment, comment_plain, title теперь могут быть пустыми и по дефолту равны '' - исправить в таблице будущего прода
 
 
 в базе данных country_code и state_code - сделать ссылками на основную таблицу и заменить на country_id и state_id
 is_ методы заменить на wherher_
 
-
+add_new_point_form[delete_photos][5d3773dcbb04a478.jpeg] value="1" - заменить на add_new_point_form[delete_photos][] value="5d3773dcbb04a478.jpeg"
 
 
 

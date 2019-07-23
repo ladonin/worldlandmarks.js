@@ -23,6 +23,10 @@ Socket.on('error-catch', function (data) {
     console.log(data.message);////ATTENTION - обратите внимание
     //ERROR_PASSWORD_NOT_PASSED => trace('errors/update_point/empty_password')
     //ERROR_WRONG_PASSWORD => trace('errors/update_point/wrong_password')
+    //ERROR_FORM_UPDATE_POINT_A_LOT_OF_PHOTOS
+    //ERROR_FORM_UPDATE_POINT_WITH_NO_PHOTOS
+
+
 });
 
 

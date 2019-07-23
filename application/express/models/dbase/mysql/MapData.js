@@ -22,13 +22,13 @@ class MapDataModel extends DBaseMysql
         this.fields = {
             x:{
                 // Preparing value before validating
-                preparing:['to_float'],
+                preparing:['to_string'],
                 rules:['numeric', 'required'],
                 //processing:['htmlspecialchars'],
             },
             y:{
                 // Preparing value before validating
-                preparing:['to_float'],
+                preparing:['to_string'],
                 rules:['numeric', 'required'],
                 //processing:['htmlspecialchars'],
             },
@@ -78,7 +78,8 @@ class MapDataModel extends DBaseMysql
             return this.tableName;
         }
 
-
+//ATTENTION - обратите внимание
+//update_point => change
 
     /*
      * Update placemark
@@ -89,6 +90,12 @@ class MapDataModel extends DBaseMysql
     {
         let _id = data.id;
         delete data.id;
+
+        // If coordinates are not set
+        if ((!data.x && data.x !== 0 && data.x !== '0') || (!data.y && data.y !== 0 && data.y !== '0')) {
+            delete data.x;
+            delete data.y;
+        }
 
         this.setValuesToFields(data);
         this.update(_id);

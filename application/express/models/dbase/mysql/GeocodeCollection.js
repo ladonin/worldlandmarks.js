@@ -328,11 +328,39 @@ class GeocodeCollectionModel extends DBaseMysql
         return _result;
     }
 
-
-
-
-
 // //ATTENTION - обратите внимание get_countries => CountriesModel.getCountries
+
+    /*
+     * Update placemark's geodata
+     *
+     * @param {object} coords - new coordinates
+     * @param {integer} dataId - placemark id
+     *
+     * @return {boolean(false)} or {array of objects} - new geodata on all available languages
+     */
+    updateRecord(coords, dataId)
+    {
+        if (coords['x'] && coords['y']) {
+
+            // Delete all old records for this placemark
+            this.deleteAdresses(dataId);
+
+            //Add new
+            return this.add(coords, dataId);
+        }
+        return false;
+    }
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -434,32 +462,7 @@ abstract class Model extends \vendor\DBase_Mysql
 
 
 
-    /*
-     * Обновляет все геоданные метки
-     *
-     * @param array $coords - кординаты новые данные метки
-     * @param integer $data_id - id обновляемой метки
-     *
-     * @return boolean(false)/array - новые геоданные метки на всех языках
-     */
-    public function update_record($coords, $data_id)
-    {
 
-        if (my_is_not_empty(@$coords['x']) && my_is_not_empty(@$coords['y'])) {
-
-            // только если координаты сменились
-            //$data_db_model = components\Map::get_db_model('data');
-            //$result = $data_db_model->get_by_id($data_id);
-            //если мы не меняли местоположение, то x,y в форме придут пустыми
-            /////if (($result['x'] !== $data['x']) || ($result['y'] !== $data['y'])) {
-            //удалим ВСЕ старые записи для этой метки
-            $this->delete_adresses($data_id);
-            //добавляем новые
-            return $this->add($coords, $data_id);
-            /////}
-        }
-        return false;
-    }
 
 
 

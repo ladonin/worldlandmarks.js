@@ -100,7 +100,7 @@ class Language extends Core {
     checkLanguage(language) {
 
         let _availableLanguages = Service.getInstance(this.requestId).getLanguagesCodes();
-        if (BaseFunctions.isUndefined(language) || !BaseFunctions.in_array(language, _availableLanguages)) {
+        if (BaseFunctions.isUndefined(language) || !BaseFunctions.inArray(language, _availableLanguages)) {
             return false;
         }
         return true;
@@ -152,7 +152,7 @@ class Language extends Core {
 
             let _availableLanguages = Service.getInstance(this.requestId).getLanguagesCodes();
             _clientLanguage = _clientLanguage.replace(/^(\w+)-.*/, '$1');
-            if (BaseFunctions.in_array(_clientLanguage, _availableLanguages)) {
+            if (BaseFunctions.inArray(_clientLanguage, _availableLanguages)) {
                return _clientLanguage;
             }
         }

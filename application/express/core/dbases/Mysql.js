@@ -5,7 +5,7 @@
  * Base database component for MySql
  */
 
-const Functions = require('application/express/functions/BaseFunctions');
+const BaseFunctions = require('application/express/functions/BaseFunctions');
 const ErrorCodes = require('application/express/settings/ErrorCodes');
 const Consts = require('application/express/settings/Constants');
 const Model = require('application/express/core/Model');
@@ -44,11 +44,11 @@ class DBaseMysql extends Model
 
 ////ATTENTION - обратите внимание
     snapshotFieldsData() {
-        this.fields_initial_data = Functions.clone(this.fields);
+        this.fields_initial_data = BaseFunctions.clone(this.fields);
     }
 
     reset_fields() {
-        this.fields = Functions.clone(this.fields_initial_data);
+        this.fields = BaseFunctions.clone(this.fields_initial_data);
     }
 
     /*
@@ -92,7 +92,7 @@ class DBaseMysql extends Model
 //                    this.error(
 //                            ErrorCodes.ERROR_MYSQL
 //                            + ': ' + err.code
-//                            + ': request[' + sql + '], values[' + Functions.toString(values) + ']',
+//                            + ': request[' + sql + '], values[' + BaseFunctions.toString(values) + ']',
 //                            Consts.LOG_MYSQL_TYPE
 //                            );
 //                })
@@ -115,7 +115,7 @@ class DBaseMysql extends Model
         } catch (e) {
             this.error(
                     ErrorCodes.ERROR_MYSQL,
-                    e.code + ': request[' + sql + '], values[' + Functions.toString(values) + ']',
+                    e.code + ': request[' + sql + '], values[' + BaseFunctions.toString(values) + ']',
                     Consts.LOG_MYSQL_TYPE);
     }
     }
@@ -134,10 +134,10 @@ class DBaseMysql extends Model
      */
     getById(idValue)//, async = false
     {
-        let _id = Functions.toInt(idValue);
+        let _id = BaseFunctions.toInt(idValue);
 
         if (!_id) {
-            this.error(ErrorCodes.ERROR_FUNCTION_ARGUMENTS, 'id [ ' + Functions.toString(idValue) + ']');
+            this.error(ErrorCodes.ERROR_FUNCTION_ARGUMENTS, 'id [ ' + BaseFunctions.toString(idValue) + ']');
         }
 
         return this.query("SELECT * FROM " + this.table_name + " WHERE id = " + _id, [])[0];//, async
@@ -167,30 +167,30 @@ class DBaseMysql extends Model
     update(idValue)
     {
 
-        let _id = Functions.toInt(idValue);
+        let _id = BaseFunctions.toInt(idValue);
 
         if (!_id) {
-            this.error(ErrorCodes.ERROR_FUNCTION_ARGUMENTS, 'id [ ' + Functions.toString(idValue) + ']');
+            this.error(ErrorCodes.ERROR_FUNCTION_ARGUMENTS, 'id [ ' + BaseFunctions.toString(idValue) + ']');
         }
 
         this.filter_all_fields(Consts.FILTER_TYPE_WITHOUT_REQUIRED);
 
         array_values = [];
 
-        let _sql = 'update ' + this.table_name + " set modified='" + Functions.get_current_time() + "'";
+        let _sql = 'update ' + this.table_name + " set modified='" + BaseFunctions.get_current_time() + "'";
 
         for (let _field_name in this.fields) {
 
             let _field = this.fields[_field_name];
 
             // Field (column) will be updated ONLY if we set a value to field
-            if (Functions.isSet(_field['value'])) {
+            if (BaseFunctions.isSet(_field['value'])) {
 
                 /*
                  * Rule 'none' tells that we should not update this field by hand
                  * For example - 'created' field (if specified in model fields)
                  */
-                if (Functions.in_array('none', _field['rules'])) {
+                if (BaseFunctions.inArray('none', _field['rules'])) {
                     continue;
                 }
 
@@ -200,7 +200,7 @@ class DBaseMysql extends Model
                 array_values.push(_field['value']);
             }
         }
-        _sql += ' where id = ' + Functions.toInt(_id);
+        _sql += ' where id = ' + BaseFunctions.toInt(_id);
 
         this.query(_sql, array_values);
 
@@ -221,7 +221,7 @@ class DBaseMysql extends Model
 
         let _sql = 'insert into ' + this.table_name;
         let _sql_fields = 'created,modified';
-        let _sql_values = Functions.get_current_time() + ',' + Functions.get_current_time();
+        let _sql_values = BaseFunctions.get_current_time() + ',' + BaseFunctions.get_current_time();
 
         for (let _field_name in this.fields) {
             let _field = this.fields[_field_name];
@@ -230,7 +230,7 @@ class DBaseMysql extends Model
              * Rule 'none' tells that we should not set this field by hand
              * For example - 'created' field (if specified in model fields)
              */
-            if (Functions.in_array('none', _field['rules'])) {
+            if (BaseFunctions.inArray('none', _field['rules'])) {
                 continue;
             }
 
@@ -238,7 +238,7 @@ class DBaseMysql extends Model
             _sql_values += ',?';
 
             this.processing_value(_field);
-            array_values.push(Functions.isSet(_field['value']) ? _field['value'] : null);
+            array_values.push(BaseFunctions.isSet(_field['value']) ? _field['value'] : null);
         }
 
         _sql += '(' + _sql_fields + ') values (' + _sql_values + ')';
@@ -260,10 +260,10 @@ class DBaseMysql extends Model
      */
     delete(idValue)
     {
-        let _id = Functions.toInt(idValue);
+        let _id = BaseFunctions.toInt(idValue);
 
         if (!_id) {
-            this.error(ErrorCodes.ERROR_FUNCTION_ARGUMENTS, 'id [ ' + Functions.toString(idValue) + ']');
+            this.error(ErrorCodes.ERROR_FUNCTION_ARGUMENTS, 'id [ ' + BaseFunctions.toString(idValue) + ']');
         }
 
         sql = 'DELETE FROM ' + this.table_name + ' WHERE id = ' + _id;
@@ -284,9 +284,9 @@ class DBaseMysql extends Model
     {
         for (let _field_name in data) {
 
-            let _field_value = this.preparingValue(data[_field_name]);
+            let _field_value = this.preparingValue(_field_name, data[_field_name]);
             this.filter(_field_name, _field_value, Consts.FILTER_TYPE_WITHOUT_REQUIRED);
-            if (!_field_value && Functions.is_not_empty(this.fields[_field_name]['default_value'])) {
+            if (!_field_value && BaseFunctions.is_not_empty(this.fields[_field_name]['default_value'])) {
                 _field_value = this.fields[_field_name]['default_value'];
             }
             this.fields[_field_name]['value'] = _field_value;
@@ -320,10 +320,10 @@ class DBaseMysql extends Model
      */
     return_limit(limit = [1])
     {
-        if (Functions.toInt(limit[1]) > 0) {
-            return  Functions.toInt(limit[0]) + ',' + Functions.toInt(limit[1]);
-        } else if (Functions.toInt(limit[0]) > 0) {
-            return Functions.toInt(limit[0]);
+        if (BaseFunctions.toInt(limit[1]) > 0) {
+            return  BaseFunctions.toInt(limit[0]) + ',' + BaseFunctions.toInt(limit[1]);
+        } else if (BaseFunctions.toInt(limit[0]) > 0) {
+            return BaseFunctions.toInt(limit[0]);
         } else {
             return '1';
     }
@@ -378,7 +378,7 @@ class DBaseMysql extends Model
         function process_error() {
             this.error(
                     ErrorCodes.ERROR_MYSQL,
-                    '|REQUIRED RESULT| request[' + sql + '], where_values[' + Functions.toString(whereValues) + ']',
+                    '|REQUIRED RESULT| request[' + sql + '], where_values[' + BaseFunctions.toString(whereValues) + ']',
                     Consts.LOG_MYSQL_TYPE
                     );
         }
@@ -454,5 +454,4 @@ class DBaseMysql extends Model
 
 }
 
-DBaseMysql.instanceId = Functions.unique_id();
 module.exports = DBaseMysql;

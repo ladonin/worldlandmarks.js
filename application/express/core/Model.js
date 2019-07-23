@@ -27,7 +27,7 @@ class Model extends Core {
          *
          * 'rules':
          *      required - value must be specified and must not be empty
-         *      not_empty - if value specified then must not be empty
+         *      not_empty - if value is specified then it must not be empty
          *      numeric - value must be integer or float
          *      boolean - value must be boolean
          *      {max:number} - maximum length of value
@@ -45,11 +45,22 @@ class Model extends Core {
          *      get_query_string_var_value - value must match a value of url query variable conception
          *      db_table_name - value must match a database table name conception
          *      none - value must not be specified (for example 'created': will be set automatically)
+         *      {in:[list]} - value must be in the list
+         *
          *
          * 'processing':
          *      strip_tags
+         *      htmlspecialchars
+         *      spec_tags - perlace special tags on html tags
+         *      strip_spec_tags - remove all special tags
+         *      urls - change string urls to links <a href>
+         *      new_line - cnange \n, \n\r to <br>
          *
          *
+         * 'preparing':
+         *      to_float
+         *      to_integer
+         *      to_string
          */
         this.fields;
     }
@@ -103,26 +114,41 @@ class Model extends Core {
     /*
      * Preparing field value according its 'preparing' settings
      *
-     * @param {object} field - field data with possible 'preparing' property
+     * @param {string} fieldName - field name with possible 'preparing' property
      * @param {mix} value - value to be prepared, in this case value is not in 'fields' yet
      *
      * @return {mix} - prepared value
      */
-    preparingValue(field, value) {
+    preparingValue(fieldName, value) {
+        let _field = this.fields[fieldName];
 
-        if (Functions.is_not_empty(field['preparing']) && Functions.is_not_empty(value)) {
+        if (!Functions.isObject(_field)) {
+
+            this.error(ErrorCodes.ERROR_DB_UNDEFINED_FIELD, 'field name [' + fieldName + ']', undefined, false);
+        }
+
+        if (Functions.is_not_empty(_field['preparing']) && Functions.is_not_empty(value)) {
 
             // Lead to float value
-            if (Functions.in_array("to_float", field['processing'])) {
+            if (Functions.inArray("to_float", _field['processing'])) {
                 value = Functions.toFloat(value);
             }
 
+            // Lead to integer value
+            if (Functions.inArray("to_integer", _field['processing'])) {
+                value = Functions.toInt(value);
+            }
+
+            // Lead to string value
+            if (Functions.inArray("to_string", _field['processing'])) {
+                value = Functions.toString(value);
+            }
         }
         return value;
     }
 
     /*
-     * Processing field value according its 'processing' settings
+     * Processing field value according its 'processing' settings after validation
      *
      * @param {array} field - field data
      */
@@ -133,18 +159,18 @@ class Model extends Core {
             // Delete all html tags
             // Attention: if used then 'htmlspecialchars' has no sense
             // Attention: html tags created subsequently will not be deleted
-            if (Functions.in_array("strip_tags", field['processing'])) {
+            if (Functions.inArray("strip_tags", field['processing'])) {
                 field['value'] = Functions.strip_tags(field['value']);
             }
 
             // Convert html tags into simple entities
             // Attention: html tags created subsequently will not be converted
-            if (Functions.in_array("htmlspecialchars", field['processing'])) {
+            if (Functions.inArray("htmlspecialchars", field['processing'])) {
                 field['value'] = Functions.escapeHtml(field['value']);
             }
 
             // Convert special tags into html tags
-            if (Functions.in_array("spec_tags", field['processing'])) {
+            if (Functions.inArray("spec_tags", field['processing'])) {
 
                 let _tags = Service.getInstance(this.requestId).get_text_form_tags();
 
@@ -185,12 +211,12 @@ class Model extends Core {
 
             // Delete special tags
             // Attention: works after 'spec_tags' and if 'spec_tags' is used then only rest special tags not processed by 'spec_tags' will be deleted
-            if (Functions.in_array("strip_spec_tags", field['processing'])) {
+            if (Functions.inArray("strip_spec_tags", field['processing'])) {
                 field['value'] = field['value'].replace(/\[.*?\]/gi, '');
             }
 
             // Convert text urls into links
-            if (Functions.in_array("urls", field['processing'])) {
+            if (Functions.inArray("urls", field['processing'])) {
 
                 if (((Users.getInstance(this.requestId).isAdmin() || Users.getInstance(this.requestId).checkAdminAccess()) && Service.getInstance(this.requestId).is_available_to_process_links_in_text_for_admin())
                         || Service.getInstance(this.requestId).is_available_to_process_links_in_text_for_free_users()) {
@@ -211,9 +237,24 @@ class Model extends Core {
             }
 
             // Convert new lines into <br/> tags
-            if (in_array("new_line", field['processing'])) {
+            if (Functions.inArray("new_line", field['processing'])) {
                 field['value'] = field['value'].replace(/\r/g, '');
                 field['value'] = field['value'].replace(/\n/g, '<br/>');
+            }
+
+            // Lead to float value
+            if (Functions.inArray("to_float", field['processing'])) {
+                field['value'] = Functions.toFloat(field['value']);
+            }
+
+            // Lead to integer value
+            if (Functions.inArray("to_integer", field['processing'])) {
+                field['value'] = Functions.toInt(field['value']);
+            }
+
+            // Lead to string value
+            if (Functions.inArray("to_string", field['processing'])) {
+                field['value'] = Functions.toString(field['value']);
             }
         }
     }
