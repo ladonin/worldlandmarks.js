@@ -28,6 +28,7 @@ Ftp.raw("cwd", _config.rootDirectory, (err, data) => {
     if (err) {
         BaseFunctions.processError(ErrorCodes.ERROR_FTP_CHANGE_ROOT_DIRECTORY, 'err[' + BaseFunctions.toString(err) + '], new dir[' + _config.rootDirectory + ']')
     }
+    console.log('FTP OK');
 });
 // Wait for process to be finished
 Deasync.loopWhile(function () {

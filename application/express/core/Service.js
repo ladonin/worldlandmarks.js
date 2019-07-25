@@ -22,25 +22,25 @@ class Service extends Core
         /*
          * Service name
          *
-         * @type string
+         * @type {string}
          */
         this.name = false;
         /*
          * Path to service
          *
-         * @type string
+         * @type {string}
          */
         this.path = false;
         /*
          * All service data from config
          *
-         * @type object
+         * @type {object}
          */
         this.data = false;
         /*
          * Available languages codes
          *
-         * @type array
+         * @type {array}
          */
         this.languagesCodes = false;
     }
@@ -48,7 +48,7 @@ class Service extends Core
     /*
      * Get all service data from config
      *
-     * @return {string}
+     * @return {object}
      */
     get_data()
     {
@@ -60,6 +60,20 @@ class Service extends Core
 
         return this.data;
     }
+
+
+
+    /*
+     * Get service config
+     *
+     * @return {string}
+     */
+    getConfig()
+    {
+        return this.get_data().config;
+    }
+
+
 
     /*
      * Get path to sevice

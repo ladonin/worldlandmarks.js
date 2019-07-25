@@ -8,7 +8,8 @@
 const Form = require('application/express/core/Form');
 const Service = require('application/express/core/Service');
 const BaseFunctions = require('application/express/functions/BaseFunctions');
-
+const StrictFunctions = require('application/express/functions/StrictFunctions');
+const Consts = require('application/express/settings/Constants');
 
 class CreatePointForm extends Form
 {
@@ -18,11 +19,11 @@ class CreatePointForm extends Form
         this.fields = {
 
             x:{
-                rules:['numeric'],
+                rules:['numeric', 'required'],
                 processing:['to_float'],
             },
             y:{
-                rules:['numeric'],
+                rules:['numeric', 'required'],
                 processing:['to_float'],
             },
             photos:{
@@ -39,12 +40,37 @@ class CreatePointForm extends Form
             },
             email:{
                 rules:['email'],
+                errors:{email:Consts.ERROR_WRONG_EMAIL}
             },
             password:{
                 rules:[],
             }
         }
     }
+
+    /*
+     * Processing data according with fields settings.
+     * Updated parent method.
+     *
+     * @param {object} datas
+     *
+     * @return {object} - processed data {fieldName : fieldValue}
+     */
+    processData(datas) {
+
+        // Attention - this checking is used also in update point form, so we have to follow this condition
+        if (BaseFunctions.isSet(datas['x']) || BaseFunctions.isSet(datas['y'])){
+            StrictFunctions.check_coords(datas['x'], datas['y']);
+        }
+
+        return super.processData(datas);
+    }
+
+
+
+
+
+
 }
 
 CreatePointForm.instanceId = BaseFunctions.unique_id();

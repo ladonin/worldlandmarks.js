@@ -16,6 +16,11 @@ class UpdatePointForm extends CreatePointForm
     constructor() {
         super();
 
+        this.fields['x'].rules = ['numeric'];
+        this.fields['y'].rules = ['numeric'];
+        this.fields['photos'].rules = [];
+        this.fields['password'].rules = ['required'];
+
         // 'delete_photos[photo_N]' checkboxes
         this.fields['delete_photos'] = {
             rules:[]
@@ -39,16 +44,8 @@ class UpdatePointForm extends CreatePointForm
             this.error(ErrorCodes.ERROR_PASSWORD_NOT_PASSED, undefined, undefined, false);
         }
 
-        if (datas['x'] || datas['y']){
-            StrictFunctions.check_coords(datas['x'], datas['y']);
-        }
-
-
         return super.processData(datas);
     }
-
-
-
 }
 
 UpdatePointForm.instanceId = BaseFunctions.unique_id();

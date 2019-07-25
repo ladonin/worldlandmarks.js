@@ -252,7 +252,7 @@ function escapeHtml(text) {
  *
  * @return {string} password
  */
-function create_password()
+function createPassword()
 {
     let _vowel = [
         'a',
@@ -685,7 +685,7 @@ module.exports = {
     get_current_time,
     strip_tags,
     escapeHtml,
-    create_password,
+    createPassword,
     prepare_image_name_to_jpeg,
     is_image_type,
     inArray,

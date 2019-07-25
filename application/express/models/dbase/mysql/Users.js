@@ -33,6 +33,38 @@ class Users extends DBaseMysql
         }
         return this.tableName;
     }
+
+    /*
+     * Get user data by email
+     *
+     * @param {string} email
+     *
+     * @return {object}
+     */
+    getByEmail(email){
+
+        return this.getByCondition(
+            condition = 'email=?',
+            order = '',
+            group = '',
+            select = '*',
+            where_values = [email],
+            limit = 1,
+            need_result = false
+        )[0];
+    }
+
+
+
+
+
+
+
+
+
+
+
+
 }
 
 Users.instanceId = BaseFunctions.unique_id();

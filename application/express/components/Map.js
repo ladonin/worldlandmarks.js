@@ -26,7 +26,7 @@ const SizeOf = require('image-size');
 const UsersModel = require('application/express/models/dbase/mysql/Users');
 const CreatePointForm = require('application/express/models/form/CreatePoint');
 const UpdatePointForm = require('application/express/models/form/UpdatePoint');
-
+const Mailer = require('application/express/components/base/Mailer');
 
 class Map extends Component {
 
@@ -732,6 +732,8 @@ class Map extends Component {
      * Update placemark
      *
      * @param {object} data - placemark data
+     *
+     * @return {object} - result data
      */
     updatePoint(data)
     {
@@ -756,7 +758,6 @@ class Map extends Component {
         if (!this.authenticateByPasswordAndDataId(_formData['password'], _formData['id'])) {
             this.error(ErrorCodes.ERROR_WRONG_PASSWORD, undefined, undefined, false);
         }
-
 
         // Check and prepare protos data
         let _photosNewCount = 0;
@@ -785,14 +786,12 @@ class Map extends Component {
 
         // If photos count is too big
         if (_photosCount > Config['restrictions']['max_upload_files_per_point']) {
-            this.error(ErrorCodes.ERROR_FORM_UPDATE_POINT_A_LOT_OF_PHOTOS, undefined, undefined, false);
+            this.error(ErrorCodes.ERROR_FORM_POINT_A_LOT_OF_PHOTOS, undefined, undefined, false);
         }
 
         if ((_photosCount === 0) && (Service.getInstance(this.requestId).whetherNeedPhotosForPlacemarks() === true)) {
-            this.error(ErrorCodes.ERROR_FORM_UPDATE_POINT_WITH_NO_PHOTOS, undefined, undefined, false);
+            this.error(ErrorCodes.ERROR_FORM_POINT_WITH_NO_PHOTOS, undefined, undefined, false);
         }
-
-
 
         // Update geodata
         GeocodeCollectionModel.getInstance(this.requestId).updateRecord(
@@ -830,228 +829,137 @@ class Map extends Component {
     }
 
 
+//ATTENTION - обратите внимание
+//prepareUserEmail => processUserEmail
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    public function create_new_point()
+    /*
+     * Process user email
+     * If absent - then create new user
+     *
+     * @param {string} email
+     *
+     * @return {object} - result data
+     */
+    processUserEmail(email)
     {
-
-
-
-        $config = self::get_config();
-        $map_db_model_data = components\Map::get_db_model('data');
-        $map_db_model_geocode_collection = self::get_model(MY_MODEL_NAME_DB_GEOCODE_COLLECTION);
-        $map_form_model_data = self::get_model(MY_MODEL_NAME_FORM_ADD_NEW_POINT);
-        $map_db_model_photos = components\Map::get_db_model('photos');
-
-
-
-
-
-
-// определяем POST данные
-        $data = array();
-        $photos = array();
-        $data_photos = array();
-        $need_to_send_email = false;
-
-
-
-
-
-// проверка и подготовка post данных
-        $map_form_model_data->prepare_fields();
-
-        $form_data = $_POST['add_new_point_form'];
-
-
-
-
-
-
-//если title не используем, то задаем его пустым (он не передается в форме, но надо все же его инициализировать)
-        if (!self::get_module(MY_MODULE_NAME_SERVICE)->is_use_titles()) {
-            $form_data['title'] = '';
-        }
-        my_check_coords($form_data['x'], $form_data['y']);
-
-        $user_email = isset($form_data['email']) ? $form_data['email'] : null;
-        $data = array(
-            'x' => $form_data['x'],
-            'y' => $form_data['y'],
-            'comment' => $form_data['comment'],
-            'comment_plain' => $form_data['comment'],
-            'title' => $form_data['title'],
-            'category' => $form_data['category'],
-        );
-
-
-
-
-// если email приложен
-        if ($user_email) {
-
-            $users_model = self::get_model(MY_MODEL_NAME_DB_USERS);
-            if (!$users_model->validate('email', $user_email, MY_FILTER_TYPE_ALL, false)) {
-                echo my_pass_through(@self::trace('errors/new_point/wrong_email'));
-                self::rollback();
-            }
-
-            $user_data = $this->prepare_user_email($user_email);
-            $data['user_id'] = $user_data['id'];
-
-// если только что создалось
-            if ($user_data['just_created'] === true) {
-                $need_to_send_email = true;
-            }
-            self::set_cookie(MY_COOKIE_EMAIL_PLACEMARK, $user_email);
-        }
-
-
-
-
-
-
-
-// записываем координату
-        $id_data = $map_db_model_data->add_new_point($data);
-
-
-
-
-
-
-        $map_db_model_geocode_collection->add(array('x' => $data['x'], 'y' => $data['y']), $id_data);
-
-
-
-// проверяем приложенные фото
-        $photos_array = explode(' ', trim($form_data['photos']));
-
-// Если фоток больше положенного
-        if (count($photos_array) > $config['allows']['max_upload_files_per_point']) {
-            self::concrete_error(array(MY_ERROR_FORM_NEW_POINT_A_LOT_OF_PHOTOS, 'photos: [' . $form_data['photos'] . ']'));
-        }
-
-// подготавливаем данные фоток
-        if ((!$photos = $this->prepare_photos_for_insert($photos_array)) && (self::get_module(MY_MODULE_NAME_SERVICE)->is_need_photos_for_placemarks() === true)) {
-            self::concrete_error(array(MY_ERROR_FORM_WRONG_DATA, 'photos: [' . $form_data['photos'] . ']'));
-        }
-// Добавляем фотки
-        $this->add_photos_for_point($photos, $id_data);
-
-
-
-
-
-
-
-
-
-
-// возвращаемся на предыдущую страницу через url возврата (после execute())
-// теперь через ajax self::set_redirect_url($form_data[MY_FORM_SUBMIT_REDIRECT_URL_VAR_NAME]);
-
-
-
-
-        if ($need_to_send_email === true) {
-// отправляем почту
-            $mailer_module = self::get_module(MY_MODULE_NAME_MAILER);
-            $data = array(
-                'recipient' => $user_email,
-                'password' => $user_data['password'],
-            );
-            $mailer_module->send_password_after_create_placemark($data, $id_data);
-        }
-
-
-
-
-
-
-
-        $result = array(
-            'status' => MY_SUCCESS_CODE,
-            'message' => my_pass_through(@self::trace('success/new_point/created')),
-            'data' => array(
-                'id' => $id_data,
-                'email' => $user_email
-            )
-        );
-        echo json_encode($result);
-        return $result;
-    }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    protected function prepare_user_email($email)
-    {
-        if (!$email) {
+        if (!email) {
             return NULL;
         }
 
-// проверяем, есть ли он уже в базе юзеров
-        $users_model = self::get_model(MY_MODEL_NAME_DB_USERS);
-        $result = $users_model->get_by_condition('email=' . $users_model->get_connect()->quote($email), '', '', '*', 1, false);
-// если нашли
-        if (my_is_not_empty(@$result['id'])) {
-            return array(
-                'just_created' => false,
-                'id' => $result['id']
-            );
+        // Check if email already exists in dbase
+        let _result = UsersModel.getInstance(this.requestId).getByEmail(email);
+
+        if (_result['id']) {
+            return {
+                'just_created': false,
+                'id': _result['id']
+            };
         }
 
-// если не нашли - создаем
-        $password = my_create_password();
-        $data = array(
-            'email' => $email,
-            'password_hash' => hash($password)
-        );
-        $id = $users_model->add_new_user($data);
+        // If didn't find - then create
+        let _password = BaseFunctions.createPassword();
+        let _data = {
+            'email': email,
+            'password_hash': BaseFunctions.crypt(_password)
+        };
+        let _id = UsersModel.getInstance(this.requestId).add(_data);
 
-        return array(
-            'just_created' => true,
-            'id' => $id,
-            'password' => $password
-        );
+        return {
+            'just_created': true,
+            'id': _id,
+            'password': _password
+        };
+    }
+
+
+
+
+
+
+//ATTENTION - обратите внимание
+//(data) = this.getFromRequest('data');
+
+
+    /*
+     * Create new placemark
+     *
+     * @param {object} data - placemark data
+     *
+     * @return {object} - result data
+     */
+    createNewPoint(data)
+    {
+        // Prepare, validate and process form data
+        // Also check coords
+        let _formData = CreatePointForm.getInstance(this.requestId).processData(data.form);
+
+        let _needToSendEmail = false;
+
+        let _data = {
+            'x':_formData['x'],
+            'y':_formData['y'],
+            'comment':_formData['comment'],
+            'comment_plain':_formData['comment'],
+            'title':_formData['title'],
+            'category':_formData['category'],
+        };
+
+        // If email is passed on
+        if (_formData['email']) {
+            var _userData = this.processUserEmail(_formData['email']);
+            _data['user_id'] = _userData['id'];
+
+            // If it user's first placemark
+            if (_userData['just_created'] === true) {
+                _needToSendEmail = true;
+            }
+        }
+
+        // Record placemark
+        let _dataId = MapDataModel.getInstance(this.requestId).add(_data);
+
+        // Record geodata
+        GeocodeCollectionModel.getInstance(this.requestId).add({'x':_data['x'], 'y':_data['y']}, _dataId);
+
+
+        // Check attached photos
+        let _photosArray = BaseFunctions.getArrayFromString(BaseFunctions.trim(_formData['photos']), ' ');
+
+        // If photos count is too big
+        if (_photosArray.length > Config['restrictions']['max_upload_files_per_point']) {
+            this.error(ErrorCodes.ERROR_FORM_POINT_A_LOT_OF_PHOTOS, undefined, undefined, false);
+        }
+
+        // Prepare photos data
+        let _photos = this.createPhotosDataForInsert(_photosArray);
+        if (!_photos && Service.getInstance(this.requestId).whetherNeedPhotosForPlacemarks() === true) {
+            this.error(ErrorCodes.ERROR_FORM_POINT_WITH_NO_PHOTOS, undefined, undefined, false);
+        }
+
+        // Add photos
+        this.addPhotosToPoint(_photos, _dataId);
+
+        // Send email
+        if (_needToSendEmail === true) {
+
+            let _mailData = {
+                data:{
+                    password:_userData['password']
+                },
+                recipient:_formData['email'],
+            };
+            Mailer.getInstance(this.requestId).sendAfterCreationPlacemark(_mailData, 'afterCreationPlacemark', _dataId);
+        }
+
+        return {
+            'status':Consts.SUCCESS_CODE,
+            'message':this.getText('success/new_point/created'),
+            'data':{
+                'id':_dataId,
+                'email':_formData['email']
+            }
+        };
     }
 
 
@@ -1069,6 +977,36 @@ class Map extends Component {
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   protected function prepare_address(array $adress)
+    {
+
+        $language_model = components\Language::get_instance();
+        $language = $language_model->get_language();
+        $result = '';
+        if ($language === MY_LANGUAGE_RU) {
+// Гугл в русских сообщениях пишет иногда иностранные слова
+            $result = str_replace('Unnamed Road', @$adress['administrative_area_level_2'], @$adress['formatted_address']);
+            return $result;
+        }
+
+        return $result;
+    }
 
 
 
@@ -1125,20 +1063,7 @@ abstract class Map extends \vendor\Module
 
 
 
-    protected function prepare_address(array $adress)
-    {
 
-        $language_model = components\Language::get_instance();
-        $language = $language_model->get_language();
-        $result = '';
-        if ($language === MY_LANGUAGE_RU) {
-// Гугл в русских сообщениях пишет иногда иностранные слова
-            $result = str_replace('Unnamed Road', @$adress['administrative_area_level_2'], @$adress['formatted_address']);
-            return $result;
-        }
-
-        return $result;
-    }
 
 
     public function prepare_result(array $result, $need_relevant = false, $need_another = false)

@@ -11,7 +11,7 @@ const DOMAIN = 'http://world-landmarks.ru';
 module.exports = {
 
     DOMAIN: DOMAIN,
-    SITE_NAME: 'world-landmarks.ru',
+    //SITE_NAME: 'world-landmarks.ru', //ATTENTION - обратите внимание
 
     PROCESS_DEV: 'development',
     PROCESS_PROD: 'production',
@@ -30,7 +30,7 @@ module.exports = {
     NONE_CATEGORY_CODE: 'none',
 
     FTP_DEFAULT_SERVER_NAME: 'default_server',
-
+    DEFAULT: 'default',
     SERVICE_IMGS_URL_CATEGORIES: '/imgs/categories/',
 
     CONTROLLER_NAME_MAP: 'map',
@@ -132,10 +132,10 @@ module.exports = {
  define('MY_ERROR_LANGUAGE_MODEL_NOT_FOUND', 24);
  define('MY_ERROR_FORM_WRONG_DATA', 25);
  define('MY_ERROR_COOKIE_NAME_UNDEFINED', 26);
- define('MY_ERROR_FORM_NEW_POINT_A_LOT_OF_PHOTOS', 27);
+ define('MY_ERROR_FORM_POINT_A_LOT_OF_PHOTOS', 27);
  define('MY_ERROR_GET_WRONG_MAP_NAME', 28);
  define('MY_ERROR_AJAX_VIEW_DATA_VARS_NOT_SET', 29);
- define('MY_ERROR_FORM_UPDATE_POINT_A_LOT_OF_PHOTOS', 30);
+ define('MY_ERROR_FORM_POINT_A_LOT_OF_PHOTOS', 30);
  define('MY_ERROR_WRONG_DB_WHERE_CONDITION', 31);
  define('MY_ERROR_FORM_UPDATE_POINT_WITH_NO_PHOTOS', 32);
  define('MY_ERROR_UNDEFINED_MODULE_NAME', 33);

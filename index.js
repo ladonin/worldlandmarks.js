@@ -10,6 +10,77 @@ const SocketsPool = require('application/express/core/SocketsPool');
 SocketsPool.setIO(io);
 
 
+
+
+
+
+
+const nodemailer = require("nodemailer");
+
+
+
+var transporter = nodemailer.createTransport({
+  host: "smtp.spaceweb.ru",
+  port: 25,
+  secure: false, // upgrade later with STARTTLS
+  auth: {
+    user: "info@world-landmarks.ru",
+    pass: "silver2007"
+  }
+});
+
+transporter.verify(function(error, success) {
+  if (error) {
+    console.log(error);
+  } else {
+    console.log("Server is ready to take our messages");
+  }
+});
+
+transporter.sendMail({
+    from: '"Mapstore" <info@world-landmarks.ru>', // sender address
+    to: "aladonin1985@gmail.com", // list of receivers
+    subject: "Hello ✔", // Subject line
+    text: "Hello world?", // plain text body
+    html: "<b>Hello world?</b>" // html body
+  }, function(error, info) {
+  if (error) {
+    return console.log(error.response);
+  }
+  console.log("Success");
+
+
+    console.log(info);
+
+
+
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 io.on('connection', function (socket) {
     let _token = SocketsPool.setSocket(socket);
 

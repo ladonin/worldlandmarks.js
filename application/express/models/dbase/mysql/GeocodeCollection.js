@@ -252,7 +252,7 @@ class GeocodeCollectionModel extends DBaseMysql
      * @param {object} coords - placemark coordinates
      * @param {integer} id - placemark id
      *
-     * @return {object} - added data
+     * @return {array} - new geodata ids
      */
     add(coords, id)
     {

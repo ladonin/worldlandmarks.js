@@ -9,7 +9,7 @@ const Core = require('application/express/core/Core');
 
 const ErrorCodes = require('application/express/settings/ErrorCodes');
 const Consts = require('application/express/settings/Constants');
-const Functions = require('application/express/functions/BaseFunctions');
+const BaseFunctions = require('application/express/functions/BaseFunctions');
 const Service = require('application/express/core/Service');
 const Users = require('application/express/core/Users');
 const Validator = require('application/express/components/base/Validator');
@@ -48,6 +48,10 @@ class Model extends Core {
          *      {in:[list]} - value must be in the list
          *
          *
+         * 'errors': error code to be throwed if specific rule will retur an error
+         *      {ruleName:errorCode}
+         *
+         *
          * 'processing':
          *      strip_tags
          *      htmlspecialchars
@@ -78,11 +82,11 @@ class Model extends Core {
     filter(name, value, filter_type = Consts.FILTER_TYPE_ALL, with_rollback = true)
     {
 
-        if (!Functions.isSet(this.fields[name])) {
+        if (!BaseFunctions.isSet(this.fields[name])) {
             this.error(ErrorCodes.ERROR_DB_UNDEFINED_FIELD, 'unknown field_name: [' + name + '], value: [' + value + ']');
         }
 
-        if (Functions.isSet(this.fields[name]['rules'] && Functions.isArray(this.fields[name]['rules']))) {
+        if (BaseFunctions.isSet(this.fields[name]['rules'] && BaseFunctions.isArray(this.fields[name]['rules']))) {
 
             for (let _index in this.fields[name]['rules']) {
 
@@ -95,7 +99,27 @@ class Model extends Core {
                     _result = Validator.validate(_rule, value);
                     if (!_result) {
                         if (with_rollback === true) {
-                            this.error(ErrorCodes.ERROR_MODEL_FILTER, 'wrong value: name[' + name + '], value[' + value + '], rule[' + JSON.stringify(_rule) + ']');
+
+                            // If a specific error code is specified
+                            if (BaseFunctions.isSet(this.fields[name]['errors'])) {
+
+                                let _errorsSet = this.fields[name]['errors'];
+                                if (BaseFunctions.isString(_rule)) {
+
+                                    if (BaseFunctions.isSet(_errorsSet[_rule])) {
+                                        this.error(_errorsSet[_rule], undefined, undefined, false);
+                                    }
+
+                                } else if (BaseFunctions.isObject(_rule)) {
+
+                                    let _ruleName = Object.keys(_rule)[0];
+                                    if (BaseFunctions.isSet(_errorsSet[_ruleName])) {
+                                        this.error(_errorsSet[_ruleName], undefined, undefined, false);
+                                    }
+                                }
+                            }
+
+                            this.error(ErrorCodes.ERROR_MODEL_FILTER, 'wrong value: name[' + name + '], value[' + value + '], rule[' + JSON.stringify(_rule) + ']', undefined, false);
                         } else {
                             return false;
                         }
@@ -122,26 +146,26 @@ class Model extends Core {
     preparingValue(fieldName, value) {
         let _field = this.fields[fieldName];
 
-        if (!Functions.isObject(_field)) {
+        if (!BaseFunctions.isObject(_field)) {
 
             this.error(ErrorCodes.ERROR_DB_UNDEFINED_FIELD, 'field name [' + fieldName + ']', undefined, false);
         }
 
-        if (Functions.is_not_empty(_field['preparing']) && Functions.is_not_empty(value)) {
+        if (BaseFunctions.is_not_empty(_field['preparing']) && BaseFunctions.is_not_empty(value)) {
 
             // Lead to float value
-            if (Functions.inArray("to_float", _field['processing'])) {
-                value = Functions.toFloat(value);
+            if (BaseFunctions.inArray("to_float", _field['processing'])) {
+                value = BaseFunctions.toFloat(value);
             }
 
             // Lead to integer value
-            if (Functions.inArray("to_integer", _field['processing'])) {
-                value = Functions.toInt(value);
+            if (BaseFunctions.inArray("to_integer", _field['processing'])) {
+                value = BaseFunctions.toInt(value);
             }
 
             // Lead to string value
-            if (Functions.inArray("to_string", _field['processing'])) {
-                value = Functions.toString(value);
+            if (BaseFunctions.inArray("to_string", _field['processing'])) {
+                value = BaseFunctions.toString(value);
             }
         }
         return value;
@@ -154,23 +178,23 @@ class Model extends Core {
      */
     processing_value(field)
     {
-        if (Functions.is_not_empty(field['processing']) && Functions.is_not_empty(field['value'])) {
+        if (BaseFunctions.is_not_empty(field['processing']) && BaseFunctions.is_not_empty(field['value'])) {
 
             // Delete all html tags
             // Attention: if used then 'htmlspecialchars' has no sense
             // Attention: html tags created subsequently will not be deleted
-            if (Functions.inArray("strip_tags", field['processing'])) {
-                field['value'] = Functions.strip_tags(field['value']);
+            if (BaseFunctions.inArray("strip_tags", field['processing'])) {
+                field['value'] = BaseFunctions.strip_tags(field['value']);
             }
 
             // Convert html tags into simple entities
             // Attention: html tags created subsequently will not be converted
-            if (Functions.inArray("htmlspecialchars", field['processing'])) {
-                field['value'] = Functions.escapeHtml(field['value']);
+            if (BaseFunctions.inArray("htmlspecialchars", field['processing'])) {
+                field['value'] = BaseFunctions.escapeHtml(field['value']);
             }
 
             // Convert special tags into html tags
-            if (Functions.inArray("spec_tags", field['processing'])) {
+            if (BaseFunctions.inArray("spec_tags", field['processing'])) {
 
                 let _tags = Service.getInstance(this.requestId).get_text_form_tags();
 
@@ -211,12 +235,12 @@ class Model extends Core {
 
             // Delete special tags
             // Attention: works after 'spec_tags' and if 'spec_tags' is used then only rest special tags not processed by 'spec_tags' will be deleted
-            if (Functions.inArray("strip_spec_tags", field['processing'])) {
+            if (BaseFunctions.inArray("strip_spec_tags", field['processing'])) {
                 field['value'] = field['value'].replace(/\[.*?\]/gi, '');
             }
 
             // Convert text urls into links
-            if (Functions.inArray("urls", field['processing'])) {
+            if (BaseFunctions.inArray("urls", field['processing'])) {
 
                 if (((Users.getInstance(this.requestId).isAdmin() || Users.getInstance(this.requestId).checkAdminAccess()) && Service.getInstance(this.requestId).is_available_to_process_links_in_text_for_admin())
                         || Service.getInstance(this.requestId).is_available_to_process_links_in_text_for_free_users()) {
@@ -237,24 +261,24 @@ class Model extends Core {
             }
 
             // Convert new lines into <br/> tags
-            if (Functions.inArray("new_line", field['processing'])) {
+            if (BaseFunctions.inArray("new_line", field['processing'])) {
                 field['value'] = field['value'].replace(/\r/g, '');
                 field['value'] = field['value'].replace(/\n/g, '<br/>');
             }
 
             // Lead to float value
-            if (Functions.inArray("to_float", field['processing'])) {
-                field['value'] = Functions.toFloat(field['value']);
+            if (BaseFunctions.inArray("to_float", field['processing'])) {
+                field['value'] = BaseFunctions.toFloat(field['value']);
             }
 
             // Lead to integer value
-            if (Functions.inArray("to_integer", field['processing'])) {
-                field['value'] = Functions.toInt(field['value']);
+            if (BaseFunctions.inArray("to_integer", field['processing'])) {
+                field['value'] = BaseFunctions.toInt(field['value']);
             }
 
             // Lead to string value
-            if (Functions.inArray("to_string", field['processing'])) {
-                field['value'] = Functions.toString(field['value']);
+            if (BaseFunctions.inArray("to_string", field['processing'])) {
+                field['value'] = BaseFunctions.toString(field['value']);
             }
         }
     }
