@@ -8,7 +8,7 @@
 const BaseFunctions = require('application/express/functions/BaseFunctions');
 const ErrorCodes = require('application/express/settings/ErrorCodes');
 const Consts = require('application/express/settings/Constants');
-const Model = require('application/express/core/Model');
+const Model = require('application/express/core/abstract/Model');
 const DBase = require('application/express/core/DBase');
 
 

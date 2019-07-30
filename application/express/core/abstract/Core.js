@@ -1,9 +1,9 @@
 /*
- * File application/express/core/Core.js
- * const Core = require('application/express/core/Core');
+ * File application/express/core/abstract/Core.js
+ * const Core = require('application/express/core/abstract/Core');
  *
  * Base component
- * Available validation rules see in 'application/express/core/Model.js'
+ * Available validation rules see in 'application/express/core/abstract/Model.js'
  */
 
 const RequestsPool = require('application/express/core/RequestsPool');
@@ -41,18 +41,15 @@ class Core {
     }
 
     /*
+     * Get request data in object or string type
+     *
+     * @param {boolean} string - return the data either in string or object type
+     *
      * @return {object} - copy of request query data {name1:value1, name2:value2}
      */
-    getRequestData() {
-        let _data = RequestsPool.getRequestData(this.requestId);
-        return BaseFunctions.clone(_data)
-    }
-
-    /*
-     * @return {string} - string presentation of request object
-     */
-    getStringData() {
-        return BaseFunctions.toString(this.getRequestData());
+    getRequestData(string = false) {
+        let _data = BaseFunctions.clone(RequestsPool.getRequestData(this.requestId));
+        return string === true ? BaseFunctions.toString(_data) : _data
     }
 
     /*
@@ -105,6 +102,48 @@ class Core {
             this.error(ErrorCodes.ERROR_REQUEST_VARIABLE_NOT_FOUND, '[' + name + ']');
         }
     }
+
+    /*
+     * Determine device type - desctop or mobile
+     *
+     * @return {boolean}
+     */
+    isMobile(){
+        return this.getFromRequest(Consts.ISMOBILE_CODE_VAR_NAME);
+    }
+
+    /*
+     * Return device type - mobile or desctop
+     *
+     * @return {string}
+     */
+    getDeviceType(){
+        return this.getFromRequest(Consts.ISMOBILE_CODE_VAR_NAME) ? Consts.MOBILE : Consts.DESCTOP;
+    }
+
+    /*
+     * Return controller name
+     *
+     * @return {string}
+     */
+    getControllerName(){
+        return this.getFromRequest(Consts.CONTROLLER_VAR_NAME);
+    }
+
+
+    /*
+     * Return a value with guarantee it is not empty
+     *
+     * @param {string/number/float} value
+     *
+     * @return {string}
+     */
+    passThrough(value) {
+        return BaseFunctions.passThrough(value, this);
+    }
+
+
+
 }
 
 module.exports = Core;

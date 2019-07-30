@@ -6,7 +6,7 @@
  */
 
 const BaseFunctions = require('application/express/functions/BaseFunctions');
-const Core = require('application/express/core/Core');
+const Core = require('application/express/core/abstract/Core');
 const Config = require('application/express/settings/Config.js');
 const Functions = require('application/express/functions/BaseFunctions');
 const ErrorCodes = require('application/express/settings/ErrorCodes');
@@ -56,7 +56,7 @@ class Service extends Core
             return this.data;
         }
 
-        this.data = Config.services[this.getServiceName()];
+        this.data = BaseFunctions.clone(Config.services[this.getServiceName()]);
 
         return this.data;
     }
@@ -172,7 +172,7 @@ class Service extends Core
     get_words(language)
     {
         if (Functions.isSet(this.get_data().text[language])) {
-            return this.data.text[language];
+            return BaseFunctions.clone(this.data.text[language]);
         }
         this.error(ErrorCodes.ERROR_SERVICE_CONFIG_ABSENT, 'service=[' + this.getServiceName() + '] language [' + language + ']');
     }
@@ -185,7 +185,7 @@ class Service extends Core
     get_ftp_data()
     {
         if (Functions.isSet(this.get_data().config.ftp)) {
-            return this.data.config.ftp;
+            return BaseFunctions.clone(this.data.config.ftp);
         }
         this.error(ErrorCodes.ERROR_SERVICE_CONFIG_ABSENT, 'service=[' + this.getServiceName() + '] ftp');
     }
@@ -301,6 +301,9 @@ class Service extends Core
         this.error(ErrorCodes.ERROR_SERVICE_CONFIG_ABSENT, 'text_form-auto_process_links-free');
     }
 
+
+//ATTENTION - обратите внимание
+///get_categories_codes => getCategories
     /*
      * Get all categories data - code and id
      *
@@ -309,7 +312,7 @@ class Service extends Core
     getCategories()
     {
         if (Functions.isSet(this.get_data().config.categories.categories_codes)) {
-            return this.data.config.categories.categories_codes;
+            return BaseFunctions.clone(this.data.config.categories.categories_codes);
         }
         this.error(ErrorCodes.ERROR_SERVICE_CONFIG_ABSENT, 'categories-categories_codes');
     }
@@ -423,7 +426,7 @@ class Service extends Core
     get_baloon_dimentions()
     {
         if (Functions.isSet(this.get_data().config.dimentions.ballon)) {
-            return this.data.config.dimentions.ballon;
+            return BaseFunctions.clone(this.data.config.dimentions.ballon);
         }
         this.error(ErrorCodes.ERROR_SERVICE_CONFIG_ABSENT, 'dimentions-ballon');
     }
@@ -431,9 +434,9 @@ class Service extends Core
     /*
      * Determines whether everyone can add placemarks
      *
-     * @return {object}
+     * @return {boolean}
      */
-    isAllCanAddPlacemarks()
+    whetherAllCanAddPlacemarks()
     {
         if (Functions.isSet(this.get_data().config.security.all_can_add_placemarks)) {
             return this.data.config.security.all_can_add_placemarks;
@@ -445,9 +448,9 @@ class Service extends Core
      * Get initial width of category photo (not placemark photo)
      * Will be shown if there are no photos loaded for placemark
      *
-     * @return integer
+     * @return {integer}
      */
-    get_categories_photo_initial_width()
+    getCategoriesPhotoInitialWidth()
     {
         if (Functions.isSet(this.get_data().config.dimentions.categories_photo_initial_width)) {
             return this.data.config.dimentions.categories_photo_initial_width;
@@ -461,7 +464,7 @@ class Service extends Core
      *
      * @return integer
      */
-    get_categories_photo_initial_height()
+    getCategoriesPhotoInitialHeight()
     {
         if (Functions.isSet(this.get_data().config.dimentions.categories_photo_initial_height)) {
             return this.data.config.dimentions.categories_photo_initial_height;
@@ -528,7 +531,7 @@ class Service extends Core
      *
      * @return {boolean}
      */
-    is_add_category_photo_as_first_in_placemark_view()
+    whetherAddCategoryPhotoAsFirstInPlacemarkView()
     {
         if (Functions.isSet(this.get_data().config.categories.generic.add_category_photo_as_first_in_placemark_view)) {
             return this.data.config.categories.generic.add_category_photo_as_first_in_placemark_view;
@@ -541,7 +544,7 @@ class Service extends Core
      *
      * @return {boolean}
      */
-    is_show_main_pages()
+    whetherShowMainPages()
     {
         if (Functions.isSet(this.get_data().config.pages.main)) {
             return this.data.config.pages.main;
@@ -554,7 +557,7 @@ class Service extends Core
      *
      * @return {boolean}
      */
-    is_show_catalog_pages()
+    whetherShowCatalogPages()
     {
         if (Functions.isSet(this.get_data().config.pages.catalog)) {
             return this.data.config.pages.catalog;
@@ -567,7 +570,7 @@ class Service extends Core
      *
      * @return {boolean}
      */
-    is_show_search_pages()
+    whetherShowSearchPages()
     {
         if (Functions.isSet(this.get_data().config.pages.search)) {
             return this.data.config.pages.search;
@@ -580,7 +583,7 @@ class Service extends Core
      *
      * @return {boolean}
      */
-    is_show_article_pages()
+    whetherShowArticlePages()
     {
         if (Functions.isSet(this.get_data().config.pages.article)) {
             return this.data.config.pages.article;
@@ -648,7 +651,7 @@ class Service extends Core
      *
      * @return {boolean}
      */
-    isShowRelevantPlacemarks()
+    whetherShowRelevantPlacemarks()
     {
         if (Functions.isSet(this.get_data().config.generic.show_relevant_placemarks)) {
             return this.data.config.generic.show_relevant_placemarks;
@@ -662,7 +665,7 @@ class Service extends Core
      *
      * @return {boolean}
      */
-    isShowAnotherPlacemarks()
+    whetherShowAnotherPlacemarks()
     {
         if (Functions.isSet(this.get_data().config.generic.show_another_placemarks)) {
             return this.data.config.generic.show_another_placemarks;

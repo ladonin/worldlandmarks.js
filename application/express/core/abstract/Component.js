@@ -1,9 +1,9 @@
 /*
- * File application/express/core/Component.js
- * const Component = require('application/express/core/Component');
+ * File application/express/core/abstract/Component.js
+ * const Component = require('application/express/core/abstract/Component');
  *
  * Base component
- * Available validation rules see in 'application/express/core/Model.js'
+ * Available validation rules see in 'application/express/core/abstract/Model.js'
  */
 const BaseFunctions = require('application/express/functions/BaseFunctions');
 const RequestsPool = require('application/express/core/RequestsPool');
@@ -11,7 +11,7 @@ const ErrorCodes = require('application/express/settings/ErrorCodes');
 const Consts = require('application/express/settings/Constants');
 const Messages = require('application/express/settings/Messages');
 const Config = require('application/express/settings/Config');
-const Core = require('application/express/core/Core');
+const Core = require('application/express/core/abstract/Core');
 const Language = require('application/express/core/Language');
 const Service = require('application/express/core/Service');
 const Cache = require('application/express/components/base/Cache');

@@ -6,7 +6,7 @@
  */
 
 const Consts = require('application/express/settings/Constants');
-const Core = require('application/express/core/Core');
+const Core = require('application/express/core/abstract/Core');
 const Service = require('application/express/core/Service');
 const BaseFunctions = require('application/express/functions/BaseFunctions');
 const Config = require('application/express/settings/Config');

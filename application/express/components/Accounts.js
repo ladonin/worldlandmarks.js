@@ -5,7 +5,7 @@
  * Accounts component - calculate user data
  */
 
-const Component = require('application/express/core/Component');
+const Component = require('application/express/core/abstract/Component');
 const BaseFunctions = require('application/express/functions/BaseFunctions');
 const UsersRegisteredModel = require('application/express/models/dbase/mysql/UsersRegistered');
 const Consts = require('application/express/settings/Constants');

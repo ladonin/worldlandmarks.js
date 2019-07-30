@@ -1,11 +1,11 @@
 /*
- * File application/express/core/Controller.js
- * const Controller = require('application/express/core/Controller');
+ * File application/express/core/abstract/Controller.js
+ * const Controller = require('application/express/core/abstract/Controller');
  *
  * Basic controller
  */
 
-const Component = require('application/express/core/Component');
+const Component = require('application/express/core/abstract/Component');
 const RequestsPool = require('application/express/core/RequestsPool');
 const SocketsPool = require('application/express/core/SocketsPool');
 

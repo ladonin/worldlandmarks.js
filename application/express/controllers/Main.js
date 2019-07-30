@@ -166,7 +166,7 @@ console.log(this.getFromRequest('data'));
 
 /*
 
- const Controller = require('application/express/core/Controller');
+ const Controller = require('application/express/core/abstract/Controller');
 
  class Main extends Controller
  {

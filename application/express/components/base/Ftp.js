@@ -8,7 +8,7 @@
 const Deasync = require('deasync');
 const jsftp = require("jsftp");
 
-const FtpServersConfig = requie('application/express/settings/gitignore/FtpServers');
+const FtpServersConfig = require('application/express/settings/gitignore/FtpServers');
 const Consts = require('application/express/settings/Constants');
 const BaseFunctions = require('application/express/functions/BaseFunctions');
 const ErrorCodes = require('application/express/settings/ErrorCodes');
@@ -110,5 +110,13 @@ module.exports = {
         Deasync.loopWhile(function () {
             return !_finished;
         });
+    },
+    /*
+     * Get ftp config
+     *
+     * @return {object} - copy of config
+     */
+    getConfig(){
+        return BaseFunctions.clone(_config);
     }
 }

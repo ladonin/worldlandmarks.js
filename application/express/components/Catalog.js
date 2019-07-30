@@ -1,45 +1,205 @@
-import Config from "src/settings/config";
-//import Localization from 'src/modules/localization/Localization';
-import Consts from 'src/settings/Constants';
+/*
+ * File application/express/components/Catalog.js
+ * const Catalog = require('application/express/components/Catalog');
+ *
+ * Catalog component - compute catalog data
+ */
 
-class Catalog {
+const Component = require('application/express/core/abstract/Component');
+const BaseFunctions = require('application/express/functions/BaseFunctions');
+const Consts = require('application/express/settings/Constants');
+const ErrorCodes = require('application/express/settings/ErrorCodes');
+const Countries = require('application/express/components/Countries');
+const Accounts = require('application/express/components/Accounts');
+const Service = require('application/express/core/Service');
+const Users = require('application/express/core/Users');
+const Cache = require('application/express/components/base/Cache');
+const Categories = require('application/express/components/Categories');
 
-    constructor(){
-        this.categories = {};
+class Catalog extends Component {
+
+    constructor() {
+        super();
+    }
 
 
 
+
+//ATTENTION - обратите внимание
+//prepareAddress = > prepareAddressLink
+//prepareAddressWithRoute => prepareAddressLinkWithRoute
+
+
+    /*
+     * Return full address as link in html
+     *
+     * @param {string} stateCode - state code
+     * @param {string} countryCcode - country code
+     * @param {string} administrativeAreaLevel2 - alternative city name (google maps termin)
+     * @param {string} state - state name
+     * @param {string} country - country name
+     * @param {string} city - city name
+     *
+     * @return {string} - html link
+     */
+    prepareAddressLink(stateCode, countryCcode, administrativeAreaLevel2, state, country, city)
+    {
+        if (!countryCcode) {
+            this.error(ErrorCodes.ERROR_FUNCTION_ARGUMENTS, 'country code [' + countryCcode + ']', undefined, false);
+          } else if (!state) {
+            this.error(ErrorCodes.ERROR_FUNCTION_ARGUMENTS, 'state [' + state + ']', undefined, false);
+        }
+
+        let _language = this.getLanguage();
+
+        state = Countries.getInstance(this.requestId).getTranslationOfStateName(_language, countryCcode, state, stateCode);
+        country = Countries.getInstance(this.requestId).prepareCountryName(country);
+
+        country = '<img class="adress_country_flag" src="' + Consts.IMG_URL + 'flags/' + countryCcode + '.png">' + country;
+
+        let _addres = '';
+        if (Service.getInstance(this.requestId).whetherShowCatalogPages() === true) {
+            _addres = "<a href='/" + Consts.CONTROLLER_NAME_CATALOG + "/" + countryCcode + "'>" + country + '</a>';
+        } else {
+            _addres = country;
+        }
+        if (Countries.getInstance(this.requestId).hasStates(countryCcode)) {
+            if (!stateCode) {
+                this.error(Consts.ERROR_FUNCTION_ARGUMENTS, 'state_code [' + stateCode + ']', undefined, false);
+            }
+            if (stateCode !== Consts.UNDEFINED_VALUE) {
+                if (Service.getInstance(this.requestId).whetherShowCatalogPages() === true) {
+//ATTENTION - обратите внимание - прямая ссылка
+                    _addres += " &bull; <a href='/" + Consts.CONTROLLER_NAME_CATALOG + "/" + countryCcode + "/" + stateCode + "'>" + state + '</a>';
+                } else {
+                    _addres += " &bull; " + state;
+                }
+
+                if (Users.getInstance(this.requestId).isAdmin() && state){
+
+                    _addres += " <a style='color:#f00;' target='_blank' href='/admin/translate_state.php?country_code="+countryCcode+"&state_code="+stateCode+"&name="+encodeURI(state)+"' title='перевод'>&equiv;</a>";
+
+
+                }
+            }
+        }
+        let _locality = ''
+        let _localitySource = '';
+        if (Countries.getInstance(this.requestId).isAdministrativeCenter(countryCcode, stateCode) == false) {
+            _addres += '<span class="locality">';
+            if (city) {
+                _locality = Countries.getInstance(this.requestId).getTranslationOfCityName(countryCcode, city, stateCode, _language);
+                _addres += ' &bull; ' + _locality;
+                _localitySource = city;
+            } else if (administrativeAreaLevel2) {
+                _locality = Countries.getInstance(this.requestId).getTranslationOfCityName(countryCcode, administrativeAreaLevel2, stateCode, _language);
+                _addres += ' &bull; ' + _locality;
+                _localitySource = administrativeAreaLevel2;
+            }
+                if (Users.getInstance(this.requestId).isAdmin() && _localitySource){
+//ATTENTION - обратите внимание - прямая ссылка
+                    _addres += " <a style='color:#f00;' target='_blank' href='/admin/translate_locality.php?country_code="+countryCcode+"&state_code="+stateCode+"&name="+encodeURI(_locality)+"&locality_source="+encodeURI(_localitySource)+"' title='перевод'>&equiv;</a>";
+                }
+                _addres +='</span>';
+        }
+
+        return _addres;
     }
 
 
 
 
 
-    getCategories(){
+
+    /*
+     * Return full address as link in html with route (more detail address)
+     *
+     * @param {string} stateCode - state code
+     * @param {string} countryCcode - country code
+     * @param {string} administrativeAreaLevel2 - alternative city name (google maps termin)
+     * @param {string} state - state name
+     * @param {string} country - country name
+     * @param {string} city - city name
+     * @param {string} route - address details: street (if exist) etc.
+     *
+     * @return {string} - html link
+     */
+    prepareAddressLinkWithRoute(stateCode, countryCcode, administrativeAreaLevel2, state, country, city, route)
+    {
+        let _address = this.prepareAddressLink(stateCode, countryCcode, administrativeAreaLevel2, state, country, city);
+
+        if ((route !== Consts.ADDRESS_UNNAMED_ROAD_VALUE) && (route)) {
+            _address += " &bull; " + route;
+        }
+
+        return _address;
+    }
 
 
+    /*
+     * Return all available categories data according with controller name
+     *
+     * @return {array of objects}
+     */
+    getCategories()
+    {
 
-        if (!this.categories) {
-            this.categories = Config.categories.categories_codes;
+        let _categories = Service.getInstance(this.requestId).getCategories();
 
+        for (let _index in _categories) {
+            _categories[_index]['title'] = this.getText('form/map_new_point/category/' + _categories[_index]['id']);
+        }
 
-for(var index in this.categories) {
-    this.categories[index]['title']=1;//Localization.getText('form/map_new_point/category/' . this.categories[index]['id']);
-}
+        if (this.getControllerName() === Consts.CONTROLLER_NAME_ARTICLE){
 
-
-        if (get_controller_name() === Consts.CONTROLLER_NAME_ARTICLE){
-            $categories_component = components\Categories::get_instance();
-            foreach($this->categories as &$category){
-                $category['title'] = $categories_component->prepare_name_for_articles($category['code'], $category['title']);
+            for (let _index in _categories) {
+                _categories[index]['title'] = Categories.getInstance(this.requestId).prepareNameForArticles(_categories[index]['code'], _categories[index]['title']);
             }
         }
 
-        return $this->categories;
+        return _categories;
+    }
 
+    /*
+     * Return category id by code
+     *
+     * @param {string} code - category code
+     *
+     * @return {integer}
+     */
+    getCategoryId(code)
+    {
+        let _categories = Service.getInstance(this.requestId).getCategories();
 
+        for (let _index in _categories) {
+            let _category = _categories[index];
 
+            if (_category['code'] === code) {
+                return _category['id'];
+            }
+        }
+        return 0;
+    }
 
+    /*
+     * Return category data by id
+     *
+     * @param {integer} id - category id
+     *
+     * @return {object}
+     */
+    getCategory(id)
+    {
+        let _categories = this.getCategories();
+
+        for (let _index in _categories) {
+            let _category = _categories[index];
+
+            if (_category['id'] === id) {
+                return _category;
+            }
+        }
+        return null;
     }
 
 
@@ -47,13 +207,20 @@ for(var index in this.categories) {
 
 
 
-
+    public function get_category_dimentions()
+    {
+        return self::get_module(MY_MODULE_NAME_SERVICE)->get_baloon_dimentions();
     }
 
 
+}
+
+Catalog.instanceId = BaseFunctions.unique_id();
+module.exports = Catalog;
 
 
-/*
+
+
 
 
 
@@ -69,66 +236,22 @@ abstract class Catalog extends \vendor\Module
     protected $categories = array();
 
 
-    public function get_categories()
-    {
-
-        if (!$this->categories) {
-            $this->categories = self::get_module(MY_MODULE_NAME_SERVICE)->get_categories_codes();
-
-            foreach ($this->categories as &$category) {
-                $category['title'] = my_pass_through(@self::trace('form/map_new_point/category/' . $category['id']));
-            }
-        }
-
-        if (get_controller_name() === MY_CONTROLLER_NAME_ARTICLE){
-            $categories_component = components\Categories::get_instance();
-            foreach($this->categories as &$category){
-                $category['title'] = $categories_component->prepare_name_for_articles($category['code'], $category['title']);
-            }
-        }
-
-        return $this->categories;
-    }
-
-
-
-
-    public function get_category_id($code = null)
-    {
-
-        $categories = $this->get_categories();
-
-        foreach ($categories as $category) {
-            if ($category['code'] == $code) {
-                return $category['id'];
-            }
-        }
-        return 0;
-    }
 
 
 
 
 
 
-    public function get_category($id = null)
-    {
-
-        $categories = $this->get_categories();
-
-        foreach ($categories as $category) {
-            if ($category['id'] == $id) {
-                return $category;
-            }
-        }
-        return null;
-    }
 
 
-    public function get_category_dimentions()
-    {
-        return self::get_module(MY_MODULE_NAME_SERVICE)->get_baloon_dimentions();
-    }
+
+
+
+
+
+
+
+
 
 
     public function get_category_code($id = null)
@@ -210,7 +333,7 @@ abstract class Catalog extends \vendor\Module
             return array();
         }
 
-        $security = \modules\base\Application\Application::get_instance();
+        $security = \modules\base\Security\Security::get_instance();
 
         $module = self::get_module(MY_MODULE_NAME_MAP);
 
@@ -269,7 +392,7 @@ abstract class Catalog extends \vendor\Module
         $db_model_adress = self::get_model(MY_MODEL_NAME_DB_GEOCODE_COLLECTION);
         $language_component = components\Language::get_instance();
 
-        $language = $language_component->getLanguage();
+        $language = $language_component->get_language();
 
         $condition = "language='" . $language . "' AND country_code != ''";
         $order = "country ASC";
@@ -293,7 +416,7 @@ abstract class Catalog extends \vendor\Module
             $map_db_model_geocode = self::get_model(MY_MODEL_NAME_DB_GEOCODE_COLLECTION);
             $data_db_model = components\Map::get_db_model('data');
             $language_model = components\Language::get_instance();
-            $language = $language_model->getLanguage();
+            $language = $language_model->get_language();
             $conn = $data_db_model->get_connect();
 
             $config = self::get_config();
@@ -340,7 +463,7 @@ abstract class Catalog extends \vendor\Module
             $map_db_model_geocode = self::get_model(MY_MODEL_NAME_DB_GEOCODE_COLLECTION);
             $data_db_model = components\Map::get_db_model('data');
             $language_model = components\Language::get_instance();
-            $language = $language_model->getLanguage();
+            $language = $language_model->get_language();
             $conn = $data_db_model->get_connect();
 
             $config = self::get_config();
@@ -394,7 +517,7 @@ abstract class Catalog extends \vendor\Module
         $language_component = components\Language::get_instance();
         $countries_component = components\Countries::get_instance();
 
-        $language = $language_component->getLanguage();
+        $language = $language_component->get_language();
 
         $country_code = $countries_component->get_country_code_from_url($country);
 
@@ -403,7 +526,7 @@ abstract class Catalog extends \vendor\Module
             return $this->get_states($country_code, $language);
         } else {
 // сменим view и layout файлы - выводим метки, поскольку в этой стране нет штатов
-            $security = \modules\base\Application\Application::get_instance();
+            $security = \modules\base\Security\Security::get_instance();
             $security->change_view_file('catalog', 'state');
             $security->change_layout_file('catalog', 'state');
             //return $this->get_placemarks($country_code, '', $language);-нигде не используются
@@ -544,7 +667,7 @@ abstract class Catalog extends \vendor\Module
         $language_component = components\Language::get_instance();
         $countries_component = components\Countries::get_instance();
 
-        $language = $language_component->getLanguage();
+        $language = $language_component->get_language();
 
         $country_code = $countries_component->get_country_code_from_url($country);
 
@@ -617,7 +740,7 @@ abstract class Catalog extends \vendor\Module
     /* когда добавим новый язык, тогда пройдемся по всем записям и будем впоследствии добавлять их и на новом языке
       protected function prepare_country_data(array $data, $country_code) {
       $language_component = components\Language::get_instance();
-      $language = $language_component->getLanguage();
+      $language = $language_component->get_language();
       $db_model_adress = self::get_model(MY_MODEL_NAME_DB_GEOCODE_COLLECTION);
 
 
@@ -660,7 +783,7 @@ abstract class Catalog extends \vendor\Module
         $map_db_model_data = components\Map::get_db_model('data');
         $map_module = self::get_module(MY_MODULE_NAME_MAP);
         $language_model = components\Language::get_instance();
-        $language = $language_model->getLanguage();
+        $language = $language_model->get_language();
         $connect = $map_db_model_data->get_connect();
 
         $config = self::get_config();
@@ -748,7 +871,7 @@ abstract class Catalog extends \vendor\Module
         $state_code = $this->get_get_var(MY_CATALOG_STATE_VAR_NAME);
         $id_placemark = (int) $this->get_get_var(MY_ID_VAR_NAME);
 
-        $language = $language_component->getLanguage();
+        $language = $language_component->get_language();
 
         $connect = $data_db_model->get_connect();
         $return = array();
@@ -908,87 +1031,8 @@ abstract class Catalog extends \vendor\Module
     }
 
 
-    public function prepare_address($state_code, $country_code, $administrative_area_level_2, $state, $country, $city)
-    {
-        if (my_is_empty(@$country_code)) {
-            self::concrete_error(array(MY_ERROR_FUNCTION_ARGUMENTS, 'country_code:' . @$country_code));
-        } else if (my_is_empty(@$state)) {
-            self::concrete_error(array(MY_ERROR_FUNCTION_ARGUMENTS, 'state:' . @$state));
-        }
-
-        $country_component = components\Countries::get_instance();
-        $language_component = components\Language::get_instance();
-        $language = $language_component->getLanguage();
-
-        $state = $country_component->translate_state_names($language, $country_code, $state, $state_code);
-        $country = $country_component->prepare_country_name($country);
-
-        $account_module = self::get_module(MY_MODULE_NAME_ACCOUNT);
-
-
-
-        $country = '<img class="adress_country_flag" src="' . MY_IMG_URL . 'flags/' . $country_code . '.png">' . $country;
-        if (self::get_module(MY_MODULE_NAME_SERVICE)->is_show_catalog_pages() === true) {
-            $addres = "<a href='" . MY_DOMEN . "/" . MY_MODULE_NAME_CATALOG . "/" . $country_code . "'>" . $country . '</a>';
-        } else {
-            $addres = $country;
-        }
-        if ($country_component->has_states($country_code)) {
-            if (my_is_empty(@$state_code)) {
-                self::concrete_error(array(MY_ERROR_FUNCTION_ARGUMENTS, 'state_code:' . @$state_code));
-            }
-            if ($state_code !== MY_UNDEFINED_VALUE) {
-                if (self::get_module(MY_MODULE_NAME_SERVICE)->is_show_catalog_pages() === true) {
-                    $addres .= " &bull; <a href='" . MY_DOMEN . "/" . MY_MODULE_NAME_CATALOG . "/" . $country_code . "/" . $state_code . "'>" . $state . '</a>';
-                } else {
-                    $addres .= " &bull; " . $state;
-                }
-
-                if ($account_module->is_admin() && $state){
-
-                    $addres .= " <a style='color:#f00;' target='_blank' href='/admin/translate_state.php?country_code=".$country_code."&state_code=".$state_code."&name=".urlencode($state)."' title='перевод'>&equiv;</a>";
-
-
-                }
-            }
-        }
-
-        if ($country_component->is_administrative_center($country_code, $state_code) == false) {
-            $addres .= '<span class="locality">';
-            if (my_is_not_empty(@$city)) {
-                $locality = $country_component->translate_city_names($country_code, $city, $state_code, $language);
-                $addres .= ' &bull; ' . $locality;
-                $locality_source = $city;
-            } else if (my_is_not_empty(@$administrative_area_level_2)) {
-                $locality = $country_component->translate_city_names($country_code, $administrative_area_level_2, $state_code, $language);
-                $addres .= ' &bull; ' . $locality;
-                $locality_source = $administrative_area_level_2;
-            }
-                if ($account_module->is_admin() && $locality_source){
-
-                    $addres .= " <a style='color:#f00;' target='_blank' href='/admin/translate_locality.php?country_code=".$country_code."&state_code=".$state_code."&name=".urlencode($locality)."&locality_source=".urlencode($locality_source)."' title='перевод'>&equiv;</a>";
-
-
-                }
-                $addres .='</span>';
-        }
 
 
 
 
-
-        return $addres;
-    }
-
-
-    public function prepare_address_with_route($state_code, $country_code, $administrative_area_level_2, $state, $country, $city, $route)
-    {
-        $address = $this->prepare_address($state_code, $country_code, $administrative_area_level_2, $state, $country, $city);
-
-        if (($route !== MY_ADDRESS_UNNAMED_ROAD_VALUE) && ($route)) {
-            $address .= " &bull; " . $route;
-        }
-
-        return $address;
-    }
 }

@@ -5,7 +5,7 @@
  * Seo component - compute seo data
  */
 
-const Component = require('application/express/core/Component');
+const Component = require('application/express/core/abstract/Component');
 const BaseFunctions = require('application/express/functions/BaseFunctions');
 const Consts = require('application/express/settings/Constants');
 const ErrorCodes = require('application/express/settings/ErrorCodes');
@@ -127,7 +127,7 @@ class Seo extends Component {
 
                 $condition = "id=" . (int) $_GET[MY_ID_VAR_NAME];
                 $placemark = $data_db_model->get_by_condition($condition, '', '', 'comment_plain, seo_description', 1, false);
-                return $placemark['seo_description'] ? $placemark['seo_description'] : get_cutted_text($placemark['comment_plain'], $config['allows']['max_cropped_seo_description_length'], false);
+                return $placemark['seo_description'] ? $placemark['seo_description'] : get_cutted_text($placemark['comment_plain'], $config['allows']['max_cropped_seo_description_length'], false);//self
             }
         } elseif ($controller_name === MY_CONTROLLER_NAME_ARTICLE) {
 
@@ -136,7 +136,7 @@ class Seo extends Component {
             if ($action_name === MY_ACTION_NAME_VIEW) {
                 $condition = "id=" . (int) $_GET[MY_ID_VAR_NAME];
                 $article = $articles_db_model->get_by_condition($condition, '', '', 'content_plain, seo_description', 1, false);
-                return $article['seo_description'] ? $article['seo_description'] : get_cutted_text($article['content_plain'], $config['allows']['max_cropped_seo_description_length'], false);
+                return $article['seo_description'] ? $article['seo_description'] : get_cutted_text($article['content_plain'], $config['allows']['max_cropped_seo_description_length'], false);//self
             }
 
         }

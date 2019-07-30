@@ -1,11 +1,11 @@
 /*
- * File application/express/core/Model.js
- * const Model = require('application/express/core/Model');
+ * File application/express/core/abstract/Model.js
+ * const Model = require('application/express/core/abstract/Model');
  *
  * Base model component
  */
 
-const Core = require('application/express/core/Core');
+const Core = require('application/express/core/abstract/Core');
 
 const ErrorCodes = require('application/express/settings/ErrorCodes');
 const Consts = require('application/express/settings/Constants');
@@ -104,7 +104,7 @@ class Model extends Core {
                             if (BaseFunctions.isSet(this.fields[name]['errors'])) {
 
                                 let _errorsSet = this.fields[name]['errors'];
-                                if (BaseFunctions.isString(_rule)) {
+                                if (BaseFunctions.isString(_rule, this)) {
 
                                     if (BaseFunctions.isSet(_errorsSet[_rule])) {
                                         this.error(_errorsSet[_rule], undefined, undefined, false);

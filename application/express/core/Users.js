@@ -6,7 +6,7 @@
  */
 
 
-const Core = require('application/express/core/Core');
+const Core = require('application/express/core/abstract/Core');
 const AccessConfig = require('application/express/settings/gitignore/Access');
 
 const Consts = require('application/express/settings/Constants');

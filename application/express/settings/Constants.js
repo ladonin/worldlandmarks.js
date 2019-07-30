@@ -20,6 +20,22 @@ let _Consts = {
 
 
 
+
+
+
+
+ FILES_URL: '/files/',
+ FILES_MAP_URL: '/files/map/',
+
+
+
+
+
+CONTROLLER_VAR_NAME:'controller',
+
+
+
+
     SERVICES_DIR:'application/express/services/',
 
 
@@ -102,6 +118,7 @@ let _Consts = {
     SPAM_TRANSFERED_EMAIL_CODE_VAR_NAME: 'transfered_by_spam_email_code',
     SPAM_TRANSFERED_EMAIL_INTEREST_VAR_NAME: 'transfered_by_spam_email_interest',
     LANGUAGE_CODE_VAR_NAME: 'language',
+    ISMOBILE_CODE_VAR_NAME: 'isMobile',
     ADMIN_PASSWORD_VAR_NAME: 'apsw',
 
     FORM_SUBMIT_REDIRECT_URL_VAR_NAME: 'url_redirect',
@@ -111,6 +128,9 @@ let _Consts = {
     DIR_GENERIC_NAME: 'generic',
     DIR_DESCTOP_NAME: 'desctop',
     DIR_MOBILE_NAME: 'mobile',
+
+    DESCTOP: 'desctop',
+    MOBILE: 'mobile',
 
     SUCCESS_CODE: 'success',
     NONE_CATEGORY_CODE: 'none',

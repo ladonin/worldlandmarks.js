@@ -1,11 +1,11 @@
 /*
- * File application/express/core/Form.js
- * const Form = require('application/express/core/Form');
+ * File application/express/core/abstract/Form.js
+ * const Form = require('application/express/core/abstract/Form');
  *
  * Base form component
  */
 
-const Model = require('application/express/core/Model');
+const Model = require('application/express/core/abstract/Model');
 const BaseFunctions = require('application/express/functions/BaseFunctions');
 const ErrorCodes = require('application/express/settings/ErrorCodes');
 
@@ -34,15 +34,13 @@ class Form extends Model {
         // Set values to fields
         for (let _name in datas) {
 
-            let _value = datas[_name];
-
             // If undefined field name
             if (!BaseFunctions.isSet(this.fields[_name])) {
                 this.error(ErrorCodes.ERROR_FORM_WRONG_DATA, 'field name [' + _name + ']', undefined, false);
             }
 
             // Set prepared value to field
-            this.fields[_name].value = this.preparingValue(_name, _value);
+            this.fields[_name].value = this.preparingValue(_name, datas[_name]);
         }
 
         // Validate

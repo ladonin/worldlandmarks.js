@@ -9,7 +9,7 @@ const Fetch = require('node-fetch');
 const Deasync = require('deasync');
 const Fs = require('fs');
 
-const Component = require('application/express/core/Component');
+const Component = require('application/express/core/abstract/Component');
 const BaseFunctions = require('application/express/functions/BaseFunctions');
 const Consts = require('application/express/settings/Constants');
 const ErrorCodes = require('application/express/settings/ErrorCodes');
@@ -20,13 +20,15 @@ const MapPhotosModel = require('application/express/models/dbase/mysql/MapPhotos
 const MapDataModel = require('application/express/models/dbase/mysql/MapData');
 const Users = require('application/express/core/Users');
 const Config = require('application/express/settings/Config');
-const StrictFunctions = require('application/express/functions/StrictFunctions');
 const Ftp = require('application/express/components/base/Ftp');
-const SizeOf = require('image-size');
 const UsersModel = require('application/express/models/dbase/mysql/Users');
 const CreatePointForm = require('application/express/models/form/CreatePoint');
 const UpdatePointForm = require('application/express/models/form/UpdatePoint');
 const Mailer = require('application/express/components/base/Mailer');
+const Countries = require('application/express/components/Countries');
+const Catalog = require('application/express/components/Catalog');
+const SublistBlock = require('application/express/blocks/placemark/Sublist');
+const CaregoriesViewerBlock = require('application/express/blocks/category/CaregoriesViewer');
 
 class Map extends Component {
 
@@ -64,8 +66,8 @@ class Map extends Component {
                 [id],
                 true,
                 undefined,
-                Service.getInstance(this.requestId).isShowRelevantPlacemarks(),
-                Service.getInstance(this.requestId).isShowAnotherPlacemarks()
+                Service.getInstance(this.requestId).whetherShowRelevantPlacemarks(),
+                Service.getInstance(this.requestId).whetherShowAnotherPlacemarks()
         );
         return _result[id];
     }
@@ -105,17 +107,17 @@ class Map extends Component {
 
         // Wait for process to be finished
         Deasync.loopWhile(function () {
-            return !finished;
+            return !_finished;
         });
 
         if (_apiData.error) {
             this.error(ErrorCodes.ERROR_MAP_API, _apiData.error.message);
         }
 
-        if (!data.response || !data.response.GeoObjectCollection || !BaseFunctions.isSet(data.response.GeoObjectCollection.featureMember)) {
+        if (!_apiData.response || !_apiData.response.GeoObjectCollection || !BaseFunctions.isSet(_apiData.response.GeoObjectCollection.featureMember)) {
             this.error(ErrorCodes.ERROR_MAP_API_CHANGED_DATA);
         }
-        let _featureMember = data.response.GeoObjectCollection.featureMember;
+        let _featureMember = _apiData.response.GeoObjectCollection.featureMember;
         let _adress = {};
 
         _adress['addressComponents'] = _featureMember[0];
@@ -174,7 +176,7 @@ class Map extends Component {
             return [];
         }
 
-        let _result = MapDataModel.getInstance(this.requestId).getPointsShortDataByIds(ids)
+        let _result = MapDataModel.getInstance(this.requestId).getPointsShortDataByIds(ids);
 
         return this.prepareResult(_result);
     }
@@ -189,7 +191,7 @@ class Map extends Component {
      */
     isAvailableToChange()
     {
-        if (Service.getInstance(this.requestId).isAllCanAddPlacemarks()) {
+        if (Service.getInstance(this.requestId).whetherAllCanAddPlacemarks()) {
             return true;
         }
 
@@ -255,7 +257,7 @@ class Map extends Component {
 
 
             // If old coordinates are not passed in means that in first request
-            if (!BaseFunctions.isSet(_data['old_X1']) || !this.getSocketData()['old_zoom']) {
+            if (!BaseFunctions.isSet(data['old_X1']) || !this.getSocketData()['old_zoom']) {
                 this.getSocketData()['old_zoom'] = data['zoom'];
             }
 
@@ -353,7 +355,7 @@ class Map extends Component {
 
         let _alreadySentIdsFromSession = this.getAlreadySentIdsStringFromSession();
 
-        let _result = MapDataModel.getInstance(this.requestId).getPointsByLimitNaked(limit, _alreadySentIdsFromSession)
+        let _result = MapDataModel.getInstance(this.requestId).getPointsByLimitNaked(limit, _alreadySentIdsFromSession);
 
         this.setAlreadySentIdsToSession(_result);
 
@@ -398,13 +400,13 @@ class Map extends Component {
 
         // Add new photos
         for (let _index in photos) {
-            let _photo = photos[index];
+            let _photo = photos[_index];
 
             let _dataPhotos = {
                 'map_data_id': pointId,
                 'path': _photo['path'],
                 'width': _photo['width'],
-                'height': _photo['height'],
+                'height': _photo['height']
             };
             MapPhotosModel.getInstance(this.requestId).add(_dataPhotos);//add()
         }
@@ -418,7 +420,7 @@ class Map extends Component {
         }
 
         for (let _index in photos) {
-            let _photo = photos[index];
+            let _photo = photos[_index];
 
             // For each size
             for (let _sizeIndex in Config['restrictions']['sizes']['images']['widths']) {
@@ -431,7 +433,7 @@ class Map extends Component {
 
                 // Prepare photo from temporary loaded according with settings in config
                 // Prepared photo put into placemark directory
-                StrictFunctions.image_resize(_photoPath, Consts.TEMP_FILES_DIR + _photo['path'],_width, 0, 100);
+                BaseFunctions.image_resize(_photoPath, Consts.TEMP_FILES_DIR + _photo['path'],_width, 0, 100, this);
                 Fs.chmod(_photoPath, 0o755);
 
                 // If we store files on an ftp server, then move them there
@@ -549,19 +551,19 @@ class Map extends Component {
         let _result = [];
 
         for (let _index in photos) {
-            let _photoName = photos[index];
+            let _photoName = photos[_index];
             let _photoPath = Consts.TEMP_FILES_DIR + _photoName;
 
             if (!_photoName || !Fs.existsSync(_photoPath)) {
                 return _result;
             }
 
-            let _dimensions = SizeOf(_photoPath);
+            let _dimensions = BaseFunctions.getImageDimentions(_photoPath, this);
 
             _result.push({
                 'path':_photoName,
                 'width':_dimensions.width,
-                'height':_dimensions.height,
+                'height':_dimensions.height
             });
         }
 
@@ -572,14 +574,14 @@ class Map extends Component {
     /*
      * Get all photos by placemark id
      *
-     * @param {integer} id - palcemark id
+     * @param {integer} id - placemark id
      *
      * @return {array of objects}
      */
     getPhotosByDataId(id)
     {
         let _needResult = Service.getInstance(this.requestId).whetherNeedPhotosForPlacemarks() === true ? true : false;
-        return MapPhotosModel.getInstance(this.requestId).getPhotosByDataId(id, needResult)
+        return MapPhotosModel.getInstance(this.requestId).getPhotosByDataId(id, _needResult)
     }
 
 //ATTENTION - обратите внимание
@@ -662,9 +664,9 @@ class Map extends Component {
     deletePoint(data)
     {
         let _dataId = BaseFunctions.toInt(data['id']);
-
+        let _password = '';
         if (_dataId && data['password']) {
-            let _password = data['password'];
+            _password = data['password'];
         } else {
             this.error(ErrorCodes.ERROR_FORM_NOT_PASSED, 'data id [' + _dataId + '], password[' + data['password'] + ']', undefined, false);
         }
@@ -712,7 +714,7 @@ class Map extends Component {
         let _result = MapPhotosModel.getInstance(this.requestId).getPhotosByDataId(dataId, false);
 
         for (let _index in _result) {
-            let _photo = _result[index];
+            let _photo = _result[_index];
 
             // From DBase
             MapPhotosModel.getInstance(this.requestId).delete(_photo['id']);
@@ -761,10 +763,11 @@ class Map extends Component {
 
         // Check and prepare protos data
         let _photosNewCount = 0;
+        let _photosNewPrepared = '';
         if (_formData['photos']) {
 
-            let _photosNewArray = BaseFunctions.getArrayFromString(BaseFunctions.trim(_formData['photos']), ' ');
-            let _photosNewPrepared = this.createPhotosDataForInsert(_photosNewArray);
+            let _photosNewArray = BaseFunctions.getArrayFromString(BaseFunctions.trim(_formData['photos']), ' ', this);
+            _photosNewPrepared = this.createPhotosDataForInsert(_photosNewArray);
             if (!_photosNewPrepared) {
                 this.error(ErrorCodes.ERROR_FORM_WRONG_DATA, 'photos: [' + _formData['photos'] + ']', undefined, false);
             }
@@ -844,7 +847,7 @@ class Map extends Component {
     processUserEmail(email)
     {
         if (!email) {
-            return NULL;
+            return null;
         }
 
         // Check if email already exists in dbase
@@ -902,7 +905,7 @@ class Map extends Component {
             'comment':_formData['comment'],
             'comment_plain':_formData['comment'],
             'title':_formData['title'],
-            'category':_formData['category'],
+            'category':_formData['category']
         };
 
         // If email is passed on
@@ -924,7 +927,7 @@ class Map extends Component {
 
 
         // Check attached photos
-        let _photosArray = BaseFunctions.getArrayFromString(BaseFunctions.trim(_formData['photos']), ' ');
+        let _photosArray = BaseFunctions.getArrayFromString(BaseFunctions.trim(_formData['photos']), ' ', this);
 
         // If photos count is too big
         if (_photosArray.length > Config['restrictions']['max_upload_files_per_point']) {
@@ -947,7 +950,7 @@ class Map extends Component {
                 data:{
                     password:_userData['password']
                 },
-                recipient:_formData['email'],
+                recipient:_formData['email']
             };
             Mailer.getInstance(this.requestId).sendAfterCreationPlacemark(_mailData, 'afterCreationPlacemark', _dataId);
         }
@@ -962,6 +965,8 @@ class Map extends Component {
         };
     }
 
+//    prepareAddress(adress) - удалил
+//ATTENTION - обратите внимание
 
 
 
@@ -976,238 +981,180 @@ class Map extends Component {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-   protected function prepare_address(array $adress)
+    /*
+     * Update result for each found placemark according with their db data
+     *
+     * @param {array of objects} data - placemarks data to be updated
+     * @param {boolean} needRelative - should we add relative placemarks to result or not
+     * @param {boolean} needAnother - should we add another placemarks to result related to category or not
+     *
+     * @return {array of objects} - updated placemarks result
+     */
+    prepareResult(data, needRelative = false, needAnother = false)
     {
 
-        $language_model = components\Language::get_instance();
-        $language = $language_model->get_language();
-        $result = '';
-        if ($language === MY_LANGUAGE_RU) {
-// Гугл в русских сообщениях пишет иногда иностранные слова
-            $result = str_replace('Unnamed Road', @$adress['administrative_area_level_2'], @$adress['formatted_address']);
-            return $result;
-        }
+        let _result = [];
 
-        return $result;
+        // For each placemark
+        for (let _index in data) {
+
+            let _placemark = data[_index];
+
+
+            if (!BaseFunctions.isSet(_result[_placemark['c_id']])) {
+                _result[_placemark['c_id']] = {
+
+                    'id':_placemark['c_id'],
+                    'x':_placemark['c_x'],
+                    'y':_placemark['c_y'],
+                    'comment':BaseFunctions.isSet(_placemark['c_comment']) ? _placemark['c_comment'] : null,
+                    'comment_plain':BaseFunctions.isSet(_placemark['c_comment_plain']) ? _placemark['c_comment_plain'] : null,
+                    'formatted_address':BaseFunctions.isSet(_placemark['g_country_code']) ?
+                        Catalog.getInstance(this.requestId).prepareAddressLink(
+                                _placemark['g_state_code'], _placemark['g_country_code'],
+                                _placemark['g_administrative_area_level_2'],
+                                _placemark['g_administrative_area_level_1'],
+                                _placemark['g_country'],
+                                _placemark['g_locality'])
+                        :
+                        null,
+                    'formatted_address_with_route':BaseFunctions.isSet(_placemark['g_country_code']) ?
+                        Catalog.getInstance(this.requestId).prepareAddressLinkWithRoute(
+                                _placemark['g_state_code'],
+                                _placemark['g_country_code'],
+                                _placemark['g_administrative_area_level_2'],
+                                _placemark['g_administrative_area_level_1'],
+                                _placemark['g_country'],
+                                _placemark['g_locality'],
+                                _placemark['g_street'])
+                        :
+                        null,
+                    'flag_url':BaseFunctions.isSet(_placemark['g_country_code']) ? BaseFunctions.get_flag_url(_placemark['g_country_code']) : null,
+                    'country_code':BaseFunctions.isSet(_placemark['g_country_code']) ? _placemark['g_country_code'] : null,
+                    'state_code':BaseFunctions.isSet(_placemark['g_state_code']) ? _placemark['g_state_code'] : null,
+                    'street':BaseFunctions.isSet(_placemark['g_street']) ? _placemark['g_street'] : null,
+                    'title':_placemark['c_title'],
+                    'category':_placemark['c_category'],
+                    'subcategories':_placemark['c_subcategories'],
+                    'relevant_placemarks':Service.getInstance(this.requestId).whetherShowRelevantPlacemarks() ? _placemark['c_relevant_placemarks'] : '',
+                    'created':BaseFunctions.isSet(_placemark['c_created']) ? _placemark['c_created'] : null,
+                    'modified':BaseFunctions.isSet(_placemark['c_modified']) ? _placemark['c_modified'] : null
+                };
+
+                // --> Prepare catalog_url
+                let _catalogUrl;
+                if (_result[_placemark['c_id']]['country_code']) {
+                    if (Countries.getInstance(this.requestId).hasStates(_result[_placemark['c_id']]['country_code'])) {
+                        _catalogUrl = _result[_placemark['c_id']]['country_code'] + '/' + _result[_placemark['c_id']]['state_code'] + '/' + _result[_placemark['c_id']]['id'];
+                    } else {
+                        _catalogUrl = _result[_placemark['c_id']]['country_code'] + '/' + _result[_placemark['c_id']]['id'];
+                    }
+                } else {
+                    _catalogUrl = '';
+                }
+                _result[_placemark['c_id']]['catalog_url'] = _catalogUrl;
+                // <-- Prepare catalog_url
+            }
+
+            // Add photos
+            if (_placemark['ph_id']) {
+
+                // The first photo - is a category photo
+                if (Service.getInstance(this.requestId).whetherAddCategoryPhotoAsFirstInPlacemarkView() === true) {
+
+                    if (!BaseFunctions.isSet(_result[_placemark['c_id']]['photos'][0])) {
+                        _result[_placemark['c_id']]['photos']=[];
+                        _result[_placemark['c_id']]['photos'][0] = {
+                            'id':0,
+                            'dir':Consts.SERVICE_IMGS_URL_CATEGORIES_PHOTOS,
+                            'name':Catalog.getInstance(this.requestId).getCategoryCode(_placemark['c_category']) + '.jpg',
+                            'width':Service.getInstance(this.requestId).getCategoriesPhotoInitialWidth(),
+                            'height':Service.getInstance(this.requestId).getCategoriesPhotoInitialHeight(),
+                            'created':BaseFunctions.isSet(_placemark['ph_created']) ? _placemark['ph_created'] : null,
+                            'modified':BaseFunctions.isSet(_placemark['ph_modified']) ? _placemark['ph_modified'] : null
+                        };
+                    }
+                }
+
+                let _dir = this.getPhotoDir(_placemark['c_id'], _placemark['ph_path']);
+
+                _result[_placemark['c_id']]['photos'].push({
+                    'id':_placemark['ph_id'],
+                    'dir': _dir,
+                    'name':_placemark['ph_path'],
+                    'width':_placemark['ph_width'],
+                    'height':_placemark['ph_height'],
+                    'created':BaseFunctions.isSet(_placemark['ph_created']) ? _placemark['ph_created'] : null,
+                    'modified':BaseFunctions.isSet(_placemark['ph_modified']) ? _placemark['ph_modified'] : null
+                });
+            } else {
+                // If there are no photos - get default
+                _result[_placemark['c_id']]['photos']=[{
+                    'id':0,
+                    'dir':Consts.SERVICE_IMGS_URL_CATEGORIES_PHOTOS,
+                    'name':Catalog.getInstance(this.requestId).getCategoryCode(_placemark['c_category']) + '.jpg',
+                    'width':Service.getInstance(this.requestId).getCategoriesPhotoInitialWidth(),
+                    'height':Service.getInstance(this.requestId).getCategoriesPhotoInitialHeight(),
+                    'created':BaseFunctions.isSet(_placemark['ph_created']) ? _placemark['ph_created'] : null,
+                    'modified':BaseFunctions.isSet(_placemark['ph_modified']) ? _placemark['ph_modified'] : null
+                }];
+            }
+
+
+            if (needRelative) {
+                // Add relative placemarks
+                if (_placemark['c_relevant_placemarks']) {
+                    _result[_placemark['c_id']]['relevant_placemarks'] = SublistBlock.getInstance(this.requestId).render({
+                        'ident':'relevant',
+                        'ids':_placemark['c_relevant_placemarks'],
+                        'image_width':Config['dimentions'][this.getDeviceType()]['sublist_images']['width'],
+                        'image_height':Config['dimentions'][this.getDeviceType()]['sublist_images']['height'],
+                        'title':this.getText('relevant_placemarks/title/text')
+                    });
+                }
+            }
+
+            if (needAnother) {
+                // Add another placemarks related to category
+                let _anotherPlacemarksIds = Catalog.getInstance(this.requestId).getAnotherPlacemarksByCategory(_placemark['c_category'], _placemark['c_id']);
+                if (_anotherPlacemarksIds.length) {
+
+                    _result[_placemark['c_id']]['another_placemarks'] = SublistBlock.getInstance(this.requestId).render({
+                        'ident':'another',
+                        'ids':_anotherPlacemarksIds,
+                        'image_width':Config['dimentions'][this.getDeviceType()]['sublist_images']['width'],
+                        'image_height':Config['dimentions'][this.getDeviceType()]['sublist_images']['height'],
+                        'title':this.getText('another_placemarks/title/text')
+                    });
+
+                } else {
+                    _result[_placemark['c_id']]['another_placemarks'] = null;
+                }
+            }
+
+            // Add placemark's categories
+            _result[_placemark['c_id']]['categories_html'] = CaregoriesViewerBlock.getInstance(this.requestId).render({'category':_placemark['c_category'],'subcategories':_placemark['c_subcategories']});
+
+        }
+        return _result;
     }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
+    /*
+     * Return photo directory
+     *
+     * @param {integer} id - placemark id
+     * @param {string} name - photo name without size prefix
+     *
+     * @return {string}
+     */
+    getPhotoDir(id, name)
+    {
+        return BaseFunctions.preparePhotoPath(id, name, '1_', true, true);
+    }
 
 }
 
 Map.instanceId = BaseFunctions.unique_id();
 
 module.exports = Map;
-
-
-
-
-
-
-
-
-
-
-
-<?php
-
-namespace modules\app\map\classes;
-use \components\base\Ftp_Client;
-use \components\app as components;
-
-
-
-
-abstract class Map extends \vendor\Module
-{
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    public function prepare_result(array $result, $need_relevant = false, $need_another = false)
-    {
-        $country_component = components\Countries::get_instance();
-        $catalog_module = self::get_module(MY_MODULE_NAME_CATALOG);
-        $config = self::get_config();
-        $return = array();
-
-        foreach ($result as $value) {
-            if (!isset($return[$value['c_id']])) {
-                $return[$value['c_id']] = array(
-                    'id' => $value['c_id'],
-                    'x' => $value['c_x'],
-                    'y' => $value['c_y'],
-                    'comment' => isset($value['c_comment']) ? $value['c_comment'] : null,
-                    'comment_plain' => isset($value['c_comment_plain']) ? $value['c_comment_plain'] : null,
-                    'formatted_address' => isset($value['g_country_code']) ? $catalog_module->prepare_address(@$value['g_state_code'], @$value['g_country_code'], @$value['g_administrative_area_level_2'], @$value['g_administrative_area_level_1'], @$value['g_country'], @$value['g_locality']) : null,
-                    'formatted_address_with_route' => isset($value['g_country_code']) ? $catalog_module->prepare_address_with_route(@$value['g_state_code'], @$value['g_country_code'], @$value['g_administrative_area_level_2'], @$value['g_administrative_area_level_1'], @$value['g_country'], @$value['g_locality'], @$value['g_street']) : null,
-                    'flag_url' => isset($value['g_country_code']) ? get_flag_url(@$value['g_country_code']) : null,
-                    'country_code' => isset($value['g_country_code']) ? $value['g_country_code'] : null,
-                    'state_code' => isset($value['g_state_code']) ? $value['g_state_code'] : null,
-                    'street' => isset($value['g_street']) ? $value['g_street'] : null,
-                    'title' => $value['c_title'],
-                    'category' => $value['c_category'],
-                    'subcategories' => $value['c_subcategories'],
-                    'relevant_placemarks' => self::get_module(MY_MODULE_NAME_SERVICE)->is_show_relevant_placemarks() ? $value['c_relevant_placemarks'] : '',
-                    'created' => isset($value['c_created']) ? $value['c_created'] : null,
-                    'modified' => isset($value['c_modified']) ? $value['c_modified'] : null,
-                );
-
-// --> Prepare catalog_url
-                if ($return[$value['c_id']]['country_code']) {
-                    if ($country_component->has_states($return[$value['c_id']]['country_code'])) {
-                        $catalog_url = $return[$value['c_id']]['country_code'] . '/' . $return[$value['c_id']]['state_code'] . '/' . $return[$value['c_id']]['id'];
-                    } else {
-                        $catalog_url = $return[$value['c_id']]['country_code'] . '/' . $return[$value['c_id']]['id'];
-                    }
-                } else {
-                    $catalog_url = '';
-                }
-                $return[$value['c_id']]['catalog_url'] = $catalog_url;
-// <-- Prepare catalog_url
-            }
-
-
-// Add photos
-            if ($value['ph_id']) {
-
-//первая фотка - фотка категории - несколько раз перезапишет - не страшно
-                if (self::get_module(MY_MODULE_NAME_SERVICE)->is_add_category_photo_as_first_in_placemark_view() === true) {
-                    $return[$value['c_id']]['photos'][0] = array(
-                        'id' => 0,
-                        'dir' => MY_SERVICE_IMGS_URL_CATEGORIES_PHOTOS,
-                        'name' => $catalog_module->get_category_code($value['c_category']) . '.jpg',
-                        'width' => self::get_module(MY_MODULE_NAME_SERVICE)->get_categories_photo_initial_width(),
-                        'height' => self::get_module(MY_MODULE_NAME_SERVICE)->get_categories_photo_initial_height(),
-                        'created' => isset($value['ph_created']) ? $value['ph_created'] : null,
-                        'modified' => isset($value['ph_modified']) ? $value['ph_modified'] : null,
-                    );
-                }
-
-
-
-//загружаем файлы сперва на основной сервер, а потом премещаем их в облачное хранилище, тем самым сохраняя место на сервере
-                $dir = $this->get_photo_dir($value['c_id'], $value['ph_path']);
-                $return[$value['c_id']]['photos'][] = array(
-                    'id' => $value['ph_id'],
-                    'dir' => $dir,
-                    'name' => $value['ph_path'],
-                    'width' => $value['ph_width'],
-                    'height' => $value['ph_height'],
-                    'created' => isset($value['ph_created']) ? $value['ph_created'] : null,
-                    'modified' => isset($value['ph_modified']) ? $value['ph_modified'] : null,
-                );
-            } else {
-//если фоток нет - берем дефолтную
-                $return[$value['c_id']]['photos'][0] = array(
-                    'id' => 0,
-                    'dir' => MY_SERVICE_IMGS_URL_CATEGORIES_PHOTOS,
-                    'name' => $catalog_module->get_category_code($value['c_category']) . '.jpg',
-                    'width' => self::get_module(MY_MODULE_NAME_SERVICE)->get_categories_photo_initial_width(),
-                    'height' => self::get_module(MY_MODULE_NAME_SERVICE)->get_categories_photo_initial_height(),
-                    'created' => isset($value['ph_created']) ? $value['ph_created'] : null,
-                    'modified' => isset($value['ph_modified']) ? $value['ph_modified'] : null,
-                );
-            }
-
-
-
-
-            if ($need_relevant) {
-                if ($value['c_relevant_placemarks']) {
-                    ob_start();
-                    $this->trace_block('_models/placemark/sublist_1', false, array(
-                        'ident' => 'relevant',
-                        'ids' => $value['c_relevant_placemarks'],
-                        'image_width' => $config['dimentions'][get_device()]['sublist_images']['width'],
-                        'image_height' => $config['dimentions'][get_device()]['sublist_images']['height'],
-                        'title' => my_pass_through(@self::trace('relevant_placemarks/title/text')))
-                    );
-                    $relevant_placemarks = ob_get_clean();
-                    $return[$value['c_id']]['relevant_placemarks'] = $relevant_placemarks ? $relevant_placemarks : null;
-                    unset($relevant_placemarks);
-                }
-            }
-
-            if ($need_another) {
-                $another_placemarks_ids = $catalog_module->get_another_placemarks_by_category($value['c_category'], $value['c_id']);
-                if (my_array_is_not_empty($another_placemarks_ids)) {
-                    ob_start();
-                    $this->trace_block('_models/placemark/sublist_1', false, array(
-                        'ident' => 'another',
-                        'ids' => $another_placemarks_ids,
-                        'image_width' => $config['dimentions'][get_device()]['sublist_images']['width'],
-                        'image_height' => $config['dimentions'][get_device()]['sublist_images']['height'],
-                        'title' => my_pass_through(@self::trace('another_placemarks/title/text')))
-                    );
-                    $another_placemarks = ob_get_clean();
-                    $return[$value['c_id']]['another_placemarks'] = $another_placemarks ? $another_placemarks : null;
-                    unset($another_placemarks);
-                } else {
-                    $return[$value['c_id']]['another_placemarks'] = null;
-                }
-            }
-
-            ob_start();
-            $this->trace_block('placemarks/categories_viewer', false, array(
-                'category' => $value['c_category'],
-                'subcategories' => $value['c_subcategories'])
-            );
-            $categories_html = ob_get_clean();
-            $return[$value['c_id']]['categories_html'] = my_pass_through(@$categories_html);
-            unset($categories_html);
-        }
-        return $return;
-    }
-
-
-//потому что загружаем файлы сперва на основной сервер, а потом премещаем их в облачное хранилище, тем самым сохраняя место на сервере
-    public function get_photo_dir($c_id, $ph_path)
-    {
-
-//потому что загружаем файлы сперва на основной сервер, а потом премещаем их в облачное хранилище, тем самым сохраняя место на сервере
-        return prepare_photo_path($c_id, $ph_path, '1_', true, true);
-    }
-}

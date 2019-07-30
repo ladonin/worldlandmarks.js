@@ -48,14 +48,14 @@ module.exports = {
 countriesNameByCode[code] = {string}
 countriesDataByCode[code] = {object}
 stateIdByCode[code] = {integer}
-countriesTranslateStates[language][countryCode][stateCode][stateName] = {string}
+translationsOfStateNames[language][countryCode][stateCode][stateName] = {string}
 countriesTranslateCities[language][countryCode][stateCode][cityName] = {string}
 administrativeCenters[countryCode][stateCode] = {boolean}
 countriesHaveStates[countryCode] = {boolean}
 countriesCodes[countryCode] = {string}
 countriesParams[countryCode] = {object}
 stateNameByCode[stateCode] = {string}
-translateStateNames[language][countryCode][stateCode][stateName] = {string}
+translationsOfStateNames[language][countryCode][stateCode][stateName] = {string}
 countriesDataById[id] = {object}
 
 

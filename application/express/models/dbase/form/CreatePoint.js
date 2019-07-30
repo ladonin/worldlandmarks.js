@@ -5,10 +5,9 @@
  * Create or update point form model
  */
 
-const Form = require('application/express/core/Form');
+const Form = require('application/express/core/abstract/Form');
 const Service = require('application/express/core/Service');
 const BaseFunctions = require('application/express/functions/BaseFunctions');
-const StrictFunctions = require('application/express/functions/StrictFunctions');
 const Consts = require('application/express/settings/Constants');
 
 class CreatePointForm extends Form
@@ -60,7 +59,7 @@ class CreatePointForm extends Form
 
         // Attention - this checking is used also in update point form, so we have to follow this condition
         if (BaseFunctions.isSet(datas['x']) || BaseFunctions.isSet(datas['y'])){
-            StrictFunctions.check_coords(datas['x'], datas['y']);
+            BaseFunctions.check_coords(datas['x'], datas['y'], undefined, this);
         }
 
         return super.processData(datas);

@@ -8,7 +8,6 @@
 const BaseFunctions = require('application/express/functions/BaseFunctions');
 const ErrorCodes = require('application/express/settings/ErrorCodes');
 const CreatePointForm = require('application/express/models/form/CreatePoint');
-const StrictFunctions = require('application/express/functions/StrictFunctions');
 
 class UpdatePointForm extends CreatePointForm
 {

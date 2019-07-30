@@ -221,14 +221,14 @@ module.exports = {
     // Screen size settings
     dimentions: {
         // Mobile version
-        mobile: {
+        [Consts.MOBILE]: {
             sublist_images: {
                 width: 90,
                 height: 90
             }
         },
         // Desctop version
-        desctop: {
+        [Consts.DESCTOP]: {
             sublist_images: {
                 width: 184,
                 height: 148

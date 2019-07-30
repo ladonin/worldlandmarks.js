@@ -10,6 +10,8 @@ import Config from 'src/settings/Config';
 import Controller from 'src/modules/controller/Controller';
 import Language from 'src/modules/Language';
 import Service from 'src/modules/Service';
+import {isMobile} from "react-device-detect";
+
 
 const Socket = socket(Config.apiServer.socketUrl, {
     query: {
@@ -36,7 +38,8 @@ export default {
             controller: Controller.getControllerName(),
             action: Controller.getActionName(),
             service: Service.getName(),
-            language: Language.getName()
+            language: Language.getName(),
+            isMobile: isMobile ? true : false
         }
 
         Socket.emit('api', data);

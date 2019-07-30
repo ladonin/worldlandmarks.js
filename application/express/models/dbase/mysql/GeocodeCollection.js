@@ -7,7 +7,6 @@
 
 const DBaseMysql = require('application/express/core/dbases/Mysql');
 const BaseFunctions = require('application/express/functions/BaseFunctions');
-const StrictFunctions = require('application/express/functions/StrictFunctions');
 const Consts = require('application/express/settings/Constants');
 const MapDataModel = require('application/express/models/dbase/mysql/MapData');
 const Language = require('application/express/components/base/Language');

@@ -20,7 +20,7 @@ module.exports = {
      */
     validate(rule, value)
     {
-        if (!BaseFunctions.isObject(rule) && !BaseFunctions.isString(rule)) {
+        if (!BaseFunctions.isObject(rule) && !BaseFunctions.isString(rule, this)) {
             BaseFunctions.processError(ErrorCodes.ERROR_FUNCTION_ARGUMENTS, 'rule[' + BaseFunctions.toString(rule) + '], value[' + BaseFunctions.toString(value) + ']');
         }
 
@@ -44,89 +44,89 @@ module.exports = {
                     }
                 } else if (BaseFunctions.inObject('max', rule)) {
                     // Maximum symbols in value
-                    if (!BaseFunctions.isString(value) || (value && value.length > rule.max)) {
+                    if (!BaseFunctions.isString(value, this) || (value && value.length > rule.max)) {
                         return false;
                     }
                 } else if (BaseFunctions.inObject('min', rule)) {
                     // Minimum symbols in value
-                    if (!BaseFunctions.isString(value) || (value && value.length < rule.min)) {
+                    if (!BaseFunctions.isString(value, this) || (value && value.length < rule.min)) {
                         return false;
                     }
                 } else if (BaseFunctions.inObject('pattern', rule)) {
                     // Match to reqular expression
-                    if (!BaseFunctions.isString(value) || (value && rule.pattern.test(value) === false)) {
+                    if (!BaseFunctions.isString(value, this) || (value && rule.pattern.test(value) === false)) {
                         return false;
                     }
                 }
 
             } else if (rule === 'word') {
 
-                if (!BaseFunctions.isString(value) || (value && /[^\wа-яё]/i.test(value) === true)) {
+                if (!BaseFunctions.isString(value, this) || (value && /[^\wа-яё]/i.test(value) === true)) {
                     return false;
                 }
             } else if (rule === 'hash') {
 
-                if (!BaseFunctions.isString(value) || (value && /[^\w\$\/\.]/.test(value) === true)) {
+                if (!BaseFunctions.isString(value, this) || (value && /[^\w\$\/\.]/.test(value) === true)) {
                     return false;
                 }
 
             } else if (rule === 'login') {
 
-                if (!BaseFunctions.isString(value) || (value && /[^\w\.@\-]/.test(value) === true)) {
+                if (!BaseFunctions.isString(value, this) || (value && /[^\w\.@\-]/.test(value) === true)) {
                     return false;
                 }
 
             } else if (rule === 'name') {//применяется для имен
 
-                if (!BaseFunctions.isString(value) || (value && /[^a-zа-яё\-]/i.test(value) === true)) {
+                if (!BaseFunctions.isString(value, this) || (value && /[^a-zа-яё\-]/i.test(value) === true)) {
                     return false;
                 }
 
             } else if ((rule === 'phone')) {
 
-                if (!BaseFunctions.isString(value) || (value && /[^\d]/.test(value) === true)) {
+                if (!BaseFunctions.isString(value, this) || (value && /[^\d]/.test(value) === true)) {
                     return false;
                 }
             } else if (rule === 'numeric') {
 
-                if (!BaseFunctions.isInteger(value) && (!BaseFunctions.isString(value) || (value && /(^\d+$)|(^\d+\.\d+$)/.test(value) === false))) {
+                if (!BaseFunctions.isInteger(value) && (!BaseFunctions.isString(value, this) || (value && /(^\d+$)|(^\d+\.\d+$)/.test(value) === false))) {
                     return false;
                 }
             } else if (rule === 'boolean') {
 
-                if (!BaseFunctions.isString(value) || (value && /(^true$)|(^false$)/.test(value) === false)) {
+                if (!BaseFunctions.isString(value, this) || (value && /(^true$)|(^false$)/.test(value) === false)) {
                     return false;
                 }
             } else if (rule === 'email') {
 
-                if (!BaseFunctions.isString(value) || (value && /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(value) === false)) {
+                if (!BaseFunctions.isString(value, this) || (value && /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(value) === false)) {
                     return false;
                 }
             } else if (rule === 'ip') {
 
-                if (!BaseFunctions.isString(value) || (value && /^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/.test(value) === false)) {
+                if (!BaseFunctions.isString(value, this) || (value && /^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/.test(value) === false)) {
                     return false;
                 }
             } else if (rule === 'url') {
 
-                if (!BaseFunctions.isString(value) || (value && /^(https?:\/\/)?((([a-z\d]([a-z\d-]*[a-z\d])*)\.)+[a-z]{2,}|((\d{1,3}\.){3}\d{1,3}))(\:\d+)?(\/[-a-z\d%_.~+]*)*([\?\#][;&a-z\d%_.~+=-]*)?(\#[-a-z\d_]*)?$/i.test(value) === false)) {
+                if (!BaseFunctions.isString(value, this) || (value && /^(https?:\/\/)?((([a-z\d]([a-z\d-]*[a-z\d])*)\.)+[a-z]{2,}|((\d{1,3}\.){3}\d{1,3}))(\:\d+)?(\/[-a-z\d%_.~+]*)*([\?\#][;&a-z\d%_.~+=-]*)?(\#[-a-z\d_]*)?$/i.test(value) === false)) {
                     return false;
                 }
 
             } else if (rule === 'varname') {
                 // Variable name rule
-                if (!BaseFunctions.isString(value) || (value && /^[a-z_]+[a-z_0-9]*/i.test(value) === false)) {
+                if (!BaseFunctions.isString(value, this) || (value && /^[a-z_]+[a-z_0-9]*/i.test(value) === false)) {
                     return false;
                 }
 
             } else if (rule === 'db_table_name') {
                 // Db table name rule
-                if (!BaseFunctions.isString(value) || (value && /[^\w\.\-\#]/.test(value) === true)) {
+                if (!BaseFunctions.isString(value, this) || (value && /[^\w\.\-\#]/.test(value) === true)) {
                     return false;
                 }
             } else if (rule === 'get_query_string_var_value') {
                 // GET variable value rule
-                if (!BaseFunctions.isString(value) || (value && /[^\w%\.~+=\-]/.test(value) === true)) {
+                if (!BaseFunctions.isString(value, this) || (value && /[^\w%\.~+=\-]/.test(value) === true)) {
                     return false;
                 }
             }

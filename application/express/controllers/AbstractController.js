@@ -4,7 +4,7 @@
  *
  * Common class for all controllers
  */
-const Controller = require('application/express/core/Controller');
+const Controller = require('application/express/core/abstract/Controller');
 const Language = require('application/express/core/Language');
 const Constants = require('application/express/settings/Constants');
 

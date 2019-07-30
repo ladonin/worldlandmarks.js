@@ -5,7 +5,7 @@
  * Countries component - compute countries data
  */
 
-const Component = require('application/express/core/Component');
+const Component = require('application/express/core/abstract/Component');
 const BaseFunctions = require('application/express/functions/BaseFunctions');
 const Consts = require('application/express/settings/Constants');
 const ErrorCodes = require('application/express/settings/ErrorCodes');
@@ -16,7 +16,6 @@ const CountryStatesModel = require('application/express/models/dbase/mysql/Count
 const CountryStatesCitiesTranslationsModel = require('application/express/models/dbase/mysql/CountryStatesCitiesTranslations');
 const CountryParamsModel = require('application/express/models/dbase/mysql/CountryParams');
 const CountryStatesNamesModel = require('application/express/models/dbase/mysql/CountryStatesNames');
-const CountryStatesCitiesTranslationsModel = require('application/express/models/dbase/mysql/CountryStatesCitiesTranslations');
 
 class Countries extends Component {
 
@@ -77,7 +76,7 @@ class Countries extends Component {
         let _language = this.getLanguage();
         let _serviceName = this.getServiceName();
 
-        if (!BaseFunctions.isString(code) || !code) {
+        if (!BaseFunctions.isString(code, this) || !code) {
             this.error(ErrorCodes.ERROR_FUNCTION_ARGUMENTS, 'country code [' + code + ']', undefined, false);
         }
 
@@ -146,10 +145,58 @@ class Countries extends Component {
 // //ATTENTION - обратите внимание get_all_countries_codes => CountriesModel.getAllCountriesCodes
 
 
-// //ATTENTION - обратите внимание translateStateNames => translateStateName
-
-// //ATTENTION - обратите внимание translateStateName => getTranslationOfStateName
+// //ATTENTION - обратите внимание translateStateNames => getTranslationOfStateName
 // //ATTENTION - обратите внимание translateCityNames => getTranslationOfCityName
+
+
+
+
+
+
+//ATTENTION - обратите внимание
+    /*
+     * Get state name by state code
+     *
+     * @param {string} language - language
+     * @param {string} countryCode - country code
+     * @param {string} stateName - state name
+     * @param {string} stateCode - state code
+     *
+     * @return {string}
+     */
+//    translateStateName(language, countryCode, stateName, stateCode)
+//    {
+//        let _result;
+//        let _language = this.getLanguage();
+//        let _serviceName = this.getServiceName();
+//
+//        if (_result = this.cache.get('translateStateName', _serviceName, _language)[language][countryCode][stateCode][stateName]) {
+//            return _result;
+//        }
+//
+//        let _datas = CountryStatesCitiesTranslationsModel.getInstance(this.requestId).translateStateName(language, countryCode, stateName)
+//
+//        if (_datas.length === 1) {
+//            if ((!_datas[0]['url_code']) || (_datas[0]['url_code'] === stateCode)) {
+//                _result = _datas[0]['translate'];
+//            }
+//        } else {
+//            for (let _index in _datas) {
+//                if (_datas[_index]['url_code'] === stateCode) {
+//                    _result = _datas[_index]['translate'];
+//                }
+//            }
+//        }
+//
+//        if (!_result) {
+//            // Default
+//            _result = stateName;
+//        }
+//
+//        this.cache.get('translateStateName', _serviceName, _language)[language][countryCode][stateCode][stateName] = _result;
+//        return _result;
+//    }
+
 
 
 
@@ -169,7 +216,7 @@ class Countries extends Component {
         let _language = this.getLanguage();
         let _serviceName = this.getServiceName();
 
-        if (_result = this.cache.get('countriesTranslateStates', _serviceName, _language)[language][countryCode][stateCode][stateName]) {
+        if (_result = this.cache.get('translationsOfStateNames', _serviceName, _language)[language][countryCode][stateCode][stateName]) {
             return _result;
         }
 
@@ -193,7 +240,7 @@ class Countries extends Component {
             _result = stateName;
         }
 
-        this.cache.get('countriesTranslateStates', _serviceName, _language)[language][countryCode][stateCode][stateName] = _result;
+        this.cache.get('translationsOfStateNames', _serviceName, _language)[language][countryCode][stateCode][stateName] = _result;
 
         return _result;
     }
@@ -316,14 +363,14 @@ class Countries extends Component {
             return _countryCode;
         }
 
-        if (_result = this.cache.get('countriesCodes', _serviceName, _language)[countryCode]) {
+        if (_result = this.cache.get('countriesCodes', _serviceName, _language)[_countryCode]) {
             return _result;
         }
 
-        let _exist = CountriesModel.getInstance(this.requestId).checkCountryCode(code);
+        let _exist = CountriesModel.getInstance(this.requestId).checkCountryCode(_countryCode);
 
         if (_exist === true) {
-            this.cache.get('countriesCodes', _serviceName, _language)[countryCode] = _countryCode;
+            this.cache.get('countriesCodes', _serviceName, _language)[_countryCode] = _countryCode;
             return _countryCode;
         }
         this.error(ErrorCodes.ERROR_FUNCTION_ARGUMENTS, 'country code [' + _countryCode + ']', undefined, false);
@@ -404,55 +451,13 @@ class Countries extends Component {
             this.error(ErrorCodes.ERROR_COUNTRY_STATE_NAME_WAS_NOT_FOUND, 'state code [' + stateCode + ']', undefined, false);
         }
 
-        _stateName = this.translateStateNames(_language, _countryCode, _stateName, stateCode);
+        _stateName = this.getTranslationOfStateName(_language, _countryCode, _stateName, stateCode);
 
         this.cache.get('stateNameByCode', _serviceName, _language)[stateCode] = _stateName;
 
         return _stateName;
     }
 
-    /*
-     * Get state name by state code
-     *
-     * @param {string} language - language
-     * @param {string} countryCode - country code
-     * @param {string} stateName - state name
-     * @param {string} stateCode - state code
-     *
-     * @return {string}
-     */
-    translateStateNames(language, countryCode, stateName, stateCode)
-    {
-        let _result;
-        let _language = this.getLanguage();
-        let _serviceName = this.getServiceName();
-
-        if (_result = this.cache.get('translateStateNames', _serviceName, _language)[language][countryCode][stateCode][stateName]) {
-            return _result;
-        }
-
-        let _datas = CountryStatesCitiesTranslationsModel.getInstance(this.requestId).translateStateName(language, countryCode, stateName)
-
-        if (_datas.length === 1) {
-            if ((!_datas[0]['url_code']) || (_datas[0]['url_code'] === stateCode)) {
-                _result = _datas[0]['translate'];
-            }
-        } else {
-            for (let _index in _datas) {
-                if (_datas[_index]['url_code'] === stateCode) {
-                    _result = _datas[_index]['translate'];
-                }
-            }
-        }
-
-        if (!_result) {
-            // Default
-            _result = stateName;
-        }
-
-        this.cache.get('translateStateNames', _serviceName, _language)[language][countryCode][stateCode][stateName] = _result;
-        return _result;
-    }
 
     /*
      * Get state and country names by their codes

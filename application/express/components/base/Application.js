@@ -7,7 +7,7 @@
 
 const BaseFunctions = require('application/express/functions/BaseFunctions');
 const Config = require('application/express/settings/Config.js');
-const Component = require('application/express/core/Component');
+const Component = require('application/express/core/abstract/Component');
 const RequestsPool = require('application/express/core/RequestsPool');
 const SocketsPool = require('application/express/core/SocketsPool');
 
@@ -266,7 +266,7 @@ class Application extends Component {
                 return true;
             }
         }
-        this.error(ErrorCodes.ERROR_WRONG_ADRESS, 'data:[' + this.getStringData() + ']');
+        this.error(ErrorCodes.ERROR_WRONG_ADRESS, 'data:[' + this.getRequestData(string = true) + ']');
     }
 
 
@@ -332,7 +332,7 @@ class Application extends Component {
                 let _rule = _config_get_rules[_index];
                 if (!Validator.validate(_rule, get_value)) {
                     this.error(ErrorCodes.ERROR_GET_VAR_IS_INVALID,
-                    'name[' + _config_get_name + '], value[' + get_value + '], rule[' + BaseFunctions.toString(_rule) + '], data[' + this.getStringData() + ']',
+                    'name[' + _config_get_name + '], value[' + get_value + '], rule[' + BaseFunctions.toString(_rule) + '], data[' + this.getRequestData(string = true) + ']',
                             undefined, false);
                 }
             }

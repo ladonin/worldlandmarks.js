@@ -81,7 +81,7 @@ class MapPhotosModel extends DBaseMysql
     /*
      * Get all photos by placemark id starting with last photo
      *
-     * @param {integer} id - palcemark id
+     * @param {integer} id - placemark id
      * @param {boolean} needResult - is result required
      *
      * @return {array of objects}
