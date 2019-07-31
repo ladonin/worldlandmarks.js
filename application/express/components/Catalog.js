@@ -15,6 +15,8 @@ const Service = require('application/express/core/Service');
 const Users = require('application/express/core/Users');
 const Cache = require('application/express/components/base/Cache');
 const Categories = require('application/express/components/Categories');
+const Map = require('application/express/components/Map');
+
 
 class Catalog extends Component {
 
@@ -65,7 +67,7 @@ class Catalog extends Component {
         }
         if (Countries.getInstance(this.requestId).hasStates(countryCcode)) {
             if (!stateCode) {
-                this.error(Consts.ERROR_FUNCTION_ARGUMENTS, 'state_code [' + stateCode + ']', undefined, false);
+                this.error(ErrorCodes.ERROR_FUNCTION_ARGUMENTS, 'state_code [' + stateCode + ']', undefined, false);
             }
             if (stateCode !== Consts.UNDEFINED_VALUE) {
                 if (Service.getInstance(this.requestId).whetherShowCatalogPages() === true) {
@@ -178,7 +180,7 @@ class Catalog extends Component {
                 return _category['id'];
             }
         }
-        return 0;
+        this.error(ErrorCodes.ERROR_FUNCTION_ARGUMENTS, message = 'code[' + code + ']', log_type = undefined, writeToLog = false);
     }
 
     /*
@@ -199,17 +201,164 @@ class Catalog extends Component {
                 return _category;
             }
         }
-        return null;
+        this.error(ErrorCodes.ERROR_FUNCTION_ARGUMENTS, message = 'id[' + id + ']', log_type = undefined, writeToLog = false);
     }
 
 
+//ATTENTION - обратите внимание
+//get_category_dimentions => Service.getInstance(this.requestId).getBaloonDimentions()
+//     get_category_dimentions()
+//    {
+//        return self::get_module(MY_MODULE_NAME_SERVICE)->get_baloon_dimentions();
+//    }
 
 
 
 
-    public function get_category_dimentions()
+
+
+    /*
+     * Return category code by id
+     *
+     * @param {integer} id - category id
+     *
+     * @return {string}
+     */
+    getCategoryCode(id)
     {
-        return self::get_module(MY_MODULE_NAME_SERVICE)->get_baloon_dimentions();
+        let _categories = Service.getInstance(this.requestId).getCategories();
+
+        for (let _index in _categories) {
+            let _category = _categories[index];
+
+            if (_category['id'] === id) {
+                return _category['code'];
+            }
+        }
+        this.error(ErrorCodes.ERROR_FUNCTION_ARGUMENTS, message = 'id[' + id + ']', log_type = undefined, writeToLog = false);
+    }
+
+    /*
+     * Return category title by id
+     *
+     * @param {integer} id - category id
+     *
+     * @return {string}
+     */
+    getCategoryTitle(id)
+    {
+        return this.getCategory(id)['title'];
+    }
+
+    /*
+     * Return middle placemark data by id (without plain text, another and relevant placemarks)
+     *
+     * @param {integer} id - placemark id
+     *
+     * @return {object} - placemark data
+     */
+    getPointMiddleDataById(id)
+    {
+        return Map.getInstance(this.requestId).getPointsBigDataByIds([id], false)[id];
+    }
+
+//ATTENTION - обратите внимание
+//get_subcategories => BaseFunctions.getArrayFromString
+//getAnotherPlacemarksByCategory => getAnotherPlacemarksIdsByCategory
+//
+//    public function get_subcategories($string)
+//    {
+//
+//        return my_get_array_from_string($string);
+//    }
+
+
+
+    /*
+     * Return another placemarks ids related to category
+     *
+     * @param {integer} categoryId - category id
+     * @param {integer} pointId - placemark id
+     *
+     * @return {array} - another placemarks ids
+     */
+    getAnotherPlacemarksIdsByCategory(categoryId, pointId)
+    {
+        let _placemarks = MapDataModel.getInstance(this.requestId).getAnotherPlacemarksIdsByCategory(categoryId, pointId);
+
+        let _result = [];
+        if (_placemarks.length) {
+            for (let _index in _placemarks) {
+                let _placemark = _placemarks[_index];
+                _result.push(_placemark['id']);
+            }
+        }
+        return _result;
+    }
+
+
+    /*
+     * Return placemarks sublist data by their ids
+     *
+     * @param {integer/string/array} ids
+     *
+     * @return {array of objects}
+     */
+    getPlacemarksSublist(ids)
+    {
+        let _placemarksIds = [];
+        if (BaseFunctions.isString(ids) && ids) {
+            _placemarksIds = BaseFunctions.getArrayFromString(ids);
+        } else if (BaseFunctions.isArray(ids) && ids.length) {
+            _placemarksIds = ids;
+        } else if (BaseFunctions.isInteger(ids) && ids) {
+            _placemarksIds = [ids];
+        } else {
+            return [];
+        }
+
+        let _placemarks = Map.getInstance(this.requestId).getPointsBigDataByIds(_placemarksIds);
+
+        for (let _index in _placemarks) {
+            let _placemark = _placemarks[_index];
+
+            let _state = '';
+            if (_placemark['state_code'] && _placemark['state_code'] != Consts.UNDEFINED_VALUE) {
+                _state = '/' + _placemark['state_code'];
+            }
+
+            if (this.isMapPage()) {
+                _placemarks[_index]['url'] = '/' + this.getControllerName() + '/' + _placemark['id'];
+            } else {
+                _placemarks[_index]['url'] = '/' + this.getControllerName() + '/' + _placemark['country_code'] + _state + '/' + _placemark['id'];
+            }
+        }
+        return _placemarks ? _placemarks : [];
+    }
+
+//ATTENTION - обратите внимание
+//getPlacemarksCountByCategory => getPlacemarksCountByCategoryId
+
+    /*
+     * Return placemarks count by category id
+     *
+     * @param {integer} id
+     *
+     * @return {integer}
+     */
+    getPlacemarksCountByCategory(id)
+    {
+        return MapDataModel.getInstance(this.requestId).getPlacemarksCountByCategory(id);
+    }
+
+    /*
+     * Return data of all countries
+     *
+     * @return {array of objects}
+     */
+    getCountriesData()
+    {
+        return GeocodeCollectionModel.getInstance(this.requestId).getCountriesData();
     }
 
 
@@ -224,186 +373,6 @@ module.exports = Catalog;
 
 
 
-<?php
-
-namespace modules\app\catalog\classes;
-
-use \components\app as components;
-
-abstract class Catalog extends \vendor\Module
-{
-
-    protected $categories = array();
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    public function get_category_code($id = null)
-    {
-
-        $category = $this->get_category($id);
-
-        return $category['code'];
-    }
-
-
-    public function get_category_title($id = null)
-    {
-
-        $category = $this->get_category($id);
-
-        return $category['title'];
-    }
-
-
-    public function get_point_content_by_id($id)
-    {
-
-        $map_module = self::get_module(MY_MODULE_NAME_MAP);
-        $result = $map_module->get_point_content_by_ids(array($id), false);
-        return $result[$id];
-    }
-
-
-    public function get_subcategories($string)
-    {
-
-        return my_get_array_from_string($string);
-    }
-
-
-    public function get_another_placemarks_by_category($category_id, $self_id)
-    {
-        $category_id = (int) $category_id;
-        $self_id = (int) $self_id;
-        $data_db_model = components\Map::get_db_model('data');
-        $config = self::get_config();
-
-        $condition = "id!=" . $self_id . " AND (category = " . $category_id . " OR subcategories REGEXP '[[:<:]]" . $category_id . "[[:>:]]')";
-        $order = "RAND()";
-        $select = 'id';
-        $limit = $config['allows']['max_items_at_sublist'];
-        $need_result = false;
-
-        $placemarks = $data_db_model->get_by_condition($condition, $order, '', $select, $limit, $need_result);
-
-        $result = array();
-        if (my_array_is_not_empty(@$placemarks)) {
-            foreach ($placemarks as $placemark) {
-                $result[] = $placemark['id'];
-            }
-        }
-
-        return $result;
-    }
-
-
-    public function get_placemarks_sublist($ids = null)
-    {
-        if (!is_null($ids)) {
-            if (is_string($ids) && $ids) {
-                $placemarks_ids = my_get_array_from_string($ids);
-            } else if (my_array_is_not_empty($ids)) {
-                $placemarks_ids = $ids;
-            } else {
-                $ids = (int) $ids;
-                if ($ids) {
-                    $placemarks_ids = array($ids);
-                } else {
-                    return array();
-                }
-            }
-        } else {
-            return array();
-        }
-
-        $security = \modules\base\Security\Security::get_instance();
-
-        $module = self::get_module(MY_MODULE_NAME_MAP);
-
-        $placemarks = $module->get_point_content_by_ids($placemarks_ids);
-
-        foreach ($placemarks as $key => &$placemark) {
-            if ($placemark['country_code']) {
-                $state = '';
-                if ($placemark['state_code'] && $placemark['state_code'] != MY_UNDEFINED_VALUE) {
-                    $state = '/' . $placemark['state_code'];
-                }
-
-                if (is_map_page()) {
-                    $placemark['url'] = MY_DOMEN . '/' . $security->get_controller() . '/' . $placemark['id'];
-                } else {
-
-                    $placemark['url'] = MY_DOMEN . '/' . $security->get_controller() . '/' . $placemark['country_code'] . $state . '/' . $placemark['id'];
-                }
-            } else {
-                unset($placemarks[$key]);
-            }
-        }
-        return prepare_to_array($placemarks);
-    }
-
-
-
-
-
-    public function get_placemarks_count_by_category($category_id)
-    {
-        $data_db_model = components\Map::get_db_model('data');
-        $connect = $data_db_model->get_connect();
-
-        $condition = "category = " . (int)$category_id . " OR subcategories REGEXP '[[:<:]]" . (int)$category_id . "[[:>:]]'";
-        $group = "";
-        $select = 'COUNT(*) as placemarks_count';
-        $limit = 1;
-        $need_result = true;
-
-        $result = $data_db_model->get_by_condition($condition, $order = '', $group, $select, $limit, $need_result);
-        return $result['placemarks_count'];
-    }
-
-
-
-
-
-
-
-
-
-    public function get_countries_data()
-    {
-
-        $db_model_adress = self::get_model(MY_MODEL_NAME_DB_GEOCODE_COLLECTION);
-        $language_component = components\Language::get_instance();
-
-        $language = $language_component->get_language();
-
-        $condition = "language='" . $language . "' AND country_code != ''";
-        $order = "country ASC";
-        $group = "country_code";
-        $select = 'country, country_code, state_code, COUNT(country_code) as placemarks_count';
-        $limit = false;
-        $need_result = false;
-
-        $countries = $db_model_adress->get_by_condition($condition, $order, $group, $select, $limit, $need_result);
-        return prepare_to_array($countries);
-    }
 
 
     public function get_country_placemarks($country_code = null, $offset = null, $limit = null)

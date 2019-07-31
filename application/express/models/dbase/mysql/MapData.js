@@ -10,7 +10,7 @@ const BaseFunctions = require('application/express/functions/BaseFunctions');
 const GeocodeCollectionModel = require('application/express/models/dbase/mysql/GeocodeCollection');
 const MapPhotosModel = require('application/express/models/dbase/mysql/MapPhotos');
 const Map = require('application/express/components/Map');
-
+const Config = require('application/express/settings/Config');
 
 class MapDataModel extends DBaseMysql
 {
@@ -222,7 +222,7 @@ class MapDataModel extends DBaseMysql
                     GROUP by c_id
                     ORDER by c_title ASC`;
 
-        return this.getBySql(_sql, needResult);
+        return this.getBySql(_sql, undefined, needResult);
     }
 
 
@@ -303,7 +303,7 @@ class MapDataModel extends DBaseMysql
 
         _sql += " GROUP by c_id";
 
-        return this.getBySql(_sql, false);
+        return this.getBySql(_sql, undefined, false);
     }
 
     /*
@@ -342,8 +342,75 @@ class MapDataModel extends DBaseMysql
 
         _sql += ` GROUP by c_id ORDER by RAND() LIMIT ${limit}`;
 
-        return this.getBySql(_sql, false);
+        return this.getBySql(_sql, undefined, false);
     }
+
+
+
+
+
+
+    /*
+     * Return another placemarks related to category
+     *
+     * @param {integer} categoryId - category id
+     * @param {integer} pointId - placemark id
+     * @param {string} select - fields to be selected
+     *
+     * @return {array of objects}
+     */
+    getAnotherPlacemarksByCategory(categoryId, pointId, select = '*')
+    {
+        categoryId = BaseFunctions.toInt(categoryId);
+        return this.getByCondition(
+                condition = "id!=? AND (category = ? OR subcategories REGEXP '[[:<:]]" + categoryId + "[[:>:]]')",
+                order = 'RAND()',
+                group = '',
+                select,
+                where_values = [pointId, categoryId],
+                limit = Config['restrictions']['max_items_at_sublist'],
+                need_result = false
+                );
+    }
+
+    /*
+     * Return another placemarks ids related to category
+     *
+     * @param {integer} categoryId - category id
+     * @param {integer} pointId - placemark id
+     *
+     * @return {array of objects}
+     */
+    getAnotherPlacemarksIdsByCategory(categoryId, pointId) {
+        return this.getAnotherPlacemarksByCategory(categoryId, pointId, select = 'id');
+    }
+
+
+
+
+    /*
+     * Return placemarks count by category id
+     *
+     * @param {integer} id
+     *
+     * @return {integer}
+     */
+    getPlacemarksCountByCategory(id)
+    {
+        id = BaseFunctions.toInt(id);
+        return this.getByCondition(
+                condition = "category = ? OR subcategories REGEXP '[[:<:]]" + id + "[[:>:]]'",
+                order = '',
+                group = '',
+                select = 'COUNT(*) as placemarks_count',
+                where_values = [id],
+                limit = 1,
+                need_result = true
+                )[0]['placemarks_count'];
+    }
+
+
+
 
 
 

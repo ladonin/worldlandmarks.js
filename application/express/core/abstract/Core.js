@@ -113,6 +113,15 @@ class Core {
     }
 
     /*
+     * Determine whether page is 'map'
+     *
+     * @return {boolean}
+     */
+    isMapPage(){
+        return this.getFromRequest(Consts.CONTROLLER_VAR_NAME) === Consts.CONTROLLER_NAME_MAP;
+    }
+
+    /*
      * Return device type - mobile or desctop
      *
      * @return {string}

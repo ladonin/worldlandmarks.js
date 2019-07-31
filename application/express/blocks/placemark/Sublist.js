@@ -51,7 +51,7 @@ class SublistBlock extends Component {
                     let _photoData = BaseFunctions.getRandomPlacemarkPhoto(_placemark['photos'], 5, true, this);
                     let linkText1 = '';
                     let linkText2 = '';
-                    if (this.getFromRequest(Consts.CONTROLLER_VAR_NAME) === Consts.CONTROLLER_NAME_MAP) {
+                    if (this.isMapPage()) {
 
                         linkText1 = 'onclick="/*//ATTENTION - обратите внимание*/my_map_vendor.get_placemark(' + _placemark['id'] + ');"';
                         linkText2 = linkText1;

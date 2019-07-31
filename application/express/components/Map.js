@@ -51,6 +51,7 @@ class Map extends Component {
 // get_name => this.getServiceName()
 //get_db_model => сразу берем из require
 // module() => и модуль и компонент один файл
+//getPointContentById => getPointBigDataById
 
 
     /*
@@ -60,9 +61,9 @@ class Map extends Component {
      *
      * @return {object} - placemark data
      */
-    getPointContentById(id)
+    getPointBigDataById(id)
     {
-        let _result = this.getPointContentByIds(
+        let _result = this.getPointsBigDataByIds(
                 [id],
                 true,
                 undefined,
@@ -89,7 +90,7 @@ class Map extends Component {
         }
 
         if (!language) {
-            this.error(Consts.ERROR_LANGUAGE_NOT_FOUND, 'language [' + language + ']');
+            this.error(ErrorCodes.ERROR_LANGUAGE_NOT_FOUND, 'language [' + language + ']');
         }
 
         let _query = this.GEOCODE_SERVICE_URL + 'format=json&apikey=' + AccessConfig.yandexMapApiKey + '&geocode='+ coords.x + ',' + coords.y + '&lang=' + language;

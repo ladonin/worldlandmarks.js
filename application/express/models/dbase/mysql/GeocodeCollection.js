@@ -351,6 +351,64 @@ class GeocodeCollectionModel extends DBaseMysql
     }
 
 
+    /*
+     * Return data of all countries
+     *
+     * @return {array of objects}
+     */
+    getCountriesData()
+    {
+        let _language = this.getLanguage();
+
+        return this.getByCondition(
+            condition = "language=? AND country_code != ''",
+            order = 'country ASC',
+            group = 'country_code',
+            select = 'country, country_code, state_code, COUNT(country_code) as placemarks_count',
+            where_values = [_language],
+            limit = false,
+            need_result = false
+        );
+    }
+
+
+
+
+
+
+    /*
+     * Check placemark by set address
+     *
+     * @param {integer} id - placemark id
+     * @param {string} countryCode - country code
+     * @param {string} stateCode - state code
+     *
+     * @return {boolean}
+     */
+    checkPlacemark(id, countryCode, stateCode)
+    {
+        id = BaseFunctions.toInt(id);
+
+        let _condition = "map_data_id = ? AND country_code = ? ";
+        let _whereValues = [id, countryCode];
+
+        if (stateCode) {
+            _condition += "AND state_code = ?";
+            _whereValues.push(stateCode);
+        }
+
+        let _result = this.getByCondition(
+            _condition,
+            order = '',
+            group = '',
+            select = 'id',
+            _whereValues,
+            limit = 1,
+            need_result = false
+        );
+
+        return _result[0]['id'] ? true : false;
+    }
 
 
 
@@ -361,161 +419,69 @@ class GeocodeCollectionModel extends DBaseMysql
 
 
 
+    /*
+     * Get geodata and placemarks ids by country and state codes
+     *
+     * @param {string} countryCode
+     * @param {string} stateCode
+     * @param {boolean} needResult - is result required
+     *
+     * @return {object} - geodata of each found placemark
+     * {
+     *      ids : [values:integer],
+     *      data : [values:{}]
+     *  }
+     */
+    getPlacemarksData(countryCode, stateCode, needResult)
+    {
+        let _language = this.getLanguage();
 
+        let _condition = "gc.language=?";
+        let _whereArray = [_language];
 
+        if (countryCode) {
+            _condition += " AND gc.country_code=?";
+            _whereArray.push(countryCode);
+        }
+        if (stateCode) {
+            _condition += " AND gc.state_code=?";
+            _whereArray.push(stateCode);
+        }
+
+        let _sql = `SELECT DISTINCT
+                gc.map_data_id as placemarks_id,
+                gc.state_code, gc.country_code, gc.formatted_address,
+                gc.country, gc.administrative_area_level_1 as state,
+                gc.locality, cs.is_administrative_center
+            FROM ${this.getTableName()} gc
+            LEFT JOIN country_states cs on cs.url_code = gc.state_code
+            WHERE ${_condition} ORDER by gc.id DESC`;
+
+        let _placemarksData = this.getBySql(_sql,_whereArray, needResult);
+
+        let _result = {
+            ids:[],
+            data:[]
+        };
+
+        if (_placemarksData.length) {
+            for (let _index in _placemarksData) {
+                let _placemark = _placemarksData[_index];
+
+                if ((_placemark['state']) && (_placemark['state_code']) && (_placemark['country_code'])) {
+                    _placemarksData[_index]['state'] = Countries.getInstance(this.requestId).getTranslationOfStateName(_language, _placemark['country_code'], _placemark['state'], _placemark['state_code']);
+                }
+
+                _result['ids'].push(_placemark['placemarks_id']);
+                _result['data'][_placemark['placemarks_id']] = _placemark;
+            }
+        }
+
+        return _result;
+    }
 
 }
 
 GeocodeCollectionModel.instanceId = BaseFunctions.unique_id();
 
 module.exports = GeocodeCollectionModel;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<?php
-/*
- * Db модель geocode_collection
- */
-namespace models\dbase\mysql\geocode_collection;
-
-use \components\app as components;
-
-abstract class Model extends \vendor\DBase_Mysql
-{
-
-
-    ######
-    #   Пояснение:
-    #   данные, возвращаемые https://maps.googleapis.com/maps/api/geocode:
-    #####
-    /*
-      street_address – указывает точный почтовый адрес.
-      route – указывает шоссе с названием (например, "US 101").
-      intersection – указывает крупные перекрестки, как правило, пересечения двух крупных дорог.
-      political – указывает политическую единицу. Чаще всего такой тип используется для обозначения некоторых административных объектов.
-      country – указывает государственную политическую единицу и обычно представляет собой тип наивысшего порядка, который возвращается геокодировщиком.
-      administrative_area_level_1 – указывает гражданскую единицу первого порядка ниже уровня страны. В США такими административными уровнями являются штаты. Эти административные уровни используются не во всех странах.
-      administrative_area_level_2 – указывает гражданскую единицу второго порядка ниже уровня страны. В США такими административными уровнями являются округи. Эти административные уровни используются не во всех странах.
-      administrative_area_level_3 – указывает гражданскую единицу третьего порядка ниже уровня страны. Такой тип представляет меньшее административное подразделение. Эти административные уровни используются не во всех странах.
-      administrative_area_level_4 – указывает гражданскую единицу четвертого порядка ниже уровня страны. Такой тип представляет меньшее административное подразделение. Эти административные уровни используются не во всех странах.
-      administrative_area_level_5 – указывает гражданскую единицу пятого порядка ниже уровня страны. Такой тип представляет меньшее административное подразделение. Эти административные уровни используются не во всех странах.
-      colloquial_area – указывает общепринятое альтернативное название единицы.
-      locality – указывает политическую единицу в составе города.
-      ward – указывает определенный тип округа в Японии, чтобы установить различие между несколькими частями населенного пункта в японском адресе.
-      sublocality – указывает гражданскую единицу первого порядка ниже уровня населенного пункта. Для некоторых местоположений возможно предоставление одного из дополнительных типов: от sublocality_level_1 до sublocality_level_5. Каждый уровень ниже населенного пункта является гражданской единицей. Большее значение указывает меньшую географическую область.
-      neighborhood – указывает именованный район.
-      premise – указывает именованное местоположение, обычно одно или несколько зданий с общепринятым названием.
-      subpremise – указывает единицу первого порядка ниже именованного местоположения, обычно одно здание в границах комплекса зданий с общепринятым названием.
-      postal_code – указывает почтовый индекс в том виде, в котором он используется в стране для обработки почты.
-      natural_feature – указывает важный природный объект.
-      airport – указывает аэропорт.
-      park – указывает парк с названием.
-      point_of_interest – указывает достопримечательность с названием. Как правило, такие достопримечательности являются важными местными единицами, которые не подходят для других категорий, например, небоскреб "Эмпайр-стейт-билдинг" или статуя Свободы.
-     */
-    /*
-     * Поля таблицы
-     *
-     * @var array
-     */
-
-
-
-
-    /*
-     * Проверяем есть ли такая метка по указанному адресу
-     *
-     * @param integer $id - id метки
-     * @param string $country_code - код страны
-     * @param array $state_code - код региона
-     *
-     * @return boolean
-     */
-    public function check_placemark($id, $country_code, $state_code)
-    {
-        $id = (int) $id;
-        $country = self::$connect->quote($country_code);
-        $data_db_model = components\Map::get_db_model('data');
-
-        $condition = "map_data_id = $id AND country_code = $country ";
-        if ($state_code) {
-            $state = self::$connect->quote($state_code);
-            $condition .= "AND state_code = $state";
-        }
-        $result = $this->get_by_condition($condition, '', '', 'id', 1, false);
-        return my_is_not_empty(@$result['id']) ? true : false;
-    }
-
-
-
-
-
-
-
-
-
-
-    /*
-     * Получаем геоданные (и их ids) по коду страны и региона
-     *
-     * @param string $country_code - код страны
-     * @param string $state_code - код региона
-     * @param boolean $need_result - обязателен ли возвращаемый результат (или можно пустой, если не найдено ничего)
-     *
-     * @return array
-     */
-    public function get_placemarks_data($country_code = null, $state_code = null, $need_result = false)
-    {
-        $connect = $this->get_connect();
-        $data_db_model = components\Map::get_db_model('data');
-        $country_component = components\Countries::get_instance();
-
-        $config = self::get_config();
-        $language_component = components\Language::get_instance();
-        $language = $language_component->get_language();
-
-        $condition = "gc.language='" . $language . "'";
-        if ($country_code) {
-            $condition .= " AND gc.country_code=" . $connect->quote($country_code);
-        }
-        if ($state_code) {
-            $condition .= " AND gc.state_code=" . $connect->quote($state_code);
-        }
-
-        $sql = "SELECT DISTINCT
-                gc.map_data_id as placemarks_id,
-                gc.state_code, gc.country_code, gc.formatted_address,
-                gc.country, gc.administrative_area_level_1 as state,
-                gc.locality, cs.is_administrative_center
-            FROM ".$this->get_table_name()." gc
-            LEFT JOIN country_states cs on cs.url_code = gc.state_code
-            WHERE ".$condition." ORDER by gc.id DESC";
-        $placemarks_data = $this->get_by_sql($sql,$need_result);
-
-        $result = array();
-        if (my_array_is_not_empty(@$placemarks_data)) {
-            foreach ($placemarks_data as $placemark) {
-                if (($placemark['state']) && ($placemark['state_code']) && ($placemark['country_code'])) {
-                    $placemark['state'] = $country_component->translate_state_names($language, $placemark['country_code'], $placemark['state'], $placemark['state_code']);
-                }
-                // массив id для implode
-                $result['ids'][] = $placemark['placemarks_id'];
-                $result['data'][$placemark['placemarks_id']] = $placemark;
-            }
-        }
-
-        return $result;
-    }
-}
