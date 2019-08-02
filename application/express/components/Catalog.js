@@ -17,7 +17,6 @@ const Cache = require('application/express/components/base/Cache');
 const Categories = require('application/express/components/Categories');
 const Map = require('application/express/components/Map');
 
-
 class Catalog extends Component {
 
     constructor() {
@@ -361,6 +360,239 @@ class Catalog extends Component {
         return GeocodeCollectionModel.getInstance(this.requestId).getCountriesData();
     }
 
+    /*
+     * Get placemarks of specified country
+     *
+     * @param {string} countryCode - country code
+     * @param {integer} offset - selection offset
+     * @param {integer} limit - selection limit
+     *
+     * @return {array of objects}
+     */
+    getCountryPlacemarks(countryCode, offset, limit)
+    {
+        if (!countryCode) {
+            this.error(ErrorCodes.ERROR_FUNCTION_ARGUMENTS, message = 'country code [' + countryCode + ']', log_type = undefined, writeToLog = false);
+        }
+
+        return MapDataModel.getInstance(this.requestId).getCountryPlacemarks(countryCode, offset, limit, this.getLanguage(), needResult = false);
+    }
+
+    /*
+     * Get placemarks of specified category
+     *
+     * @param {integer} categoryId - category id
+     * @param {integer} offset - selection offset
+     * @param {integer} limit - selection limit
+     *
+     * @return {array of objects}
+     */
+    getCategoryPlacemarks(categoryId, offset, limit)
+    {
+        if (BaseFunctions.isUndefined(categoryId)) {
+            this.error(ErrorCodes.ERROR_FUNCTION_ARGUMENTS, message = 'category id [' + categoryId + ']', log_type = undefined, writeToLog = false);
+        }
+
+        return MapDataModel.getInstance(this.requestId).getCategoryPlacemarks(categoryId, offset, limit, this.getLanguage(), needResult = false);
+    }
+
+
+
+
+
+
+//ATTENTION - обратите внимание
+//process_country_data => processCountryData
+
+
+    /*
+     * Return view data for countries page
+     *
+     * @return {array of objects}
+     */
+    processCountryPageData()
+    {
+        let _countryCode = Countries.getInstance(this.requestId).getCountryCodeFromUrl();
+
+        // If country has states
+        if (Countries.getInstance(this.requestId).hasStates(_countryCode)) {
+            return this.getStates(_countryCode, this.getLanguage());
+        } else {
+            return null;
+        }
+    }
+
+
+
+    /*
+     * Return placemarks count in current country
+     *
+     * @param {string} countryCode - country code
+     *
+     * @return {integer}
+     */
+    getPlacemarksCountInCountry(countryCode)
+    {
+
+        if (!countryCode) {
+            this.error(ErrorCodes.ERROR_FUNCTION_ARGUMENTS, message = 'country code[' + countryCode + ']', log_type = undefined, writeToLog = false);
+        }
+
+        return GeocodeCollectionModel.getInstance(this.requestId).getPlacemarksCountInCountry(countryCode);
+    }
+
+
+
+//ATTENTION - обратите внимание
+//get_placemarks_count => MapDataModel.getInstance(this.requestId).getPlacemarksCount()
+//getPhotosData => getPlacemarksPhotos
+//getStateData => getStatePlacemarksByUrl
+    /*
+     * Return photos data of current country
+     *
+     * @param {string} countryCode - country code
+     *
+     * @return {array of objects}
+     */
+    getCountryPhotosData(countryCode)
+    {
+        if (!countryCode) {
+            this.error(ErrorCodes.ERROR_FUNCTION_ARGUMENTS, message = 'country code[' + countryCode + ']', log_type = undefined, writeToLog = false);
+        }
+
+        let _placemarksData = GeocodeCollectionModel.getInstance(this.requestId).getPlacemarksData(countryCode, null, true);
+        return this.getPhotosData(_placemarksData['ids'], _placemarksData['data']);
+    }
+
+
+    /*
+     * Return photos data of current state
+     *
+     * @param {string} countryCode - country code
+     * @param {string} stateCode - satte code
+     *
+     * @return {array of objects}
+     */
+    getStatePhotosData(countryCode, stateCode)
+    {
+        if (!countryCode || !stateCode) {
+            this.error(ErrorCodes.ERROR_FUNCTION_ARGUMENTS, message = 'country code[' + countryCode + '], state code[' + stateCode + ']', log_type = undefined, writeToLog = false);
+        }
+
+        let _placemarksData = GeocodeCollectionModel.getInstance(this.requestId).getPlacemarksData(countryCode, stateCode, true);
+
+        return this.getPhotosData(_placemarksData['ids'], _placemarksData['data']);
+    }
+
+
+
+
+
+    /*
+     * Extract photos data from placemarks data
+     *
+     * @param {array} placemarksIds - placemarks ids
+     * @param {array of objects} placemarksData - placemarks data
+     *
+     * @return {array of objects} - photos data
+     */
+    getPlacemarksPhotosData(placemarksIds, placemarksData)
+    {
+        let _photosData = MapDataModel.getInstance(this.requestId).getPlacemarksPhotos(placemarksIds);
+
+        let _photosResult = [];
+        if (_photosResult.length) {
+
+            for (let _index in _photosData) {
+                let _photo = _photosData[_index];
+
+                if (my_array_is_empty(placemarksData[_photo['c_id']])) {
+                    this.error(ErrorCodes.ERROR_VARIABLE_EMPTY, message = '_placemarksData[\'data\'][_photo[\'c_id\']], _photo[\'c_id\'] =' + _photo['c_id']);
+                }
+
+                let _placemarkTitle = _photo['c_title'];
+                delete(_photosData[_index]['c_title']);
+
+                _photosResult[_photo['ph_id']]['photo'] = _photo;
+                _photosResult[_photo['ph_id']]['photo']['dir'] = Map.getInstance(this.requestId).getPhotoDir(_photo['c_id'], _photo['ph_path']);
+                _photosResult[_photo['ph_id']]['placemark'] = placemarksData[_photo['c_id']];
+                _photosResult[_photo['ph_id']]['placemark']['title'] = _placemarkTitle;
+            }
+        }
+
+        return _photosResult;
+    }
+
+
+
+
+    /*
+     * Return placemarks data of current state
+     *
+     * @return {array of objects}
+     */
+    getStatePlacemarksByUrl()
+    {
+        let _countryCode = Countries.getInstance(this.requestId).getCountryCodeFromUrl();
+
+        let _stateCode = this.getFromRequest(Consts.ACTION_NAME_STATE, required = true);
+
+        if (Countries.getInstance(this.requestId).hasStates(_countryCode)) {
+            return this.getPlacemarks(_countryCode, _stateCode, this.getLanguage());
+        } else {
+            this.error(
+                ErrorCodes.ERROR_WRONG_ADRESS,
+                message = 'country code[' + _countryCode + '], state code[' + _stateCode + ']',
+                log_type = undefined,
+                writeToLog = false
+            );
+        }
+    }
+
+    /*
+     * Return placemarks data of current coutry and, if set, state in current language
+     *
+     * @param {string} countryCode
+     * @param {string} stateCode
+     * @param {string} language
+     *
+     * @return {array of objects}
+     */
+    getPlacemarks(countryCode, stateCode, language)
+    {
+        let _placemarksIds = GeocodeCollectionModel.getInstance(this.requestId).getPlacemarksIds(countryCode, stateCode, language)
+        let _ids = [];
+
+        for (let _index in _placemarksIds) {
+            _ids.push(_placemarksIds[_index]['placemark_id']);
+        }
+
+        let _result = Map.getInstance(this.requestId).getPointsBigDataByIds(_ids, false, 'c_title ASC');
+
+        for (let _index in _result) {
+
+            let _placemark = _result[_index];
+
+            if (!_placemark['title']) {
+                _result[_index]['title'] = this.getText('map/default_title_part/value') + ' ' + _placemark['id'];
+            }
+
+            _result[_index]['comment'] = BaseFunctions.getCroppedText(_placemark['comment'], Config['restrictions']['max_cropped_text_length']);
+        }
+        return _result;
+    }
+
+
+
+
+
+
+
+
+
+
+
+
 
 }
 
@@ -375,91 +607,34 @@ module.exports = Catalog;
 
 
 
-    public function get_country_placemarks($country_code = null, $offset = null, $limit = null)
-    {
-        if (my_is_empty(@$country_code)) {
-            self::concrete_error(array(MY_ERROR_FUNCTION_ARGUMENTS, 'country_code:' . $country_code));
-        }
 
 
-            $map_db_model_geocode = self::get_model(MY_MODEL_NAME_DB_GEOCODE_COLLECTION);
-            $data_db_model = components\Map::get_db_model('data');
-            $language_model = components\Language::get_instance();
-            $language = $language_model->get_language();
-            $conn = $data_db_model->get_connect();
 
-            $config = self::get_config();
 
-            $sql = "SELECT
-                c.id as id,
-                    c.title as title,
-                    geo.country_code as country_code,
-                    geo.state_code as state_code
 
 
-                    FROM " . $data_db_model->get_table_name() . " c "
-                    . "LEFT JOIN " . $map_db_model_geocode->get_table_name() . " geo on geo.map_data_id = c.id AND geo.language='" . $language . "' "
-                    . "WHERE geo.country_code = " . $conn->quote($country_code);
 
-            $sql .= " ORDER by c.id DESC";
-            if (!is_null($offset) && !is_null($limit)) {
-                $sql .= " LIMIT ".(int) $offset . ', ' . (int) $limit;
-            }
 
-            $result = $conn->query($sql, \PDO::FETCH_ASSOC)->fetchAll();
 
-            if (!my_array_is_not_empty(@$result)) {
-                self::concrete_error(array(MY_ERROR_MYSQL, 'request:' . $sql), MY_LOG_MYSQL_TYPE);
-            }
 
-            return $result;
-    }
 
 
 
 
 
-    public function get_category_placemarks($category_id = null, $offset = null, $limit = null)
-    {
-        if (is_null($category_id)) {
-            self::concrete_error(array(MY_ERROR_FUNCTION_ARGUMENTS, 'category_id:' . $category_id));
-        }
 
 
 
-        $category_id = (int) $category_id;
 
-            $map_db_model_geocode = self::get_model(MY_MODEL_NAME_DB_GEOCODE_COLLECTION);
-            $data_db_model = components\Map::get_db_model('data');
-            $language_model = components\Language::get_instance();
-            $language = $language_model->get_language();
-            $conn = $data_db_model->get_connect();
 
-            $config = self::get_config();
 
-            $sql = "SELECT
-                c.id as id,
-                    c.title as title,
-                    geo.country_code as country_code,
-                    geo.country as country,
-                    geo.state_code as state_code
 
 
-                    FROM " . $data_db_model->get_table_name() . " c "
-                    . "LEFT JOIN " . $map_db_model_geocode->get_table_name() . " geo on geo.map_data_id = c.id AND geo.language='" . $language . "' "
-                    . "WHERE category = " . $category_id . " OR subcategories REGEXP '[[:<:]]" . $category_id . "[[:>:]]'";
 
-            $sql .= " ORDER by c.id DESC";
-            if (!is_null($offset) && !is_null($limit)) {
-                $sql .= " LIMIT ".(int) $offset . ', ' . (int) $limit;
-            }
 
-            $result = $conn->query($sql, \PDO::FETCH_ASSOC)->fetchAll();
 
 
 
-            return $result;
-    }
 
 
 
@@ -473,224 +648,6 @@ module.exports = Catalog;
 
 
 
-    public function process_country_data()
-    {
-
-        $country = $this->get_get_var(MY_CATALOG_COUNTRY_VAR_NAME);
-
-        if (my_is_empty(@$country)) {
-            self::concrete_error(array(MY_ERROR_CATALOG_WRONG_GET_VALUE, 'country:' . $country));
-        }
-        $data_db_model = components\Map::get_db_model('data');
-        $db_model_adress = self::get_model(MY_MODEL_NAME_DB_GEOCODE_COLLECTION);
-        $language_component = components\Language::get_instance();
-        $countries_component = components\Countries::get_instance();
-
-        $language = $language_component->get_language();
-
-        $country_code = $countries_component->get_country_code_from_url($country);
-
-// если в этой стране есть области, штаты и т.д. - то возвращаем их
-        if ($countries_component->has_states($country_code)) {
-            return $this->get_states($country_code, $language);
-        } else {
-// сменим view и layout файлы - выводим метки, поскольку в этой стране нет штатов
-            $security = \modules\base\Security\Security::get_instance();
-            $security->change_view_file('catalog', 'state');
-            $security->change_layout_file('catalog', 'state');
-            //return $this->get_placemarks($country_code, '', $language);-нигде не используются
-        }
-    }
-
-
-    public function get_placemarks_count_in_country($country_code)
-    {
-
-        if (my_is_empty(@$country_code)) {
-            self::concrete_error(array(MY_ERROR_FUNCTION_ARGUMENTS, 'country_code:' . $country_code));
-        }
-
-        $db_model_adress = self::get_model(MY_MODEL_NAME_DB_GEOCODE_COLLECTION);
-        $data_db_model = components\Map::get_db_model('data');
-        $connect = $db_model_adress->get_connect();
-
-        $condition = "language='" . MY_LANGUAGE_EN . "' AND country_code = " . $connect->quote($country_code);
-        $group = "country_code";
-        $select = 'COUNT(country_code) as placemarks_count';
-        $limit = 1;
-        $need_result = false;
-
-        $result = $db_model_adress->get_by_condition($condition, $order = '', $group, $select, $limit, $need_result);
-        return $result['placemarks_count'];
-    }
-
-
-    public function get_placemarks_count()
-    {
-        $data_db_model = components\Map::get_db_model('data');
-
-
-        $select = 'COUNT(*) as placemarks_count';
-        $limit = 1;
-        $need_result = false;
-        $result = $data_db_model->get_by_condition('', '', '', $select, $limit, $need_result);
-        return $result['placemarks_count'];
-    }
-
-
-    public function get_country_photos($country_code)
-    {
-        if (my_is_empty($country_code)) {
-            self::concrete_error(array(MY_ERROR_FUNCTION_ARGUMENTS, 'country_code:' . $country_code));
-        }
-    }
-
-
-    public function get_country_photos_data($country_code)
-    {
-        if (my_is_empty($country_code)) {
-            self::concrete_error(array(MY_ERROR_FUNCTION_ARGUMENTS, 'country_code:' . $country_code));
-        }
-//берем id меток страны
-        $placemarks_data = self::get_model(MY_MODEL_NAME_DB_GEOCODE_COLLECTION)->get_placemarks_data($country_code, null, true);
-        return $this->get_photos_data($placemarks_data['ids'], $placemarks_data['data']);
-    }
-
-
-    public function get_state_photos_data($country_code, $state_code)
-    {
-        if (my_is_empty($country_code) || my_is_empty($state_code)) {
-            self::concrete_error(array(MY_ERROR_FUNCTION_ARGUMENTS, 'country_code:' . $country_code . ',' . 'state_code:' . $state_code));
-        }
-
-//берем id меток страны
-        $placemarks_data = self::get_model(MY_MODEL_NAME_DB_GEOCODE_COLLECTION)->get_placemarks_data($country_code, $state_code, true);
-
-        return $this->get_photos_data($placemarks_data['ids'], $placemarks_data['data']);
-    }
-
-
-    protected function get_photos_data(array $placemarks_ids, array $placemarks_data)
-    {
-
-        $map_module = self::get_module(MY_MODULE_NAME_MAP);
-        $photos_db_model = components\Map::get_db_model('photos');
-        $data_db_model = components\Map::get_db_model('data');
-        $conn = $photos_db_model->get_connect();
-// берем фотки этих меток
-        $sql = "SELECT
-                    c.id as c_id,
-                    c.title as c_title,
-
-                    ph.id as ph_id,
-                    ph.path as ph_path,
-                    ph.width as ph_width,
-                    ph.height as ph_height
-
-                    FROM " . $data_db_model->get_table_name() . " c "
-                . "JOIN " . $photos_db_model->get_table_name() . " ph on ph.map_data_id = c.id "
-                . "WHERE c.id IN (" . implode(',', $placemarks_ids) . ") "
-//. "GROUP by c_id "
-                . "ORDER by ph_id DESC";
-
-        $photos_data = $conn->query($sql, \PDO::FETCH_ASSOC)->fetchAll();
-
-        if (!my_array_is_not_empty($photos_data)) {
-            self::concrete_error(array(MY_ERROR_MYSQL, 'request:' . $sql), MY_LOG_MYSQL_TYPE);
-        }
-
-        $photos_result = array();
-        if (my_array_is_not_empty(@$photos_data)) {
-            foreach ($photos_data as $photo) {
-                if (my_array_is_empty($placemarks_data[$photo['c_id']])) {
-                    self::concrete_error(array(MY_ERROR_VARIABLE_EMPTY, '$placemarks_data[\'data\'][$photo[\'c_id\']], $photo[\'c_id\'] =' . $photo['c_id']));
-                }
-
-                $placemark_title = $photo['c_title'];
-                unset($photo['c_title']);
-                $photos_result[$photo['ph_id']]['photo'] = $photo;
-                $photos_result[$photo['ph_id']]['photo']['dir'] = $map_module->get_photo_dir($photo['c_id'], $photo['ph_path']);
-                $photos_result[$photo['ph_id']]['placemark'] = $placemarks_data[$photo['c_id']];
-                $photos_result[$photo['ph_id']]['placemark']['title'] = $placemark_title;
-            }
-        }
-
-        return $photos_result;
-    }
-
-
-    public function get_state_data()
-    {
-
-        $country = $this->get_get_var(MY_CATALOG_COUNTRY_VAR_NAME);
-        $state_code = $this->get_get_var(MY_CATALOG_STATE_VAR_NAME);
-
-        if (my_is_empty(@$country)) {
-            self::concrete_error(array(MY_ERROR_CATALOG_WRONG_GET_VALUE, 'country:' . $country));
-        }
-        if (my_is_empty(@$state_code)) {
-            self::concrete_error(array(MY_ERROR_CATALOG_WRONG_GET_VALUE, 'state_code:' . $state_code));
-        }
-        $data_db_model = components\Map::get_db_model('data');
-        $db_model_adress = self::get_model(MY_MODEL_NAME_DB_GEOCODE_COLLECTION);
-        $language_component = components\Language::get_instance();
-        $countries_component = components\Countries::get_instance();
-
-        $language = $language_component->get_language();
-
-        $country_code = $countries_component->get_country_code_from_url($country);
-
-// только, если в этой стране есть области, штаты и т.д.
-        if ($countries_component->has_states($country_code)) {
-            return $this->get_placemarks($country_code, $state_code, $language);
-        } else {
-            self::concrete_error(array(MY_ERROR_WRONG_ADRESS, 'country_code="' . $country_code . '", state_code="' . $state_code . '"'));
-        }
-    }
-
-
-    protected function get_placemarks($country_code, $state_code, $language)
-    {
-
-        $config = self::get_config();
-
-
-        $db_model_adress = self::get_model(MY_MODEL_NAME_DB_GEOCODE_COLLECTION);
-        $condition = "(language='" . $language . "' OR language='" . MY_LANGUAGE_EN . "') AND country_code='" . $country_code . "'";
-
-        if ($state_code) {
-            $connect = $db_model_adress->get_connect();
-            $condition .= " AND state_code=" . $connect->quote($state_code);
-        }
-
-        $order = "id DESC";
-        $select = 'DISTINCT map_data_id as placemarks_id';
-        $limit = false;
-        $need_result = false;
-        $placemarks_ids = $db_model_adress->get_by_condition($condition, $order, '', $select, $limit, $need_result);
-
-        if (!$placemarks_ids) {
-            self::concrete_error(array(MY_ERROR_WRONG_ADRESS, 'country_code="' . $country_code . '", state_code="' . $state_code . '"'));
-        }
-
-        $ids = array();
-        foreach ($placemarks_ids as $value) {
-            $ids[] = $value['placemarks_id'];
-        }
-
-        $map_module = self::get_module(MY_MODULE_NAME_MAP);
-        $result = $map_module->get_point_content_by_ids($ids, false, 'c_title ASC');
-
-        foreach ($result as &$value) {
-
-            if (!$value['title']) {
-                $value['title'] = my_pass_through(@self::trace('map/default_title_part/value')) . ' ' . $value['id'];
-            }
-
-            $value['comment'] = get_cutted_text($value['comment'], $config['allows']['max_cropped_text_length']);//self
-        }
-        return $result;
-    }
 
 
     protected function get_states($country_code, $language)

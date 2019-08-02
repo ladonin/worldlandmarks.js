@@ -405,9 +405,157 @@ class MapDataModel extends DBaseMysql
                 select = 'COUNT(*) as placemarks_count',
                 where_values = [id],
                 limit = 1,
-                need_result = true
+                need_result = false
                 )[0]['placemarks_count'];
     }
+
+
+    /*
+     * Return all placemarks count
+     *
+     * @return {integer}
+     */
+    getPlacemarksCount()
+    {
+        return this.getByCondition(
+            condition = 1,
+            order = '',
+            group = '',
+            select = 'COUNT(*) as placemarks_count',
+            where_values = [],
+            limit = 1,
+            need_result = false
+        )[0]['placemarks_count'];
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    /*
+     * Extract photos data from current placemarks
+     *
+     * @param {array} placemarksIds - placemarks ids
+     *
+     * @return {array of objects} - photos data
+     */
+    getPlacemarksPhotos(placemarksIds)
+    {
+
+        let _sql = `SELECT
+                    c.id as c_id,
+                    c.title as c_title,
+
+                    ph.id as ph_id,
+                    ph.path as ph_path,
+                    ph.width as ph_width,
+                    ph.height as ph_height
+
+                    FROM ${this.getTableName()} c
+                    JOIN ${MapPhotosModel.getInstance(this.requestId).getTableName()} ph on ph.map_data_id = c.id
+                    WHERE c.id IN (${placemarksIds.join(', ')})
+                    ORDER by ph_id DESC`;
+
+        return this.getBySql(_sql, undefined, false);
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    /*
+     * Get placemarks data of specified country
+     *
+     * @param {string} countryCode - country code
+     * @param {integer} offset - selection offset
+     * @param {integer} limit - selection limit
+     * @param {string} language - language
+     * @param {boolean} needResult - is result required
+     *
+     * @return {array of objects} - DESCRIPTION
+     */
+    getCountryPlacemarks(countryCode, offset, limit, language, needResult = true)
+    {
+        let _sql = `SELECT
+                c.id as id,
+                c.title as title,
+                geo.country_code as country_code,
+                geo.state_code as state_code
+            FROM ${this.getTableName()} c
+            LEFT JOIN ${GeocodeCollectionModel.getInstance(this.requestId).getTableName()} geo on geo.map_data_id = c.id AND geo.language = ?
+            WHERE geo.country_code = ?
+            ORDER by c.id DESC`;
+
+        if (BaseFunctions.isSet(offset) && BaseFunctions.isSet(limit)) {
+            _sql += " LIMIT " + offset + ', ' + limit;
+        }
+        return this.getBySql(_sql, [language, countryCode], needResult);
+    }
+
+
+
+
+
+
+    /*
+     * Get placemarks of specified category
+     *
+     * @param {integer} categoryId - category id
+     * @param {integer} offset - selection offset
+     * @param {integer} limit - selection limit
+     * @param {string} language - language
+     * @param {boolean} needResult - is result required
+     *
+     * @return {array of objects}
+     */
+    getCategoryPlacemarks(categoryId, offset, limit, language, needResult = true) {
+
+        categoryId = BaseFunctions.toInt(categoryId);
+
+        let _sql = `SELECT
+                c.id as id,
+                c.title as title,
+                geo.country_code as country_code,
+                geo.country as country,
+                geo.state_code as state_code
+            FROM ${this.getTableName()} c
+            LEFT JOIN ${GeocodeCollectionModel.getInstance(this.requestId).getTableName()} geo on geo.map_data_id = c.id
+                    AND geo.language=?
+                    WHERE category = ? OR subcategories REGEXP '[[:<:]]${categoryId}[[:>:]]'
+            ORDER by c.id DESC`;
+
+            if (BaseFunctions.isSet(offset) && BaseFunctions.isSet(limit)) {
+                _sql += " LIMIT " + offset + ', ' + limit;
+            }
+
+        return this.getBySql(_sql, [language, categoryId], needResult);
+    }
+
+
+
+
+
+
 
 
 

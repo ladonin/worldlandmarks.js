@@ -1041,12 +1041,49 @@ function preparePhotoPath(id, name, prefix, onlyDir = false, isUrl = false, serv
 }
 
 
+// //ATTENTION - обратите внимание
+//getCuttedText => getCroppedText
 
+/*
+ * Crop text with saving words integrity
+ *
+ * @param {string} text - text for cropping
+ * @param {integer} length - cropping length
+ * @param {boolean} dots - whether we must use dots in the end
+ *
+ * @return string - cropped text
+ */
+function getCroppedText(text, length, dots = true)
+{
+    if (!text) {
+        return '';
+    }
 
+    // Clear from html
+    text = strip_tags(text);
+
+    let _strLength = text.length;
+    // If the text is already short
+    if (_strLength < length) {
+        return text;
+    }
+
+    // Cut the text
+    text = text.substr(0, length);
+
+    //Затем убедимся, что текст не заканчивается восклицательным знаком, запятой, точкой или тире:
+    text = rtrim(text, "!,.-");
+
+    // Then find the last space and delete it and letters after
+    text = text.replace(/(.*?)(?: [^ ]*)$/g, '$1');
+
+    return text + (dots ? ' ...' : '');
+}
 
 
 
 module.exports = {
+    getCroppedText,
     preparePhotoPath,
     isFloat,
     crypt,

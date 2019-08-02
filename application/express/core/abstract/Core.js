@@ -99,7 +99,7 @@ class Core {
         } else if (required === false) {
             return undefined;
         } else {
-            this.error(ErrorCodes.ERROR_REQUEST_VARIABLE_NOT_FOUND, '[' + name + ']');
+            this.error(ErrorCodes.ERROR_REQUEST_VARIABLE_NOT_FOUND, '[' + name + ']', undefined, false);
         }
     }
 
@@ -128,6 +128,15 @@ class Core {
      */
     getDeviceType(){
         return this.getFromRequest(Consts.ISMOBILE_CODE_VAR_NAME) ? Consts.MOBILE : Consts.DESCTOP;
+    }
+
+    /*
+     * Return controller name
+     *
+     * @return {string}
+     */
+    getControllerName(){
+        return this.getFromRequest(Consts.CONTROLLER_VAR_NAME);
     }
 
     /*

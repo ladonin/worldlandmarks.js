@@ -354,7 +354,7 @@ class Countries extends Component {
     getCountryCodeFromUrl()
     {
 
-        let _countryCode = this.getFromRequest(Consts.CATALOG_COUNTRY_VAR_NAME);
+        let _countryCode = this.getFromRequest(Consts.ACTION_NAME_COUNTRY);
         let _result;
         let _language = this.getLanguage();
         let _serviceName = this.getServiceName();
@@ -373,7 +373,7 @@ class Countries extends Component {
             this.cache.get('countriesCodes', _serviceName, _language)[_countryCode] = _countryCode;
             return _countryCode;
         }
-        this.error(ErrorCodes.ERROR_FUNCTION_ARGUMENTS, 'country code [' + _countryCode + ']', undefined, false);
+        this.error(ErrorCodes.ERROR_WRONG_GET_VALUE, 'country [' + _countryCode + ']', undefined, false);
     }
 
     /*

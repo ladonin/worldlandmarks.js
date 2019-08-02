@@ -411,14 +411,6 @@ class GeocodeCollectionModel extends DBaseMysql
     }
 
 
-
-
-
-
-
-
-
-
     /*
      * Get geodata and placemarks ids by country and state codes
      *
@@ -479,6 +471,63 @@ class GeocodeCollectionModel extends DBaseMysql
 
         return _result;
     }
+
+
+
+
+    /*
+     * Return placemarks ids of current country and, if set, state in current language
+     *
+     * @param {string} countryCode
+     * @param {string} stateCode
+     * @param {string} language
+     *
+     * @return {array of objects}
+     */
+    getPlacemarksIds(countryCode, stateCode, language)
+    {
+        let _condition = "(language=? OR language='" + Consts.LANGUAGE_EN + "') AND country_code=?";
+        let _where_values = [language, countryCode];
+        if (stateCode) {
+            _condition += " AND state_code=?";
+            _where_values.push(stateCode);
+        }
+
+        this.getByCondition(
+            _condition,
+            order = 'id DESC',
+            group = '',
+            select = 'DISTINCT map_data_id as placemark_id',
+            _where_values,
+            limit = false,
+            need_result = false
+        );
+    }
+
+
+    /*
+     * Return placemarks count in current country
+     *
+     * @param {string} countryCode - country code
+     *
+     * @return {integer}
+     */
+    getPlacemarksCountInCountry(countryCode)
+    {
+        return this.getByCondition(
+            condition = "language='" + Consts.LANGUAGE_EN + "' AND country_code = ?",
+            order = '',
+            group = 'country_code',
+            select = 'COUNT(country_code) as placemarks_count',
+            where_values = [countryCode],
+            limit = 1,
+            need_result = false
+        )[0]['placemarks_count'];
+    }
+
+
+
+
 
 }
 
