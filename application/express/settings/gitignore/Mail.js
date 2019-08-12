@@ -1,6 +1,6 @@
 /*
  * File application/express/settings/gitignore/Mail.js
- * const MailConfig = require_once('application/express/settings/gitignore/Mail');
+ * const MailConfig = require('application/express/settings/gitignore/Mail');
  *
  * Mail settings
  */

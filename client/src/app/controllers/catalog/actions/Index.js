@@ -10,7 +10,7 @@ import { Link } from 'react-router-dom';
 import AbstractAction from 'src/app/abstract/AbstractAction';
 
 // Components
-import Hat from 'src/app/common/blocks/Hat';
+import CountriesList from 'src/app/common/blocks/catalog/index/CountriesList';
 
 //Css
 import "./Css";
@@ -22,11 +22,16 @@ class CatalogIndex extends AbstractAction {
     }
 
     render() {
+
+
         return (
                 <React.Fragment>
-
+                    <CountriesList/>
                 </React.Fragment>
                 );
     }
 }
+
+
+
 export default CatalogIndex;

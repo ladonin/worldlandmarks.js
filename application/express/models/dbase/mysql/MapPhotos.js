@@ -65,12 +65,12 @@ class MapPhotosModel extends DBaseMysql
     delete(placemarkId, photoName, mustBeDeleted = true) {
 
         let _result = this.getByCondition(
-                condition = 'map_data_id=' + BaseFunctions.toInt(placemarkId) + ' AND path=?',
-                order = '',
-                group = '',
-                select = 'id',
-                where_values = [photoName],
-                limit = false,
+                /*condition*/'map_data_id=' + BaseFunctions.toInt(placemarkId) + ' AND path=?',
+                /*order*/'',
+                /*group*/'',
+                /*select*/'id',
+                /*where_values*/[photoName],
+                /*limit*/false,
                 mustBeDeleted
             );
 
@@ -90,12 +90,12 @@ class MapPhotosModel extends DBaseMysql
     {
         // Order by DESC because the last photo will be main now
         return this.getByCondition(
-            condition = "map_data_id = ?",
-            order = 'id DESC',
-            group = '',
-            select = '*',
-            where_values = [id],
-            limit = false,
+            /*condition*/"map_data_id = ?",
+            /*order*/'id DESC',
+            /*group*/'',
+            /*select*/'*',
+            /*where_values*/[id],
+            /*limit*/false,
             needResult
         );
     }

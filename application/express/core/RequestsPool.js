@@ -59,7 +59,7 @@ function checkObject(reqId, objectId, errorMessage = '') {
     if (!_instances_pool[reqId].hasOwnProperty(objectId)) {
         errorProcess(ErrorCodes.ERROR_OBJECT_ABSENT_IN_REQUEST_POOL,
                 errorMessage + ': objectId[' + BaseFunctions.toString(objectId) + '], type of objectId[' + typeof (objectId) + ']');
-}
+    }
 }
 
 module.exports = {

@@ -1,6 +1,6 @@
 /*
  * File application/express/settings/gitignore/Access.js
- * const AccessConfig = require_once('application/express/settings/gitignore/Access');
+ * const AccessConfig = require('application/express/settings/gitignore/Access');
  *
  * Access settings
  */

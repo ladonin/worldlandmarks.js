@@ -8,10 +8,13 @@ const BaseFunctions = require('application/express/functions/BaseFunctions');
 const Language = require('application/express/core/Language');
 const ErrorCodes = require('application/express/settings/ErrorCodes');
 const Consts = require('application/express/settings/Constants');
+const Seo = require('application/express/components/Seo');
+const GeocodeCollectionModel = require('application/express/models/dbase/mysql/GeocodeCollection');
+const Countries = require('application/express/components/Countries');
 
-const AbstractController = require('application/express/controllers/AbstractController');
+const CommonController = require('application/express/controllers/CommonController');
 
-class Catalog extends AbstractController {
+class Catalog extends CommonController {
 
     constructor() {
         super();
@@ -21,49 +24,22 @@ class Catalog extends AbstractController {
      * Action index
      */
     action_index() {
-
-        $seo_module = self::get_module(MY_MODULE_NAME_SEO);
-        $catalog_module = self::get_module(MY_MODULE_NAME_CATALOG);
-        $security = \modules\base\Security\Security::get_instance();
-
-        $this->data['title'] = $seo_module->get_title('catalog/index');
-        $this->data['keywords'] = $seo_module->get_keywords('catalog/index');
-        $this->data['description'] = $seo_module->get_description('catalog/index');
-
-        $this->data['data'] = $catalog_module->get_countries_data();
-        // ЧПУ
-        $this->data['scroll_url'] = MY_DOMEN . '/' . $security->get_controller() . '/' . 'scroll';
-        $this->data['current_url'] = MY_DOMEN . '/' . $security->get_controller() . '/';
-
-        return $this->data;
-    }
-
-
-
-
-
-
-
-
-
-
-
-
-
-        this.addDynamicData({errorMessage: 'errorMessageerrorMessageerrorMessageerrorMessage'});////ATTENTION - обратите внимание
-
-
-
-
-
-
-        this.data = {};
+        this.addDynamicData({
+            'title':Seo.getInstance(this.requestId).getTitle('catalog/index'),
+            'keywords':Seo.getInstance(this.requestId).getKeywords('catalog/index'),
+            'description':Seo.getInstance(this.requestId).getDescription('catalog/index'),
+            'data':Countries.getInstance(this.requestId).prepareCountriesNames(GeocodeCollectionModel.getInstance(this.requestId).getCountriesData(this.getLanguage())),
+            'scroll_url':'/' + this.getControllerName() + '/scroll',
+            'current_url':'/' + this.getControllerName() + '/'
+        });
 
         this.sendMe('index');
-
-
-
     }
+
+
+       // this.addDynamicData({errorMessage: 'errorMessageerrorMessageerrorMessageerrorMessage'});////ATTENTION - обратите внимание
+
+
 
 
 

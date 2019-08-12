@@ -5,17 +5,17 @@
  * Countries component - compute countries data
  */
 
-const Component = require('application/express/core/abstract/Component');
+const Component = require('application/express/core/parents/Component');
 const BaseFunctions = require('application/express/functions/BaseFunctions');
 const Consts = require('application/express/settings/Constants');
 const ErrorCodes = require('application/express/settings/ErrorCodes');
-const CountriesNamesReplaces = require('application/express/settings/countries/CountriesNamesReplaces');
 const CountriesModel = require('application/express/models/dbase/mysql/Countries');
 const CountryNameModel = require('application/express/models/dbase/mysql/CountryName');
 const CountryStatesModel = require('application/express/models/dbase/mysql/CountryStates');
 const CountryStatesCitiesTranslationsModel = require('application/express/models/dbase/mysql/CountryStatesCitiesTranslations');
 const CountryParamsModel = require('application/express/models/dbase/mysql/CountryParams');
 const CountryStatesNamesModel = require('application/express/models/dbase/mysql/CountryStatesNames');
+const CountriesNamesReplaces = require('application/express/settings/CountriesNamesReplaces');
 
 class Countries extends Component {
 
@@ -40,7 +40,7 @@ class Countries extends Component {
         if (!name) {
             return this.getText('countries/undefined/name');
         }
-
+        
         for (let _replacedName in this.countriesNamesReplaces) {
 
             let _replace = this.countriesNamesReplaces[_replacedName];
@@ -51,6 +51,23 @@ class Countries extends Component {
 
         return name;
     }
+
+
+    /*
+     * Prepare name for all countries
+     *
+     * @param {array of objects} countries - countries data
+     *
+     * @return {array of objects} - prepared countries data
+     */
+    prepareCountriesNames(countries) {
+
+        for (let _index in countries) {
+            countries[_index]['country'] = this.prepareCountryName(countries[_index]['country']);
+        }
+        return countries;
+    }
+
 
     /*
      * Get country name from request
@@ -147,7 +164,7 @@ class Countries extends Component {
 
 // //ATTENTION - обратите внимание translateStateNames => getTranslationOfStateName
 // //ATTENTION - обратите внимание translateCityNames => getTranslationOfCityName
-
+//getStateNameByGetVar => getStateNameFromRequest
 
 
 
@@ -347,11 +364,11 @@ class Countries extends Component {
     }
 
     /*
-     * Get country code by request url
+     * Get country code from request url
      *
      * @return {string}
      */
-    getCountryCodeFromUrl()
+    getCountryCodeFromRequest()
     {
 
         let _countryCode = this.getFromRequest(Consts.ACTION_NAME_COUNTRY);
@@ -408,13 +425,13 @@ class Countries extends Component {
     }
 
     /*
-     * Get state name by request url
+     * Get state name from request url
      *
      * @param {boolean} needResult - is result required
      *
      * @return {string}
      */
-    getStateNameByGetVar(needResult = true)
+    getStateNameFromRequest(needResult = true)
     {
 
         let _stateCode = this.getFromRequest(Consts.CATALOG_STATE_VAR_NAME);

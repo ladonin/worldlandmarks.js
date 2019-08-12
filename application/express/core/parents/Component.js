@@ -1,9 +1,9 @@
 /*
- * File application/express/core/abstract/Component.js
- * const Component = require('application/express/core/abstract/Component');
+ * File application/express/core/parents/Component.js
+ * const Component = require('application/express/core/parents/Component');
  *
  * Base component
- * Available validation rules see in 'application/express/core/abstract/Model.js'
+ * Available validation rules see in 'application/express/core/parents/Model.js'
  */
 const BaseFunctions = require('application/express/functions/BaseFunctions');
 const RequestsPool = require('application/express/core/RequestsPool');
@@ -11,7 +11,7 @@ const ErrorCodes = require('application/express/settings/ErrorCodes');
 const Consts = require('application/express/settings/Constants');
 const Messages = require('application/express/settings/Messages');
 const Config = require('application/express/settings/Config');
-const Core = require('application/express/core/abstract/Core');
+const Core = require('application/express/core/parents/Core');
 const Language = require('application/express/core/Language');
 const Service = require('application/express/core/Service');
 const Cache = require('application/express/components/base/Cache');
@@ -61,7 +61,7 @@ class Component extends Core {
      * @returns {string}
      */
     getText(adress, vars){
-        Language.getInstance(this.requestId).getText(adress, vars);
+        return Language.getInstance(this.requestId).getText(adress, vars);
     }
 
     /*

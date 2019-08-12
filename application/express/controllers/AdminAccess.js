@@ -5,7 +5,7 @@
  */
 
 
-const Controller = require('application/express/core/abstract/Controller');
+const Controller = require('application/express/core/parents/Controller');
 const Users = require('application/express/core/Users');
 
 

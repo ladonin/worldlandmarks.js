@@ -9,11 +9,11 @@ const Fetch = require('node-fetch');
 const Deasync = require('deasync');
 const Fs = require('fs');
 
-const Component = require('application/express/core/abstract/Component');
+const Component = require('application/express/core/parents/Component');
 const BaseFunctions = require('application/express/functions/BaseFunctions');
 const Consts = require('application/express/settings/Constants');
 const ErrorCodes = require('application/express/settings/ErrorCodes');
-const AccessConfig = require_once('application/express/settings/gitignore/Access');
+const AccessConfig = require('application/express/settings/gitignore/Access');
 const Service = require('application/express/core/Service');
 const GeocodeCollectionModel = require('application/express/models/dbase/mysql/GeocodeCollection');
 const MapPhotosModel = require('application/express/models/dbase/mysql/MapPhotos');

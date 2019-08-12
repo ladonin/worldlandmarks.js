@@ -5,6 +5,7 @@
  */
 
 const Constants = require('application/express/settings/Constants');
+const Seo = require('application/express/settings/language/seo/En');
 
 module.exports = {
     'domain_name': 'WORLD-LANDMARKS.RU',
@@ -117,23 +118,11 @@ module.exports = {
     'page_bottom/articles_categories/text': 'Articles by category selection',
     'articles_countries/header/text': 'Choose a country',
     'articles_categories/header/text': 'Choose a category',
-    'site/title/catalog/sitemap_countries/country': 'Site map. %country%.',
-    'site/title/catalog/sitemap_countries/index': 'Site map. Countries.',
-    'site/title/catalog/sitemap_categories/category': 'Site map. %category%.',
-    'site/title/catalog/sitemap_categories/index': 'Site map. Categories.',
-    'site/keywords/catalog/sitemap_countries/index': 'countries',
-    'site/keywords/catalog/sitemap_categories/index': 'categories',
     'text_form/tags/a/title': 'Link',
     'text_form/tags/p/title': 'Paragraph',
     'text_form/tags/b/title': 'Bold',
     'text_form/tags/strong/title': 'Tag <strong>',
     'text_form/tags/img/title': 'Image',
-    'site/title/articles/country': 'Articles abount world landmarks. %country%.',
-    'site/title/articles/category': 'Articles abount world landmarks. %category%.',
-    'site/title/articles/index': 'Articles abount world landmarks',
-    'site/description/articles/country': '',
-    'site/description/articles/category': '',
-    'site/description/articles/index': '',
-    'site/keywords/articles/index': '',
-    'see_all': 'see all'
+    'see_all': 'see all',
+    ...Seo
 }

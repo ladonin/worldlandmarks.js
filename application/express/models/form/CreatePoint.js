@@ -5,7 +5,7 @@
  * Create or update point form model
  */
 
-const Form = require('application/express/core/abstract/Form');
+const Form = require('application/express/core/parents/Form');
 const Service = require('application/express/core/Service');
 const BaseFunctions = require('application/express/functions/BaseFunctions');
 const Consts = require('application/express/settings/Constants');

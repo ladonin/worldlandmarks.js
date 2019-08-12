@@ -5,7 +5,7 @@
  * Placemark's categories and subcategories block
  */
 
-const Component = require('application/express/core/abstract/Component');
+const Component = require('application/express/core/parents/Component');
 const BaseFunctions = require('application/express/functions/BaseFunctions');
 const Consts = require('application/express/settings/Constants');
 const Catalog = require('application/express/components/Catalog');

@@ -5,7 +5,7 @@
  * Catalog component - compute catalog data
  */
 
-const Component = require('application/express/core/abstract/Component');
+const Component = require('application/express/core/parents/Component');
 const BaseFunctions = require('application/express/functions/BaseFunctions');
 const Consts = require('application/express/settings/Constants');
 const ErrorCodes = require('application/express/settings/ErrorCodes');
@@ -16,6 +16,9 @@ const Users = require('application/express/core/Users');
 const Cache = require('application/express/components/base/Cache');
 const Categories = require('application/express/components/Categories');
 const Map = require('application/express/components/Map');
+const GeocodeCollectionModel = require('application/express/models/dbase/mysql/GeocodeCollection');
+const MapDataModel = require('application/express/models/dbase/mysql/MapData');
+const Config = require('application/express/settings/Config');
 
 class Catalog extends Component {
 
@@ -84,9 +87,9 @@ class Catalog extends Component {
                 }
             }
         }
-        let _locality = ''
+        let _locality = '';
         let _localitySource = '';
-        if (Countries.getInstance(this.requestId).isAdministrativeCenter(countryCcode, stateCode) == false) {
+        if (Countries.getInstance(this.requestId).isAdministrativeCenter(countryCcode, stateCode) === false) {
             _addres += '<span class="locality">';
             if (city) {
                 _locality = Countries.getInstance(this.requestId).getTranslationOfCityName(countryCcode, city, stateCode, _language);
@@ -154,7 +157,7 @@ class Catalog extends Component {
         if (this.getControllerName() === Consts.CONTROLLER_NAME_ARTICLE){
 
             for (let _index in _categories) {
-                _categories[index]['title'] = Categories.getInstance(this.requestId).prepareNameForArticles(_categories[index]['code'], _categories[index]['title']);
+                _categories[_index]['title'] = Categories.getInstance(this.requestId).prepareNameForArticles(_categories[_index]['code'], _categories[_index]['title']);
             }
         }
 
@@ -173,7 +176,7 @@ class Catalog extends Component {
         let _categories = Service.getInstance(this.requestId).getCategories();
 
         for (let _index in _categories) {
-            let _category = _categories[index];
+            let _category = _categories[_index];
 
             if (_category['code'] === code) {
                 return _category['id'];
@@ -194,7 +197,7 @@ class Catalog extends Component {
         let _categories = this.getCategories();
 
         for (let _index in _categories) {
-            let _category = _categories[index];
+            let _category = _categories[_index];
 
             if (_category['id'] === id) {
                 return _category;
@@ -228,7 +231,7 @@ class Catalog extends Component {
         let _categories = Service.getInstance(this.requestId).getCategories();
 
         for (let _index in _categories) {
-            let _category = _categories[index];
+            let _category = _categories[_index];
 
             if (_category['id'] === id) {
                 return _category['code'];
@@ -322,7 +325,7 @@ class Catalog extends Component {
             let _placemark = _placemarks[_index];
 
             let _state = '';
-            if (_placemark['state_code'] && _placemark['state_code'] != Consts.UNDEFINED_VALUE) {
+            if (_placemark['state_code'] && _placemark['state_code'] !== Consts.UNDEFINED_VALUE) {
                 _state = '/' + _placemark['state_code'];
             }
 
@@ -337,7 +340,7 @@ class Catalog extends Component {
 
 //ATTENTION - обратите внимание
 //getPlacemarksCountByCategory => getPlacemarksCountByCategoryId
-
+// getCountriesData => GeocodeCollectionModel.getInstance(this.requestId).getCountriesData();
     /*
      * Return placemarks count by category id
      *
@@ -348,16 +351,6 @@ class Catalog extends Component {
     getPlacemarksCountByCategory(id)
     {
         return MapDataModel.getInstance(this.requestId).getPlacemarksCountByCategory(id);
-    }
-
-    /*
-     * Return data of all countries
-     *
-     * @return {array of objects}
-     */
-    getCountriesData()
-    {
-        return GeocodeCollectionModel.getInstance(this.requestId).getCountriesData();
     }
 
     /*
@@ -412,7 +405,7 @@ class Catalog extends Component {
      */
     processCountryPageData()
     {
-        let _countryCode = Countries.getInstance(this.requestId).getCountryCodeFromUrl();
+        let _countryCode = Countries.getInstance(this.requestId).getCountryCodeFromRequest();
 
         // If country has states
         if (Countries.getInstance(this.requestId).hasStates(_countryCode)) {
@@ -447,6 +440,8 @@ class Catalog extends Component {
 //get_placemarks_count => MapDataModel.getInstance(this.requestId).getPlacemarksCount()
 //getPhotosData => getPlacemarksPhotos
 //getStateData => getStatePlacemarksByUrl
+//getStates => GeocodeCollectionModel.getInstance(this.requestId).getStates()
+//getPointsList => getPlacemarksList
     /*
      * Return photos data of current country
      *
@@ -460,7 +455,7 @@ class Catalog extends Component {
             this.error(ErrorCodes.ERROR_FUNCTION_ARGUMENTS, message = 'country code[' + countryCode + ']', log_type = undefined, writeToLog = false);
         }
 
-        let _placemarksData = GeocodeCollectionModel.getInstance(this.requestId).getPlacemarksData(countryCode, null, true);
+        let _placemarksData = GeocodeCollectionModel.getInstance(this.requestId).getPlacemarksData(countryCode, null, this.getLanguage(), true);
         return this.getPhotosData(_placemarksData['ids'], _placemarksData['data']);
     }
 
@@ -479,7 +474,7 @@ class Catalog extends Component {
             this.error(ErrorCodes.ERROR_FUNCTION_ARGUMENTS, message = 'country code[' + countryCode + '], state code[' + stateCode + ']', log_type = undefined, writeToLog = false);
         }
 
-        let _placemarksData = GeocodeCollectionModel.getInstance(this.requestId).getPlacemarksData(countryCode, stateCode, true);
+        let _placemarksData = GeocodeCollectionModel.getInstance(this.requestId).getPlacemarksData(countryCode, stateCode, this.getLanguage(), true);
 
         return this.getPhotosData(_placemarksData['ids'], _placemarksData['data']);
     }
@@ -533,7 +528,7 @@ class Catalog extends Component {
      */
     getStatePlacemarksByUrl()
     {
-        let _countryCode = Countries.getInstance(this.requestId).getCountryCodeFromUrl();
+        let _countryCode = Countries.getInstance(this.requestId).getCountryCodeFromRequest();
 
         let _stateCode = this.getFromRequest(Consts.ACTION_NAME_STATE, required = true);
 
@@ -560,7 +555,7 @@ class Catalog extends Component {
      */
     getPlacemarks(countryCode, stateCode, language)
     {
-        let _placemarksIds = GeocodeCollectionModel.getInstance(this.requestId).getPlacemarksIds(countryCode, stateCode, language)
+        let _placemarksIds = GeocodeCollectionModel.getInstance(this.requestId).getPlacemarksIds(countryCode, stateCode, language);
         let _ids = [];
 
         for (let _index in _placemarksIds) {
@@ -577,388 +572,226 @@ class Catalog extends Component {
                 _result[_index]['title'] = this.getText('map/default_title_part/value') + ' ' + _placemark['id'];
             }
 
-            _result[_index]['comment'] = BaseFunctions.getCroppedText(_placemark['comment'], Config['restrictions']['max_cropped_text_length']);
+            _result[_index]['comment'] = BaseFunctions.getCroppedText(_placemark['comment'], Config['restrictions']['max_cropped_text_length'], undefined, this);
         }
         return _result;
     }
 
 
+    /*
+     * Return limited collection of placemarks
+     *
+     * @param {integer} idStart - placemark id from which collection will be started
+     *
+     * @return {array of objects}
+     */
+    getPlacemarksList(idStart = 0)
+    {
+
+        let _result;
+        let _ids = [];
+
+        let _language = this.getLanguage();
+        let _limit = Config['restrictions']['max_rows_per_scroll_load'];
+        let _requestFormData = this.getRequestFormData();
+
+        // If search page
+        if (_requestFormData['isSearch']) {
+
+            let _category = _requestFormData['category'];
+            let _country = _requestFormData['country'];
+            let _state = _requestFormData['state'];
+            let _keywords = _requestFormData['keywords'];
+
+            let _placemarks = MapDataModel.getInstance(this.requestId).getPlacemarksSeacrhList(
+                idStart,
+                _category,
+                _country = '',
+                _state = '',
+                _keywords = '',
+                _limit,
+                _language,
+                needResult = false
+            );
+
+            for (let _index in _placemarks) {
+                _ids.push(_placemarks[_index]['id']);
+            }
+
+        } else {
+            let _placemarks = MapDataModel.getInstance(this.requestId).getLastPLacemarks (idStart, limit);
+
+            for (let _index in _placemarks) {
+                _ids.push(_placemarks[_index]['id']);
+            }
+
+        }
+
+        _result = Map.getInstance(this.requestId).getPointsBigDataByIds(_ids, false);
+
+        for (let _index in _result) {
+            let _placemark = _result[_index];
+
+            if (!_placemark['title']) {
+                _result[_index]['title'] = this.getText('map/default_title_part/value') + ' ' + _placemark['id'];
+            }
+
+            _result[_index]['comment'] = BaseFunctions.getCroppedText(_placemark['comment'], Config['restrictions']['max_cropped_text_length'], undefined, this);
+        }
+        return _result;
+    }
 
 
+    /*
+     * Return breadcrumbs data according with page
+     *
+     * @return {array of objects}
+     */
+    getBreadcrumbsData()
+    {
+        let _countryCode = this.getFromRequest(Consts.ACTION_NAME_COUNTRY, false);
+        let _stateCode = this.getFromRequest(Consts.ACTION_NAME_STATE, false);
+        let _idPlacemark = BaseFunctions.toInt(this.getFromRequest(Consts.ID_VAR_NAME, false));
+        let _language = this.getLanguage();
+
+        let _return = [];
+
+        let _controllerName = this.getControllerName();
+        let _countriesUrl = '/' + _controllerName;
+        let _countriesName = this.getText('breadcrumbs/' + _controllerName + '/text');
+
+        let _countries = {
+            'url':_countriesUrl,
+            'name': _countriesName,
+        };
+
+        let _placemarks;
+        let _states;
+        let _actionName = this.getActionName();
+
+        // In this case breadcrumbs are not showed
+        if ((_controllerName === Consts.CONTROLLER_NAME_CATALOG) &&
+                ((_actionName === Consts.ACTION_NAME_SITEMAP_COUNTRIES) || (_actionName === Consts.ACTION_NAME_SITEMAP_CATEGORIES))) {
+            return _return;
+        }
+
+        if (_idPlacemark) {
+
+            let _result = GeocodeCollectionModel.getInstance(this.requestId).getBreadcrumbsForPlacemarkPage(_idPlacemark, _language);
+            _states = {
+                'url':'/' + _controllerName + '/' + _result['country_code'],
+                'name' : Countries.getInstance(this.requestId).prepareCountryName(_result['country'])
+            };
+
+            if (Countries.getInstance(this.requestId).hasStates(_result['country_code'])) {
+                _placemarks = {
+                    'url' : '/' + _controllerName + '/' + _result['country_code'] + '/' + _result['state_code'],
+                    'name' : Countries.getInstance(this.requestId).getTranslationOfStateName(_language, _countryCode, _result['state'], _result['state_code'])
+                };
+            }
+
+            // In countries page breadcrumbs will be empty
+
+            // Return to countries list page
+            _return[0] = _countries;
+
+            // Return to country states list page or placemarks list if there are no states in country
+            _return[1] = _states;
+
+            if (_placemarks) {
+                // Return to placemarks list page
+                // If there are no states in country element 1 in array will lead to placemarks list page
+                _return[2] = _placemarks;
+            }
+            return _return;
+        }
+
+        if (_stateCode) {
+
+            let _result = GeocodeCollectionModel.getInstance(this.requestId).getBreadcrumbsForPlacemarkPage(_countryCode, _stateCode, _language);
+
+            if (Countries.getInstance(this.requestId).hasStates(_result['country_code'])) {
+                _states = {
+                    'url':'/' + _controllerName + '/' + _result['country_code'],
+                    'name' : Countries.getInstance(this.requestId).prepareCountryName(_result['country'])
+                };
+
+                _placemarks = {
+                    'url' : null,
+                    'name': Countries.getInstance(this.requestId).getTranslationOfStateName(_language, _countryCode, _result['state'], _result['state_code'])
+                };
+            } else {
+                _states = {
+                    'url' : null,
+                    'name' : Countries.getInstance(this.requestId).prepareCountryName(_result['country'])
+                };
+            }
+
+            // Return to countries list page
+            _return[0] = _countries;
+
+            // Return to country states list page or just country name without url
+            _return[1] = _states;
+
+            if (_placemarks) {
+                // State name
+                _return[2] = _placemarks;
+            }
+
+            return _return;
+        }
+
+        if (_countryCode) {
+
+            let _result = GeocodeCollectionModel.getInstance(this.requestId).getBreadcrumbsForCountryPage(_countryCode, _language);
+
+            _states = {
+                'url' : null,
+                'name' : Countries.getInstance(this.requestId).prepareCountryName(_result['country'])
+            };
+
+            // Return to countries list page
+            _return[0] = _countries;
+
+            // State name
+            _return[1] = _states; // возврат в список штатов (или меток, если штатов нет в стране)
+            return _return;
+        }
+
+        if (_actionName === Consts.CONTROLLER_NAME_SEARCH) {
+
+            _return[0] = _countries;
+
+            _return[1] = {
+                'url' : null,
+                'name' : this.getText('site/title/catalog/search/title')
+            };
+            return _return;
+        }
+
+        return _return;
+    }
 
 
+//ATTENTION - обратите внимание
+/*
+    getPlacemarksTitle()
+    {
+        let _countryCode = this.getFromRequest(Consts.ACTION_NAME_COUNTRY, false);
+        let _stateCode = this.getFromRequest(Consts.ACTION_NAME_STATE, false);
 
+        if (_stateCode) {
+            return Countries.getInstance(this.requestId).getStateNameFromRequest();
+        }
 
-
-
-
+        if (_countryCode) {
+            return Countries.getInstance(this.requestId).getCountryNameFromRequest();
+        }
+    }
+*/
 
 
 }
 
 Catalog.instanceId = BaseFunctions.unique_id();
 module.exports = Catalog;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    protected function get_states($country_code, $language)
-    {
-
-        $db_model_adress = self::get_model(MY_MODEL_NAME_DB_GEOCODE_COLLECTION);
-        $condition = "language='" . $language . "' AND country_code='" . $country_code . "' AND state_code !='" . MY_UNDEFINED_VALUE . "'";
-        $order = "state ASC";
-        $select = 'DISTINCT administrative_area_level_1 as state, state_code';
-        $limit = false;
-        $need_result = false;
-        $states = $db_model_adress->get_by_condition($condition, $order, '', $select, $limit, $need_result);
-//$result = $this->prepare_country_data($states, $country_code);
-        return $states;
-    }
-    /* когда добавим новый язык, тогда пройдемся по всем записям и будем впоследствии добавлять их и на новом языке
-      protected function prepare_country_data(array $data, $country_code) {
-      $language_component = components\Language::get_instance();
-      $language = $language_component->get_language();
-      $db_model_adress = self::get_model(MY_MODEL_NAME_DB_GEOCODE_COLLECTION);
-
-
-      foreach ($data as $value) {
-      $countries[$value['map_data_id']][$value['language']]['state'] = $value['state'];
-      $countries[$value['map_data_id']][$value['language']]['state_code'] = $value['state_code'];
-      }
-
-      // подготавливаем данные, чтобы были все
-      foreach ($countries as $data_id => &$value) {
-      // если нет названия штата (области) на таком языке, то просим гугл дать нам информацию на нем - запишем её в базу и отобразим
-      if (my_array_is_empty(@$value[$language])) {
-
-      $data = $db_model_adress->add_one_language($data_id, $language, array('country' => $country_code, 'administrative_area_level_1' => $value[MY_LANGUAGE_EN]['state']));
-      $value[$language]['state'] = $data['administrative_area_level_1'];
-      $value[$language]['state_code'] = $value[MY_LANGUAGE_EN]['state_code'];
-      }
-      }
-
-      // убираем ненужные (английский, например, теперь он нам не нужен)
-      $result = array();
-      $helper = array();
-      foreach ($countries as $country) {
-      // области не должны повторяться и только на нужном языке
-      if (!in_array($country[$language]['state_code'], $helper)) {
-      $helper[] = $country[$language]['state_code'];
-      $result[] = $country[$language];
-      }
-      }
-
-      return $result;
-      }
-
-     */
-
-
-    public function get_points_list($id_start = 0)
-    {
-        $map_db_model_geocode = self::get_model(MY_MODEL_NAME_DB_GEOCODE_COLLECTION);
-        $map_db_model_data = components\Map::get_db_model('data');
-        $map_module = self::get_module(MY_MODULE_NAME_MAP);
-        $language_model = components\Language::get_instance();
-        $language = $language_model->get_language();
-        $connect = $map_db_model_data->get_connect();
-
-        $config = self::get_config();
-        $condition = '1';
-        $limit = $config['allows']['max_rows_per_scroll_load'];
-
-
-        $is_search = (int) @$_POST['is_search'];
-//для поиска добавляем условия
-        if ($is_search) {
-
-            $order = 'c.id DESC';
-            if ($id_start) {
-                $condition .= ' AND c.id < ' . $id_start;
-            }
-
-            $category = isset($_SESSION['search']['category']) ? $_SESSION['search']['category'] : null;
-            $country = isset($_SESSION['search']['country']) ? $_SESSION['search']['country'] : null;
-            $state = isset($_SESSION['search']['state']) ? $_SESSION['search']['state'] : null;
-
-
-            $keywords = isset($_SESSION['search']['keywords']) ? $_SESSION['search']['keywords'] : null;
-
-            if (!is_null($category) && (($category === '0') || $category)) {
-                $condition .= " AND (c.category = " . (int) $category . " OR c.subcategories REGEXP '[[:<:]]" . (int) $category . "[[:>:]]')";
-            }
-            if (!is_null($country) && $country) {
-                $condition .= ' AND LOWER(geo.country_code) = LOWER(' . $connect->quote($country) . ')';
-            }
-            if (!is_null($state) && $state) {
-                $condition .= ' AND LOWER(geo.state_code) = LOWER(' . $connect->quote($state) . ')';
-            }
-            if (!is_null($keywords) && $keywords) {
-                $condition .= ' AND LOWER(c.title) LIKE' . $connect->quote(strtolower('%' . $keywords . '%'));
-            }
-            $sql = "SELECT
-                    c.id as c_id
-                    FROM " . $map_db_model_data->get_table_name() . " c "
-                    . "LEFT JOIN " . $map_db_model_geocode->get_table_name() . " geo on geo.map_data_id = c.id AND geo.language='" . $language . "' "
-                    . "WHERE " . $condition . " "
-                    . "ORDER by " . $order . " "
-                    . " LIMIT " . $limit;
-            $result = $connect->query($sql, \PDO::FETCH_ASSOC)->fetchAll();
-            $ids = array();
-            foreach ($result as $value) {
-                $ids[] = $value['c_id'];
-            }
-        } else {
-            $order = 'id DESC';
-            if ($id_start) {
-                $condition .= ' AND id < ' . $id_start;
-            }
-            $result = $map_db_model_data->get_by_condition($condition, $order, '', $select = 'id', $limit, $need_result = false);
-            $ids = array();
-            foreach ($result as $value) {
-                $ids[] = $value['id'];
-            }
-        }
-
-
-
-        $result = $map_module->get_point_content_by_ids($ids, false);
-
-        foreach ($result as &$value) {
-
-            if (!$value['title']) {
-                $value['title'] = my_pass_through(@self::trace('map/default_title_part/value')) . ' ' . $value['id'];
-            }
-
-            $value['comment'] = get_cutted_text($value['comment'], $config['allows']['max_cropped_text_length']);//self
-        }
-        return $result;
-    }
-
-
-    public function get_breadcrumbs_data()
-    {
-
-        $db_model_adress = self::get_model(MY_MODEL_NAME_DB_GEOCODE_COLLECTION);
-        $data_db_model = components\Map::get_db_model('data');
-        $language_component = components\Language::get_instance();
-        $country_component = components\Countries::get_instance();
-
-        $country_code = $this->get_get_var(MY_CATALOG_COUNTRY_VAR_NAME);
-        $state_code = $this->get_get_var(MY_CATALOG_STATE_VAR_NAME);
-        $id_placemark = (int) $this->get_get_var(MY_ID_VAR_NAME);
-
-        $language = $language_component->get_language();
-
-        $connect = $data_db_model->get_connect();
-        $return = array();
-        $countries_url = MY_DOMEN . '/' . get_controller_name();
-        $countries_name = self::trace('breadcrumbs/' . get_controller_name() . '/text');
-        $countries = array(
-            'url' => $countries_url,
-            'name' => $countries_name,
-        );
-        $placemarks = array();
-
-        $controller_name=get_controller_name();
-        $action_name=get_action_name();
-
-        // В этом случае не показываем breadcrumbs
-        if (($controller_name===MY_CONTROLLER_NAME_CATALOG) && (($action_name===MY_ACTION_NAME_SITEMAP_COUNTRIES) || ($action_name==MY_ACTION_NAME_SITEMAP_CATEGORIES))){
-            return array();
-        }
-
-        if ($id_placemark) {
-
-            $condition = "language='" . $language . "' AND map_data_id=" . $id_placemark;
-            $order = null;
-            $select = 'country, country_code, administrative_area_level_1 as state, state_code';
-            $limit = 1;
-            $need_result = true;
-            $result = $db_model_adress->get_by_condition($condition, $order, '', $select, $limit, $need_result);
-
-
-            $states = array(
-                'url' => MY_DOMEN . '/' . get_controller_name() . '/' . $result['country_code'],
-                'name' => $country_component->prepare_country_name($result['country'])
-            );
-            if ($country_component->has_states($result['country_code'])) {
-                $placemarks = array(
-                    'url' => MY_DOMEN . '/' . get_controller_name() . '/' . $result['country_code'] . '/' . $result['state_code'],
-                    'name' => $country_component->translate_state_names($language, $country_code, $result['state'], $result['state_code'])
-                );
-            }
-
-// в списке стран bredcrumbs будут пустые
-//смотрим штаты
-            $return[0] = $countries; // возврат в список стран
-//смотрим метки штата
-            $return[1] = $states; // возврат в список штатов (или меток, если штатов нет в стране)
-//смотрим метку
-            if ($placemarks) {
-                $return[2] = $placemarks; // возврат в список меток - уровень штата (если он есть, иначе элемент [1] будет отсутствовать - уровень страны)
-            }
-            return $return;
-        }
-
-
-        if ($state_code) {
-
-            $condition = "state_code=" . $connect->quote($state_code) . " AND language='" . $language . "'";
-            $order = null;
-            $select = 'country, country_code, administrative_area_level_1 as state, state_code';
-            $limit = 1;
-            $need_result = true;
-            $result = $db_model_adress->get_by_condition($condition, $order, '', $select, $limit, $need_result);
-
-
-
-
-
-
-            if ($country_component->has_states($result['country_code'])) {
-                $states = array(
-                    'url' => MY_DOMEN . '/' . get_controller_name() . '/' . $result['country_code'],
-                    'name' => $country_component->prepare_country_name($result['country'])
-                );
-                $placemarks = array(
-                    'url' => null,
-                    'name' => $country_component->translate_state_names($language, $country_code, $result['state'], $result['state_code'])
-                );
-            } else {
-                $states = array(
-                    'url' => null,
-                    'name' => $country_component->prepare_country_name($result['country'])
-                );
-            }
-
-
-
-
-// в списке стран bredcrumbs будут пустые
-//смотрим штаты
-            $return[0] = $countries; // возврат в список стран
-//смотрим метки штата
-            $return[1] = $states; // возврат в список штатов (или меток, если штатов нет в стране)
-            if ($placemarks) {
-                $return[2] = $placemarks; // возврат в список меток - уровень штата (если он есть, иначе элемент [1] будет отсутствовать - уровень страны)
-            }
-
-
-
-            return $return;
-        }
-
-
-        if ($country_code) {
-
-
-
-
-            $condition = "country_code=" . $connect->quote($country_code) . " AND language='" . $language . "'";
-            $order = null;
-            $select = 'country, country_code, administrative_area_level_1 as state, state_code';
-            $limit = 1;
-            $need_result = true;
-            $result = $db_model_adress->get_by_condition($condition, $order, '', $select, $limit, $need_result);
-
-
-
-            $states = array(
-                'url' => null,
-                'name' => $country_component->prepare_country_name($result['country'])
-            );
-
-
-// в списке стран bredcrumbs будут пустые
-//смотрим штаты
-            $return[0] = $countries; // возврат в список стран
-//смотрим метки штата
-            $return[1] = $states; // возврат в список штатов (или меток, если штатов нет в стране)
-            return $return;
-        }
-
-        if (get_action_name() === MY_MODULE_NAME_SEARCH) {
-
-            $return[0] = $countries;
-
-            $return[1] = array(
-                'name' => my_pass_through(@self::trace('site/title/catalog/search/title'))
-            );
-        }
-
-
-        return $return;
-    }
-
-
-    public function get_placemarks_title()
-    {
-        $country_code = $this->get_get_var(MY_CATALOG_COUNTRY_VAR_NAME);
-        $state_code = $this->get_get_var(MY_CATALOG_STATE_VAR_NAME);
-
-        $country_component = components\Countries::get_instance();
-        if ($state_code) {
-            return $country_component->get_state_name_by_get_var();
-        }
-
-        if ($country_code) {
-            return $country_component->get_country_name_by_get_var();
-        }
-    }
-
-
-
-
-
-
-}

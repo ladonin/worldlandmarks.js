@@ -4,7 +4,11 @@
  */
 
 
-import socket from 'socket.io-client';
+import SocketIO from 'socket.io-client';
+
+// Settings
+import Consts from 'src/settings/Constants';
+
 import BaseFunctions from 'src/functions/BaseFunctions';
 import Config from 'src/settings/Config';
 import Controller from 'src/modules/controller/Controller';
@@ -13,7 +17,7 @@ import Service from 'src/modules/Service';
 import {isMobile} from "react-device-detect";
 
 
-const Socket = socket(Config.apiServer.socketUrl, {
+const Socket = SocketIO(Config.apiServer.socketUrl, {
     query: {
         token: BaseFunctions.uniqueString()////ATTENTION - обратите внимание
     }
@@ -33,13 +37,15 @@ Socket.on('error-catch', function (data) {
 
 
 export default {
-    query(data) {
-        data = {...data,
+    query(data = {}) {
+        data = {
+            [Consts.REQUEST_FORM_DATA]:{},
+            ...data,
             controller: Controller.getControllerName(),
             action: Controller.getActionName(),
             service: Service.getName(),
             language: Language.getName(),
-            isMobile: isMobile ? true : false
+            isMobile: isMobile ? true : false,
         }
 
         Socket.emit('api', data);

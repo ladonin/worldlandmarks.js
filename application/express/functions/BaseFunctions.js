@@ -34,8 +34,17 @@ const _lang = require('lodash/lang');
 
 
 
-
-
+/*
+ * Check whether array is empty or not
+ *
+ * @param {array} arr
+ *
+ * @return {boolean}
+ */
+function quote(string)
+{
+    return string.replace(/\'/i, '\'');
+}
 
 
 
@@ -782,44 +791,6 @@ function get_flag_url(country_code)
 
 
 /*
- * Cutting text with saving word integrity
- *
- * @param {string} text - text for cutting
- * @param {integer} length - cutting length
- * @param {object} self - reference on current caller class instance
- *
- * @return {string} - cutted text
- */
-function get_cutted_text(text, length, dots = true, self)
-{
-    checkOnString(text, self);
-
-    if (text === '') {
-        return '';
-    }
-
-    // Clear from html tags
-    text = strip_tags(text);
-
-
-    // Maybe text length is not too big
-    if (text.length < length) {
-        return text;
-    }
-
-    // Cut text
-    text = text.substring(0, length);
-
-    // Ensure that text is not ending with specific symbols
-    text = rtrim(text, "!,.-");
-
-    // Find the last space and delete it with a possible chunk of the word on the right
-    text = text.replace(/(.*?)(?: [^ ]*)$/gi, '$1');
-
-    return text + (dots ? ' ...' : '');
-}
-
-/*
  * Call error
  *
  * @param {object} errorCode - error data {code, name}
@@ -1050,11 +1021,14 @@ function preparePhotoPath(id, name, prefix, onlyDir = false, isUrl = false, serv
  * @param {string} text - text for cropping
  * @param {integer} length - cropping length
  * @param {boolean} dots - whether we must use dots in the end
+ * @param {object} self - reference on current caller class instance
  *
  * @return string - cropped text
  */
-function getCroppedText(text, length, dots = true)
+function getCroppedText(text, length, dots = true, self)
 {
+    checkOnString(text, self);
+
     if (!text) {
         return '';
     }
@@ -1071,18 +1045,34 @@ function getCroppedText(text, length, dots = true)
     // Cut the text
     text = text.substr(0, length);
 
-    //Затем убедимся, что текст не заканчивается восклицательным знаком, запятой, точкой или тире:
+    // Ensure that text is not ended with the specific symbols
     text = rtrim(text, "!,.-");
 
-    // Then find the last space and delete it and letters after
+    // Find the last space and delete it with a possible chunk of the word on the right
     text = text.replace(/(.*?)(?: [^ ]*)$/g, '$1');
 
     return text + (dots ? ' ...' : '');
 }
 
 
+/*
+ * Clear text from special symbols
+ *
+ * @param {string} text - text for preparing
+ *
+ * @return {string} = prepared text
+ */
+function clearSpecialSymbols(text)
+{
+    return text.replace(/[ \,\|«»]\'\"\`\!/g, ' ');
+}
+
+
+
 
 module.exports = {
+    clearSpecialSymbols,
+    quote,
     getCroppedText,
     preparePhotoPath,
     isFloat,
@@ -1118,7 +1108,6 @@ module.exports = {
     get_unique,
     get_flag_url,
     getRandomPlacemarkPhoto,
-    get_cutted_text,
     isClass,
     isFunction,
     isMethod,

@@ -1,20 +1,18 @@
 /*
- * File application/express/core/abstract/Model.js
- * const Model = require('application/express/core/abstract/Model');
+ * File application/express/core/parents/Model.js
+ * const Model = require('application/express/core/parents/Model');
  *
  * Base model component
  */
-
-const Core = require('application/express/core/abstract/Core');
-
 const ErrorCodes = require('application/express/settings/ErrorCodes');
 const Consts = require('application/express/settings/Constants');
 const BaseFunctions = require('application/express/functions/BaseFunctions');
 const Service = require('application/express/core/Service');
 const Users = require('application/express/core/Users');
 const Validator = require('application/express/components/base/Validator');
+const Component = require('application/express/core/parents/Component');
 
-class Model extends Core {
+class Model extends Component {
 
     constructor() {
         super();

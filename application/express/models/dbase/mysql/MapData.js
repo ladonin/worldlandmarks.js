@@ -175,16 +175,6 @@ class MapDataModel extends DBaseMysql
     }
 
 
-
-
-
-
-
-
-
-
-
-
     /*
      * Get placemarks short data by ids
      *
@@ -224,34 +214,6 @@ class MapDataModel extends DBaseMysql
 
         return this.getBySql(_sql, undefined, needResult);
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
     /*
@@ -363,13 +325,13 @@ class MapDataModel extends DBaseMysql
     {
         categoryId = BaseFunctions.toInt(categoryId);
         return this.getByCondition(
-                condition = "id!=? AND (category = ? OR subcategories REGEXP '[[:<:]]" + categoryId + "[[:>:]]')",
-                order = 'RAND()',
-                group = '',
+                /*condition*/"id!=? AND (category = ? OR subcategories REGEXP '[[:<:]]" + categoryId + "[[:>:]]')",
+                /*order*/'RAND()',
+                /*group*/'',
                 select,
-                where_values = [pointId, categoryId],
-                limit = Config['restrictions']['max_items_at_sublist'],
-                need_result = false
+                /*where_values*/[pointId, categoryId],
+                /*limit*/Config['restrictions']['max_items_at_sublist'],
+                /*need_result*/false
                 );
     }
 
@@ -399,13 +361,13 @@ class MapDataModel extends DBaseMysql
     {
         id = BaseFunctions.toInt(id);
         return this.getByCondition(
-                condition = "category = ? OR subcategories REGEXP '[[:<:]]" + id + "[[:>:]]'",
-                order = '',
-                group = '',
-                select = 'COUNT(*) as placemarks_count',
-                where_values = [id],
-                limit = 1,
-                need_result = false
+                /*condition*/"category = ? OR subcategories REGEXP '[[:<:]]" + id + "[[:>:]]'",
+                /*order*/'',
+                /*group*/'',
+                /*select*/'COUNT(*) as placemarks_count',
+                /*where_values*/[id],
+                /*limit*/1,
+                /*need_result*/false
                 )[0]['placemarks_count'];
     }
 
@@ -419,28 +381,14 @@ class MapDataModel extends DBaseMysql
     {
         return this.getByCondition(
             condition = 1,
-            order = '',
-            group = '',
-            select = 'COUNT(*) as placemarks_count',
-            where_values = [],
-            limit = 1,
-            need_result = false
+            /*order*/'',
+            /*group*/'',
+            /*select*/'COUNT(*) as placemarks_count',
+            /*where_values*/[],
+            /*limit*/1,
+            /*need_result*/false
         )[0]['placemarks_count'];
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
     /*
@@ -553,15 +501,83 @@ class MapDataModel extends DBaseMysql
 
 
 
+    /*
+     * Return limited collection of placemarks by search conditions
+     *
+     * @param {integer} idStart - placemark id from which collection will be started
+     * @param {integer} category - category
+     * @param {string} country - country
+     * @param {string} state - state
+     * @param {string} keywords - placemark keywords (separate field)
+     * @param {integer} limit - selection limit
+     * @param {string} language - language
+     * @param {boolean} needResult - is result required
+     *
+     * @return  {array of objects}
+     */
+    getPlacemarksSeacrhList(idStart = 0, category = false, country = '', state = '', keywords = '', limit, language, needResult)
+    {
+        category = category !== false ? BaseFunctions.toInt(category) : category;
+        country = BaseFunctions.quote(country);
+        state = BaseFunctions.quote(state);
+        keywords = BaseFunctions.quote(keywords.toLowerCase());
+
+        let _condition = 1;
+        let _order = 'c.id DESC';
+        if (idStart) {
+            _condition += ' AND c.id < ' + idStart;
+        }
+
+        if (category !== false){
+            _condition += " AND (c.category = " + category + " OR c.subcategories REGEXP '[[:<:]]" + category + "[[:>:]]')";
+        }
+        if (country) {
+            _condition += ' AND LOWER(geo.country_code) = LOWER(' + country + ')';
+        }
+        if (state) {
+            _condition += ' AND LOWER(geo.state_code) = LOWER(' + state + ')';
+        }
+        if (keywords) {
+            _condition += " AND LOWER(c.title) LIKE '%" + keywords + "%'";
+        }
+
+        let _sql = `SELECT
+                c.id as id
+                FROM ${this.getTableName()} c
+                LEFT JOIN ${GeocodeCollectionModel.getInstance(this.requestId).getTableName()} geo on geo.map_data_id = c.id AND geo.language=?
+                WHERE ${_condition}
+                ORDER by ${_order}
+                LIMIT ${limit}`;
+
+        return this.getBySql(_sql, [language], needResult);
+    }
 
 
+    /*
+     * Return limited collection of placemarks started from last
+     *
+     * @param {integer} idStart - placemark id from which collection will be started
+     * @param {integer} limit - selection limit
+     *
+     * @return  {array of objects}
+     */
+    getLastPLacemarks (idStart, limit){
+            let _condition = '1';
 
+            if (idStart) {
+                _condition += ' AND id < ?';
+            }
 
-
-
-
-
-
+            return this.getByCondition(
+                _condition,
+                /*order*/'id DESC',
+                /*group*/'',
+                /*select*/'id',
+                /*where_values*/[idStart],
+                limit,
+                /*need_result*/false
+            );
+    }
 
 
 

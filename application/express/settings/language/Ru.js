@@ -6,6 +6,10 @@
 
 const Constants = require('application/express/settings/Constants');
 
+const Seo = require('application/express/settings/language/seo/Ru');
+
+
+
 module.exports = {
     'domain_name': 'WORLD-LANDMARKS.RU',
     'countries/undefined/name': 'Прочие места',
@@ -117,23 +121,11 @@ module.exports = {
     'page_bottom/articles_categories/text': 'Просмотр статей по категориям',
     'articles_countries/header/text': 'Выберите страну',
     'articles_categories/header/text': 'Выберите категорию',
-    'site/title/catalog/sitemap_countries/country': 'Карта сайта. %country%.',
-    'site/title/catalog/sitemap_countries/index': 'Карта сайта. Страны.',
-    'site/title/catalog/sitemap_categories/category': 'Карта сайта. %category%.',
-    'site/title/catalog/sitemap_categories/index': 'Карта сайта. Категории.',
-    'site/keywords/catalog/sitemap_countries/index': 'страны',
-    'site/keywords/catalog/sitemap_categories/index': 'категории',
     'text_form/tags/a/title': 'Ссылка',
     'text_form/tags/p/title': 'Абзац',
     'text_form/tags/b/title': 'Выделить жирным',
     'text_form/tags/strong/title': 'Тег <strong>',
     'text_form/tags/img/title': 'Изображение',
-    'site/title/articles/country': 'Статьи о мировых достопримечательностях. %country%.',
-    'site/title/articles/category': 'Статьи о мировых достопримечательностях. %category%.',
-    'site/title/articles/index': 'Статьи о мировых достопримечательностях.',
-    'site/description/articles/country': '', //'Статьи. %country%',
-    'site/description/articles/category': '', //'Статьи. %country%',
-    'site/description/articles/index': '', //'Статьи. Выберите страну',
-    'site/keywords/articles/index': '',
-    'see_all':'смотреть все'
+    'see_all':'смотреть все',
+    ...Seo
 };

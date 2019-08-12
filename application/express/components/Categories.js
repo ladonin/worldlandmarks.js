@@ -5,7 +5,7 @@
  * Categories component - compute categories data
  */
 
-const Component = require('application/express/core/abstract/Component');
+const Component = require('application/express/core/parents/Component');
 const BaseFunctions = require('application/express/functions/BaseFunctions');
 
 class Categories extends Component {

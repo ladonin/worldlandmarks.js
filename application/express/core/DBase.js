@@ -9,7 +9,7 @@ const syncMySql = require('sync-mysql');
 //const asyncMySql = require('mysql2');
 //const Deasync = require('deasync');
 
-const Core = require('application/express/core/abstract/Core');
+const Core = require('application/express/core/parents/Core');
 
 const ErrorCodes = require('application/express/settings/ErrorCodes');
 const Consts = require('application/express/settings/Constants');

@@ -44,13 +44,13 @@ class Users extends DBaseMysql
     getByEmail(email){
 
         return this.getByCondition(
-            condition = 'email=?',
-            order = '',
-            group = '',
-            select = '*',
-            where_values = [email],
-            limit = 1,
-            need_result = false
+            /*condition*/'email=?',
+            /*order*/'',
+            /*group*/'',
+            /*select*/'*',
+            /*where_values*/[email],
+            /*limit*/1,
+            /*need_result*/false
         )[0];
     }
 

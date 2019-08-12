@@ -1,3 +1,6 @@
+console.log('Compiling completed');
+
+
 var app = require('express')();
 var server = require('http').Server(app);
 var io = require('socket.io')(server);
@@ -13,7 +16,7 @@ SocketsPool.setIO(io);
 
 
 
-
+/*
 
 const nodemailer = require("nodemailer");
 
@@ -55,6 +58,7 @@ transporter.sendMail({
 
 
 });
+*/
 
 
 
@@ -79,8 +83,7 @@ transporter.sendMail({
 
 
 
-
-
+console.log('Socket is set');
 io.on('connection', function (socket) {
     let _token = SocketsPool.setSocket(socket);
 
@@ -96,7 +99,7 @@ io.on('connection', function (socket) {
 });
 
 
-
+console.log('Express is set');
 //Application.getInstance(RequestsPool.init(data)).run();
 server.listen(3001);
 // WARNING: app.listen(80) will NOT work here!

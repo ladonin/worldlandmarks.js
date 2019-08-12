@@ -7,7 +7,7 @@ import { combineReducers } from 'redux';
 import Constants from 'src/settings/Constants';
 
 
-function staticText(state = {}, action) {console.log('staticText');console.log(state);
+function staticText(state = {}, action) {
     switch (action.type) {
         case Constants.REDUX_ACTION_TYPE_UPDATE_STATIC_TEXT:
             return Object.assign({}, state, action.data);
@@ -16,7 +16,7 @@ function staticText(state = {}, action) {console.log('staticText');console.log(s
     }
 }
 
-function dynamicText(state = {}, action) {console.log('dynamicText');console.log(state);
+function dynamicText(state = {}, action) {
     switch (action.type) {
         case Constants.REDUX_ACTION_TYPE_UPDATE_DYNAMIC_TEXT:
             return Object.assign({}, state, action.data);

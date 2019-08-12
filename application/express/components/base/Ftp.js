@@ -12,6 +12,8 @@ const FtpServersConfig = require('application/express/settings/gitignore/FtpServ
 const Consts = require('application/express/settings/Constants');
 const BaseFunctions = require('application/express/functions/BaseFunctions');
 const ErrorCodes = require('application/express/settings/ErrorCodes');
+const DebugSettings = require('application/express/settings/DebugSettings');
+const Config = require('application/express/settings/Config');
 
 let _config = FtpServersConfig[Consts.FTP_DEFAULT_SERVER_NAME];
 const Ftp = new jsftp({
@@ -21,19 +23,27 @@ const Ftp = new jsftp({
 });
 Ftp.keepAlive(5000);
 
-// Set root directory at the ftp server
-let _finished = false;
-Ftp.raw("cwd", _config.rootDirectory, (err, data) => {
-    _finished = true;
-    if (err) {
-        BaseFunctions.processError(ErrorCodes.ERROR_FTP_CHANGE_ROOT_DIRECTORY, 'err[' + BaseFunctions.toString(err) + '], new dir[' + _config.rootDirectory + ']')
-    }
-    console.log('FTP OK');
-});
-// Wait for process to be finished
-Deasync.loopWhile(function () {
-    return !_finished;
-});
+// Check the need to call this slow operation during debug
+if (Config.debug === 1 && DebugSettings.ftp === 0) {
+    console.log('WARNING! FTP directory is NOT set. Reason: debug setting turned it off.');
+} else {
+    // Set root directory at the ftp server
+    let _finished = false;
+    Ftp.raw("cwd", _config.rootDirectory, (err, data) => {
+        _finished = true;
+        if (err) {
+            BaseFunctions.processError(ErrorCodes.ERROR_FTP_CHANGE_ROOT_DIRECTORY, 'err[' + BaseFunctions.toString(err) + '], new dir[' + _config.rootDirectory + ']')
+        }
+        console.log('FTP OK');
+        console.log('FTP directory is set');
+    });
+    // Wait for process to be finished
+    Deasync.loopWhile(function () {
+        return !_finished;
+    });
+}
+
+
 
 
 module.exports = {

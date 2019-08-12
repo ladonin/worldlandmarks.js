@@ -8,11 +8,12 @@
 const Nodemailer = require("nodemailer");
 
 const BaseFunctions = require('application/express/functions/BaseFunctions');
-const MailConfig = require_once('application/express/settings/gitignore/Mail');
+const MailConfig = require('application/express/settings/gitignore/Mail');
 const Consts = require('application/express/settings/Constants');
 const ErrorCodes = require('application/express/settings/ErrorCodes');
 const MapDataModel = require('application/express/models/dbase/mysql/MapData');
 const EmailsSendsModel = require('application/express/models/dbase/mysql/EmailsSends');
+const Component = require('application/express/core/parents/Component');
 
 
 let _config = MailConfig[Consts.DEFAULT];

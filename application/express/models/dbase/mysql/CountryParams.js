@@ -74,12 +74,12 @@ class CountryParamsModel extends DBaseMysql
     getParams(countryId, needResult = true) {
 
         let _result = this.getByCondition(
-                condition = "cp.country_id = ?",
-                order = '',
-                group = '',
-                select = '*',
-                whereValues = [countryId],
-                limit = 1,
+                /*condition*/"cp.country_id = ?",
+                /*order*/'',
+                /*group*/'',
+                /*select*/'*',
+                /*whereValues*/[countryId],
+                /*limit*/1,
                 needResult);
         return _result[0];
     }

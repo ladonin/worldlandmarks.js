@@ -1,9 +1,9 @@
 /*
- * File application/express/core/abstract/Core.js
- * const Core = require('application/express/core/abstract/Core');
+ * File application/express/core/parents/Core.js
+ * const Core = require('application/express/core/parents/Core');
  *
  * Base component
- * Available validation rules see in 'application/express/core/abstract/Model.js'
+ * Available validation rules see in 'application/express/core/parents/Model.js'
  */
 
 const RequestsPool = require('application/express/core/RequestsPool');
@@ -88,20 +88,33 @@ class Core {
      * Get variable from request
      *
      * @param {string} name -  variable name
-     * @param {boolean} required - is value should not be required (not empty)?
+     * @param {boolean} required - wherher value should be required
      *
-     * @return {string} - value of specific query variable
+     * @return {mix} - value of specific query variable
      */
     getFromRequest(name, required = true) {
         let _data = RequestsPool.getRequestData(this.requestId);
         if (_data.hasOwnProperty(name)) {
-            return BaseFunctions.toString(_data[name]);
+            return _data[name];
         } else if (required === false) {
             return undefined;
         } else {
             this.error(ErrorCodes.ERROR_REQUEST_VARIABLE_NOT_FOUND, '[' + name + ']', undefined, false);
         }
     }
+
+    /*
+     * Get form data from request
+     *
+      * @param {boolean} required - wherher value should be required
+     *
+     * @return {object}
+     */
+    getRequestFormData(required = false) {
+        let _result = this.getFromRequest(Consts.REQUEST_FORM_DATA, required);
+        return _result ? _result : {};
+    }
+
 
     /*
      * Determine device type - desctop or mobile
@@ -140,12 +153,12 @@ class Core {
     }
 
     /*
-     * Return controller name
+     * Return action name
      *
      * @return {string}
      */
-    getControllerName(){
-        return this.getFromRequest(Consts.CONTROLLER_VAR_NAME);
+    getActionName(){
+        return this.getFromRequest(Consts.ACTION_VAR_NAME);
     }
 
 

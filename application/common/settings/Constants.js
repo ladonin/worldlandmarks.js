@@ -45,7 +45,7 @@ module.exports = {
 
     MY_IMG_URL: DOMAIN + '/img/',
 
-
+    REQUEST_FORM_DATA: 'formData',
 
 
     REDUX_ACTION_TYPE_UPDATE_STATIC_TEXT:'UPDATE_STATIC_TEXT',

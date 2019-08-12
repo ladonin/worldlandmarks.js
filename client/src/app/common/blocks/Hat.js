@@ -25,12 +25,12 @@ class Hat extends AbstractBlock {
                     <BrowserView>
                         <div className="hat_logo">
                             <div className="hat_logo_img">
-                                <a onClick={this.goTo} data-url={Consts.DOMAIN}>
+                                <a onClick={this.goTo} data-url='/'>
                                     <img src="/img/logo.png"/>
                                 </a>
                             </div>
                             <div className="hat_logo_text_main">
-                                <a onClick={this.goTo} data-url={Consts.DOMAIN}>{this.props.domainName}</a>
+                                <a onClick={this.goTo} data-url='/'>{this.props.domainName}</a>
                             </div>
                             <div className="hat_logo_text_under">{this.props.logoUnderText}</div>
                         </div>

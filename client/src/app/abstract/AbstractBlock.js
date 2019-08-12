@@ -19,7 +19,7 @@ class AbstractBlock extends Component {
      * NOTE: if you want to use goTo you must wrap your component with a withRouter() HOC
      */
     goTo(event) {
-        this.props.history.push(event.target.dataset.url);
+        this.props.history.push(event.target.closest("[data-url]").dataset.url);
     }
 }
 

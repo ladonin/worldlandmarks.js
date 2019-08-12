@@ -6,7 +6,7 @@
  */
 
 const BaseFunctions = require('application/express/functions/BaseFunctions');
-const Core = require('application/express/core/abstract/Core');
+const Core = require('application/express/core/parents/Core');
 const Config = require('application/express/settings/Config.js');
 const Functions = require('application/express/functions/BaseFunctions');
 const ErrorCodes = require('application/express/settings/ErrorCodes');
@@ -110,7 +110,7 @@ class Service extends Core
         let _service_name = this.getFromRequest(Consts.SERVICE_VAR_NAME);
 
         if (Config.services.hasOwnProperty(_service_name)) {
-            this.name = _service_name
+            this.name = _service_name;
             return this.name;
         }
 

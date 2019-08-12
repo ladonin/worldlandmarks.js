@@ -5,13 +5,16 @@
  * Seo component - compute seo data
  */
 
-const Component = require('application/express/core/abstract/Component');
+const Component = require('application/express/core/parents/Component');
 const BaseFunctions = require('application/express/functions/BaseFunctions');
 const Consts = require('application/express/settings/Constants');
 const ErrorCodes = require('application/express/settings/ErrorCodes');
 const Language = require('application/express/core/Language');
 const Countries = require('application/express/components/Countries');
 const RequestsPool = require('application/express/core/RequestsPool');
+const MapDataModel = require('application/express/models/dbase/mysql/MapData');
+const Articles = require('application/express/components/Articles');
+const Config = require('application/express/settings/Config');
 
 class Seo extends Component {
 
@@ -22,130 +25,90 @@ class Seo extends Component {
     /*
      * Get page title
      *
-     * $param string action - controller's action
+     * $param {string} address - text address
      * $param object params - values to insert into the title
      *
      * @return {string}
      */
-    getTitle(action, params = {})
+    getTitle(address, params = {})
     {
-        return  this.getText('site/title/' + action, params);
+        return  this.getText('site/title/' + address, params);
     }
 
     /*
      * Get page keywords
      *
-     * $param string action - controller's action
+     * $param {string} address - text address
      *
      * @return {string}
      */
-    getKeywords(action)
+    getKeywords(address)
     {
-        let {controller, action} = RequestsPool.getControllerAndActionNames(this.requestId);
+        let {_controller, _action} = RequestsPool.getControllerAndActionNames(this.requestId);
 
+        if (_controller === Consts.CONTROLLER_NAME_CATALOG) {
 
-        $data_db_model = components\Map::get_db_model('data');
+            if (_action === Consts.ACTION_NAME_COUNTRY) {
+                return Countries.getInstance(this.requestId).getCountryNameFromRequest();
+            } else if (_action === Consts.ACTION_NAME_STATE) {
 
+                let _countryCode = Countries.getInstance(this.requestId).getCountryCodeFromRequest();
+                let _stateCode = this.getFromRequest(Consts.CATALOG_STATE_VAR_NAME);
+                let _countryData = Countries.getInstance(this.requestId).getStateAndCountryNameByCode(_countryCode, _stateCode);
+                return _countryData['country'] + ',' + _countryData['state'];
 
+            } else if (_action === Consts.ACTION_NAME_PLACEMARK) {
 
-
-
-
-        if ($controller_name === MY_CONTROLLER_NAME_CATALOG) {
-
-            if ($action_name === MY_ACTION_NAME_COUNTRY) {
-                return Countries->get_country_name_by_get_var();
-            } else if ($action_name === MY_ACTION_NAME_STATE) {
-
-                $country_code = Countries->get_country_code_from_url();
-                $state_code = $this->get_get_var(MY_CATALOG_STATE_VAR_NAME);
-                $country_data = Countries->get_state_and_country_name_by_code($country_code, $state_code);
-
-                return $country_data['country'] . ',' . $country_data['state'];
-            } else if ($action_name === MY_ACTION_NAME_PLACEMARK) {
-
-                $condition = "id=" . (int) $_GET[MY_ID_VAR_NAME];
-                $placemark = $data_db_model->get_by_condition($condition, '', '', 'title, seo_keywords', 1, false);
-                return $placemark['seo_keywords'] ? $placemark['seo_keywords'] : clear_special_symbols($placemark['title']);
+                let _placemark = MapDataModel.getInstance(this.requestId).getById(this.getFromRequest(Consts.ID_VAR_NAME), ['seo_keywords','title']);
+                return _placemark['seo_keywords'] ? _placemark['seo_keywords'] : BaseFunctions.clearSpecialSymbols(_placemark['title']);
             }
         }
 
-        return my_pass_through(@self::trace('site/keywords/' . $action, $params));
+        return this.getText('site/keywords/' + address);
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
     /*
-     * Вернуть description страницы
+     * Get page description
      *
-     * $param string $action - action контроллера
-     * $param array $params - переменные для постороения description
+     * $param {string} address - text address
+     * $param {object} params - parameters for building the description
      *
      * @return {string}
      */
-    public function get_description($action=null, $params=null)
+    getDescription(address, params)
     {
-        $country_component = components\Countries::get_instance();
-        $controller_name = get_controller_name();
-        $action_name = get_action_name();
-        $service_module = self::get_module(MY_MODULE_NAME_SERVICE);
-        $data_db_model = components\Map::get_db_model('data');
-        $config = self::get_config();
+        let {_controller, _action} = RequestsPool.getControllerAndActionNames(this.requestId);
 
-        if ($controller_name === MY_CONTROLLER_NAME_CATALOG) {
+        if (_controller === Consts.CONTROLLER_NAME_CATALOG) {
 
-            if ($action_name === MY_ACTION_NAME_COUNTRY) {
+            if (_action === Consts.ACTION_NAME_COUNTRY) {
                 return '';
-            } else if ($action_name === MY_ACTION_NAME_STATE) {
+            } else if (_action === Consts.ACTION_NAME_STATE) {
                 return '';
-            } else if ($action_name === MY_ACTION_NAME_PLACEMARK) {
+            } else if (_action === Consts.ACTION_NAME_PLACEMARK) {
 
-                $condition = "id=" . (int) $_GET[MY_ID_VAR_NAME];
-                $placemark = $data_db_model->get_by_condition($condition, '', '', 'comment_plain, seo_description', 1, false);
-                return $placemark['seo_description'] ? $placemark['seo_description'] : get_cutted_text($placemark['comment_plain'], $config['allows']['max_cropped_seo_description_length'], false);//self
+                let _placemark = MapDataModel.getInstance(this.requestId).getById(this.getFromRequest(Consts.ID_VAR_NAME), ['comment_plain','seo_description']);
+
+                return _placemark['seo_description']
+                    ? _placemark['seo_description']
+                    : BaseFunctions.getCroppedText(_placemark['comment_plain'], Config['restrictions']['max_cropped_seo_description_length'], dots = true, this);
             }
-        } elseif ($controller_name === MY_CONTROLLER_NAME_ARTICLE) {
+        } else if (_controller === Consts.CONTROLLER_NAME_ARTICLE) {
 
-            $articles_db_model = self::get_model(MY_MODEL_NAME_DB_ARTICLES);
+            if (_action === Consts.ACTION_NAME_VIEW) {
 
-            if ($action_name === MY_ACTION_NAME_VIEW) {
-                $condition = "id=" . (int) $_GET[MY_ID_VAR_NAME];
-                $article = $articles_db_model->get_by_condition($condition, '', '', 'content_plain, seo_description', 1, false);
-                return $article['seo_description'] ? $article['seo_description'] : get_cutted_text($article['content_plain'], $config['allows']['max_cropped_seo_description_length'], false);//self
+                let _article = Articles.getInstance(this.requestId).getById(this.getFromRequest(Consts.ID_VAR_NAME), ['content_plain','seo_description']);
+
+                return _article['seo_description']
+                    ? _article['seo_description']
+                    : BaseFunctions.getCroppedText(_article['content_plain'], Config['restrictions']['max_cropped_seo_description_length'], dots = true, this);
             }
-
         }
 
-        return my_pass_through(@self::trace('site/description/' . $action, $params));
+        return this.getText('site/description/' + address, params);
     }
 }
-
-
 
 
 Seo.instanceId = BaseFunctions.unique_id();

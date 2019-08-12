@@ -6,7 +6,7 @@
  */
 
 const Consts = require('application/express/settings/Constants');
-const Core = require('application/express/core/abstract/Core');
+const Core = require('application/express/core/parents/Core');
 const Service = require('application/express/core/Service');
 const BaseFunctions = require('application/express/functions/BaseFunctions');
 const Config = require('application/express/settings/Config');
@@ -76,7 +76,7 @@ class Language extends Core {
                     'language[' + this.getLanguage() + '], word[' + adress + ']');
         }
 
-// If also need to prepare some vars in it
+        // If also need to prepare some vars in it
         if (BaseFunctions.isObject(vars)) {
 
             for (let _key in vars) {

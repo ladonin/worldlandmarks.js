@@ -33,7 +33,7 @@ let _Consts = {
 
 CONTROLLER_VAR_NAME:'controller',
 
-
+ACTION_VAR_NAME:'action',
 
 
     SERVICES_DIR:'application/express/services/',
@@ -88,6 +88,7 @@ CONTROLLER_VAR_NAME:'controller',
     CONTROLLER_NAME_MAIN: 'main',
     CONTROLLER_NAME_CATALOG: 'catalog',
     CONTROLLER_NAME_ARTICLE: 'article',
+    CONTROLLER_NAME_SEARCH: 'search',
 
     ACTION_NAME_INDEX: 'index',
     ACTION_NAME_COUNTRY: 'country',

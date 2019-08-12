@@ -1,11 +1,11 @@
 /*
- * File application/express/core/abstract/Form.js
- * const Form = require('application/express/core/abstract/Form');
+ * File application/express/core/parents/Form.js
+ * const Form = require('application/express/core/parents/Form');
  *
  * Base form component
  */
 
-const Model = require('application/express/core/abstract/Model');
+const Model = require('application/express/core/parents/Model');
 const BaseFunctions = require('application/express/functions/BaseFunctions');
 const ErrorCodes = require('application/express/settings/ErrorCodes');
 

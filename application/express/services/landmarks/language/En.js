@@ -92,7 +92,7 @@ Every object, whether on the map or in a directory that has a detailed descripti
     'main/search/title': 'search',
     'main/catalog/link': 'Go',
     'main/map/link': 'Go',
-    'main/last_articles/text': 'Last articles',
+    'last_articles/text': 'Last articles',
     'main/last_placemarks/text': 'All placemarks',
     'catalog/country/last_articles/text': 'Last articles',
     'map/default_title_part/value': 'placemark:',

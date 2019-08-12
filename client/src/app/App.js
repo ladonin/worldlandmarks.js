@@ -71,13 +71,13 @@ class App extends Component {
 
     }
     componentWillUpdate() {
-        console.log('App componentWillUpdate');
+        //console.log('App componentWillUpdate');
     }
     componentWillMount() {
-        console.log('App componentWillMount');
+        //console.log('App componentWillMount');
     }
     componentDidUpdate() {
-        console.log('App componentDidUpdate');
+        //console.log('App componentDidUpdate');
     }
     initSettings(){
         //Localization.changeLang(Consts.LANGUAGE_EN);
@@ -89,12 +89,12 @@ class App extends Component {
 
                                     rr(){
                                          Socket.getSocket().emit('api', {data:{a:1,b:2}, controller: 'main', action: 'index', service:'landmarks', language:Language.getName()});
-                                    }
+    }
 
     componentDidMount(){
-Socket.getSocket().emit('api', {data:{a:1,b:2}, controller: 'main', action: 'index', service:'landmarks', language:Language.getName()});
+//Socket.getSocket().emit('api', {data:{a:1,b:2}, controller: 'main', action: 'index', service:'landmarks', language:Language.getName()});
     }
-  render() {console.log('App render');
+  render() {
     const App = () => (
       <div onClick={this.rr}>
         <Switch>
@@ -112,8 +112,7 @@ Socket.getSocket().emit('api', {data:{a:1,b:2}, controller: 'main', action: 'ind
     //////////////redux1111111
     const { redux1111111 } = this.props;
     /////////////////
-console.log('this.props');
-console.log(this.props);
+
 
     return (
 

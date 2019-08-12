@@ -9,11 +9,11 @@ const Language = require('application/express/core/Language');
 const ErrorCodes = require('application/express/settings/ErrorCodes');
 const Consts = require('application/express/settings/Constants');
 
-const AbstractController = require('application/express/controllers/AbstractController');
+const CommonController = require('application/express/controllers/CommonController');
 
 
 
-class Errors extends AbstractController {
+class Errors extends CommonController {
 
     constructor() {
         super();

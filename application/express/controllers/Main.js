@@ -9,13 +9,13 @@ const Language = require('application/express/core/Language');
 const ErrorCodes = require('application/express/settings/ErrorCodes');
 const Consts = require('application/express/settings/Constants');
 
-const AbstractController = require('application/express/controllers/AbstractController');
+const CommonController = require('application/express/controllers/CommonController');
 
 
 const DBase = require('application/express/core/DBase');
 const DBaseMysql = require('application/express/core/dbases/Mysql');
 
-class Main extends AbstractController {
+class Main extends CommonController {
 
     constructor() {
         super();
@@ -29,8 +29,8 @@ class Main extends AbstractController {
         //console.log('index action ' + this.getText('site/description/catalog/sitemap_categories/category', {category: '111111111111111'}));
         //this.error(ErrorCodes.ERROR_REQUEST_VARIABLE_NOT_FOUND, 'action_index111111111111');
 
-
-console.log(this.getFromRequest('data'));
+console.log(this.getRequestFormData());
+console.log(this.getRequestFormData().a);
 
       //  console.log(DBaseMysql.getInstance(this.requestId).getBySql("insert into users values(NULL, 'vhervehve','hgjhj',345435,345335)", [] , false));
 
@@ -166,7 +166,7 @@ console.log(this.getFromRequest('data'));
 
 /*
 
- const Controller = require('application/express/core/abstract/Controller');
+ const Controller = require('application/express/core/parents/Controller');
 
  class Main extends Controller
  {

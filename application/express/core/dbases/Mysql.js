@@ -8,7 +8,7 @@
 const BaseFunctions = require('application/express/functions/BaseFunctions');
 const ErrorCodes = require('application/express/settings/ErrorCodes');
 const Consts = require('application/express/settings/Constants');
-const Model = require('application/express/core/abstract/Model');
+const Model = require('application/express/core/parents/Model');
 const DBase = require('application/express/core/DBase');
 
 
@@ -128,19 +128,22 @@ class DBaseMysql extends Model
      * Get data by id
      *
      * @param {integer} idValue - id key value
+     * @param {array} select - fields to be selected (by default - all)
      * //@param {boolean} async - whether we use async query or sync
      *
      * @return {array of objects / promise}
      */
-    getById(idValue)//, async = false
+    getById(idValue, select = '*')//, async = false
     {
         let _id = BaseFunctions.toInt(idValue);
 
         if (!_id) {
             this.error(ErrorCodes.ERROR_FUNCTION_ARGUMENTS, 'id [ ' + BaseFunctions.toString(idValue) + ']');
         }
-
-        return this.query("SELECT * FROM " + this.table_name + " WHERE id = " + _id, [])[0];//, async
+        if (BaseFunctions.isArray(select)) {
+            select = select.join(',');
+        }
+        return this.query("SELECT " + select + " FROM " + this.table_name + " WHERE id = " + _id, [])[0];//, async
     }
 
     /*
@@ -345,7 +348,7 @@ class DBaseMysql extends Model
      */
     getByCondition(condition = 1, order = '', group = '', select = '*', where_values = [], limit = false, need_result = true)//, async = false
     {
-        let _sql = 'SELECT ' + select + ' FROM ' + this.table_name + ' WHERE ' + condition;
+        let _sql = 'SELECT ' + select + ' FROM ' + this.getTableName() + ' WHERE ' + condition;
 
         if (group) {
             _sql += ' GROUP BY ' + group + ' ';

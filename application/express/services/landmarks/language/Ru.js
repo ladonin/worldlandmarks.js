@@ -94,7 +94,7 @@ module.exports = {
     'main/catalog/link': 'Перейти',
     'main/map/link': 'Перейти',
     'main/last_placemarks/text': 'Все метки',
-    'main/last_articles/text': 'Новые статьи',
+    'last_articles/text': 'Новые статьи',
     'catalog/country/last_articles/text': 'Новые статьи',
     'map/default_title_part/value': 'метка:',
     'errors/new_point/category_none': 'Укажите категорию',
