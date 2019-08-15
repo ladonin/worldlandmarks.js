@@ -14,7 +14,7 @@ class Users extends DBaseMysql
     constructor() {
         super();
 
-        this.tableName;
+        this.tableNameInit = this.tableInitNames.USERS;
 
         this.fields = {
             email: {
@@ -27,12 +27,6 @@ class Users extends DBaseMysql
         this.snapshotFieldsData();
     }
 
-    getTableName() {
-        if (!this.tableName) {
-            this.tableName = 'users';
-        }
-        return this.tableName;
-    }
 
     /*
      * Get user data by email

@@ -5,7 +5,7 @@ import { Provider } from "react-redux";
 
 import Socket from 'src/app/socket/Socket';
 
-
+import { withRouter } from 'react-router-dom';
 
 // Modules
 //import Localization from 'src/modules/localization/Localization';
@@ -22,46 +22,10 @@ import Article from './controllers/article/Article';
 import Error404 from './controllers/errors/Error404';
 
 import Language from 'src/modules/Language';
-
-
+import Router from 'src/modules/router/Router';
 
 // Css
 import "./Css";
-
-
-
-
-
-
-
-
-
-
-
-
-
-//////////////////redux1111111
-import { connect } from 'react-redux'
-import {updateStaticText} from 'src/app/redux/actions/Actions';
-
-//////////////////////
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 class App extends Component {
@@ -73,73 +37,45 @@ class App extends Component {
     componentWillUpdate() {
         //console.log('App componentWillUpdate');
     }
-    componentWillMount() {
+    componentDidMount() {
+
         //console.log('App componentWillMount');
+
     }
     componentDidUpdate() {
         //console.log('App componentDidUpdate');
     }
     initSettings(){
         //Localization.changeLang(Consts.LANGUAGE_EN);
-
-
-
-
     }
 
-                                    rr(){
-                                         Socket.getSocket().emit('api', {data:{a:1,b:2}, controller: 'main', action: 'index', service:'landmarks', language:Language.getName()});
-    }
+//  rr(){
+//     Socket.getSocket().emit('api', {data:{a:1,b:2}, controller: 'main', action: 'index', service:'landmarks', language:Language.getName()});
+//  }
 
     componentDidMount(){
-//Socket.getSocket().emit('api', {data:{a:1,b:2}, controller: 'main', action: 'index', service:'landmarks', language:Language.getName()});
     }
   render() {
+
     const App = () => (
       <div onClick={this.rr}>
         <Switch>
           <Route exact path='/' component={Main}/>
-          <Route path={'/:controller('+Consts.CONTROLLER_NAME_MAP+')/:action?'} component={Map}/>
-          <Route path={'/:controller('+Consts.CONTROLLER_NAME_CATALOG+')/:action?'} component={Catalog}/>
-          <Route path={'/:controller('+Consts.CONTROLLER_NAME_ARTICLE+')/:action?'} component={Article}/>
+          <Route path={'/:controller('+Consts.CONTROLLER_NAME_MAP+')/:var2?'} component={Map}/>
+          <Route path={'/:controller('+Consts.CONTROLLER_NAME_CATALOG+')/:var2?/:var3?/:var4?'} component={Catalog}/>
+          <Route path={'/:controller('+Consts.CONTROLLER_NAME_ARTICLE+')/:var2?'} component={Article}/>
           <Route component={Error404}/>
         </Switch>
       </div>
     );
 
-
-
-    //////////////redux1111111
-    const { redux1111111 } = this.props;
-    /////////////////
-
-
     return (
-
-      <div>========={redux1111111}
+      <div>
         <App/>
       </div>
     );
   }
 }
 
-//export default App; redux1111111
 
-
-
-
-
-/////////////////redux1111111
-function mapStateToProps(state) {
-  const { redux1111111 } = state.staticText;
-
-  return {
-    redux1111111
-  }
-}
-let mapDispatchToProps = {
-    updateStaticText
-  }
-
-export default connect(mapStateToProps, mapDispatchToProps)(App)
-    //////////////////
+export default withRouter(App)

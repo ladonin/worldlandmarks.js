@@ -52,6 +52,7 @@ class ArticlesList extends AbstractBlock {
                         </div>
                     </BrowserView>
                     <MobileView>
+                        TODO MOBILE ArticlesList
                     </MobileView>
                 </React.Fragment>
         );
@@ -61,8 +62,8 @@ class ArticlesList extends AbstractBlock {
 function mapStateToProps(state) {
 
     return {
-        articles:state.dynamicText['articles'],
-        seeAll:state.staticText['see_all']
+        articles:state.dynamicData['articles'],
+        seeAll:state.staticData['see_all']
     };
 }
 let mapDispatchToProps = {};

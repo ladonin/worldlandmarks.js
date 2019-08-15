@@ -7,16 +7,16 @@
 
 import React, { Component } from 'react';
 
-
 import AbstractController from 'src/app/abstract/AbstractController';
 import Consts from 'src/settings/Constants';
-import Controller from 'src/modules/controller/Controller';
+import Router from 'src/modules/router/Router';
 
-// Components
-import MainIndex from 'src/app/controllers/main/actions/Index';
+// Action components
+import MainIndex from 'src/app/controllers/main/actions/index/Index';
 
-//Css
-import "./Css";
+
+import Hat from 'src/app/common/blocks/Hat';
+
 
 class Main extends AbstractController {
 
@@ -27,12 +27,22 @@ class Main extends AbstractController {
 
     render() {
         let _actionComponent;
-        switch (Controller.getActionName()){
+        switch (Router.getActionName()){
             case Consts.ACTION_NAME_INDEX: _actionComponent = <MainIndex/>;
 
             default: _actionComponent = <MainIndex/>;
         }
-        return _actionComponent;
+
+        return (
+            <React.Fragment>
+                <Hat/>
+                <div className="padding_after_hat"></div>
+                <div id='action' className='static_page'>
+                    {_actionComponent}
+                </div>
+            </React.Fragment>
+        );
     }
 }
-export default Main;
+
+export default Main

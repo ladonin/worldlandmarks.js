@@ -49,7 +49,7 @@ class Error404 extends AbstractController {
 
 /////////////////redux1111111
 function mapStateToProps(state) {
-  const { errorMessage } = state.dynamicText;
+  const { errorMessage } = state.dynamicData;
 
   return {
     errorMessage

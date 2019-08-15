@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 import Consts from 'src/settings/Constants';
 
 // Modules
-import Url from 'src/modules/controller/Controller';
+
 
 // Components
 import Hat from 'src/app/common/blocks/Hat';
@@ -24,7 +24,6 @@ class Article extends Component {
 
     constructor() {
         super();
-        Url.setControllerName(Consts.CONTROLLER_NAME_ARTICLE);
     }
 
 

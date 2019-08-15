@@ -27,7 +27,7 @@ module.exports = {
         }
 
         if (BaseFunctions.isUndefined(_cache[service][language])) {
-            _cache[name][language] = {};
+            _cache[service][language] = {};
         }
 
         if (BaseFunctions.isUndefined(_cache[service][language][name])) {

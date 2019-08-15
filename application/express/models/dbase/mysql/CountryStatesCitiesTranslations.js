@@ -14,7 +14,7 @@ class CountryStatesCitiesTranslationsModel extends DBaseMysql
     constructor() {
         super();
 
-        this.tableName;
+        this.tableNameInit = this.tableInitNames.COUNTRY_STATES_CITIES_TRANSLATIONS;
 
         this.fields = {
             country_id:{
@@ -40,20 +40,6 @@ class CountryStatesCitiesTranslationsModel extends DBaseMysql
         this.snapshotFieldsData();
     }
 
-    /*
-     * Get db table name
-     *
-     * @return {string} - table name
-     */
-    getTableName() {
-        if (!this.tableName) {
-            this.tableName = 'country_states_cities_translations';
-        }
-        return this.tableName;
-    }
-
-
-
 
     /*
      * Get state translation
@@ -75,8 +61,50 @@ class CountryStatesCitiesTranslationsModel extends DBaseMysql
         return this.getBySql(_sql, [countryCode, stateName, language], needResult);
     }
 
+    /*
+     * Get translation of state name
+     *
+     * @param {string} language - on what language will be translated
+     * @param {string} countryCode - country code
+     * @param {string} stateName - state name
+     * @param {string} stateCode - state code
+     *
+     * @return string - translated state name
+     */
+    getTranslationOfStateName(language, countryCode, stateName, stateCode)
+    {
+        let _result;
+        let _language = this.getLanguage();
+        let _serviceName = this.getServiceName();
 
+        if (_result = this.cache.get('translationsOfStateNames', _serviceName, _language)[language+'%'+countryCode+'%'+stateCode+'%'+stateName]) {
+            return _result;
+        }
 
+        let _datas = this.getStateTranslation(countryCode, stateName, language, false);
+
+        if (_datas.length === 1) {
+            if ((!_datas[0]['url_code']) || (_datas[0]['url_code'] === stateCode)) {
+                _result = _datas[0]['translate'];
+            }
+        } else {
+            for (let _index in _datas) {
+
+                let _data = _datas[_index];
+                if (_data['url_code'] === stateCode) {
+                    _result = _data['translate'];
+                }
+            }
+        }
+        if (!_result) {
+            // Default
+            _result = stateName;
+        }
+
+        this.cache.get('translationsOfStateNames', _serviceName, _language)[language+'%'+countryCode+'%'+stateCode+'%'+stateName] = _result;
+
+        return _result;
+    }
 
 
     /*
@@ -106,7 +134,7 @@ class CountryStatesCitiesTranslationsModel extends DBaseMysql
             FROM country c
             LEFT JOIN country_states_cities_google_translates ct on c.id = ct.country_id
             LEFT JOIN country_states cs on cs.id = ct.only_for_state
-            WHERE c.local_code = ? AND ct.google_name = ? AND language = ? AND is_city=1 
+            WHERE c.local_code = ? AND ct.google_name = ? AND language = ? AND is_city=1
             LIMIT 1`;
 
             return this.getBySql(_sql, [countryCode, cityName, language], needResult)[0];

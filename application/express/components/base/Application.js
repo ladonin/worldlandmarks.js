@@ -13,9 +13,8 @@ const SocketsPool = require('application/express/core/SocketsPool');
 
 const ErrorCodes = require('application/express/settings/ErrorCodes');
 const Consts = require('application/express/settings/Constants');
-const DBase = require('application/express/core/DBase');
+const DBase = require('application/express/components/base/DBase');
 const Validator = require('application/express/components/base/Validator');
-
 class Application extends Component {
     constructor(){
         super();
@@ -242,26 +241,26 @@ class Application extends Component {
      */
     set_controller_and_action()
     {
-        let _controller_name = this.getFromRequest('controller').toLowerCase();
+        let _controllerName = this.getControllerName().toLowerCase();
 
-        if (BaseFunctions.is_not_empty(Config.controllers.enabled[_controller_name])){
+        if (BaseFunctions.is_not_empty(Config.controllers.enabled[_controllerName])){
 
-            let _controller_file_name = Config.controllers.enabled[_controller_name];
-            let _controller_path = 'application/express/controllers/'+_controller_file_name+'.js';
+            let _controllerFileName = Config.controllers.enabled[_controllerName];
+            let _controllerPath = 'application/express/controllers/'+_controllerFileName+'.js';
 
-            let _Controller = require(_controller_path);
-            let _controller_object = _Controller.getInstance(this.requestId);
+            let _Controller = require(_controllerPath);
+            let _controllerObject = _Controller.getInstance(this.requestId);
 
-            let _action_name = this.getFromRequest('action').toLowerCase();
-            let _action_name_prepared = 'action_' + _action_name;
+            let _actionName = this.getActionName().toLowerCase();
+            let _actionNamePrepared = 'action_' + _actionName;
 
             // If action exists
-            if (BaseFunctions.isMethod(_controller_object[_action_name_prepared])) {
-                this.controller = _controller_object;
-                this.action = _action_name_prepared;
+            if (BaseFunctions.isMethod(_controllerObject[_actionNamePrepared])) {
+                this.controller = _controllerObject;
+                this.action = _actionNamePrepared;
 
                 // All ok, controller and action are valid
-                RequestsPool.setControllerAndActionNames(this.requestId, _controller_name, _action_name);
+                RequestsPool.setControllerAndActionNames(this.requestId, _controllerName, _actionName);
 
                 return true;
             }
@@ -278,10 +277,10 @@ class Application extends Component {
      */
     run_controller()
     {
-        let _controller_object = this.get_controller();
-        let _action_name = this.get_action();
+        let _controllerObject = this.get_controller();
+        let _actionName = this.get_action();
 
-        return _controller_object[_action_name]();
+        return _controllerObject[_actionName]();
     }
 
 
@@ -332,7 +331,7 @@ class Application extends Component {
                 let _rule = _config_get_rules[_index];
                 if (!Validator.validate(_rule, get_value)) {
                     this.error(ErrorCodes.ERROR_GET_VAR_IS_INVALID,
-                    'name[' + _config_get_name + '], value[' + get_value + '], rule[' + BaseFunctions.toString(_rule) + '], data[' + this.getRequestData(string = true) + ']',
+                    'name[' + _config_get_name + '], value[' + get_value + '], rule[' + BaseFunctions.toString(_rule) + '], data[' + this.getRequestData(true) + ']',
                             undefined, false);
                 }
             }
@@ -422,6 +421,10 @@ class Application extends Component {
         })
         .then(res => {
             console.log('# then 2');
+
+            // Close possible mysql connection (required to be closed, unlike another dbases)
+            DBase.getInstance(_applicationObject.requestId).closeConnection('mysql')
+            console.log('> DB mysql connection closed');
 
             // Only if object managed to preserve in requests pool
             if (_applicationObject) {

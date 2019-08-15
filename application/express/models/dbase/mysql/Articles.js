@@ -14,7 +14,7 @@ class ArticlesModel extends DBaseMysql
     constructor() {
         super();
 
-        this.tableName;
+        this.tableNameInit = this.tableInitNames.ARTICLES;
 
         this.fields = {
             title:{
@@ -49,31 +49,20 @@ class ArticlesModel extends DBaseMysql
         this.snapshotFieldsData();
     }
 
-    /*
-     * Get db table name
-     *
-     * @return {string} - table name
-     */
-    getTableName() {
-        if (!this.tableName) {
-            this.tableName = this.getServiceName() + '_articles';
-        }
-        return this.tableName;
-    }
-
 
     /*
      * Get last articles
      *
      * @param {integer} limit - max count of returned articles
+     * @param {boolean} withContent - whether to take content or not
      *
      * @return {array of objects}
      */
-    getLastArticles(limit = 10)
+    getLastArticles(limit = 10, withContent = false)
     {
-        let _condition = '';
+        let _condition = '1';
         let _order = 'id DESC';
-        let _select = '*';
+        let _select = withContent === true ? '*' : 'id, title';
         let _group = '';
         let _need_result = false;
 

@@ -15,7 +15,7 @@ class CountryStatesModel extends DBaseMysql
     constructor() {
         super();
 
-        this.tableName;
+        this.tableNameInit = this.tableInitNames.COUNTRY_STATES;
 
         this.fields = {
             url_code: {
@@ -29,17 +29,6 @@ class CountryStatesModel extends DBaseMysql
         this.snapshotFieldsData();
     }
 
-    /*
-     * Get db table name
-     *
-     * @return {string} - table name
-     */
-    getTableName() {
-        if (!this.tableName) {
-            this.tableName = 'country_states';
-        }
-        return this.tableName;
-    }
 
     /*
      * Add unique record

@@ -6,27 +6,20 @@
  */
 
 import { Component } from 'react';
-import Controller from 'src/modules/controller/Controller';
+import Router from 'src/modules/router/Router';
 import Consts from 'src/settings/Constants';
 import Socket from 'src/app/socket/Socket';
 
 
 export default class AbstractController extends Component {
 
-
-
-
+    componentWillMount() {
+        Router.set(this.props.match.params);
+    }
     componentDidMount() {
-        Controller.setControllerName(this.props.match.params.controller);
-        Controller.setActionName(this.props.match.params.action);
         Socket.query();
     }
 
-
-
-
-
-
-
-
 }
+
+

@@ -14,7 +14,7 @@ class CountryParamsModel extends DBaseMysql
     constructor() {
         super();
 
-        this.tableName;
+        this.tableNameInit = this.tableInitNames.COUNTRY_PARAMS;
 
         this.fields = {
             country_id: {
@@ -28,17 +28,6 @@ class CountryParamsModel extends DBaseMysql
         this.snapshotFieldsData();
     }
 
-    /*
-     * Get db table name
-     *
-     * @return {string} - table name
-     */
-    getTableName() {
-        if (!this.tableName) {
-            this.tableName = 'country_params';
-        }
-        return this.tableName;
-    }
 
     /*
      * Check if country has states
@@ -74,7 +63,7 @@ class CountryParamsModel extends DBaseMysql
     getParams(countryId, needResult = true) {
 
         let _result = this.getByCondition(
-                /*condition*/"cp.country_id = ?",
+                /*condition*/"country_id = ?",
                 /*order*/'',
                 /*group*/'',
                 /*select*/'*',

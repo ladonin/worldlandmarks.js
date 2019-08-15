@@ -12,6 +12,7 @@ const Users = require('application/express/core/Users');
 const Validator = require('application/express/components/base/Validator');
 const Component = require('application/express/core/parents/Component');
 
+
 class Model extends Component {
 
     constructor() {
@@ -280,6 +281,7 @@ class Model extends Component {
             }
         }
     }
+
 }
 
 module.exports = Model;

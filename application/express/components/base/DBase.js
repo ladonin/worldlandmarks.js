@@ -1,22 +1,18 @@
 /*
- * File application/express/core/DBase.js
- * const DBase = require('application/express/core/DBase');
+ * File application/express/components/base/DBase.js
+ * const DBase = require('application/express/components/base/DBase');
  *
  * Databases manager
  */
 
-const syncMySql = require('sync-mysql');
-//const asyncMySql = require('mysql2');
-//const Deasync = require('deasync');
+const mysql = require('mysql');
 
 const Core = require('application/express/core/parents/Core');
-
 const ErrorCodes = require('application/express/settings/ErrorCodes');
 const Consts = require('application/express/settings/Constants');
 const BaseFunctions = require('application/express/functions/BaseFunctions');
 const Config = require('application/express/settings/Config.js');
 const MySqlConfig = require('application/express/settings/gitignore/MySql');
-
 
 
 class DBase extends Core {
@@ -27,7 +23,7 @@ class DBase extends Core {
         /*
          * Mysql Database connection
          *
-         * @type resource
+         * @type {object}
          */
         this.mysqlDbConnection = false;
 
@@ -84,8 +80,6 @@ class DBase extends Core {
     }
 
 
-
-
     /*
      * Create db connection
      *
@@ -96,48 +90,35 @@ class DBase extends Core {
     createConnection(type = 'mysql') {
 
         if (type === 'mysql') {
-            let _connection;
-            //######################### Create connection #################################
-            //##                                                                          ##
-            //##                                                                          ##
-
-            // You can use only one of two connections per request
-            //
-            // If your request requires only fetching data from db (SELECT queries)
-            // then you can use either async or sync conneection
-            //
-            // If your request also make changes in db,
-            // then you should use ONLY sync connection to provide correct transaction work
-            //
-            // Connection by default is sync
 
             /*
-             * DB sync connection
-             * Use in requests where needed db changes
+             * DB async connection
              *
-             * @type object
+             * @type {object}
              */
-            _connection = new syncMySql(MySqlConfig.connect);
-
-            // Checking sync connection
-            try {
-                _connection.query("SELECT 1");
-            } catch (e) {
-                this.error(ErrorCodes.ERROR_DB_NO_CONNECT, 'mysql: ' + e.code);
-            }
+            let _connection = mysql.createConnection(MySqlConfig.connect);
+            _connection.connect();
 
             return _connection;
 
-//        /*
-//         * DB async connection
-//         *
-//         * @type resource
-//         */
-//        this.asyncConnection = asyncMySql.createPool(MySqlConfig.connect).promise();
+        }
+    }
 
-            //##                                                                          ##
-            //##                                                                          ##
-            //##############################################################################
+
+    /*
+     * Close db connections
+     *
+     * @param {string} type - db type
+     *
+     * @returns {object}
+     */
+    closeConnection(type = 'mysql') {
+
+        if (type === 'mysql') {
+            // Only if was created
+            if (this.mysqlDbConnection !== false) {
+                this.mysqlDbConnection.end();
+            }
         }
     }
 

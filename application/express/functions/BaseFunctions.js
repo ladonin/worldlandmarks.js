@@ -546,7 +546,7 @@ function is_not_empty(val)
  *
  * @return {boolean}
  */
-function is_empty(val)
+function isEmpty(val)
 {
     return !is_not_empty(val);
 }
@@ -1092,7 +1092,7 @@ module.exports = {
     ltrim,
     prepare_double_quotes,
     is_not_empty,
-    is_empty,
+    isEmpty,
     prepareToIntArray,
     toInt,
     toString,

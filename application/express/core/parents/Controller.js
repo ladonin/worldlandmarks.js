@@ -36,14 +36,14 @@ class Controller extends Component {
     }
 
     /*
-     * Flush result
+     * Send result to client who send this request
      *
      * @param {string} actionName - controller action name
      * @param {string} eventName - socket event name
      */
     sendMe(actionName = null, eventName = 'api') {
         if (actionName) {
-            this.addStaticText(actionName);
+            this.addStaticData(actionName);
         }
         this.sendbySocket(eventName);
     }
@@ -54,16 +54,8 @@ class Controller extends Component {
      * @param {object} data - added data
      */
     addDynamicData(data) {
-        this.data[Constants.REDUX_ACTION_TYPE_UPDATE_DYNAMIC_TEXT] = {...this.data[Constants.REDUX_ACTION_TYPE_UPDATE_DYNAMIC_TEXT], ...data};
+        this.data[Constants.DYNAMIC_DATA] = {...this.data[Constants.DYNAMIC_DATA], ...data};
     }
-
-
-
-
-
-
-
-
 
 }
 module.exports = Controller;

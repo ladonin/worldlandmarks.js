@@ -86,7 +86,7 @@ module.exports = {
             socket: socket,
             data: {}
         };
-        console.log('Socket set');
+
         return _token;
     },
 

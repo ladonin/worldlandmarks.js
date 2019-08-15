@@ -8,29 +8,15 @@
 const DBaseMysql = require('application/express/core/dbases/Mysql');
 const BaseFunctions = require('application/express/functions/BaseFunctions');
 const Consts = require('application/express/settings/Constants');
-const MapDataModel = require('application/express/models/dbase/mysql/MapData');
-const Language = require('application/express/core/Language');
-const Map = require('application/express/components/Map');
 const ErrorCodes = require('application/express/settings/ErrorCodes');
-const Service = require('application/express/core/Service');
-const Countries = require('application/express/components/Countries');
-const CountryStatesNamesModel = require('application/express/models/dbase/mysql/CountryStatesNames');
-const CountryStatesModel = require('application/express/models/dbase/mysql/CountryStates');
-const States = require('application/express/components/States');
+const CountryStatesCitiesTranslationsModel = require('application/express/models/dbase/mysql/CountryStatesCitiesTranslations');
 
 class GeocodeCollectionModel extends DBaseMysql
 {
     constructor() {
         super();
 
-        this.tableName;
-
-        this.fields = {
-            title:{
-                'rules':['required'],
-                'processing':['strip_tags']
-            }
-        };
+        this.tableNameInit = this.tableInitNames.GEOCODE_COLLECTION;
 
         this.fields = {
             map_data_id:{
@@ -78,55 +64,6 @@ class GeocodeCollectionModel extends DBaseMysql
         this.snapshotFieldsData();
     }
 
-    /*
-     * Get db table name
-     *
-     * @return {string} - table name
-     */
-    getTableName() {
-        if (!this.tableName) {
-            this.tableName = this.getServiceName() + '_geocode_collection';
-        }
-        return this.tableName;
-    }
-
-
-    /*
-     * Add record for placemark on one language
-     *
-     * @param {integer} id - placemark id
-     * @param {string} language - language
-     * @param {object} enData - data of current placemark in english
-     *
-     * @return {object} - added data
-     */
-    addOnOneLanguage(id, language, enData)
-    {
-        let _data = MapDataModel.getInstance(this.requestId).getById(id);
-
-        _data = this.prepareAddress(
-                {
-                    'x':_data['x'],
-                    'y':_data['y']
-                },
-                id,
-                language,
-                {
-                    'country':enData['country'],
-                    'administrative_area_level_1':enData['administrative_area_level_1']
-                });
-        // Delete possibly already existed record
-        this.deleteAdresses(id, language);
-
-        // Now record
-        this.setValuesToFields(_data);
-        this.insert();
-
-        return _data;
-    }
-
-
-
 
     /*
      * Delete all records of placemark for all languages or only specific language
@@ -155,177 +92,11 @@ class GeocodeCollectionModel extends DBaseMysql
 
 
 
+//ATTENTION - обратите внимание
+// prepareAddress => Geo.getInstance(this.requestId).prepareAddress
+// add => Placemarks.getInstance(this.requestId).add
+// addOnOneLanguage => Placemarks.getInstance(this.requestId).addInOneLanguage
 
-
-    /*
-     * Prepare geodata
-     *
-     * @param {object} data - data to be prepared
-     * @param {integer} id - placemark id
-     * @param {string} language - language on which geodata will be prepared
-     * @param {object} enData - the sample in english
-     *
-     * @return {object} - added data
-     */
-    prepareAddress(data, id, language, enData = {})
-    {
-        if ((language !== Consts.LANGUAGE_EN) && (!enData['country'] || !enData['administrative_area_level_1'])) {
-            this.error(ErrorCodes.ERROR_MAP_API_HAS_NOT_ENGLISH, 'for language [' + language + ']');
-        }
-        if (!BaseFunctions.isSet(data.x) || !BaseFunctions.isSet(data.y)) {
-            this.error(ErrorCodes.ERROR_FUNCTION_ARGUMENTS, 'data [' + BaseFunctions.toString(data) + ']');
-        }
-        if (!id) {
-            this.error(ErrorCodes.ERROR_FUNCTION_ARGUMENTS, 'placemark id [' + id + ']');
-        }
-        if (!language) {
-            this.error(ErrorCodes.ERROR_FUNCTION_ARGUMENTS, 'language [' + language + ']');
-        }
-
-        Language.getInstance(this.requestId).checkLanguage(language);
-
-        let _adress = Map.getInstance(this.requestId).getAdressByCoords(data, language);
-
-        let _adressJson = JSON.stringify(_adress);
-
-        let _data = {
-            'map_data_id':id,
-            'language':language,
-            'json_data':_adressJson,
-            'formatted_address':_adress['formattedAdress']
-        };
-
-        for (var index in _adress['address_components']['GeoObject']['metaDataProperty']['GeocoderMetaData']['Address']['Components']) {
-            let _component = _adress['address_components']['GeoObject']['metaDataProperty']['GeocoderMetaData']['Address']['Components'][index];
-
-            if (_component['kind'] === 'street') {
-
-                _data['street'] = _component['name'];
-
-            } else if (_component['kind'] === 'country') {
-
-                _data['country'] = _component['name'];
-
-                /*
-                 * 1. _component['name'] - only when 'data' argument passed in English, enData['country'] is empty in this case.
-                 *
-                 * 2. When _component['name'] and enData['country'] are empty - _data['country_code']
-                 *    will have string 'undefined' value (specified in prepareToOneWord()).
-                 *    Case for english language with no country location (Antarctida, Pacific ocean, etc).
-                 */
-                _data['country_code'] = BaseFunctions.prepareToOneWord(enData['country'],_component['name']);
-
-            } else if (_component['kind'] === 'province') {
-
-                _data['administrative_area_level_1'] = _component['name'];
-
-                /*
-                 * 1. _component['name'] - only when 'data' argument passed in English, enData['administrative_area_level_1'] is empty in this case.
-                 *
-                 * 2. When _component['name'] and enData['administrative_area_level_1'] are empty - _data['state_code']
-                 *    will have string 'undefined' value (specified in prepareToOneWord()).
-                 *    Case for english language with no country location (Antarctida, Pacific ocean, etc).
-                 */
-                _data['state_code'] = BaseFunctions.prepareToOneWord(enData['administrative_area_level_1'],_component['name']);
-
-            } else if (_component['kind'] === 'area') {
-
-                _data['administrative_area_level_2'] = _component['name'];
-
-            } else if (_component['kind'] === 'locality') {
-
-                _data['locality'] = _component['name'];
-            }
-        }
-         if (!_data['state_code']) {
-            _data['administrative_area_level_1'] = Consts.UNDEFINED_VALUE;
-            _data['state_code'] = Consts.UNDEFINED_VALUE;
-        }
-
-        return _data;
-    }
-
-    /*
-     * Add record for one placemark in all available languages
-     *
-     * @param {object} coords - placemark coordinates
-     * @param {integer} id - placemark id
-     *
-     * @return {array} - new geodata ids
-     */
-    add(coords, id)
-    {
-        let _result = [];
-        let _languages = Service.getInstance(this.requestId).getLanguagesCodes();
-
-        // Initially prepare adress in English
-        let _dataEn = this.prepareAddress(coords, id, Consts.LANGUAGE_EN);
-        this.setValuesTofields(_dataEn);
-
-        _result.push(this.insert());
-
-        let _administrativeAreaLevel1En = _dataEn['administrative_area_level_1'] ? _dataEn['administrative_area_level_1'] : Consts.UNDEFINED_VALUE;
-
-        let _countryEn = _dataEn['country'] ? _dataEn['country'] : Consts.UNDEFINED_VALUE;
-
-        let _countryCodeEn = _dataEn['country_code'] ? _dataEn['country_code'] : Consts.UNDEFINED_VALUE;
-
-        let countryId = Countries.getInstance(this.requestId).getCountryDataByCode(_countryCodeEn)['id'];
-
-        let _stateId;
-
-        if (_dataEn['state_code'] !== Consts.UNDEFINED_VALUE) {
-            // Try to add new state
-            CountryStatesModel.getInstance(this.requestId).addOnce({
-                'url_code':_dataEn['state_code'],
-                'country_id':countryId
-            });
-
-            _stateId = States.getStateIdByCode(_dataEn['state_code']);
-
-            // Try to add new state name - defined and in English
-            CountryStatesNamesModel.getInstance(this.requestId).addOnce({
-                'state_id':_stateId,
-                'name':_administrativeAreaLevel1En,
-                'language':Consts.LANGUAGE_EN
-            });
-        }
-
-        //For other languages
-        for (let index in _languages) {
-            let _language = _languages[index];
-            let _data;
-
-            if (_language !== Consts.LANGUAGE_EN) {
-                _data = this.prepareAddress(coords, id, _language, {
-                    'country':_countryEn,
-                    'administrative_area_level_1':_administrativeAreaLevel1En
-                });
-
-                this.setValuesToFields(_data);
-
-                _result.push(this.insert());
-
-                if (_dataEn['state_code'] !== Consts.UNDEFINED_VALUE) {
-
-
-                    if (_data['administrative_area_level_1'] === Consts.UNDEFINED_VALUE) {
-                        _data['administrative_area_level_1'] = _administrativeAreaLevel1En;
-                    }
-
-                    // Try to add new state name - defined and in nonenglish language
-                    CountryStatesNamesModel.getInstance(this.requestId).addOnce({
-                        'state_id':_stateId,
-                        'name':_data['administrative_area_level_1'],
-                        'language':_language
-                    }
-                    );
-                }
-            }
-        }
-
-        return _result;
-    }
 
 // //ATTENTION - обратите внимание get_countries => CountriesModel.getCountries
 
@@ -460,7 +231,7 @@ class GeocodeCollectionModel extends DBaseMysql
                 let _placemark = _placemarksData[_index];
 
                 if ((_placemark['state']) && (_placemark['state_code']) && (_placemark['country_code'])) {
-                    _placemarksData[_index]['state'] = Countries.getInstance(this.requestId).getTranslationOfStateName(language, _placemark['country_code'], _placemark['state'], _placemark['state_code']);
+                    _placemarksData[_index]['state'] = CountryStatesCitiesTranslationsModel.getInstance(this.requestId).getTranslationOfStateName(language, _placemark['country_code'], _placemark['state'], _placemark['state_code']);
                 }
 
                 _result['ids'].push(_placemark['placemarks_id']);

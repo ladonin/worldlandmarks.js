@@ -15,7 +15,7 @@ class CountriesModel extends DBaseMysql
     constructor() {
         super();
 
-        this.tableName;
+        this.tableNameInit = this.tableInitNames.COUNTRY;
 
         this.fields = {
             code2: {
@@ -29,12 +29,6 @@ class CountriesModel extends DBaseMysql
         this.snapshotFieldsData();
     }
 
-    getTableName() {
-        if (!this.tableName) {
-            this.tableName = 'country';
-        }
-        return this.tableName;
-    }
 
     /*
      * Get country data by country code

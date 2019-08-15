@@ -48,13 +48,73 @@ module.exports = {
     REQUEST_FORM_DATA: 'formData',
 
 
-    REDUX_ACTION_TYPE_UPDATE_STATIC_TEXT:'UPDATE_STATIC_TEXT',
-    REDUX_ACTION_TYPE_UPDATE_DYNAMIC_TEXT:'UPDATE_DYNAMIC_TEXT',
+    STATIC_DATA:'STATIC_DATA',
+    DYNAMIC_DATA:'DYNAMIC_DATA',
+    UPDATE_PAGE:'UPDATE_PAGE',
+    REMOVE_DYNAMIC_DATA:'REMOVE_DYNAMIC_DATA',
 
-    HASH_SALT:'f348=890(ubhr5od-t',
 
 
+CONTROLLER_VAR_NAME:'controller',
 
+ACTION_VAR_NAME:'action',
+    CONTROLLER_NAME_MAP: 'map',
+    CONTROLLER_NAME_MAIN: 'main',
+    CONTROLLER_NAME_CATALOG: 'catalog',
+    CONTROLLER_NAME_ARTICLE: 'article',
+    CONTROLLER_NAME_SEARCH: 'search',
+
+    ACTION_NAME_INDEX: 'index',
+    ACTION_NAME_COUNTRY: 'country',
+    ACTION_NAME_STATE: 'state',
+    ACTION_NAME_PLACEMARK: 'placemark',
+    ACTION_NAME_SITEMAP_COUNTRIES: 'sitemap_countries',
+    ACTION_NAME_SITEMAP_CATEGORIES: 'sitemap_categories',
+    ACTION_NAME_VIEW: 'view',
+
+    ACTION_NAME_ARTICLES_COUNTRIES_NAME: 'countries',
+    ACTION_NAME_ARTICLES_CATEGORIES_NAME: 'categories',
+
+    UNDEFINED_VALUE: 'undefined',
+    SERVICE_VAR_NAME: 'service',//ATTENTION - обратите внимание
+    ID_VAR_NAME: 'id',
+
+    URL_VAR_1_NAME: 'var1',
+    URL_VAR_2_NAME: 'var2',
+    URL_VAR_3_NAME: 'var3',
+    URL_VAR_4_NAME: 'var4',
+
+    CATALOG_CATEGORY_VAR_NAME: 'category',
+    CATALOG_COUNTRY_VAR_NAME: 'country',
+    CATALOG_STATE_VAR_NAME: 'state',
+    CATALOG_PAGE_NUMBER_VAR_NAME: 'page_number',
+
+    TOO_BIG_MAP_REQUEST_AREA_CODE: 'too_big_map_area',
+
+    SPAM_TRANSFERED_EMAIL_ID_VAR_NAME: 'transfered_by_spam_email_id',
+    SPAM_TRANSFERED_EMAIL_CODE_VAR_NAME: 'transfered_by_spam_email_code',
+    SPAM_TRANSFERED_EMAIL_INTEREST_VAR_NAME: 'transfered_by_spam_email_interest',
+    LANGUAGE_CODE_VAR_NAME: 'language',
+    ISMOBILE_CODE_VAR_NAME: 'isMobile',
+    ADMIN_PASSWORD_VAR_NAME: 'apsw',
+
+    FORM_SUBMIT_REDIRECT_URL_VAR_NAME: 'url_redirect',
+    FORM_SUBMIT_REDIRECT_URL_VALUE_SELF: 'self',
+    FORM_BUTTON_CODE: '@1',
+    SUCCESS_CODE: 'success',
+    NONE_CATEGORY_CODE: 'none',
+    FILTER_TYPE_ALL: 'all',
+    FILTER_TYPE_ONLY_REQUIRED: 'only_required',
+    FILTER_TYPE_WITHOUT_REQUIRED: 'without_required',
+    FORM_TEXT_TAG_CODE_A: 'a',
+    FORM_TEXT_TAG_CODE_B: 'b',
+    FORM_TEXT_TAG_CODE_STRONG: 'strong',
+    FORM_TEXT_TAG_CODE_IMAGE_ADVANCED: 'image_advanced',
+    FORM_TEXT_TAG_CODE_P: 'p',
+    LANGUAGE_RU: 'ru',
+    LANGUAGE_EN: 'en',
+
+    COOKIE_EMAIL_PLACEMARK: 'email_placemark',
 
     /*
      LANGUAGE_RU: 'ru',

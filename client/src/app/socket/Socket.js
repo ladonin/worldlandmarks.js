@@ -11,7 +11,7 @@ import Consts from 'src/settings/Constants';
 
 import BaseFunctions from 'src/functions/BaseFunctions';
 import Config from 'src/settings/Config';
-import Controller from 'src/modules/controller/Controller';
+import Router from 'src/modules/router/Router';
 import Language from 'src/modules/Language';
 import Service from 'src/modules/Service';
 import {isMobile} from "react-device-detect";
@@ -36,20 +36,28 @@ Socket.on('error-catch', function (data) {
 });
 
 
+
 export default {
     query(data = {}) {
         data = {
             [Consts.REQUEST_FORM_DATA]:{},
             ...data,
-            controller: Controller.getControllerName(),
-            action: Controller.getActionName(),
+            controller: Router.getControllerName(),
             service: Service.getName(),
             language: Language.getName(),
             isMobile: isMobile ? true : false,
         }
 
-        Socket.emit('api', data);
+        // Prepare request data (see method description)
+        data = Router.getActionData(data);
+        console.log('>>>>>>> Sending socket request');
+        console.log(data);
 
+        Socket.emit('api', data);
+        //    for (let i=0; i<1000; i++){
+        //     Socket.emit('api', data);
+        //    }
+        //ATTENTION - обратите внимание
     },
     getSocket(){
         return Socket;

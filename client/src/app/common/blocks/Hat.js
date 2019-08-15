@@ -51,8 +51,8 @@ class Hat extends AbstractBlock {
 
 
 function mapStateToProps(state) {
-    let _domainName = state.staticText['domain_name'];
-    let _logoUnderText = state.staticText['hat/logo/under_text'];
+    let _domainName = state.staticData['domain_name'];
+    let _logoUnderText = state.staticData['hat/logo/under_text'];
     return {
         domainName:_domainName,
         logoUnderText:_logoUnderText

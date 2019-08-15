@@ -1,3 +1,4 @@
 client/node_modules
-client/build
+client/build/img
+client/build/static
 node_modules

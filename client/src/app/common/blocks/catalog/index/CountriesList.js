@@ -24,11 +24,11 @@ class CountriesList extends AbstractBlock {
 
     render() {
 
-        let _flagsList =[];
+        let _countriesList =[];
 
         for (let _index in this.props.data) {
             let _item = this.props.data[_index];
-            _flagsList.push(
+            _countriesList.push(
                 <div className="catalog_index_country_row" onClick={this.goTo} data-url={'/' + Consts.CONTROLLER_NAME_CATALOG + '/'+_item.country_code}>
                     <img className="flag" src={BaseFunctions.getFlagUrl(_item.country_code)}/>
                     <div className="catalog_index_country_row_name">{_item.country}
@@ -42,20 +42,10 @@ class CountriesList extends AbstractBlock {
         return (
             <React.Fragment>
                 <BrowserView>
-                    <div className="catalog_index_block">
-                        {_flagsList}
-                        <div className="clear"></div>
-                        <div className="catalog_block_last_articles_title" style={{position:'relative'}}>
-                            <img style={{display: 'inline-block',width: '40px'}} src="/img/article_icon.png"/>
-                            <span style={{display: 'block', position: 'absolute',top: '20px',left: '60px', color:'#333'}}>{this.props.last_articles}</span>
-                        </div>
-                        <div style={{'background-color':'#fff', margin:'0 10px'}}>
-                            <ArticlesList/>
-                        </div>
-                    </div>
-                    <div className="clear"></div>
+                    {_countriesList}
                 </BrowserView>
                 <MobileView>
+                    TODO_MOBILE CountriesList
                 </MobileView>
             </React.Fragment>
         );
@@ -66,9 +56,9 @@ class CountriesList extends AbstractBlock {
 function mapStateToProps(state) {
 
     return {
-        data:state.dynamicText['data'],
-        placemarks_count:state.staticText['placemarks_count'],
-        last_articles:state.staticText['last_articles']
+        data:state.dynamicData['data'],
+        placemarks_count:state.staticData['placemarks_count'],
+        last_articles:state.staticData['last_articles']
     }
 }
 let mapDispatchToProps = {}

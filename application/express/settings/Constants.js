@@ -31,9 +31,7 @@ let _Consts = {
 
 
 
-CONTROLLER_VAR_NAME:'controller',
 
-ACTION_VAR_NAME:'action',
 
 
     SERVICES_DIR:'application/express/services/',
@@ -84,47 +82,25 @@ ACTION_VAR_NAME:'action',
 
     COOKIE_MAX_LIFETIME_VALUE: 999999999,
 
-    CONTROLLER_NAME_MAP: 'map',
-    CONTROLLER_NAME_MAIN: 'main',
-    CONTROLLER_NAME_CATALOG: 'catalog',
-    CONTROLLER_NAME_ARTICLE: 'article',
-    CONTROLLER_NAME_SEARCH: 'search',
 
-    ACTION_NAME_INDEX: 'index',
-    ACTION_NAME_COUNTRY: 'country',
-    ACTION_NAME_STATE: 'state',
-    ACTION_NAME_PLACEMARK: 'placemark',
-    ACTION_NAME_SITEMAP_COUNTRIES: 'sitemap_countries',
-    ACTION_NAME_SITEMAP_CATEGORIES: 'sitemap_categories',
-    ACTION_NAME_VIEW: 'view',
 
-    ACTION_NAME_ARTICLES_COUNTRIES_NAME: 'countries',
-    ACTION_NAME_ARTICLES_CATEGORIES_NAME: 'categories',
 
-    UNDEFINED_VALUE: 'undefined',
+
+
+
     ADDRESS_UNNAMED_ROAD_VALUE: 'Unnamed Road',
 
     SERVICES_NAME: 'services',
     FILE_UPLOADED_VARNAME: 'file',
-    SERVICE_VAR_NAME: 'service',//ATTENTION - обратите внимание
-    ID_VAR_NAME: 'id',
-    CATALOG_CATEGORY_VAR_NAME: 'category',
-    CATALOG_COUNTRY_VAR_NAME: 'country',
-    CATALOG_STATE_VAR_NAME: 'state',
-    CATALOG_PAGE_NUMBER_VAR_NAME: 'page_number',
 
-    TOO_BIG_MAP_REQUEST_AREA_CODE: 'too_big_map_area',
 
-    SPAM_TRANSFERED_EMAIL_ID_VAR_NAME: 'transfered_by_spam_email_id',
-    SPAM_TRANSFERED_EMAIL_CODE_VAR_NAME: 'transfered_by_spam_email_code',
-    SPAM_TRANSFERED_EMAIL_INTEREST_VAR_NAME: 'transfered_by_spam_email_interest',
-    LANGUAGE_CODE_VAR_NAME: 'language',
-    ISMOBILE_CODE_VAR_NAME: 'isMobile',
-    ADMIN_PASSWORD_VAR_NAME: 'apsw',
 
-    FORM_SUBMIT_REDIRECT_URL_VAR_NAME: 'url_redirect',
-    FORM_SUBMIT_REDIRECT_URL_VALUE_SELF: 'self',
-    FORM_BUTTON_CODE: '@1',
+
+
+
+
+
+
 
     DIR_GENERIC_NAME: 'generic',
     DIR_DESCTOP_NAME: 'desctop',
@@ -133,28 +109,49 @@ ACTION_VAR_NAME:'action',
     DESCTOP: 'desctop',
     MOBILE: 'mobile',
 
-    SUCCESS_CODE: 'success',
-    NONE_CATEGORY_CODE: 'none',
-    FILTER_TYPE_ALL: 'all',
-    FILTER_TYPE_ONLY_REQUIRED: 'only_required',
-    FILTER_TYPE_WITHOUT_REQUIRED: 'without_required',
+
+
+
+
+
+
+    HASH_SALT:'f348=890(ubhr5od-t',
+
+
+
+
+
 
     DIMENTIONS_DESCTOP_CONTENT_WIDTH: '900',
     MODEL_NAME_FORM_ADD_NEW_POINT: 'form_add_new_point',
     MODEL_NAME_DB_SPAM: 'db_spam',
 
-    FORM_TEXT_TAG_CODE_A: 'a',
-    FORM_TEXT_TAG_CODE_B: 'b',
-    FORM_TEXT_TAG_CODE_STRONG: 'strong',
-    FORM_TEXT_TAG_CODE_IMAGE_ADVANCED: 'image_advanced',
-    FORM_TEXT_TAG_CODE_P: 'p',
+
+
+
+
+
+
+
+
+
+
 
     ACCOUNT_ROLE_ADMIN_CODE: 9,
 
-    LANGUAGE_RU: 'ru',
-    LANGUAGE_EN: 'en',
 
-    COOKIE_EMAIL_PLACEMARK: 'email_placemark',
+
+
+
+
+
+
+
+
+
+
+
+
 
 // - добавляется и в базу (как простые данные пользователя, у которого роль админ) и в константу (можно потом брать хеш не из константы, а из базы)
     SUPER_ADMIN_PASSWORD_HASH: '$6$$J/xCAtPslyQ7xy3SLwmDo.SMr0fnyyddNZI2ag6iMNnn7hMwetjqOzp198eeINWOP6yoS3QdmkJIhmJHUQ.dB/',

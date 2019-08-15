@@ -13,7 +13,7 @@ class EmailsSendsModel extends DBaseMysql
     constructor() {
         super();
 
-        this.tableName;
+        this.tableNameInit = this.tableInitNames.EMAILS_SENDS;
 
         this.fields = {
             map_table:{
@@ -49,18 +49,6 @@ class EmailsSendsModel extends DBaseMysql
         };
 
         this.snapshotFieldsData();
-    }
-
-    /*
-     * Get db table name
-     *
-     * @return {string} - table name
-     */
-    getTableName() {
-        if (!this.tableName) {
-            this.tableName = 'emails_sends';
-        }
-        return this.tableName;
     }
 }
 

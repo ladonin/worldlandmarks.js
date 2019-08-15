@@ -106,7 +106,7 @@ class Core {
     /*
      * Get form data from request
      *
-      * @param {boolean} required - wherher value should be required
+     * @param {boolean} required - wherher value should be required
      *
      * @return {object}
      */

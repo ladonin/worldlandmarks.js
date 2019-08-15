@@ -15,23 +15,23 @@ class CommonController extends Controller {
     }
 
     /*
-     * Add additional static text to controller's responce according with controller and action name
+     * Add additional static data to controller's responce according with controller and action name
      *
      * @param {string} actionName - controller's action name
      */
-    addStaticText(actionName) {
+    addStaticData(actionName) {
 
         let _controllerName = this.constructor.name.toLowerCase();
 
         let _path = _controllerName + '_' + actionName;
-        let _staticText = {};
+        let _staticData = {};
 
         if ((_path === 'errors_error404')
                 || (_path === 'main_index')
                 || (_path === 'catalog_index')
                 ) {
 
-            _staticText = {..._staticText,
+            _staticData = {..._staticData,
                 'domain_name': this.getText('domain_name'),
                 'hat/logo/under_text': this.getText('hat/logo/under_text'),
                 'see_all': this.getText('see_all'),
@@ -39,13 +39,13 @@ class CommonController extends Controller {
         }
 
         if (_path === 'catalog_index') {
-            _staticText = {..._staticText,
+            _staticData = {..._staticData,
                 'placemarks_count': this.getText('placemarks_count/2/text'),
                 'last_articles': this.getText('last_articles/text'),
             }
         }
 
-        this.data = {...this.data, [Constants.REDUX_ACTION_TYPE_UPDATE_STATIC_TEXT]:_staticText};
+        this.data = {...this.data, [Constants.STATIC_DATA]:_staticData};
     }
 }
 module.exports = CommonController;

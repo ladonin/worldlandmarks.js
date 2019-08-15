@@ -75,16 +75,6 @@ class Component extends Core {
         }
         return this.service;
     }
-
-
-
-
-
-
-
-
-
-
 }
 
 module.exports = Component;

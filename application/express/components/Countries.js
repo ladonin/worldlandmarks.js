@@ -40,7 +40,7 @@ class Countries extends Component {
         if (!name) {
             return this.getText('countries/undefined/name');
         }
-        
+
         for (let _replacedName in this.countriesNamesReplaces) {
 
             let _replace = this.countriesNamesReplaces[_replacedName];
@@ -67,7 +67,6 @@ class Countries extends Component {
         }
         return countries;
     }
-
 
     /*
      * Get country name from request
@@ -154,7 +153,7 @@ class Countries extends Component {
 // запрашивал MY_MODEL_NAME_DB_GEOCODE_COLLECTION.get_countries, там делал запрос в таблицу countries
 // в итоге все запросы (MY_MODEL_NAME_DB_GEOCODE_COLLECTION.get_countries и this.getAllCountriesList) идут в новый метод this.getCountries
 //getAllCountriesList() => this.getCountries
-
+//getCountryNameByGetVar => getCountryNameFromRequest
 
 
 
@@ -164,9 +163,9 @@ class Countries extends Component {
 
 // //ATTENTION - обратите внимание translateStateNames => getTranslationOfStateName
 // //ATTENTION - обратите внимание translateCityNames => getTranslationOfCityName
-//getStateNameByGetVar => getStateNameFromRequest
-
-
+// getStateNameByGetVar => getStateNameFromRequest
+// getCountryCodeFromUrl => getCountryCodeFromRequest
+// getTranslationOfStateName => CountryStatesCitiesTranslationsModel.getTranslationOfStateName
 
 
 
@@ -217,50 +216,7 @@ class Countries extends Component {
 
 
 
-    /*
-     * Get translation of state name
-     *
-     * @param {string} language - on what language will be translated
-     * @param {string} countryCode - country code
-     * @param {string} stateName - state name
-     * @param {string} stateCode - state code
-     *
-     * @return string - translated state name
-     */
-    getTranslationOfStateName(language, countryCode, stateName, stateCode)
-    {
-        let _result;
-        let _language = this.getLanguage();
-        let _serviceName = this.getServiceName();
 
-        if (_result = this.cache.get('translationsOfStateNames', _serviceName, _language)[language][countryCode][stateCode][stateName]) {
-            return _result;
-        }
-
-        let _datas = CountryStatesCitiesTranslationsModel.getInstance(this.requestId).getStateTranslation(countryCode, stateName, language, false);
-
-        if (_datas.length === 1) {
-            if ((!_datas[0]['url_code']) || (_datas[0]['url_code'] === stateCode)) {
-                _result = _datas[0]['translate'];
-            }
-        } else {
-            for (let _index in _datas) {
-
-                let _data = _datas[_index];
-                if (_data['url_code'] === stateCode) {
-                    _result = _data['translate'];
-                }
-            }
-        }
-        if (!_result) {
-            // Default
-            _result = stateName;
-        }
-
-        this.cache.get('translationsOfStateNames', _serviceName, _language)[language][countryCode][stateCode][stateName] = _result;
-
-        return _result;
-    }
 
     /*
      * Get translation of city name
@@ -280,7 +236,7 @@ class Countries extends Component {
         let _language = this.getLanguage();
         let _serviceName = this.getServiceName();
 
-        if (_result = this.cache.get('countriesTranslateCities', _serviceName, _language)[language][countryCode][stateCode][cityName]) {
+        if (_result = this.cache.get('countriesTranslateCities', _serviceName, _language)[language+'%'+countryCode+'%'+stateCode+'%'+cityName]) {
             return _result;
         }
 
@@ -301,7 +257,7 @@ class Countries extends Component {
             _result = cityName;
         }
 
-        this.cache.get('countriesTranslateCities', _serviceName, _language)[language][countryCode][stateCode][cityName] = _result;
+        this.cache.get('countriesTranslateCities', _serviceName, _language)[language+'%'+countryCode+'%'+stateCode+'%'+cityName] = _result;
 
         return _result;
     }
@@ -324,13 +280,13 @@ class Countries extends Component {
         let _language = this.getLanguage();
         let _serviceName = this.getServiceName();
 
-        if (_result = this.cache.get('administrativeCenters', _serviceName, _language)[countryCode][stateCode]) {
+        if (_result = this.cache.get('administrativeCenters', _serviceName, _language)[countryCode+'%'+stateCode]) {
             return _result;
         }
 
         _result = CountryStatesModel.getInstance(this.requestId).isAdministrativeCenter(countryCode, stateCode);
 
-        this.cache.get('administrativeCenters', _serviceName, _language)[countryCode][stateCode] = _result;
+        this.cache.get('administrativeCenters', _serviceName, _language)[countryCode+'%'+stateCode] = _result;
 
         return _result;
     }
@@ -468,7 +424,7 @@ class Countries extends Component {
             this.error(ErrorCodes.ERROR_COUNTRY_STATE_NAME_WAS_NOT_FOUND, 'state code [' + stateCode + ']', undefined, false);
         }
 
-        _stateName = this.getTranslationOfStateName(_language, _countryCode, _stateName, stateCode);
+        _stateName = CountryStatesCitiesTranslationsModel.getInstance(this.requestId).getTranslationOfStateName(_language, _countryCode, _stateName, stateCode);
 
         this.cache.get('stateNameByCode', _serviceName, _language)[stateCode] = _stateName;
 

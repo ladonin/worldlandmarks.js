@@ -14,7 +14,7 @@ class MapPhotosModel extends DBaseMysql
     constructor() {
         super();
 
-        this.tableName;
+        this.tableNameInit = this.tableInitNames.MAP_PHOTOS;
 
         this.fields = {
             map_data_id:{
@@ -34,17 +34,6 @@ class MapPhotosModel extends DBaseMysql
         this.snapshotFieldsData();
     }
 
-    /*
-     * Get db table name
-     *
-     * @return {string} - table name
-     */
-    getTableName() {
-        if (!this.tableName) {
-            this.tableName = this.getServiceName() + '_map_photos';
-        }
-        return this.tableName;
-    }
 
 // //ATTENTION - обратите внимание
 //get_by_data_id => MY_MODULE_NAME_MAP.getPhotosByDataId()

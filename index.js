@@ -9,6 +9,8 @@ var io = require('socket.io')(server);
 const Application = require('application/express/components/base/Application');
 const RequestsPool = require('application/express/core/RequestsPool');
 const SocketsPool = require('application/express/core/SocketsPool');
+const DBase = require('application/express/components/base/DBase');
+const Ftp = require('application/express/components/base/Ftp');
 
 SocketsPool.setIO(io);
 

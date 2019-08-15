@@ -513,11 +513,11 @@ class Service extends Core
     }
 
     /*
-     * Get maximum number of new articles on main page
+     * Get the maximum number of new articles in the list
      *
      * @return integer
      */
-    get_max_last_main_page_articles()
+    getMaxLastArticlesList()
     {
         if (Functions.isSet(this.get_data().config.generic.max_last_main_page_articles)) {
             return this.data.config.generic.max_last_main_page_articles;

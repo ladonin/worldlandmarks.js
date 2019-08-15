@@ -62,6 +62,7 @@ function checkObject(reqId, objectId, errorMessage = '') {
     }
 }
 
+
 module.exports = {
     /*
      * Create new request pool for instances
@@ -72,6 +73,7 @@ module.exports = {
      * @return integer - key of object pool in which all objects (controller, models, other components) are keeped
      */
     init(data, token) {
+
         let _reqId = BaseFunctions.unique_id();
         _instances_pool[_reqId] = {request: data, socketToken: token};
         return _reqId;
@@ -112,8 +114,8 @@ module.exports = {
     getControllerAndActionNames(reqId) {
         checkReqId(reqId, 'for getControllerAndActionNames');
         return {
-            controller:_instances_pool[reqId].controller,
-            action:_instances_pool[reqId].action
+            _controller:_instances_pool[reqId].controller,
+            _action:_instances_pool[reqId].action
         }
     },
 

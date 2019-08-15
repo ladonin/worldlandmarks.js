@@ -8,13 +8,14 @@
 const DBaseMysql = require('application/express/core/dbases/Mysql');
 const BaseFunctions = require('application/express/functions/BaseFunctions');
 
+
 class UsersRegistered extends DBaseMysql
 {
 
     constructor() {
         super();
 
-        this.tableName;
+        this.tableNameInit = this.tableInitNames.USERS_REGISTERED;
 
         this.fields = {
             role: {
@@ -31,13 +32,6 @@ class UsersRegistered extends DBaseMysql
             },
         };
         this.snapshotFieldsData();
-    }
-
-    getTableName() {
-        if (!this.tableName) {
-            this.tableName = 'users_registered';
-        }
-        return this.tableName;
     }
 }
 

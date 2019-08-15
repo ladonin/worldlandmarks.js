@@ -9,7 +9,10 @@ const BaseFunctions = require('application/express/functions/BaseFunctions');
 const ErrorCodes = require('application/express/settings/ErrorCodes');
 const Consts = require('application/express/settings/Constants');
 const Model = require('application/express/core/parents/Model');
-const DBase = require('application/express/core/DBase');
+const DBase = require('application/express/components/base/DBase');
+const TableNames = require('application/express/models/dbase/TableNames');
+const TableNamesConstants = require('application/express/settings/TableNames');
+const Deasync = require('deasync');
 
 
 class DBaseMysql extends Model
@@ -23,7 +26,7 @@ class DBaseMysql extends Model
          *
          * @type string
          */
-        this.table_name;
+        this.tableName;
 
         /*
          * DB table Fields
@@ -37,18 +40,25 @@ class DBaseMysql extends Model
          *
          * @type object
          */
-        this.fields_initial_data;
+        this.fieldsInitialData;
+
+        /*
+         * Collection of initial db table names
+         *
+         * @type object
+         */
+        this.tableInitNames = TableNamesConstants;
     }
 
 
 
 ////ATTENTION - обратите внимание
     snapshotFieldsData() {
-        this.fields_initial_data = BaseFunctions.clone(this.fields);
+        this.fieldsInitialData = BaseFunctions.clone(this.fields);
     }
 
     reset_fields() {
-        this.fields = BaseFunctions.clone(this.fields_initial_data);
+        this.fields = BaseFunctions.clone(this.fieldsInitialData);
     }
 
     /*
@@ -74,7 +84,7 @@ class DBaseMysql extends Model
      */
     query(sql, values = []) {//, async = false
 
-        return this.query_sync(sql, values);//async === true ? this.query_async(sql, values) :
+        return this.query_async(sql, values);//async === true ? this.query_async(sql, values) :
     }
 
     /*
@@ -85,21 +95,36 @@ class DBaseMysql extends Model
      *
      * @return promise
      */
-//    query_async(sql, values = []) {
-//        return this.getConnection()//true
-//                .query(sql, values)
-//                .catch(err => {
-//                    this.error(
-//                            ErrorCodes.ERROR_MYSQL
-//                            + ': ' + err.code
-//                            + ': request[' + sql + '], values[' + BaseFunctions.toString(values) + ']',
-//                            Consts.LOG_MYSQL_TYPE
-//                            );
-//                })
-//                .then((res) => {
-//                    return res[0];
-//                });
-//    }
+    query_async(sql, values = []) {
+
+        let _finished = false;
+        let _result;
+        let _error = false;
+
+        this.getConnection().query(sql, values, function (error, result, fields) {
+            _finished = true;
+            if (error) {
+                _error = error;
+            } else {
+                _result = result;
+            }
+        });
+
+       // Wait for process to be finished
+        Deasync.loopWhile(function () {
+            return !_finished;
+        });
+
+        if (_error !== false) {
+            this.error(
+                ErrorCodes.ERROR_MYSQL,
+                _error.code + ': request[' + sql + '], values[' + BaseFunctions.toString(values) + ']',
+                Consts.LOG_MYSQL_TYPE
+                );
+        }
+
+        return _result;
+    }
 
     /*
      * Sync query
@@ -109,16 +134,18 @@ class DBaseMysql extends Model
      *
      * @return {array of objects or empty array}
      */
-    query_sync(sql, values = []) {
-        try {
-            return this.getConnection().query(sql, values);
-        } catch (e) {
-            this.error(
-                    ErrorCodes.ERROR_MYSQL,
-                    e.code + ': request[' + sql + '], values[' + BaseFunctions.toString(values) + ']',
-                    Consts.LOG_MYSQL_TYPE);
-    }
-    }
+//    query_sync(sql, values = []) {
+//        try {
+//            let _result = this.getConnection().query(sql, values);
+//            this.getConnection().release();
+//            return _result;
+//        } catch (e) {
+//            this.error(
+//                    ErrorCodes.ERROR_MYSQL,
+//                    e.code + ': request[' + sql + '], values[' + BaseFunctions.toString(values) + ']',
+//                    Consts.LOG_MYSQL_TYPE);
+//    }
+//    }
 
 
 
@@ -453,6 +480,33 @@ class DBaseMysql extends Model
         delete data.id;
         this.setValuesToFields(data);
         this.update(_id);
+    }
+
+
+    /*
+     * Get db table name
+     *
+     * @param {string} name - initial table name
+     *
+     * @return {string} - prepared table name
+     */
+    getTableName(name) {
+
+        let _tableNamesInstance = TableNames.getInstance(this.requestId);
+
+        if (!name) {
+            // It means that we want to get our own table name
+
+            name = this.tableNameInit;
+
+            if (!this.tableName) {
+                this.tableName = _tableNamesInstance.getTableName(name);
+            }
+            return this.tableName;
+        }
+
+        return _tableNamesInstance.getTableName(name);
+
     }
 
 }

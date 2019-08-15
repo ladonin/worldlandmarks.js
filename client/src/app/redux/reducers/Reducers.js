@@ -7,33 +7,31 @@ import { combineReducers } from 'redux';
 import Constants from 'src/settings/Constants';
 
 
-function staticText(state = {}, action) {
+function staticData(state = {}, action) {
     switch (action.type) {
-        case Constants.REDUX_ACTION_TYPE_UPDATE_STATIC_TEXT:
-            return Object.assign({}, state, action.data);
+        case Constants.UPDATE_PAGE:
+            return Object.assign({}, state, action.data[Constants.STATIC_DATA]);
         default:
             return state;
     }
 }
 
-function dynamicText(state = {}, action) {
+function dynamicData(state = {}, action) {
     switch (action.type) {
-        case Constants.REDUX_ACTION_TYPE_UPDATE_DYNAMIC_TEXT:
-            return Object.assign({}, state, action.data);
+        case Constants.UPDATE_PAGE:
+            return Object.assign({}, state, action.data[Constants.DYNAMIC_DATA]);
+
+        case Constants.REMOVE_DYNAMIC_DATA:
+            return {};
+
         default:
             return state;
     }
 }
-
-
-
-
-
-
 
 const rootReducer = combineReducers({
-    staticText,
-    dynamicText
+    staticData,
+    dynamicData
 })
 
 export default rootReducer

@@ -7,17 +7,15 @@
 
 const DBaseMysql = require('application/express/core/dbases/Mysql');
 const BaseFunctions = require('application/express/functions/BaseFunctions');
-const GeocodeCollectionModel = require('application/express/models/dbase/mysql/GeocodeCollection');
-const MapPhotosModel = require('application/express/models/dbase/mysql/MapPhotos');
-const Map = require('application/express/components/Map');
 const Config = require('application/express/settings/Config');
+
 
 class MapDataModel extends DBaseMysql
 {
     constructor() {
         super();
 
-        this.tableName;
+        this.tableNameInit = this.tableInitNames.MAP_DATA;
 
         this.fields = {
             x:{
@@ -69,13 +67,6 @@ class MapDataModel extends DBaseMysql
             };
 
             this.snapshotFieldsData();
-        }
-
-        getTableName() {
-            if (!this.tableName) {
-                this.tableName = this.getServiceName() + '_map_data';
-            }
-            return this.tableName;
         }
 
 //ATTENTION - обратите внимание
@@ -157,8 +148,8 @@ class MapDataModel extends DBaseMysql
                 ph.modified as ph_modified
 
                 FROM ${this.getTableName()} c
-                LEFT JOIN (SELECT * FROM ${MapPhotosModel.getInstance(this.requestId).getTableName()} ORDER by id DESC) ph ON ph.map_data_id=c.id
-                LEFT JOIN ${GeocodeCollectionModel.getInstance(this.requestId).getTableName()} geo on geo.map_data_id = c.id AND geo.language=?
+                LEFT JOIN (SELECT * FROM ${this.getTableName(this.tableInitNames.MAP_PHOTOS)} ORDER by id DESC) ph ON ph.map_data_id=c.id
+                LEFT JOIN ${this.getTableName(this.tableInitNames.GEOCODE_COLLECTION)} geo on geo.map_data_id = c.id AND geo.language=?
                 WHERE c.id IN (${_idsList}) `;
 
         let _innerOrder='c_id, ph_id DESC';
@@ -309,9 +300,6 @@ class MapDataModel extends DBaseMysql
 
 
 
-
-
-
     /*
      * Return another placemarks related to category
      *
@@ -335,17 +323,10 @@ class MapDataModel extends DBaseMysql
                 );
     }
 
-    /*
-     * Return another placemarks ids related to category
-     *
-     * @param {integer} categoryId - category id
-     * @param {integer} pointId - placemark id
-     *
-     * @return {array of objects}
-     */
-    getAnotherPlacemarksIdsByCategory(categoryId, pointId) {
-        return this.getAnotherPlacemarksByCategory(categoryId, pointId, select = 'id');
-    }
+
+
+
+
 
 
 
@@ -411,7 +392,7 @@ class MapDataModel extends DBaseMysql
                     ph.height as ph_height
 
                     FROM ${this.getTableName()} c
-                    JOIN ${MapPhotosModel.getInstance(this.requestId).getTableName()} ph on ph.map_data_id = c.id
+                    JOIN ${this.getTableName(this.tableInitNames.MAP_PHOTOS)} ph on ph.map_data_id = c.id
                     WHERE c.id IN (${placemarksIds.join(', ')})
                     ORDER by ph_id DESC`;
 
@@ -450,7 +431,7 @@ class MapDataModel extends DBaseMysql
                 geo.country_code as country_code,
                 geo.state_code as state_code
             FROM ${this.getTableName()} c
-            LEFT JOIN ${GeocodeCollectionModel.getInstance(this.requestId).getTableName()} geo on geo.map_data_id = c.id AND geo.language = ?
+            LEFT JOIN ${this.getTableName(this.tableInitNames.GEOCODE_COLLECTION)} geo on geo.map_data_id = c.id AND geo.language = ?
             WHERE geo.country_code = ?
             ORDER by c.id DESC`;
 
@@ -487,7 +468,7 @@ class MapDataModel extends DBaseMysql
                 geo.country as country,
                 geo.state_code as state_code
             FROM ${this.getTableName()} c
-            LEFT JOIN ${GeocodeCollectionModel.getInstance(this.requestId).getTableName()} geo on geo.map_data_id = c.id
+            LEFT JOIN ${this.getTableName(this.tableInitNames.GEOCODE_COLLECTION)} geo on geo.map_data_id = c.id
                     AND geo.language=?
                     WHERE category = ? OR subcategories REGEXP '[[:<:]]${categoryId}[[:>:]]'
             ORDER by c.id DESC`;
@@ -544,7 +525,7 @@ class MapDataModel extends DBaseMysql
         let _sql = `SELECT
                 c.id as id
                 FROM ${this.getTableName()} c
-                LEFT JOIN ${GeocodeCollectionModel.getInstance(this.requestId).getTableName()} geo on geo.map_data_id = c.id AND geo.language=?
+                LEFT JOIN ${this.getTableName(this.tableInitNames.GEOCODE_COLLECTION)} geo on geo.map_data_id = c.id AND geo.language=?
                 WHERE ${_condition}
                 ORDER by ${_order}
                 LIMIT ${limit}`;
@@ -589,7 +570,7 @@ class MapDataModel extends DBaseMysql
 
 //ATTENTION - обратите внимание
 // getPointsByIds => MY_MODULE_NAME_MAP.getPointsByIds
-//getPointContentById(id) => Map.getPointContentById
+//getPointContentById(id) => Map.getPointBigDataById
 
 // get_points_bunch => MY_MODULE_NAME_MAP.get_points_bunch
 

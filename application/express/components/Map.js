@@ -5,15 +5,12 @@
  * Map component - compute map data
  */
 
-const Fetch = require('node-fetch');
-const Deasync = require('deasync');
-const Fs = require('fs');
 
+const Fs = require('fs');
 const Component = require('application/express/core/parents/Component');
 const BaseFunctions = require('application/express/functions/BaseFunctions');
 const Consts = require('application/express/settings/Constants');
 const ErrorCodes = require('application/express/settings/ErrorCodes');
-const AccessConfig = require('application/express/settings/gitignore/Access');
 const Service = require('application/express/core/Service');
 const GeocodeCollectionModel = require('application/express/models/dbase/mysql/GeocodeCollection');
 const MapPhotosModel = require('application/express/models/dbase/mysql/MapPhotos');
@@ -26,21 +23,14 @@ const CreatePointForm = require('application/express/models/form/CreatePoint');
 const UpdatePointForm = require('application/express/models/form/UpdatePoint');
 const Mailer = require('application/express/components/base/Mailer');
 const Countries = require('application/express/components/Countries');
-const Catalog = require('application/express/components/Catalog');
 const SublistBlock = require('application/express/blocks/placemark/Sublist');
 const CaregoriesViewerBlock = require('application/express/blocks/category/CaregoriesViewer');
+const Placemarks = require('application/express/components/Placemarks');
 
 class Map extends Component {
 
     constructor(){
         super();
-
-        /*
-         * Example: https://geocode-maps.yandex.ru/1.x/?format=json&apikey=APIKEY&geocode=19.611347,0.760241&lang=en
-         */
-        this.GEOCODE_SERVICE_URL = 'https://geocode-maps.yandex.ru/1.x/?';
-
-
 
     }
 
@@ -52,7 +42,7 @@ class Map extends Component {
 //get_db_model => сразу берем из require
 // module() => и модуль и компонент один файл
 //getPointContentById => getPointBigDataById
-
+//getAdressByCoords => Geo.getInstance(this.requestId).getAdressByCoords
 
     /*
      * Get placemark full data by id
@@ -63,7 +53,7 @@ class Map extends Component {
      */
     getPointBigDataById(id)
     {
-        let _result = this.getPointsBigDataByIds(
+        let _result = Placemarks.getInstance(this.requestId).getPlacemarksBigDataByIds(
                 [id],
                 true,
                 undefined,
@@ -75,57 +65,7 @@ class Map extends Component {
 
 
 
-    /*
-     * Get adress by coordinates from API
-     *
-     * @param {object} coords - coordinates {x,y}
-     * @param {string} language - desired adress language
-     *
-     * @return {object} - adress
-     */
-    getAdressByCoords(coords, language = '')
-    {
-        if (!language) {
-            language = this.getLanguage();
-        }
 
-        if (!language) {
-            this.error(ErrorCodes.ERROR_LANGUAGE_NOT_FOUND, 'language [' + language + ']');
-        }
-
-        let _query = this.GEOCODE_SERVICE_URL + 'format=json&apikey=' + AccessConfig.yandexMapApiKey + '&geocode='+ coords.x + ',' + coords.y + '&lang=' + language;
-        let _apiData;
-        let _finished = false;
-
-        fetch(_query)
-            .then(function(response) {
-                return response.json();
-            })
-            .then(function(data) {
-                _apiData = data;
-                _finished = true;
-            });
-
-        // Wait for process to be finished
-        Deasync.loopWhile(function () {
-            return !_finished;
-        });
-
-        if (_apiData.error) {
-            this.error(ErrorCodes.ERROR_MAP_API, _apiData.error.message);
-        }
-
-        if (!_apiData.response || !_apiData.response.GeoObjectCollection || !BaseFunctions.isSet(_apiData.response.GeoObjectCollection.featureMember)) {
-            this.error(ErrorCodes.ERROR_MAP_API_CHANGED_DATA);
-        }
-        let _featureMember = _apiData.response.GeoObjectCollection.featureMember;
-        let _adress = {};
-
-        _adress['addressComponents'] = _featureMember[0];
-        _adress['formattedAddress'] = _featureMember[0]['GeoObject']['metaDataProperty']['GeocoderMetaData']['text'];
-
-        return _adress;
-    }
 
 
 
@@ -134,33 +74,10 @@ class Map extends Component {
 
 //ATTENTION - обратите внимание
 
-//getPointContentByIds => getPointsBigDataByIds
+//getPointContentByIds => Placemarks.getPlacemarksBigDataByIds
 // getPointsByIds => getPointsShortDataByIds
 
 
-    /*
-     * Get placemarks big data by ids
-     *
-     * @param {array} ids - placemarks ids
-     * @param {boolean} needPlainText - whether placemark description (plain text) is necessary
-     * @param {string} order - fetch order
-     * @param {boolean} needRelevant - whether 'relevant' placemarks are necessary
-     * @param {boolean} needAnother - whether 'another' placemarks are necessary
-     *
-     * @return {object} - placemark data
-     */
-    getPointsBigDataByIds(ids, needPlainText = true, order = null, needRelevant = false, needAnother = false)
-    {
-        if (!ids) {
-            return [];
-        }
-
-        let _language = this.getLanguage();
-
-        let _result = MapDataModel.getInstance(this.requestId).getPointsBigDataByIds(ids, _language, order, needPlainText, true);
-
-        return this.prepareResult(_result, needRelevant, needAnother);
-    }
 
 
 
@@ -924,7 +841,7 @@ class Map extends Component {
         let _dataId = MapDataModel.getInstance(this.requestId).add(_data);
 
         // Record geodata
-        GeocodeCollectionModel.getInstance(this.requestId).add({'x':_data['x'], 'y':_data['y']}, _dataId);
+        Placemarks.getInstance(this.requestId).add({'x':_data['x'], 'y':_data['y']}, _dataId);
 
 
         // Check attached photos
@@ -1011,7 +928,7 @@ class Map extends Component {
                     'comment':BaseFunctions.isSet(_placemark['c_comment']) ? _placemark['c_comment'] : null,
                     'comment_plain':BaseFunctions.isSet(_placemark['c_comment_plain']) ? _placemark['c_comment_plain'] : null,
                     'formatted_address':BaseFunctions.isSet(_placemark['g_country_code']) ?
-                        Catalog.getInstance(this.requestId).prepareAddressLink(
+                        Placemarks.getInstance(this.requestId).prepareAddressLink(
                                 _placemark['g_state_code'], _placemark['g_country_code'],
                                 _placemark['g_administrative_area_level_2'],
                                 _placemark['g_administrative_area_level_1'],
@@ -1020,7 +937,7 @@ class Map extends Component {
                         :
                         null,
                     'formatted_address_with_route':BaseFunctions.isSet(_placemark['g_country_code']) ?
-                        Catalog.getInstance(this.requestId).prepareAddressLinkWithRoute(
+                        Placemarks.getInstance(this.requestId).prepareAddressLinkWithRoute(
                                 _placemark['g_state_code'],
                                 _placemark['g_country_code'],
                                 _placemark['g_administrative_area_level_2'],
@@ -1068,7 +985,7 @@ class Map extends Component {
                         _result[_placemark['c_id']]['photos'][0] = {
                             'id':0,
                             'dir':Consts.SERVICE_IMGS_URL_CATEGORIES_PHOTOS,
-                            'name':Catalog.getInstance(this.requestId).getCategoryCode(_placemark['c_category']) + '.jpg',
+                            'name':Placemarks.getInstance(this.requestId).getCategoryCode(_placemark['c_category']) + '.jpg',
                             'width':Service.getInstance(this.requestId).getCategoriesPhotoInitialWidth(),
                             'height':Service.getInstance(this.requestId).getCategoriesPhotoInitialHeight(),
                             'created':BaseFunctions.isSet(_placemark['ph_created']) ? _placemark['ph_created'] : null,
@@ -1077,7 +994,7 @@ class Map extends Component {
                     }
                 }
 
-                let _dir = this.getPhotoDir(_placemark['c_id'], _placemark['ph_path']);
+                let _dir = Placemarks.getInstance(this.requestId).getPhotoDir(_placemark['c_id'], _placemark['ph_path']);
 
                 _result[_placemark['c_id']]['photos'].push({
                     'id':_placemark['ph_id'],
@@ -1093,7 +1010,7 @@ class Map extends Component {
                 _result[_placemark['c_id']]['photos']=[{
                     'id':0,
                     'dir':Consts.SERVICE_IMGS_URL_CATEGORIES_PHOTOS,
-                    'name':Catalog.getInstance(this.requestId).getCategoryCode(_placemark['c_category']) + '.jpg',
+                    'name':Placemarks.getInstance(this.requestId).getCategoryCode(_placemark['c_category']) + '.jpg',
                     'width':Service.getInstance(this.requestId).getCategoriesPhotoInitialWidth(),
                     'height':Service.getInstance(this.requestId).getCategoriesPhotoInitialHeight(),
                     'created':BaseFunctions.isSet(_placemark['ph_created']) ? _placemark['ph_created'] : null,
@@ -1117,7 +1034,7 @@ class Map extends Component {
 
             if (needAnother) {
                 // Add another placemarks related to category
-                let _anotherPlacemarksIds = Catalog.getInstance(this.requestId).getAnotherPlacemarksByCategory(_placemark['c_category'], _placemark['c_id']);
+                let _anotherPlacemarksIds = Placemarks.getInstance(this.requestId).getAnotherPlacemarksIdsByCategory(_placemark['c_category'], _placemark['c_id']);
                 if (_anotherPlacemarksIds.length) {
 
                     _result[_placemark['c_id']]['another_placemarks'] = SublistBlock.getInstance(this.requestId).render({
@@ -1141,18 +1058,8 @@ class Map extends Component {
     }
 
 
-    /*
-     * Return photo directory
-     *
-     * @param {integer} id - placemark id
-     * @param {string} name - photo name without size prefix
-     *
-     * @return {string}
-     */
-    getPhotoDir(id, name)
-    {
-        return BaseFunctions.preparePhotoPath(id, name, '1_', true, true);
-    }
+//ATTENTION - обратите внимание
+// getPhotoDir => Placemarks.getPhotoDir
 
 }
 

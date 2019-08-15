@@ -12,7 +12,7 @@ const Consts = require('application/express/settings/Constants');
 const CommonController = require('application/express/controllers/CommonController');
 
 
-const DBase = require('application/express/core/DBase');
+const DBase = require('application/express/components/base/DBase');
 const DBaseMysql = require('application/express/core/dbases/Mysql');
 
 class Main extends CommonController {
