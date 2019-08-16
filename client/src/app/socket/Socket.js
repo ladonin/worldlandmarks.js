@@ -38,18 +38,18 @@ Socket.on('error-catch', function (data) {
 
 
 export default {
-    query(data = {}) {
+    query(matchParams, data = {}) {
         data = {
             [Consts.REQUEST_FORM_DATA]:{},
             ...data,
-            controller: Router.getControllerName(),
+            controller: Router.getControllerName(matchParams),
             service: Service.getName(),
             language: Language.getName(),
             isMobile: isMobile ? true : false,
         }
 
         // Prepare request data (see method description)
-        data = Router.getActionData(data);
+        data = Router.getActionData(data, matchParams);
         console.log('>>>>>>> Sending socket request');
         console.log(data);
 

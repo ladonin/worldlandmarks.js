@@ -6,19 +6,17 @@
  */
 
 import React, { Component } from 'react';
+import { withRouter } from 'react-router-dom';
 
-import AbstractController from 'src/app/abstract/AbstractController';
+import Controller from 'src/app/parents/Controller';
 import Consts from 'src/settings/Constants';
 import Router from 'src/modules/router/Router';
 
 // Action components
-import MainIndex from 'src/app/controllers/main/actions/index/Index';
+import MainIndex from 'src/app/controllers/main/actions/Index';
 
 
-import Hat from 'src/app/common/blocks/Hat';
-
-
-class Main extends AbstractController {
+class Main extends Controller {
 
     constructor() {
         super();
@@ -27,22 +25,17 @@ class Main extends AbstractController {
 
     render() {
         let _actionComponent;
-        switch (Router.getActionName()){
-            case Consts.ACTION_NAME_INDEX: _actionComponent = <MainIndex/>;
-
+        switch (this.getActionName()){
+            case Consts.ACTION_NAME_INDEX: _actionComponent = <MainIndex/>; break;
             default: _actionComponent = <MainIndex/>;
         }
 
         return (
-            <React.Fragment>
-                <Hat/>
-                <div className="padding_after_hat"></div>
-                <div id='action' className='static_page'>
-                    {_actionComponent}
-                </div>
-            </React.Fragment>
+            <div id='action' className='static_page'>
+                {_actionComponent}
+            </div>
         );
     }
 }
 
-export default Main
+export default withRouter(Main)

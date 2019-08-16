@@ -7,19 +7,17 @@
 
 import React, { Component } from 'react';
 
-import AbstractController from 'src/app/abstract/AbstractController';
+import Controller from 'src/app/parents/Controller';
 import Consts from 'src/settings/Constants';
 import Router from 'src/modules/router/Router';
 
 // Action components
-import CatalogIndex from 'src/app/controllers/catalog/actions/index/Index';
-import CatalogCountry from 'src/app/controllers/catalog/actions/country/Country';
+import CatalogIndex from 'src/app/controllers/catalog/actions/Index';
+import CatalogCountry from 'src/app/controllers/catalog/actions/Country';
 
-// Other components
-import Hat from 'src/app/common/blocks/Hat';
+import { withRouter } from 'react-router-dom';
 
-
-class Catalog extends AbstractController {
+class Catalog extends Controller {
 
     constructor() {
         super();
@@ -29,27 +27,21 @@ class Catalog extends AbstractController {
 
 
         let _actionComponent;
-        switch (Router.getActionName()) {
+        switch (this.getActionName()) {
             case Consts.ACTION_NAME_INDEX:
-                _actionComponent = <CatalogIndex/>;
+                _actionComponent = <CatalogIndex/>; break;
             case Consts.ACTION_NAME_COUNTRY:
-                _actionComponent = <CatalogCountry/>;
-
-
+                _actionComponent = <CatalogCountry/>; break;
             default:
                 _actionComponent = <CatalogIndex/>;
         }
 
         return (
-                <React.Fragment>
-                    <Hat/>
-                    <div className="padding_after_hat"></div>
-                    <div id='action'>
-                        {_actionComponent}
-                    </div>
-                </React.Fragment>
-                );
+                <div id='action'>
+                    {_actionComponent}
+                </div>
+        );
     }
 }
 
-export default Catalog
+export default withRouter(Catalog)

@@ -464,10 +464,10 @@ border-color: #faebcc;
 
 
 
-#placemark_close, #placemark_add_cancel,#close_panel,#hat #open_panel{
+#placemark_close, #placemark_add_cancel,#close_panel,.hat #open_panel{
     background-color:#648eb7;
 }
-#placemark_close:hover, #placemark_add_cancel:hover,#close_panel:hover,#hat #open_panel:hover{
+#placemark_close:hover, #placemark_add_cancel:hover,#close_panel:hover,.hat #open_panel:hover{
     background-color:#537ca5;
 }
 
@@ -628,4 +628,19 @@ border-color: #faebcc;
 .hover_blue:hover{
     color:#4a76a8;
 
+}
+
+
+#action {
+    transition: 0.2s;
+    opacity:0;
+}
+
+#action.showed{
+    opacity:100;
+}
+
+
+#action.static_page{
+    opacity:100;
 }

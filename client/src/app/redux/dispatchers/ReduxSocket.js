@@ -18,7 +18,7 @@ export default {
 
             _store.dispatch(updatePage(data));
 console.log('_store.dispatch(updatePage(data))');
-
+console.log(data);
 
 
 

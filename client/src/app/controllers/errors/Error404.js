@@ -9,10 +9,10 @@ import Hat from 'src/app/common/blocks/Hat';
 import { connect } from 'react-redux'
 
 
-import AbstractController from 'src/app/abstract/AbstractController';
+import Controller from 'src/app/parents/Controller';
 import Consts from 'src/settings/Constants';
 
-class Error404 extends AbstractController {
+class Error404 extends Controller {
 
     constructor() {
         super();

@@ -28,6 +28,7 @@ import Router from 'src/modules/router/Router';
 import "./Css";
 
 
+
 class App extends Component {
     constructor(){
         super();
@@ -43,7 +44,7 @@ class App extends Component {
 
     }
     componentDidUpdate() {
-        //console.log('App componentDidUpdate');
+        alert(11111);
     }
     initSettings(){
         //Localization.changeLang(Consts.LANGUAGE_EN);
@@ -59,6 +60,7 @@ class App extends Component {
 
     const App = () => (
       <div onClick={this.rr}>
+
         <Switch>
           <Route exact path='/' component={Main}/>
           <Route path={'/:controller('+Consts.CONTROLLER_NAME_MAP+')/:var2?'} component={Map}/>
@@ -78,4 +80,4 @@ class App extends Component {
 }
 
 
-export default withRouter(App)
+export default App

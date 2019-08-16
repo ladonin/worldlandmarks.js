@@ -13,13 +13,13 @@ import {BrowserView, MobileView, isBrowser, isMobile} from "react-device-detect"
 
 import Consts from 'src/settings/Constants';
 
-import AbstractBlock from 'src/app/abstract/AbstractBlock';
+import Block from 'src/app/parents/Block';
 
 
 
 
 
-class ArticlesList extends AbstractBlock {
+class ArticlesList extends Block {
     constructor() {
         super();
     }

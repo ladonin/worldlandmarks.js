@@ -12,11 +12,11 @@ import { connect } from 'react-redux';
 
 
 import ArticlesList from 'src/app/common/blocks/ArticlesList';
-import AbstractBlock from 'src/app/abstract/AbstractBlock';
+import Block from 'src/app/parents/Block';
 import BaseFunctions from 'src/functions/BaseFunctions';
 import Consts from 'src/settings/Constants';
 
-class CountriesList extends AbstractBlock {
+class CountriesList extends Block {
 
     constructor() {
         super();

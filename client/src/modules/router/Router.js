@@ -2,44 +2,13 @@
  * File src/modules/router/Router.js
  * import Router from 'src/modules/router/Router';
  *
- * Works with server requests
+ * Works with server requests and react rooter match parameters
  */
-
 
 
 import Consts from 'src/settings/Constants';
 import ErrorHandler from 'src/modules/error_handler/ErrorHandler';
 import ErrorCodes from 'src/settings/ErrorCodes';
-
-
-/*
- * Controller name
- * By default refers to main page
- *
- * @type {string}
- */
-var controllerName = Consts.CONTROLLER_NAME_MAIN;
-
-
-
-
-/*
- * Controller's action name
- *
- * @type {string}
- */
-var actionName;
-
-
-
-/*
- * React router url data (not a copy!)
- *
- * @type {object}
- */
-var routerUrlData = {};
-
-
 
 /*
  * Chech if name for controller is correct
@@ -68,36 +37,45 @@ function checkConrtollerName(name) {
  *  url 'catalog/germany/bayern': controller = 'country', action = 'state', country = 'germany', state = 'bayern'
  *
  * @param {object} data - request data
+ * @param {object} matchParams - react rooter match parameters
  *
  * @return {object} - prepared request data
  */
-function getActionData(data = {}) {
+function getActionData(data = {}, matchParams) {
 
-    if (routerUrlData[Consts.CONTROLLER_VAR_NAME] === Consts.CONTROLLER_NAME_CATALOG) {
+    if (!matchParams[Consts.CONTROLLER_VAR_NAME]) {
+        // Main page
+        data[Consts.ACTION_VAR_NAME] = Consts.ACTION_NAME_INDEX;
+        console.log('>>>>>>>>>is Main page');
+        return data;
+    }
 
-        if ((routerUrlData[Consts.URL_VAR_2_NAME] !== Consts.ACTION_NAME_INDEX)
-                && (routerUrlData[Consts.URL_VAR_2_NAME] !== Consts.ACTION_NAME_SEARCH)) {
 
-            if (routerUrlData[Consts.URL_VAR_4_NAME]) {
+    if (matchParams[Consts.CONTROLLER_VAR_NAME] === Consts.CONTROLLER_NAME_CATALOG) {
+
+        if ((matchParams[Consts.URL_VAR_2_NAME] !== Consts.ACTION_NAME_INDEX)
+                && (matchParams[Consts.URL_VAR_2_NAME] !== Consts.ACTION_NAME_SEARCH)) {
+
+            if (matchParams[Consts.URL_VAR_4_NAME]) {
                 // Placemark page
 
                 return data;
-            } else if (routerUrlData[Consts.URL_VAR_3_NAME]) {
+            } else if (matchParams[Consts.URL_VAR_3_NAME]) {
                 // State page
 
                 return data;
-            } else if (routerUrlData[Consts.URL_VAR_2_NAME]) {
+            } else if (matchParams[Consts.URL_VAR_2_NAME]) {
                 // Country page
                 data[Consts.ACTION_VAR_NAME] = Consts.ACTION_NAME_COUNTRY;
-                data[Consts.CATALOG_COUNTRY_VAR_NAME] = routerUrlData[Consts.URL_VAR_2_NAME];
-                //console.log('>>>>>>>>>is Country page');
+                data[Consts.CATALOG_COUNTRY_VAR_NAME] = matchParams[Consts.URL_VAR_2_NAME];
+                console.log('>>>>>>>>>is Country page');
                 return data;
             }
         }
 
         // Countries list page
         data[Consts.ACTION_VAR_NAME] = Consts.ACTION_NAME_INDEX;
-        //console.log('>>>>>>>>>is Countries list page');
+        console.log('>>>>>>>>>is Countries list page');
         return data;
     }
 
@@ -106,67 +84,54 @@ function getActionData(data = {}) {
 
 
 /*
- * Set controller name
+ * Get controller name
  *
- * @param string name - controller name
+ * @return string
  */
-function setControllerName(name) {
+function getControllerName(matchParams) {
 
-    if (!name) {
-        name = Consts.CONTROLLER_NAME_MAIN;
+    let _controllerName = matchParams[Consts.CONTROLLER_VAR_NAME];
+
+    if (!_controllerName) {
+        _controllerName = Consts.CONTROLLER_NAME_MAIN;
     }
 
-    if (checkConrtollerName(name)) {
-        controllerName = name;
+    if (!checkConrtollerName(_controllerName)) {
+        _controllerName = 'wrong name: [' + _controllerName + ']';
     }
+
+    return _controllerName;
 }
 
 
+/*
+ * Get controller's action name
+ *
+ * @return string
+ */
+function getActionName(matchParams) {
+    return getActionData(undefined, matchParams)[Consts.ACTION_VAR_NAME];
+}
+
+
+/*
+ * Define are we on map page now?
+ *
+ * @param {object} matchParams - react rooter match parameters
+ *
+ * @return boolean
+ */
+function isMapPage(matchParams) {
+    return (getControllerName(matchParams) === Consts.CONTROLLER_NAME_MAP);
+}
+
+
+
 export default {
-
-    /*
-     * Set router data
-     *
-     * @param {object} data - react router url data
-     */
-    set(data){//console.log('>>>>>>>>>ROUTER set:::');console.log(data);
-        //Set react router url data
-        routerUrlData = data;
-
-        setControllerName(data.controller);
-    },
-
-    /*
-     * See function description above
-     */
-    getActionData(data) {
-        return getActionData(data);
-
-    },
-
-
-    /*
-     * Get controller name
-     *
-     * @return string
-     */
-    getControllerName: () => controllerName,
-
-    /*
-     * Get controller's action name
-     *
-     * @return string
-     */
-    getActionName() {//console.log('>>>>>>>>getActionName-----------> ' + getActionData()[Consts.ACTION_VAR_NAME]);
-        return getActionData()[Consts.ACTION_VAR_NAME];
-    },
-
-    /*
-     * Define are we on map page now?
-     *
-     * @return boolean
-     */
-    isMapPage: () => (controllerName === Consts.CONTROLLER_NAME_MAP)
+    isMapPage,
+    getActionName,
+    getControllerName,
+    getActionData
 }
 
 
