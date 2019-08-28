@@ -7,10 +7,11 @@
 
 import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom';
+import { connect } from 'react-redux';
 
 import Controller from 'src/app/parents/Controller';
 import Consts from 'src/settings/Constants';
-import Router from 'src/modules/router/Router';
+import Router from 'src/modules/Router';
 
 // Action components
 import MainIndex from 'src/app/controllers/main/actions/Index';
@@ -22,7 +23,6 @@ class Main extends Controller {
         super();
     }
 
-
     render() {
         let _actionComponent;
         switch (this.getActionName()){
@@ -30,12 +30,10 @@ class Main extends Controller {
             default: _actionComponent = <MainIndex/>;
         }
 
-        return (
-            <div id='action' className='static_page'>
-                {_actionComponent}
-            </div>
-        );
+        return <React.Fragment>
+            {_actionComponent}
+        </React.Fragment>;
     }
 }
 
-export default withRouter(Main)
+export default connect()(withRouter(Main))

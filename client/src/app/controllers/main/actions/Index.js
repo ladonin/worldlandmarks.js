@@ -10,31 +10,31 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 
 import { Link } from 'react-router-dom';
-import Action, {MapStateToProps} from 'src/app/parents/Action';
+import Action, {MapStateToProps, MapDispatchToProps} from 'src/app/parents/Action';
+import Consts from 'src/settings/Constants';
 
 // Components
-
 import MainLinks from 'src/app/common/blocks/main/index/MainLinks';
-
-
+import PlacemarksList from 'src/app/common/blocks/PlacemarksList';
 
 
 class MainIndex extends Action {
 
     constructor() {
-        super();
-        this.scroll = this.scroll.bind(this);
+        super();this.scroll2 = this.scroll2.bind(this);
     }
-
-
+    scroll2(){
+       this.showCategoryViewer(3);
+        //Socket.backgroundQuery(Consts.CONTROLLER_NAME_CATALOG, 'get_placemarks_list', {[Consts.ID_VAR_NAME]:921})
+    }
     render() {
         return (
-                <div>
+                <div id='action' className={this.getActionClass()}><div onClick={this.scroll2}>scroll</div>
                     <MainLinks/>
-                    <div onClick={this.scroll}>scroll</div>
+                    <PlacemarksList/>
                 </div>
                 );
     }
 }
 
-export default connect(MapStateToProps)(withRouter(MainIndex))
+export default connect(MapStateToProps, MapDispatchToProps)(withRouter(MainIndex))

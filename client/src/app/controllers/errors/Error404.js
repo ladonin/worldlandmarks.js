@@ -32,7 +32,7 @@ class Error404 extends Controller {
                 <React.Fragment>
                     <Hat/>
                     <div className="padding_after_hat"></div>
-                    {this.props.errorMessage}
+                    {this.props.redux.errorMessage}
                 </React.Fragment>
                 );
     }
@@ -49,10 +49,12 @@ class Error404 extends Controller {
 
 /////////////////redux1111111
 function mapStateToProps(state) {
-  const { errorMessage } = state.dynamicData;
+
 
   return {
-    errorMessage
+      redux:{
+        errorMessage:state.dynamicData.errorMessage
+    }
   }
 }
 let mapDispatchToProps = {

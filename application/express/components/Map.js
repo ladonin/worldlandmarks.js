@@ -23,8 +23,6 @@ const CreatePointForm = require('application/express/models/form/CreatePoint');
 const UpdatePointForm = require('application/express/models/form/UpdatePoint');
 const Mailer = require('application/express/components/base/Mailer');
 const Countries = require('application/express/components/Countries');
-const SublistBlock = require('application/express/blocks/placemark/Sublist');
-const CaregoriesViewerBlock = require('application/express/blocks/category/CaregoriesViewer');
 const Placemarks = require('application/express/components/Placemarks');
 
 class Map extends Component {
@@ -53,12 +51,14 @@ class Map extends Component {
      */
     getPointBigDataById(id)
     {
-        let _result = Placemarks.getInstance(this.requestId).getPlacemarksBigDataByIds(
+        let _result = Placemarks.getInstance(this.requestId).getPlacemarksDataByIds(
                 [id],
+                true,
                 true,
                 undefined,
                 Service.getInstance(this.requestId).whetherShowRelevantPlacemarks(),
-                Service.getInstance(this.requestId).whetherShowAnotherPlacemarks()
+                Service.getInstance(this.requestId).whetherShowAnotherPlacemarks(),
+                true
         );
         return _result[id];
     }
@@ -74,30 +74,14 @@ class Map extends Component {
 
 //ATTENTION - обратите внимание
 
-//getPointContentByIds => Placemarks.getPlacemarksBigDataByIds
-// getPointsByIds => getPointsShortDataByIds
+//getPointContentByIds => Placemarks.getPlacemarksDataByIds
+// getPointsByIds => Placemarks.getPlacemarksDataByIds
 
 
 
 
 
-    /*
-     * Get a short points information by their ids
-     *
-     * @param {array} ids - points ids
-     *
-     * @return {array of objects}
-     */
-    getPointsShortDataByIds(ids)
-    {
-        if (!ids.length) {
-            return [];
-        }
 
-        let _result = MapDataModel.getInstance(this.requestId).getPointsShortDataByIds(ids);
-
-        return this.prepareResult(_result);
-    }
 
 
 
@@ -140,13 +124,8 @@ class Map extends Component {
         if (!_result || !_result.length) {
             return [];
         }
-        return this.prepareResult(_result);
+        return Placemarks.getInstance(this.requestId).prepareResult(_result, false, false, 1);
     }
-
-
-
-
-
 
 
     /*
@@ -251,7 +230,7 @@ class Map extends Component {
     {
         let _result = this.getPointsByLimitNaked();
 
-        _result = _result ? this.prepareResult(_result) : _result;
+        _result = _result ? Placemarks.getInstance(this.requestId).prepareResult(_result, false, false, 1) : _result;
 
         return _result;
     }
@@ -684,7 +663,7 @@ class Map extends Component {
         let _photosNewPrepared = '';
         if (_formData['photos']) {
 
-            let _photosNewArray = BaseFunctions.getArrayFromString(BaseFunctions.trim(_formData['photos']), ' ', this);
+            let _photosNewArray = BaseFunctions.getArrayFromString(_formData['photos'].trim(), ' ', this);
             _photosNewPrepared = this.createPhotosDataForInsert(_photosNewArray);
             if (!_photosNewPrepared) {
                 this.error(ErrorCodes.ERROR_FORM_WRONG_DATA, 'photos: [' + _formData['photos'] + ']', undefined, false);
@@ -845,7 +824,7 @@ class Map extends Component {
 
 
         // Check attached photos
-        let _photosArray = BaseFunctions.getArrayFromString(BaseFunctions.trim(_formData['photos']), ' ', this);
+        let _photosArray = BaseFunctions.getArrayFromString(_formData['photos'].trim(), ' ', this);
 
         // If photos count is too big
         if (_photosArray.length > Config['restrictions']['max_upload_files_per_point']) {
@@ -885,177 +864,8 @@ class Map extends Component {
 
 //    prepareAddress(adress) - удалил
 //ATTENTION - обратите внимание
+//prepareResult => Placemarks.getInstance(this.requestId).prepareResult
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-    /*
-     * Update result for each found placemark according with their db data
-     *
-     * @param {array of objects} data - placemarks data to be updated
-     * @param {boolean} needRelative - should we add relative placemarks to result or not
-     * @param {boolean} needAnother - should we add another placemarks to result related to category or not
-     *
-     * @return {array of objects} - updated placemarks result
-     */
-    prepareResult(data, needRelative = false, needAnother = false)
-    {
-
-        let _result = [];
-
-        // For each placemark
-        for (let _index in data) {
-
-            let _placemark = data[_index];
-
-
-            if (!BaseFunctions.isSet(_result[_placemark['c_id']])) {
-                _result[_placemark['c_id']] = {
-
-                    'id':_placemark['c_id'],
-                    'x':_placemark['c_x'],
-                    'y':_placemark['c_y'],
-                    'comment':BaseFunctions.isSet(_placemark['c_comment']) ? _placemark['c_comment'] : null,
-                    'comment_plain':BaseFunctions.isSet(_placemark['c_comment_plain']) ? _placemark['c_comment_plain'] : null,
-                    'formatted_address':BaseFunctions.isSet(_placemark['g_country_code']) ?
-                        Placemarks.getInstance(this.requestId).prepareAddressLink(
-                                _placemark['g_state_code'], _placemark['g_country_code'],
-                                _placemark['g_administrative_area_level_2'],
-                                _placemark['g_administrative_area_level_1'],
-                                _placemark['g_country'],
-                                _placemark['g_locality'])
-                        :
-                        null,
-                    'formatted_address_with_route':BaseFunctions.isSet(_placemark['g_country_code']) ?
-                        Placemarks.getInstance(this.requestId).prepareAddressLinkWithRoute(
-                                _placemark['g_state_code'],
-                                _placemark['g_country_code'],
-                                _placemark['g_administrative_area_level_2'],
-                                _placemark['g_administrative_area_level_1'],
-                                _placemark['g_country'],
-                                _placemark['g_locality'],
-                                _placemark['g_street'])
-                        :
-                        null,
-                    'flag_url':BaseFunctions.isSet(_placemark['g_country_code']) ? BaseFunctions.get_flag_url(_placemark['g_country_code']) : null,
-                    'country_code':BaseFunctions.isSet(_placemark['g_country_code']) ? _placemark['g_country_code'] : null,
-                    'state_code':BaseFunctions.isSet(_placemark['g_state_code']) ? _placemark['g_state_code'] : null,
-                    'street':BaseFunctions.isSet(_placemark['g_street']) ? _placemark['g_street'] : null,
-                    'title':_placemark['c_title'],
-                    'category':_placemark['c_category'],
-                    'subcategories':_placemark['c_subcategories'],
-                    'relevant_placemarks':Service.getInstance(this.requestId).whetherShowRelevantPlacemarks() ? _placemark['c_relevant_placemarks'] : '',
-                    'created':BaseFunctions.isSet(_placemark['c_created']) ? _placemark['c_created'] : null,
-                    'modified':BaseFunctions.isSet(_placemark['c_modified']) ? _placemark['c_modified'] : null
-                };
-
-                // --> Prepare catalog_url
-                let _catalogUrl;
-                if (_result[_placemark['c_id']]['country_code']) {
-                    if (Countries.getInstance(this.requestId).hasStates(_result[_placemark['c_id']]['country_code'])) {
-                        _catalogUrl = _result[_placemark['c_id']]['country_code'] + '/' + _result[_placemark['c_id']]['state_code'] + '/' + _result[_placemark['c_id']]['id'];
-                    } else {
-                        _catalogUrl = _result[_placemark['c_id']]['country_code'] + '/' + _result[_placemark['c_id']]['id'];
-                    }
-                } else {
-                    _catalogUrl = '';
-                }
-                _result[_placemark['c_id']]['catalog_url'] = _catalogUrl;
-                // <-- Prepare catalog_url
-            }
-
-            // Add photos
-            if (_placemark['ph_id']) {
-
-                // The first photo - is a category photo
-                if (Service.getInstance(this.requestId).whetherAddCategoryPhotoAsFirstInPlacemarkView() === true) {
-
-                    if (!BaseFunctions.isSet(_result[_placemark['c_id']]['photos'][0])) {
-                        _result[_placemark['c_id']]['photos']=[];
-                        _result[_placemark['c_id']]['photos'][0] = {
-                            'id':0,
-                            'dir':Consts.SERVICE_IMGS_URL_CATEGORIES_PHOTOS,
-                            'name':Placemarks.getInstance(this.requestId).getCategoryCode(_placemark['c_category']) + '.jpg',
-                            'width':Service.getInstance(this.requestId).getCategoriesPhotoInitialWidth(),
-                            'height':Service.getInstance(this.requestId).getCategoriesPhotoInitialHeight(),
-                            'created':BaseFunctions.isSet(_placemark['ph_created']) ? _placemark['ph_created'] : null,
-                            'modified':BaseFunctions.isSet(_placemark['ph_modified']) ? _placemark['ph_modified'] : null
-                        };
-                    }
-                }
-
-                let _dir = Placemarks.getInstance(this.requestId).getPhotoDir(_placemark['c_id'], _placemark['ph_path']);
-
-                _result[_placemark['c_id']]['photos'].push({
-                    'id':_placemark['ph_id'],
-                    'dir': _dir,
-                    'name':_placemark['ph_path'],
-                    'width':_placemark['ph_width'],
-                    'height':_placemark['ph_height'],
-                    'created':BaseFunctions.isSet(_placemark['ph_created']) ? _placemark['ph_created'] : null,
-                    'modified':BaseFunctions.isSet(_placemark['ph_modified']) ? _placemark['ph_modified'] : null
-                });
-            } else {
-                // If there are no photos - get default
-                _result[_placemark['c_id']]['photos']=[{
-                    'id':0,
-                    'dir':Consts.SERVICE_IMGS_URL_CATEGORIES_PHOTOS,
-                    'name':Placemarks.getInstance(this.requestId).getCategoryCode(_placemark['c_category']) + '.jpg',
-                    'width':Service.getInstance(this.requestId).getCategoriesPhotoInitialWidth(),
-                    'height':Service.getInstance(this.requestId).getCategoriesPhotoInitialHeight(),
-                    'created':BaseFunctions.isSet(_placemark['ph_created']) ? _placemark['ph_created'] : null,
-                    'modified':BaseFunctions.isSet(_placemark['ph_modified']) ? _placemark['ph_modified'] : null
-                }];
-            }
-
-
-            if (needRelative) {
-                // Add relative placemarks
-                if (_placemark['c_relevant_placemarks']) {
-                    _result[_placemark['c_id']]['relevant_placemarks'] = SublistBlock.getInstance(this.requestId).render({
-                        'ident':'relevant',
-                        'ids':_placemark['c_relevant_placemarks'],
-                        'image_width':Config['dimentions'][this.getDeviceType()]['sublist_images']['width'],
-                        'image_height':Config['dimentions'][this.getDeviceType()]['sublist_images']['height'],
-                        'title':this.getText('relevant_placemarks/title/text')
-                    });
-                }
-            }
-
-            if (needAnother) {
-                // Add another placemarks related to category
-                let _anotherPlacemarksIds = Placemarks.getInstance(this.requestId).getAnotherPlacemarksIdsByCategory(_placemark['c_category'], _placemark['c_id']);
-                if (_anotherPlacemarksIds.length) {
-
-                    _result[_placemark['c_id']]['another_placemarks'] = SublistBlock.getInstance(this.requestId).render({
-                        'ident':'another',
-                        'ids':_anotherPlacemarksIds,
-                        'image_width':Config['dimentions'][this.getDeviceType()]['sublist_images']['width'],
-                        'image_height':Config['dimentions'][this.getDeviceType()]['sublist_images']['height'],
-                        'title':this.getText('another_placemarks/title/text')
-                    });
-
-                } else {
-                    _result[_placemark['c_id']]['another_placemarks'] = null;
-                }
-            }
-
-            // Add placemark's categories
-            _result[_placemark['c_id']]['categories_html'] = CaregoriesViewerBlock.getInstance(this.requestId).render({'category':_placemark['c_category'],'subcategories':_placemark['c_subcategories']});
-
-        }
-        return _result;
-    }
 
 
 //ATTENTION - обратите внимание

@@ -39,7 +39,7 @@ class CountriesModel extends DBaseMysql
      * @return {object} - country data
      */
     getCountryDataByCode(code, needResult = true) {
-        let _data = this.getBySql("SELECT * FROM country WHERE local_code = ?", [code], needResult);
+        let _data = this.getBySql("SELECT * FROM " + this.getTableName(this.tableInitNames.COUNTRY) + " WHERE local_code = ?", [code], needResult);
         return _data[0].id ? _data[0] : null;
     }
 
@@ -50,7 +50,7 @@ class CountriesModel extends DBaseMysql
      */
     getAllCountriesCodes()
     {
-        return this.getBySql("SELECT c.local_code FROM country");
+        return this.getBySql("SELECT c.local_code FROM " + this.getTableName(this.tableInitNames.COUNTRY));
     }
 
     /*
@@ -62,7 +62,7 @@ class CountriesModel extends DBaseMysql
      */
     checkCountryCode(code)
     {
-        let _result = this.getBySql("SELECT 1 as exist FROM country c WHERE c.local_code = ?", [code]);
+        let _result = this.getBySql("SELECT 1 as exist FROM " + this.getTableName(this.tableInitNames.COUNTRY) + " c WHERE c.local_code = ?", [code]);
 
         return _result.length ? true : false;
     }

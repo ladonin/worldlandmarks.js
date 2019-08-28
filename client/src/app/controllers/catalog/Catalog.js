@@ -6,10 +6,11 @@
  */
 
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 
 import Controller from 'src/app/parents/Controller';
 import Consts from 'src/settings/Constants';
-import Router from 'src/modules/router/Router';
+import Router from 'src/modules/Router';
 
 // Action components
 import CatalogIndex from 'src/app/controllers/catalog/actions/Index';
@@ -25,7 +26,6 @@ class Catalog extends Controller {
 
     render() {
 
-
         let _actionComponent;
         switch (this.getActionName()) {
             case Consts.ACTION_NAME_INDEX:
@@ -36,12 +36,10 @@ class Catalog extends Controller {
                 _actionComponent = <CatalogIndex/>;
         }
 
-        return (
-                <div id='action'>
-                    {_actionComponent}
-                </div>
-        );
+        return <React.Fragment>
+            {_actionComponent}
+        </React.Fragment>;
     }
 }
 
-export default withRouter(Catalog)
+export default connect()(withRouter(Catalog))

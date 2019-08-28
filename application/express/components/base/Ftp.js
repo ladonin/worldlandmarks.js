@@ -15,11 +15,11 @@ const ErrorCodes = require('application/express/settings/ErrorCodes');
 const DebugSettings = require('application/express/settings/DebugSettings');
 const Config = require('application/express/settings/Config');
 
-let _config = FtpServersConfig[Consts.FTP_DEFAULT_SERVER_NAME];
+
 const Ftp = new jsftp({
-    host: _config.url,
-    user: _config.userName,
-    pass: _config.userPassword
+    host: FtpServersConfig.url,
+    user: FtpServersConfig.userName,
+    pass: FtpServersConfig.userPassword
 });
 Ftp.keepAlive(5000);
 
@@ -29,10 +29,10 @@ if (Config.debug === 1 && DebugSettings.ftp === 0) {
 } else {
     // Set root directory at the ftp server
     let _finished = false;
-    Ftp.raw("cwd", _config.rootDirectory, (err, data) => {
+    Ftp.raw("cwd", FtpServersConfig.rootDirectory, (err, data) => {
         _finished = true;
         if (err) {
-            BaseFunctions.processError(ErrorCodes.ERROR_FTP_CHANGE_ROOT_DIRECTORY, 'err[' + BaseFunctions.toString(err) + '], new dir[' + _config.rootDirectory + ']')
+            BaseFunctions.processError(ErrorCodes.ERROR_FTP_CHANGE_ROOT_DIRECTORY, 'err[' + BaseFunctions.toString(err) + '], new dir[' + FtpServersConfig.rootDirectory + ']')
         }
         console.log('FTP OK');
         console.log('FTP directory is set');
@@ -120,13 +120,5 @@ module.exports = {
         Deasync.loopWhile(function () {
             return !_finished;
         });
-    },
-    /*
-     * Get ftp config
-     *
-     * @return {object} - copy of config
-     */
-    getConfig(){
-        return BaseFunctions.clone(_config);
     }
 }

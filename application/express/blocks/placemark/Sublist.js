@@ -13,7 +13,7 @@ const ErrorCodes = require('application/express/settings/ErrorCodes');
 const Catalog = require('application/express/components/Catalog');
 const Service = require('application/express/core/Service');
 const CaregoriesViewerBlock = require('application/express/blocks/category/CaregoriesViewer');
-
+const CommonBaseFunctions = require('application/common/functions/BaseFunctions');
 
 class SublistBlock extends Component {
 
@@ -60,16 +60,11 @@ class SublistBlock extends Component {
                         linkText2 = 'href="' + _placemark['url'] + '"';
                     }
 
+
                     _html += `
                         <div class="sublist_placemarks_block">
-                            <div ${linkText1} class="sublist_placemarks_photo" id="sublist_placemarks_photo_${_ident}_${_index}">
-                                <script type="text/javascript">
-                                    $(document).ready(function () {
-                                        var photo = view_cropped_photo('${_photoData['url']}',${_photoData['width']},${_photoData['height']}, ${_imageWidth}, ${_imageHeight});
-                                        $('#sublist_placemarks_photo_${_ident}_${_index}').append(photo);
-                                        $('.sublist_placemarks_photo').width('${_imageWidth}');
-                                    });
-                                </script>
+                            <div ${linkText1} class="sublist_placemarks_photo" style="width:${_imageWidth}px" id="sublist_placemarks_photo_${_ident}_${_index}">
+                                ${CommonBaseFunctions.viewCroppedPhoto(_photoData['url'],_photoData['width'],_photoData['height'],_imageWidth,_imageHeight)}
                             </div>
                             <div class="sublist_placemarks_content">`;
 
@@ -87,7 +82,7 @@ class SublistBlock extends Component {
 
                     if (this.isMobile()) {
                         _html += `
-                                    <img src='" + _placemark['flag_url'] + "' class='adress_country_flag'/>`;
+                                    <img src='${_placemark['flag_url']}' class='adress_country_flag'/>`;
                     } else {
                         _html +=
                                     _placemark['formatted_address'];

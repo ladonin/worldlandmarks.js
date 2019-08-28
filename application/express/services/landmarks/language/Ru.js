@@ -4,41 +4,11 @@
  * Service words in russian translation
  */
 const Consts = require('application/express/settings/Constants');
-
+const Ru = require('application/common/services/landmarks/language/Ru');
 
 module.exports = {
+    ...Ru,
     ['form/map_new_point/category/' + Consts.NONE_CATEGORY_CODE]: 'Выберите из списка',
-    'form/map_new_point/category/0': 'Прочие места',
-    'form/map_new_point/category/1': 'Замки',
-    'form/map_new_point/category/2': 'Дворцы, усадьбы',
-    'form/map_new_point/category/3': 'Заброшенные здания',
-    'form/map_new_point/category/4': 'Памятники архитектуры, исторические здания',
-    'form/map_new_point/category/5': 'Архитектурные комплексы (кремли, монастыри)',
-    'form/map_new_point/category/6': 'Храмы, церкви, соборы (христианство)',
-    'form/map_new_point/category/7': 'Мечети',
-    'form/map_new_point/category/8': 'Синагоги',
-    'form/map_new_point/category/9': 'Музеи, выставочные залы',
-    'form/map_new_point/category/10': 'Памятники и монументы',
-    'form/map_new_point/category/11': 'Места культуры (театры, консерватории)',
-    'form/map_new_point/category/12': 'Зоопарки, дельфинарии',
-    'form/map_new_point/category/13': 'Цирки',
-    'form/map_new_point/category/14': 'Индустриальные объекты',
-    'form/map_new_point/category/15': 'Сады и парки',
-    'form/map_new_point/category/16': 'Памятные места',
-    'form/map_new_point/category/17': 'Необычные места',
-    'form/map_new_point/category/18': 'Горы',
-    'form/map_new_point/category/19': 'Вулканы',
-    'form/map_new_point/category/20': 'Пещеры',
-    'form/map_new_point/category/21': 'Водоемы',
-    'form/map_new_point/category/22': 'Водопады',
-    'form/map_new_point/category/23': 'Родники',
-    'form/map_new_point/category/24': 'Памятники археологии, руины',
-    'form/map_new_point/category/25': 'Фонтаны',
-    'form/map_new_point/category/26': 'Крепости, укрепления',
-    'form/map_new_point/category/27': 'Улицы, площади, бульвары',
-    'form/map_new_point/category/28': 'Буддистские храмы',
-    'form/map_new_point/category/29': 'Учебные заведения',
-    'form/map_new_point/category/30': 'Библиотеки',
     'form/map_new_point/comment/label': 'Комментарий (не обязательно).',
     'form/map_new_point/title/label': 'Заголовок (не обязательно).',
     'form/map_new_point/category/label': 'Категория',

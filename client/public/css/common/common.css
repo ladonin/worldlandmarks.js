@@ -121,7 +121,6 @@ input[type="text"],input[type="password"],select,textarea {
 }
 
 
-
 .container,.alert{
     width: 100%;
 }
@@ -631,16 +630,17 @@ border-color: #faebcc;
 }
 
 
-#action {
+#action{
     transition: 0.2s;
     opacity:0;
 }
 
-#action.showed{
-    opacity:100;
+
+.hidden{
+    display:none !important;
+    opacity:0 !important;
 }
-
-
-#action.static_page{
-    opacity:100;
+.showed{
+    display:block !important;
+    opacity:100 !important;
 }

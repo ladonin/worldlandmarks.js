@@ -28,8 +28,8 @@ class ArticlesList extends Block {
 
         let _articlesList = [];
 
-        for (let _index in this.props.articles) {
-            let _item = this.props.articles[_index];
+        for (let _index in this.props.redux.articles) {
+            let _item = this.props.redux.articles[_index];
             _articlesList.push(
                 <div className="cataolg_page_article_item">
                     <a onClick={this.goTo} data-url={'/' + Consts.CONTROLLER_NAME_ARTICLE + "/" + _item.id}>
@@ -46,7 +46,7 @@ class ArticlesList extends Block {
                             {_articlesList}
                             <div className="cataolg_page_article_item padding_bottom_10 padding_top_5">
                                 <a onClick={this.goTo} data-url={'/' + Consts.CONTROLLER_NAME_ARTICLE}>
-                                    <i>{this.props.seeAll}</i>
+                                    <i>{this.props.redux.seeAll}</i>
                                 </a>
                             </div>
                         </div>
@@ -62,10 +62,11 @@ class ArticlesList extends Block {
 function mapStateToProps(state) {
 
     return {
-        articles:state.dynamicData['articles'],
-        seeAll:state.staticData['see_all']
+        redux:{
+            articles:state.dynamicData['articles'],
+            seeAll:state.staticData['see_all']
+        }
     };
 }
-let mapDispatchToProps = {};
 
-export default connect(mapStateToProps, mapDispatchToProps)(withRouter(ArticlesList))
+export default connect(mapStateToProps)(withRouter(ArticlesList))

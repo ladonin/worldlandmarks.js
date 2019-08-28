@@ -2,6 +2,7 @@
 cataolg_page_article_items_list cataolg_page_article_item
 в world-landmarks.ru фраза 'смотреть все' (для статей) только на русском
 
+в react добаить keys в массивы
 кешироват ькак можно больше данных
 
 snapshot_fields_data() в конце каждого конструктора исходной модели

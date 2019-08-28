@@ -7,7 +7,8 @@
 
 const DBaseMysql = require('application/express/core/dbases/Mysql');
 const BaseFunctions = require('application/express/functions/BaseFunctions');
-
+const Service = require('application/express/core/Service');
+const Countries = require('application/express/components/Countries');
 
 class ArticlesModel extends DBaseMysql
 {
@@ -67,6 +68,32 @@ class ArticlesModel extends DBaseMysql
         let _need_result = false;
 
         return this.getByCondition(_condition, _order, _group, _select, undefined, limit, _need_result);
+    }
+
+    /*
+     * Return last articles for current country
+     *
+     * @param {string} countryCode
+     * @param {boolean} withContent - whether to take content or not
+     *
+     * @return {array of objects}
+     */
+    getLastCountryArticles(countryCode = null, withContent = false)
+    {
+        if (!countryCode) {
+            countryCode = Countries.getInstance(this.requestId).getCountryCodeFromRequest();
+        }
+        let _countryId = Countries.getInstance(this.requestId).getCountryDataByCode(countryCode)['id'];
+
+        return this.getByCondition(
+            /*condition*/'country_id=' + _countryId,
+            /*order*/'id DESC',
+            /*group*/'',
+            /*select*/withContent === true ? '*' : 'id, title',
+            /*where_values*/[],
+            /*limit*/ Service.getInstance(this.requestId).getMaxLastCountryArticles(),
+            /*need_result*/false
+        );
     }
 
 

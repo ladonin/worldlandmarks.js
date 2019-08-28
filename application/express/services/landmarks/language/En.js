@@ -4,42 +4,11 @@
  * Service words in english translation
  */
 const Consts = require('application/express/settings/Constants');
-
+const En = require('application/common/services/landmarks/language/En');
 
 module.exports = {
-
+    ...En,
     ['form/map_new_point/category/' + Consts.NONE_CATEGORY_CODE]: 'Select from the list',
-    'form/map_new_point/category/0': 'Other places',
-    'form/map_new_point/category/1': 'Castles',
-    'form/map_new_point/category/2': 'Palaces, manor houses',
-    'form/map_new_point/category/3': 'Abandoned buildings',
-    'form/map_new_point/category/4': 'Monuments of architecture, historic buildings',
-    'form/map_new_point/category/5': 'Architectural complexes (kremlins, monasteries)',
-    'form/map_new_point/category/6': 'Temples, churches (Christianity)',
-    'form/map_new_point/category/7': 'Mosques',
-    'form/map_new_point/category/8': 'Synagogues',
-    'form/map_new_point/category/9': 'Museums, exhibition halls',
-    'form/map_new_point/category/10': 'Memorials and monuments',
-    'form/map_new_point/category/11': 'Places of culture (theatres, conservatories)',
-    'form/map_new_point/category/12': 'Zoos, dolphinariums',
-    'form/map_new_point/category/13': 'Circuses',
-    'form/map_new_point/category/14': 'Industrial buildings',
-    'form/map_new_point/category/15': 'Gardens and parks',
-    'form/map_new_point/category/16': 'Memorial places',
-    'form/map_new_point/category/17': 'Unusual places',
-    'form/map_new_point/category/18': 'Mountains',
-    'form/map_new_point/category/19': 'Volcanoes',
-    'form/map_new_point/category/20': 'Caves',
-    'form/map_new_point/category/21': 'Ponds',
-    'form/map_new_point/category/22': 'Waterfalls',
-    'form/map_new_point/category/23': 'Springs',
-    'form/map_new_point/category/24': 'Archaeological sites, ruins',
-    'form/map_new_point/category/25': 'Fountains',
-    'form/map_new_point/category/26': 'Fortresses, fortifications',
-    'form/map_new_point/category/27': 'Streets, squares, boulevards',
-    'form/map_new_point/category/28': 'Buddhist temples',
-    'form/map_new_point/category/29': 'Educational institutions',
-    'form/map_new_point/category/30': 'Libraries',
     'form/map_new_point/comment/label': 'Review (optional).',
     'form/map_new_point/title/label': 'Title (optional).',
     'form/map_new_point/category/label': 'Category',

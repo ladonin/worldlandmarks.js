@@ -303,7 +303,7 @@ class Service extends Core
 
 
 //ATTENTION - обратите внимание
-///get_categories_codes => getCategories
+///get_category_codes => getCategories
     /*
      * Get all categories data - code and id
      *
@@ -311,10 +311,10 @@ class Service extends Core
      */
     getCategories()
     {
-        if (Functions.isSet(this.get_data().config.categories.categories_codes)) {
-            return BaseFunctions.clone(this.data.config.categories.categories_codes);
+        if (Functions.isSet(this.get_data().config.categories.category_codes)) {
+            return BaseFunctions.clone(this.data.config.categories.category_codes);
         }
-        this.error(ErrorCodes.ERROR_SERVICE_CONFIG_ABSENT, 'categories-categories_codes');
+        this.error(ErrorCodes.ERROR_SERVICE_CONFIG_ABSENT, 'categories-category_codes');
     }
 
 
@@ -326,10 +326,10 @@ class Service extends Core
      */
     getCategoriesIds()
     {
-        if (Functions.isSet(this.get_data().config.categories.categories_codes)) {
-            return this.data.config.categories.categories_codes.map(function(data) {return data.id;});
+        if (Functions.isSet(this.get_data().config.categories.category_codes)) {
+            return this.data.config.categories.category_codes.map(function(data) {return data.id;});
         }
-        this.error(ErrorCodes.ERROR_SERVICE_CONFIG_ABSENT, 'categories-categories_codes');
+        this.error(ErrorCodes.ERROR_SERVICE_CONFIG_ABSENT, 'categories-category_codes');
     }
 
 
@@ -504,7 +504,7 @@ class Service extends Core
      *
      * @return integer
      */
-    get_max_last_country_articles()
+    getMaxLastCountryArticles()
     {
         if (Functions.isSet(this.get_data().config.generic.max_last_country_articles)) {
             return this.data.config.generic.max_last_country_articles;

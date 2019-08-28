@@ -42,75 +42,13 @@ class Catalog extends Component {
 
 
 
-    /*
-     * Return all available categories data according with controller name
-     *
-     * @return {array of objects}
-     */
-    getCategories()
-    {
 
-        let _categories = Service.getInstance(this.requestId).getCategories();
 
-        for (let _index in _categories) {
-            _categories[_index]['title'] = this.getText('form/map_new_point/category/' + _categories[_index]['id']);
-        }
 
-        if (this.getControllerName() === Consts.CONTROLLER_NAME_ARTICLE){
-
-            for (let _index in _categories) {
-                _categories[_index]['title'] = Categories.getInstance(this.requestId).prepareNameForArticles(_categories[_index]['code'], _categories[_index]['title']);
-            }
-        }
-
-        return _categories;
-    }
-
-    /*
-     * Return category id by code
-     *
-     * @param {string} code - category code
-     *
-     * @return {integer}
-     */
-    getCategoryId(code)
-    {
-        let _categories = Service.getInstance(this.requestId).getCategories();
-
-        for (let _index in _categories) {
-            let _category = _categories[_index];
-
-            if (_category['code'] === code) {
-                return _category['id'];
-            }
-        }
-        this.error(ErrorCodes.ERROR_FUNCTION_ARGUMENTS, 'code[' + code + ']', undefined, false);
-    }
-
-    /*
-     * Return category data by id
-     *
-     * @param {integer} id - category id
-     *
-     * @return {object}
-     */
-    getCategory(id)
-    {
-        let _categories = this.getCategories();
-
-        for (let _index in _categories) {
-            let _category = _categories[_index];
-
-            if (_category['id'] === id) {
-                return _category;
-            }
-        }
-        this.error(ErrorCodes.ERROR_FUNCTION_ARGUMENTS, 'id[' + id + ']', undefined, false);
-    }
 
 
 //ATTENTION - обратите внимание
-//getCategoryCode => Placemarks.getInstance(this.requestId).getCategoryCode
+//getCategoryCode => Categories.getInstance(this.requestId).getCategoryCode
 //get_category_dimentions => Service.getInstance(this.requestId).getBaloonDimentions()
 //     get_category_dimentions()
 //    {
@@ -119,29 +57,6 @@ class Catalog extends Component {
 
 
 
-    /*
-     * Return category title by id
-     *
-     * @param {integer} id - category id
-     *
-     * @return {string}
-     */
-    getCategoryTitle(id)
-    {
-        return this.getCategory(id)['title'];
-    }
-
-    /*
-     * Return middle placemark data by id (without plain text, another and relevant placemarks)
-     *
-     * @param {integer} id - placemark id
-     *
-     * @return {object} - placemark data
-     */
-    getPointMiddleDataById(id)
-    {
-        return Placemarks.getInstance(this.requestId).getPlacemarksBigDataByIds([id], false)[id];
-    }
 
 //ATTENTION - обратите внимание
 // get_subcategories => BaseFunctions.getArrayFromString
@@ -179,7 +94,7 @@ class Catalog extends Component {
             return [];
         }
 
-        let _placemarks = Placemarks.getInstance(this.requestId).getPlacemarksBigDataByIds(_placemarksIds);
+        let _placemarks = Placemarks.getInstance(this.requestId).getPlacemarksDataByIds(_placemarksIds, false, false, undefined, false, false, 1);
 
         for (let _index in _placemarks) {
             let _placemark = _placemarks[_index];
@@ -256,7 +171,10 @@ class Catalog extends Component {
 
 //ATTENTION - обратите внимание
 //process_country_data => processCountryPageData
-
+ //getCategoryTitle => Categories.getInstance(this.requestId).getCategoryTitle
+ //getCategory => Categories.getInstance(this.requestId).getCategory
+ //getCategories => Categories.getInstance(this.requestId).getCategories
+ //getCategoryId => Categories.getInstance(this.requestId).getCategoryId
 
     /*
      * Return view data for countries page
@@ -269,7 +187,17 @@ class Catalog extends Component {
 
         // If country has states
         if (Countries.getInstance(this.requestId).hasStates(_countryCode)) {
-            return GeocodeCollectionModel.getInstance(this.requestId).getStates(_countryCode, this.getLanguage());
+            let _states = GeocodeCollectionModel.getInstance(this.requestId).getStates(_countryCode, this.getLanguage());
+
+            // Translate state names
+            for (let _index in _states) {
+                let _state = _states[_index];
+                _states[_index]['state'] = CountryStatesCitiesTranslationsModel.getInstance(this.requestId).getTranslationOfStateName(
+                    this.getLanguage(),
+                    _countryCode,
+                    _state['state'], _state['state_code']);
+            }
+            return _states;
         } else {
             return null;
         }
@@ -295,7 +223,6 @@ class Catalog extends Component {
     }
 
 
-
 //ATTENTION - обратите внимание
 //get_placemarks_count => MapDataModel.getInstance(this.requestId).getPlacemarksCount()
 //getPhotosData => getPlacemarksPhotosData
@@ -315,8 +242,50 @@ class Catalog extends Component {
             this.error(ErrorCodes.ERROR_FUNCTION_ARGUMENTS, 'country code[' + countryCode + ']', undefined, false);
         }
 
-        let _placemarksData = GeocodeCollectionModel.getInstance(this.requestId).getPlacemarksData(countryCode, null, this.getLanguage(), true);
+        let _placemarksData = this.getPlacemarksData(countryCode, null, this.getLanguage(), true);
         return this.getPlacemarksPhotosData(_placemarksData['ids'], _placemarksData['data']);
+    }
+
+
+    /*
+     * Get geodata and placemarks ids by country and state codes
+     *
+     * @param {string} countryCode
+     * @param {string} stateCode
+     * @param {string} language
+     * @param {boolean} needResult - is result required
+     *
+     * @return {object} - geodata of each found placemark
+     * {
+     *      ids : [values:integer],
+     *      data : [values:{}]
+     *  }
+     */
+    getPlacemarksData(countryCode, stateCode, language, needResult) {
+
+        let _placemarksData = GeocodeCollectionModel.getInstance(this.requestId).getPlacemarksData(countryCode, stateCode, language, needResult);
+
+        let _result = {
+            ids:[],
+            data:{}
+        };
+
+        if (_placemarksData.length) {
+            for (let _index in _placemarksData) {
+                let _placemark = _placemarksData[_index];
+
+                if ((_placemark['state']) && (_placemark['state_code']) && (_placemark['state'] !== Consts.UNDEFINED_VALUE) && (_placemark['state_code'] !== Consts.UNDEFINED_VALUE) && (_placemark['country_code'])) {
+                    _placemark['state'] = CountryStatesCitiesTranslationsModel.getInstance(this.requestId).getTranslationOfStateName(language, _placemark['country_code'], _placemark['state'], _placemark['state_code']);
+                }
+                _placemark['country'] = Countries.getInstance(this.requestId).prepareCountryName(_placemark['country']);
+                _placemark['has_states'] = _placemark['state_code'] !== Consts.UNDEFINED_VALUE ? 1 : 0;
+
+                _result['ids'].push(_placemark['placemarks_id']);
+                _result['data'][_placemark['placemarks_id']] = _placemark;
+            }
+        }
+
+        return _result;
     }
 
 
@@ -334,7 +303,7 @@ class Catalog extends Component {
             this.error(ErrorCodes.ERROR_FUNCTION_ARGUMENTS, 'country code[' + countryCode + '], state code[' + stateCode + ']', undefined, false);
         }
 
-        let _placemarksData = GeocodeCollectionModel.getInstance(this.requestId).getPlacemarksData(countryCode, stateCode, this.getLanguage(), true);
+        let _placemarksData = this.getPlacemarksData(countryCode, stateCode, this.getLanguage(), true);
 
         return this.getPlacemarksPhotosData(_placemarksData['ids'], _placemarksData['data']);
     }
@@ -356,22 +325,27 @@ class Catalog extends Component {
         let _photosData = MapDataModel.getInstance(this.requestId).getPlacemarksPhotos(placemarksIds);
 
         let _photosResult = [];
-        if (_photosResult.length) {
+        if (_photosData.length) {
 
             for (let _index in _photosData) {
                 let _photo = _photosData[_index];
 
-                if (my_array_is_empty(placemarksData[_photo['c_id']])) {
+                if (!placemarksData[_photo['c_id']]) {
                     this.error(ErrorCodes.ERROR_VARIABLE_EMPTY, message = '_placemarksData[\'data\'][_photo[\'c_id\']], _photo[\'c_id\'] =' + _photo['c_id']);
                 }
 
                 let _placemarkTitle = _photo['c_title'];
                 delete(_photosData[_index]['c_title']);
-
-                _photosResult[_photo['ph_id']]['photo'] = _photo;
-                _photosResult[_photo['ph_id']]['photo']['dir'] = Placemarks.getInstance(this.requestId).getPhotoDir(_photo['c_id'], _photo['ph_path']);
-                _photosResult[_photo['ph_id']]['placemark'] = placemarksData[_photo['c_id']];
-                _photosResult[_photo['ph_id']]['placemark']['title'] = _placemarkTitle;
+                _photosResult.push({
+                    photo: {
+                        ..._photo,
+                        ...{dir:Placemarks.getInstance(this.requestId).getPhotoDir(_photo['c_id'], _photo['ph_path'])}
+                    },
+                    placemark: {
+                        ...placemarksData[_photo['c_id']],
+                        ...{title:_placemarkTitle}
+                    }
+                });
             }
         }
 
@@ -422,7 +396,7 @@ class Catalog extends Component {
             _ids.push(_placemarksIds[_index]['placemark_id']);
         }
 
-        let _result = Placemarks.getInstance(this.requestId).getPlacemarksBigDataByIds(_ids, false, 'c_title ASC');
+        let _result = Placemarks.getInstance(this.requestId).getPlacemarksDataByIds(_ids, true, false, 'c_title ASC', false, false, 1);
 
         for (let _index in _result) {
 
@@ -466,9 +440,9 @@ class Catalog extends Component {
             let _placemarks = MapDataModel.getInstance(this.requestId).getPlacemarksSeacrhList(
                 idStart,
                 _category,
-                _country = '',
-                _state = '',
-                _keywords = '',
+                _country,
+                _state,
+                _keywords,
                 _limit,
                 _language,
                 needResult = false
@@ -479,7 +453,7 @@ class Catalog extends Component {
             }
 
         } else {
-            let _placemarks = MapDataModel.getInstance(this.requestId).getLastPLacemarks (idStart, limit);
+            let _placemarks = MapDataModel.getInstance(this.requestId).getLastPLacemarks (idStart, _limit);
 
             for (let _index in _placemarks) {
                 _ids.push(_placemarks[_index]['id']);
@@ -487,7 +461,7 @@ class Catalog extends Component {
 
         }
 
-        _result = Placemarks.getInstance(this.requestId).getPlacemarksBigDataByIds(_ids, false);
+        _result = Placemarks.getInstance(this.requestId).getPlacemarksDataByIds(_ids, true, false, undefined, false, false, 1);
 
         for (let _index in _result) {
             let _placemark = _result[_index];
@@ -496,7 +470,7 @@ class Catalog extends Component {
                 _result[_index]['title'] = this.getText('map/default_title_part/value') + ' ' + _placemark['id'];
             }
 
-            _result[_index]['comment'] = BaseFunctions.getCroppedText(_placemark['comment'], Config['restrictions']['max_cropped_text_length'], undefined, this);
+            _result[_index]['comment'] = BaseFunctions.getCroppedText(_placemark['comment_plain'], Config['restrictions']['max_cropped_text_length'], undefined, this);
         }
         return _result;
     }

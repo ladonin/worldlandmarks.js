@@ -19,7 +19,7 @@ module.exports = {
     LANGUAGE_EN: 'en',
 
     LANGUAGE_COMMON: 'COMMON',
-
+    SERVICE_LANDMARKS: 'landmarks',
     DEVICE_NAME_DESCTOP: 'desctop',
     DEVICE_NAME_MOBILE: 'mobile',
     DEVICE_NAME_COMMON: 'common',
@@ -43,7 +43,7 @@ module.exports = {
 
     ACTION_NAME_INDEX: 'index',
 
-    MY_IMG_URL: DOMAIN + '/img/',
+    IMG_URL: '/img/',
 
     REQUEST_FORM_DATA: 'formData',
 
@@ -115,6 +115,24 @@ ACTION_VAR_NAME:'action',
     LANGUAGE_EN: 'en',
 
     COOKIE_EMAIL_PLACEMARK: 'email_placemark',
+    SERVICE_IMGS_URL_CATEGORIES_PHOTOS:'/img/categories/photos/',
+
+
+
+    // Events
+    EVENT_SHOW_CATEGORY_VIEWER:'app:show_category_viewer',
+    EVENT_HIDE_CATEGORY_VIEWER:'app:hide_category_viewer',
+    EVENT_GOTO:'app:goto',
+
+
+
+
+
+
+
+
+
+
 
     /*
      LANGUAGE_RU: 'ru',

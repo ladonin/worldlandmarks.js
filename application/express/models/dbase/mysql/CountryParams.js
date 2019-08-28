@@ -39,8 +39,8 @@ class CountryParamsModel extends DBaseMysql
     hasStates(countryCode) {
 
         let _sql = `SELECT cp.has_states
-                    FROM country c
-                    LEFT JOIN country_params cp on c.id = cp.country_id
+                    FROM ${this.getTableName(this.tableInitNames.COUNTRY)} c
+                    LEFT JOIN ${this.getTableName(this.tableInitNames.COUNTRY_PARAMS)} cp on c.id = cp.country_id
                     WHERE c.local_code = ?`;
 
         let _data = this.getBySql(_sql, [countryCode]);

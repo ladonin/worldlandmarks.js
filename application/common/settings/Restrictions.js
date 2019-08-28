@@ -1,5 +1,5 @@
 /*
- * File application/express/settings/Restrictions.js
+ * File application/common/settings/Restrictions.js
  *
  * Application restrinctions
  */
@@ -39,4 +39,5 @@ module.exports = {
     'max_cropped_seo_description_length':200,
     'max_items_at_sublist':10,
     'max_pager_rows':20,
+    'desctop_content_width':900
 };

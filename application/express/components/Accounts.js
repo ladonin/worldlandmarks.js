@@ -33,7 +33,7 @@ class Accounts extends Component {
         let _usersInstance = Users.getInstance(this.requestId);
 
         _usersInstance.id = 1;
-        _usersInstance.role = 1;
+        _usersInstance.role = Consts.ACCOUNT_ROLE_ADMIN_CODE;
         _usersInstance.name = 'admin';
         return true;
         /*//ATTENTION - обратите внимание

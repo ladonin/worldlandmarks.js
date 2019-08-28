@@ -161,8 +161,8 @@ class Countries extends Component {
 // //ATTENTION - обратите внимание get_all_countries_codes => CountriesModel.getAllCountriesCodes
 
 
-// //ATTENTION - обратите внимание translateStateNames => getTranslationOfStateName
-// //ATTENTION - обратите внимание translateCityNames => getTranslationOfCityName
+// //ATTENTION - обратите внимание translateStateNames => CountryStatesCitiesTranslationsModel.getTranslationOfStateName
+// //ATTENTION - обратите внимание translateCityNames => CountryStatesCitiesTranslationsModel.getTranslationOfCityName
 // getStateNameByGetVar => getStateNameFromRequest
 // getCountryCodeFromUrl => getCountryCodeFromRequest
 // getTranslationOfStateName => CountryStatesCitiesTranslationsModel.getTranslationOfStateName
@@ -242,13 +242,13 @@ class Countries extends Component {
 
         let _data = CountryStatesCitiesTranslationsModel.getInstance(this.requestId).getCityTranslation(countryCode, stateCode, cityName, language, true, false);
 
-        if (!_data['translate']) {
+        if (!_data || !_data['translate']) {
             // It means that country have no states (small country) (or API thinks so)
             // Then try to get translation for city without relation to state
             _data = CountryStatesCitiesTranslationsModel.getInstance(this.requestId).getCityTranslation(countryCode, stateCode, cityName, language, false, false);
         }
 
-        if (_data['translate']) {
+        if (_data && _data['translate']) {
             _result = _data['translate'];
         }
 

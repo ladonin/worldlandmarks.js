@@ -54,7 +54,11 @@ class Catalog extends CommonController {
             'title': Seo.getInstance(this.requestId).getTitle('catalog/country', {'country':_countryName}),
             'keywords': Seo.getInstance(this.requestId).getKeywords('catalog/country'),
             'description': Seo.getInstance(this.requestId).getDescription('catalog/country'),
-            'data': CatalogComponent.getInstance(this.requestId).processCountryPageData(),
+            'data': {
+                states:CatalogComponent.getInstance(this.requestId).processCountryPageData(),
+                photos:CatalogComponent.getInstance(this.requestId).getCountryPhotosData(_countryCode),
+                articles:ArticlesModel.getInstance(this.requestId).getLastCountryArticles(_countryCode)
+            },
             'country': _countryName,
             'country_params': Countries.getInstance(this.requestId).getCountryParamsByCode(_countryCode),
             'country_code': _countryCode,
@@ -62,8 +66,7 @@ class Catalog extends CommonController {
             'back_url': '/' + this.getControllerName() + '/',
             'current_url': '/' + this.getControllerName() + '/' + _countryCode + '/',
             'has_states': Countries.getInstance(this.requestId).hasStates(_countryCode) ? true : false,
-            'placemarks_count': CatalogComponent.getInstance(this.requestId).getPlacemarksCountInCountry(_countryCode),
-            'photos': CatalogComponent.getInstance(this.requestId).getCountryPhotosData(_countryCode)
+            'placemarks_count': CatalogComponent.getInstance(this.requestId).getPlacemarksCountInCountry(_countryCode)
         });
 
         this.sendMe('country');
@@ -71,14 +74,17 @@ class Catalog extends CommonController {
 
 
 
+    action_get_placemarks_list()
+    {
+        let _idStart = BaseFunctions.toInt(this.getFromRequest(Consts.ID_VAR_NAME, false));
 
+        this.addDynamicData({
+            scroll_data: CatalogComponent.getInstance(this.requestId).getPlacemarksList(_idStart).reverse()
+        });
 
+        this.sendMe('get_placemarks_list');
+    }
 
-
-
-
-
-       // this.addDynamicData({errorMessage: 'errorMessageerrorMessageerrorMessageerrorMessage'});////ATTENTION - обратите внимание
 
 
 

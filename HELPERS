@@ -1,40 +1,14 @@
-Language.getInstance(this.requestId)
-Language.getInstance(this.requestId).getText('site/title/' + action, params);
+    qqq(v){
+        return function(){
+            alert(v);
+        }
+    }
+onClick={this.qqq(22222222)}
 
+this.props.match.params
 
-this.db.getBySql(_sql);
-this.error(ErrorCodes.ERROR_FUNCTION_ARGUMENTS, 'country code [' + code + ']', undefined, false);
-this.getFromRequest(name, required = true)
+ dangerouslySetInnerHTML={{__html:sssssssssss}}
 
-this.getLanguage()
-this.getText(adress, vars)
-this.getServiceName()
+<a onClick={this.goTo} data-url={'/' + Consts.CONTROLLER_NAME_ARTICLE + '/' + _article['id']}>{_article['title']}</a>
 
-
-* @param {boolean} needResult - is result required
-
-
-
-const Cache = require('application/express/components/base/Cache');
-const ErrorCodes = require('application/express/settings/ErrorCodes');
-const Language = require('application/express/components/base/Language');
-
-
-
-
-
-
-
-for (var index in arr) {
-    arr[index] = toInt(arr[index]);
-}
-
-
-
-
-
-
-
-
-
-
+onclick="window.dispatchEvent('${Consts.EVENT_GOTO}', {url:'/'+${Consts.CONTROLLER_NAME_CATALOG}+'/' + ${window._ppAs[id + '_cc']}})"

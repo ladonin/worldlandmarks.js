@@ -1,13 +1,13 @@
 /*
- * File src/modules/router/Router.js
- * import Router from 'src/modules/router/Router';
+ * File src/modules/Router.js
+ * import Router from 'src/modules/Router';
  *
  * Works with server requests and react rooter match parameters
  */
 
 
 import Consts from 'src/settings/Constants';
-import ErrorHandler from 'src/modules/error_handler/ErrorHandler';
+import ErrorHandler from 'src/modules/ErrorHandler';
 import ErrorCodes from 'src/settings/ErrorCodes';
 
 /*

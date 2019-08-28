@@ -22,10 +22,20 @@
       work correctly both with client-side routing and a non-root public URL.
       Learn how to configure a non-root public URL by running `npm run build`.
     -->
-    <!--
-      Notice: jQuery used it only for html tags, not for components.
-    -->
+
+    <!-- Notice: jQuery is used only for libraries and multibrowser determining document properties-->
     <script src="/js/jquery.min.js"></script>
+    
+    <script src="/js/functions.js"></script>
+    <script src="/js/prettyPhoto/jquery.prettyPhoto.js"></script>
+    <script src="/js/prettyPhoto/script.js"></script>
+
+    <script src="https://api-maps.yandex.ru/2.1/?lang=ru_RU" type="text/javascript"></script>
+
+
+    <link type="text/css" href="/css/common/pretty_photo/styles.css" rel="stylesheet" media="all" />
+    <link href="/css/common/pretty_photo/prettyPhoto.css" rel="stylesheet" type="text/css" />
+
     <link rel="stylesheet" type="text/css" href="/css/common/font-awesome.min.css"/>
     <link rel="stylesheet" type="text/css" href="/css/common/common.css"/>
     <link rel="stylesheet" type="text/css" href="/css/common/catalog.css"/>
@@ -35,7 +45,7 @@
   </head>
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>
-    <div id="root"></div>
+    <div id="container"></div>
     <!--
       This HTML file is a template.
       If you open it directly in the browser, you will see an empty page.

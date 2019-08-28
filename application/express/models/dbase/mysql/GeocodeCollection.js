@@ -183,7 +183,7 @@ class GeocodeCollectionModel extends DBaseMysql
 
 
     /*
-     * Get geodata and placemarks ids by country and state codes
+     * Return geodata by country and state codes
      *
      * @param {string} countryCode
      * @param {string} stateCode
@@ -191,10 +191,6 @@ class GeocodeCollectionModel extends DBaseMysql
      * @param {boolean} needResult - is result required
      *
      * @return {object} - geodata of each found placemark
-     * {
-     *      ids : [values:integer],
-     *      data : [values:{}]
-     *  }
      */
     getPlacemarksData(countryCode, stateCode, language, needResult)
     {
@@ -216,30 +212,10 @@ class GeocodeCollectionModel extends DBaseMysql
                 gc.country, gc.administrative_area_level_1 as state,
                 gc.locality, cs.is_administrative_center
             FROM ${this.getTableName()} gc
-            LEFT JOIN country_states cs on cs.url_code = gc.state_code
+            LEFT JOIN ${this.getTableName(this.tableInitNames.COUNTRY_STATES)} cs on cs.url_code = gc.state_code
             WHERE ${_condition} ORDER by gc.id DESC`;
 
-        let _placemarksData = this.getBySql(_sql,_whereArray, needResult);
-
-        let _result = {
-            ids:[],
-            data:[]
-        };
-
-        if (_placemarksData.length) {
-            for (let _index in _placemarksData) {
-                let _placemark = _placemarksData[_index];
-
-                if ((_placemark['state']) && (_placemark['state_code']) && (_placemark['country_code'])) {
-                    _placemarksData[_index]['state'] = CountryStatesCitiesTranslationsModel.getInstance(this.requestId).getTranslationOfStateName(language, _placemark['country_code'], _placemark['state'], _placemark['state_code']);
-                }
-
-                _result['ids'].push(_placemark['placemarks_id']);
-                _result['data'][_placemark['placemarks_id']] = _placemark;
-            }
-        }
-
-        return _result;
+        return this.getBySql(_sql,_whereArray, needResult);
     }
 
 

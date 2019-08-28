@@ -22,7 +22,7 @@ import Article from './controllers/article/Article';
 import Error404 from './controllers/errors/Error404';
 
 import Language from 'src/modules/Language';
-import Router from 'src/modules/router/Router';
+import Router from 'src/modules/Router';
 
 // Css
 import "./Css";
@@ -35,9 +35,7 @@ class App extends Component {
         this.initSettings();
 
     }
-    componentWillUpdate() {
-        //console.log('App componentWillUpdate');
-    }
+
     componentDidMount() {
 
         //console.log('App componentWillMount');

@@ -15,10 +15,10 @@ export default {
         _store = store;
 
         Socket.getSocket().on('api', function (data) {
-
-            _store.dispatch(updatePage(data));
-console.log('_store.dispatch(updatePage(data))');
+console.log('_store.dispatch(updatePage(data))');//ATTENTION - обратите внимание
 console.log(data);
+            _store.dispatch(updatePage(data));
+
 
 
 

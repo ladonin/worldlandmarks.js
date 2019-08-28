@@ -79,7 +79,7 @@ module.exports = {
         }
 
         if (!BaseFunctions.isUndefined(_sockets[_token])) {
-            BaseFunctions.processError(ErrorCodes.ERROR_SET_SOCKET_TWICE, undefined, undefined, undefined, undefined, true);
+            BaseFunctions.processError(ErrorCodes.ERROR_SET_SOCKET_TWICE, 'token [' + _token + ']', undefined, undefined, undefined, true);
         }
 
         _sockets[_token] = {

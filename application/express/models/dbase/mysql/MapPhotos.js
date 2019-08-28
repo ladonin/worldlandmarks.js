@@ -68,14 +68,14 @@ class MapPhotosModel extends DBaseMysql
 
 
     /*
-     * Get all photos by placemark id starting with last photo
+     * Get all photos of one placemark by placemark id starting with last photo
      *
      * @param {integer} id - placemark id
      * @param {boolean} needResult - is result required
      *
      * @return {array of objects}
      */
-    getPhotosByDataId(id, needResult)
+    getPhotosByDataId(id, needResult = false)
     {
         // Order by DESC because the last photo will be main now
         return this.getByCondition(
@@ -92,7 +92,26 @@ class MapPhotosModel extends DBaseMysql
 
 
 
-
+    /*
+     * Get all photos of placemarks by placemark ids starting with last photo
+     *
+     * @param {array} ids - placemark ids
+     * @param {boolean} needResult - is result required
+     *
+     * @return {array of objects}
+     */
+    getPhotosByDataIds(ids, needResult = false)
+    {
+        return this.getByCondition(
+            /*condition*/"map_data_id IN (" + BaseFunctions.rtrim('?,'.repeat(ids.length),',') + ")",
+            /*order*/'map_data_id, id DESC',
+            /*group*/'',
+            /*select*/'*',
+            /*where_values*/ids,
+            /*limit*/false,
+            needResult
+        );
+    }
 
 
 

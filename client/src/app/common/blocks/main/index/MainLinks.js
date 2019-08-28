@@ -18,6 +18,10 @@ class MainLinks extends Block {
         super();
     }
 
+    shouldComponentUpdate(){
+        return false;
+    }
+
     render() {
         return (
                 <React.Fragment>

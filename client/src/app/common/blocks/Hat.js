@@ -13,18 +13,11 @@ import { withRouter } from 'react-router-dom';
 import Block from 'src/app/parents/Block';
 import Consts from 'src/settings/Constants';
 
+
 class Hat extends Block {
 
     constructor() {
         super();
-    }
-
-    shouldComponentUpdate(nextProps, nextState){
-        if ((nextProps.domainName != this.props.domainName)
-            ||(nextProps.logoUnderText != this.props.logoUnderText)) {
-            return true;
-        }
-        return false;
     }
 
     render() {
@@ -39,9 +32,9 @@ class Hat extends Block {
                                     </a>
                                 </div>
                                 <div className="hat_logo_text_main">
-                                    <a onClick={this.goTo} data-url='/'>{this.props.domainName}</a>
+                                    <a onClick={this.goTo} data-url='/'>{this.props.redux.domainName}</a>
                                 </div>
-                                <div className="hat_logo_text_under">{this.props.logoUnderText}</div>
+                                <div className="hat_logo_text_under">{this.props.redux.logoUnderText}</div>
                             </div>
                             <div className="hat_menu">
                                 <div id="open_panel">
@@ -64,8 +57,10 @@ class Hat extends Block {
 function mapStateToProps(state) {
 
     return {
-        domainName:state.staticData['domain_name'],
-        logoUnderText:state.staticData['hat/logo/under_text']
+        redux: {
+            domainName:state.staticData['domain_name'],
+            logoUnderText:state.staticData['hat/logo/under_text']
+        }
     }
 }
 

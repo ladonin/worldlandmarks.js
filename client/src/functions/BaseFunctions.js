@@ -17,5 +17,18 @@ module.exports = {
     },
     getFlagUrl(countryCode){
         return '/img/flags/' + countryCode + '.png';
+    },
+    getWidth(selector) {
+        // For example window.innerWidth != $(window).width();
+        // So use universal multibrowser function on jquery
+        return window.$(selector).width();
+    },
+    getHeight(selector) {
+        // Use universal multibrowser function on jquery
+        return window.$(selector).height();
+    },
+    getScrollTop(selector) {
+        // Use universal multibrowser function on jquery
+        return window.$(selector).scrollTop();
     }
 }

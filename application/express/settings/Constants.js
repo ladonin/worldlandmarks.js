@@ -119,10 +119,6 @@ let _Consts = {
 
 
 
-
-
-
-    DIMENTIONS_DESCTOP_CONTENT_WIDTH: '900',
     MODEL_NAME_FORM_ADD_NEW_POINT: 'form_add_new_point',
     MODEL_NAME_DB_SPAM: 'db_spam',
 

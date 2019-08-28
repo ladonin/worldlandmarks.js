@@ -3,13 +3,31 @@
  * import Config from 'src/settings/Config';
  */
 
+import LandmarksConfig from 'src/../../application/common/services/landmarks/settings/Config';
+import LandmarksLanguageEn from 'src/../../application/common/services/landmarks/language/En';
+import LandmarksLanguageRu from 'src/../../application/common/services/landmarks/language/Ru';
+
+
+
+
+
+
 
 import Consts from 'src/settings/Constants';
 
 export default {
         apiServer: {
             socketUrl: 'http://192.168.56.1:3001'
-        }
+        },
+        serviceSettings:{
+           [Consts.SERVICE_LANDMARKS]: LandmarksConfig
+        },
+        languages:{
+           [Consts.SERVICE_LANDMARKS]: {
+               [Consts.LANGUAGE_RU]:LandmarksLanguageRu,
+               [Consts.LANGUAGE_EN]:LandmarksLanguageEn
+            }
+       }
     }
 
 
@@ -121,7 +139,7 @@ export default {
             [27, 'form/map_new_point/category/27']
             [3, 'form/map_new_point/category/3']
         ],
-        'categories_codes': [
+        'category_codes': [
             {
                 'code': 'other',
                 'id': 0},

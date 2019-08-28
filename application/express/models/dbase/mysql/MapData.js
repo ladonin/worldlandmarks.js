@@ -71,7 +71,7 @@ class MapDataModel extends DBaseMysql
 
 //ATTENTION - обратите внимание
 //update_point => change
-
+//getPointsBigDataByIds => getPointsDataByIds
     /*
      * Update placemark
      *
@@ -98,17 +98,18 @@ class MapDataModel extends DBaseMysql
 
 
     /*
-     * Get placemarks big data by ids
+     * Get placemarks data by ids
      *
      * @param {array} ids - placemarks ids
      * @param {string} language - language
      * @param {string} order - fetch order
      * @param {boolean} needPlainText - whether placemark description (plain text) is necessary
+     * @param {boolean} needText - whether placemark description (main text with html) is necessary
      * @param {boolean} needResult - is result required
      *
      * @return {array of objects} - placemarks data
      */
-    getPointsBigDataByIds(ids, language, order, needPlainText, needResult = true)
+    getPointsDataByIds(ids, language, order, needPlainText, needText, needResult = true)
     {
         ids = BaseFunctions.prepareToIntArray(ids);
         let _idsList = ids.join(',');
@@ -118,11 +119,17 @@ class MapDataModel extends DBaseMysql
             _commentPlain = 'c.comment_plain as c_comment_plain,';
         }
 
+        let _comment = '';
+
+        if (needText) {
+            _comment = 'c.comment as c_comment,';
+        }
+
         let _sql = `SELECT
                 c.id as c_id,
                 c.x as c_x,
                 c.y as c_y,
-                c.comment as c_comment,
+                ${_comment}
                 ${_commentPlain}
                 c.title as c_title,
                 c.category as c_category,
@@ -138,21 +145,13 @@ class MapDataModel extends DBaseMysql
                 geo.country as g_country,
                 geo.state_code as g_state_code,
                 geo.locality as g_locality,
-                geo.street as g_street,
-
-                ph.id as ph_id,
-                ph.path as ph_path,
-                ph.width as ph_width,
-                ph.height as ph_height,
-                ph.created as ph_created,
-                ph.modified as ph_modified
+                geo.street as g_street
 
                 FROM ${this.getTableName()} c
-                LEFT JOIN (SELECT * FROM ${this.getTableName(this.tableInitNames.MAP_PHOTOS)} ORDER by id DESC) ph ON ph.map_data_id=c.id
                 LEFT JOIN ${this.getTableName(this.tableInitNames.GEOCODE_COLLECTION)} geo on geo.map_data_id = c.id AND geo.language=?
                 WHERE c.id IN (${_idsList}) `;
 
-        let _innerOrder='c_id, ph_id DESC';
+        let _innerOrder='c_id DESC';
 
         if (order) {
             _sql += `ORDER by ${order},${_innerOrder}`;
@@ -166,45 +165,57 @@ class MapDataModel extends DBaseMysql
     }
 
 
+
+
+
+
+
+
+//ATTENTION - обратите внимание
+//getPointsShortDataByIds => getPointsDataByIds
     /*
      * Get placemarks short data by ids
      *
      * @param {array} ids - placemarks ids
-     * @param {boolean} needResult - is result required
+     * @param {boolean} needComment - whether placemark description required
+     * @param {boolean} needResult - whether result required
      *
      * @return {array of objects} - placemarks data
      */
-    getPointsShortDataByIds(ids, needResult = true)
-    {
-        ids = BaseFunctions.prepareToIntArray(ids);
-        let _idsList = ids.join(',');
-
-        // Get only first photo
-        let _sql = `SELECT
-                    c.id as c_id,
-                    c.x as c_x,
-                    c.y as c_y,
-                    c.title as c_title,
-                    c.category as c_category,
-                    c.subcategories as c_subcategories,
-                    c.relevant_placemarks as c_relevant_placemarks,
-
-                    ph.id as ph_id,
-                    ph.path as ph_path,
-                    ph.width as ph_width,
-                    ph.height as ph_height
-
-                    FROM ${this.getTableName()} c
-                    LEFT JOIN (
-                        SELECT * FROM (SELECT MAX(id) phh2_id FROM landmarks_map_photos GROUP BY map_data_id) phh2
-                        JOIN landmarks_map_photos on phh2.phh2_id=landmarks_map_photos.id
-                    ) ph ON ph.map_data_id=c.id
-                    WHERE c.id IN (${_idsList})
-                    GROUP by c_id
-                    ORDER by c_title ASC`;
-
-        return this.getBySql(_sql, undefined, needResult);
-    }
+//    getPointsShortDataByIds(ids, needComment = false, needResult = true)
+//    {
+//        ids = BaseFunctions.prepareToIntArray(ids);
+//        let _idsList = ids.join(',');
+//
+//        let _comment = needComment ? 'c.comment as c_comment,' : '';
+//
+//        // Get only first photo
+//        let _sql = `SELECT
+//                    c.id as c_id,
+//                    ${_comment}
+//                    c.x as c_x,
+//                    c.y as c_y,
+//                    c.title as c_title,
+//                    c.category as c_category,
+//                    c.subcategories as c_subcategories,
+//                    c.relevant_placemarks as c_relevant_placemarks,
+//
+//                    ph.id as ph_id,
+//                    ph.path as ph_path,
+//                    ph.width as ph_width,
+//                    ph.height as ph_height
+//
+//                    FROM ${this.getTableName()} c
+//                    LEFT JOIN (
+//                        SELECT * FROM (SELECT MAX(id) phh2_id FROM ${this.getTableName(this.tableInitNames.MAP_PHOTOS)} GROUP BY map_data_id) phh2
+//                        JOIN ${this.getTableName(this.tableInitNames.MAP_PHOTOS)} phh3 on phh2.phh2_id=phh3.id
+//                    ) ph ON ph.map_data_id=c.id
+//                    WHERE c.id IN (${_idsList})
+//                    GROUP by c_id
+//                    ORDER by c_title ASC`;
+//
+//        return this.getBySql(_sql, undefined, needResult);
+//    }
 
 
     /*
@@ -227,12 +238,7 @@ class MapDataModel extends DBaseMysql
                 t.title as c_title,
                 t.category as c_category,
                 t.subcategories as c_subcategories,
-                t.relevant_placemarks as c_relevant_placemarks,
-
-                ph.id as ph_id,
-                ph.path as ph_path,
-                ph.width as ph_width,
-                ph.height as ph_height
+                t.relevant_placemarks as c_relevant_placemarks
 
                 FROM (SELECT * FROM ${this.getTableName()} WHERE `;
 
@@ -244,11 +250,7 @@ class MapDataModel extends DBaseMysql
             _sql += `(x BETWEEN ${x1} AND ${x2}) `;
         }
 
-        _sql += `AND (y BETWEEN ${y2} AND ${y1})) t LEFT JOIN (
-                SELECT * FROM
-                (SELECT MAX(id) phh2_id FROM landmarks_map_photos GROUP BY map_data_id) phh2
-                JOIN landmarks_map_photos on phh2.phh2_id=landmarks_map_photos.id
-                ) ph ON ph.map_data_id=t.id`;
+        _sql += `AND (y BETWEEN ${y2} AND ${y1})) t`;
 
         if (ignore) {
             _sql += ` WHERE t.id NOT IN (${ignore})`;
@@ -269,33 +271,15 @@ class MapDataModel extends DBaseMysql
      */
     getPointsByLimitNaked(limit, ignore)
     {
-        let _sql = `SELECT
-                    t.id as c_id,
-                    t.x as c_x,
-                    t.y as c_y,
-                    t.title as c_title,
-                    t.category as c_category,
-                    t.subcategories as c_subcategories,
-                    t.relevant_placemarks as c_relevant_placemarks,
-
-                    ph.id as ph_id,
-                    ph.path as ph_path,
-                    ph.width as ph_width,
-                    ph.height as ph_height
-
-                    FROM ${this.getTableName()} t
-                    LEFT JOIN (
-                        SELECT * FROM
-                        (SELECT MAX(id) phh2_id FROM landmarks_map_photos GROUP BY map_data_id) phh2
-                        JOIN landmarks_map_photos on phh2.phh2_id=landmarks_map_photos.id
-                        ) ph ON ph.map_data_id=t.id`;
-        if (ignore) {
-            _sql += ` WHERE t.id NOT IN (${ignore})`;
-        }
-
-        _sql += ` GROUP by c_id ORDER by RAND() LIMIT ${limit}`;
-
-        return this.getBySql(_sql, undefined, false);
+        return this.getByCondition(
+            /*condition*/`t.id NOT IN (${ignore})`,
+            /*order*/'RAND()',
+            /*group*/'',
+            /*select*/'id, x, y, title, category, subcategories, relevant_placemarks',
+            /*where_values*/[],
+            /*limit*/limit,
+            /*need_result*/false
+        );
     }
 
 

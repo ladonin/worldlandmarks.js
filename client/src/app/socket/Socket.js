@@ -11,7 +11,7 @@ import Consts from 'src/settings/Constants';
 
 import BaseFunctions from 'src/functions/BaseFunctions';
 import Config from 'src/settings/Config';
-import Router from 'src/modules/router/Router';
+import Router from 'src/modules/Router';
 import Language from 'src/modules/Language';
 import Service from 'src/modules/Service';
 import {isMobile} from "react-device-detect";
@@ -38,7 +38,16 @@ Socket.on('error-catch', function (data) {
 
 
 export default {
-    query(matchParams, data = {}) {
+
+
+    /*
+     * Send socket query on action level
+     * Controller and action parameters are got from url
+     *
+     * @param {object} matchParams - react rooter match parameters
+     * @param {object} data - additional data
+     */
+    actionQuery(matchParams, data = {}) {
         data = {
             [Consts.REQUEST_FORM_DATA]:{},
             ...data,
@@ -50,8 +59,8 @@ export default {
 
         // Prepare request data (see method description)
         data = Router.getActionData(data, matchParams);
-        console.log('>>>>>>> Sending socket request');
-        console.log(data);
+        //console.log('>>>>>>> Sending action socket request');
+        //console.log(data);
 
         Socket.emit('api', data);
         //    for (let i=0; i<1000; i++){
@@ -59,6 +68,40 @@ export default {
         //    }
         //ATTENTION - обратите внимание
     },
+    /*
+     * Send socket query on background level
+     * Controller and action parameters are set independently of url
+     *
+     * @param {object} controller
+     * @param {object} action
+     * @param {object} data - additional data
+     */
+    backgroundQuery(controller, action, data = {}) {
+        data = {
+            ...data,
+            controller: controller,
+            action: action,
+            service: Service.getName(),
+            language: Language.getName(),
+            isMobile: isMobile ? true : false
+        }
+
+        //console.log('>>>>>>> Sending background socket request');
+        //console.log(data);
+
+        Socket.emit('api', data);
+        //    for (let i=0; i<1000; i++){
+        //     Socket.emit('api', data);
+        //    }
+        //ATTENTION - обратите внимание
+    },
+
+
+
+
+
+
+
     getSocket(){
         return Socket;
     }

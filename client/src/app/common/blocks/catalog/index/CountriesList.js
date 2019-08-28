@@ -26,13 +26,13 @@ class CountriesList extends Block {
 
         let _countriesList =[];
 
-        for (let _index in this.props.data) {
-            let _item = this.props.data[_index];
+        for (let _index in this.props.redux.data) {
+            let _item = this.props.redux.data[_index];
             _countriesList.push(
                 <div className="catalog_index_country_row" onClick={this.goTo} data-url={'/' + Consts.CONTROLLER_NAME_CATALOG + '/'+_item.country_code}>
                     <img className="flag" src={BaseFunctions.getFlagUrl(_item.country_code)}/>
                     <div className="catalog_index_country_row_name">{_item.country}
-                        <div className="catalog_index_country_placemarks_count">{this.props.placemarks_count} {_item.placemarks_count}</div>
+                        <div className="catalog_index_country_placemarks_count">{this.props.redux.placemarks_count} {_item.placemarks_count}</div>
                     </div>
                     <div className="clear"></div>
                 </div>
@@ -56,14 +56,15 @@ class CountriesList extends Block {
 function mapStateToProps(state) {
 
     return {
-        data:state.dynamicData['data'],
-        placemarks_count:state.staticData['placemarks_count'],
-        last_articles:state.staticData['last_articles']
+        redux: {
+            data:state.dynamicData['data'],
+            placemarks_count:state.staticData['placemarks_count'],
+            //last_articles:state.staticData['last_articles']//ATTENTION - обратите внимание
+        }
     }
 }
-let mapDispatchToProps = {}
 
-export default connect(mapStateToProps, mapDispatchToProps)(withRouter(CountriesList))
+export default connect(mapStateToProps)(withRouter(CountriesList))
 
 
 

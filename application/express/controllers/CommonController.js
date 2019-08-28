@@ -7,6 +7,7 @@
 const Controller = require('application/express/core/parents/Controller');
 const Language = require('application/express/core/Language');
 const Constants = require('application/express/settings/Constants');
+const Users = require('application/express/core/Users');
 
 class CommonController extends Controller {
 
@@ -34,7 +35,7 @@ class CommonController extends Controller {
             _staticData = {..._staticData,
                 'domain_name': this.getText('domain_name'),
                 'hat/logo/under_text': this.getText('hat/logo/under_text'),
-                'see_all': this.getText('see_all'),
+                'catalog/placemark/link_to_map/text':this.getText('catalog/placemark/link_to_map/text')
             }
         }
 
@@ -43,6 +44,34 @@ class CommonController extends Controller {
                 'placemarks_count': this.getText('placemarks_count/2/text'),
                 'last_articles': this.getText('last_articles/text'),
             }
+        }
+
+        if (_path === 'catalog_country') {
+            _staticData = {..._staticData,
+                'catalog_states_regions_list_title': this.getText('catalog/states/regions/list/title'),
+                'catalog_photoalbum_title_text': this.getText('catalog/country/photoalbum_title/text')
+            }
+        }
+        if (_path === 'catalog_state') {
+            _staticData = {..._staticData,
+                'catalog_photoalbum_title_text': this.getText('catalog/state/photoalbum_title/text')
+            }
+        }
+
+        if ((_path === 'catalog_country') ||  (_path === 'catalog_state')) {
+            _staticData = {..._staticData,
+                'default_title_part': this.getText('map/default_title_part/value'),
+                'last_articles_text': this.getText('last_articles/text'),
+            }
+        }
+
+
+
+        // Always
+        _staticData = {..._staticData,
+            'category_info_title_text': this.getText('category/info/title/text'),
+            'is_admin': Users.getInstance(this.requestId).isAdmin(),
+            'see_all': this.getText('see_all')
         }
 
         this.data = {...this.data, [Constants.STATIC_DATA]:_staticData};

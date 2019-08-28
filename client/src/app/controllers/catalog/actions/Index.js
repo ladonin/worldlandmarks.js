@@ -11,7 +11,7 @@ import {BrowserView, MobileView, isBrowser, isMobile} from "react-device-detect"
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 
-import Action, {MapStateToProps} from 'src/app/parents/Action';
+import Action, {MapStateToProps, MapDispatchToProps} from 'src/app/parents/Action';
 // Components
 import CountriesList from 'src/app/common/blocks/catalog/index/CountriesList';
 import ArticlesList from 'src/app/common/blocks/ArticlesList';
@@ -24,16 +24,15 @@ class CatalogIndex extends Action {
     }
 
     render() {
-
         return (
-            <React.Fragment>
+            <div id='action' className={this.getActionClass()}>
                 <BrowserView>
                     <div className="catalog_index_block">
                         <CountriesList/>
                         <div className="clear"></div>
                         <div className="catalog_block_last_articles_title" style={{position:'relative'}}>
                             <img style={{display: 'inline-block',width: '40px'}} src="/img/article_icon.png"/>
-                            <span style={{display: 'block', position: 'absolute',top: '20px',left: '60px', color:'#333'}}>{this.props.last_articles}</span>
+                            <span style={{display: 'block', position: 'absolute',top: '20px',left: '60px', color:'#333'}}>TODO{this.props.last_articles}</span>
                         </div>
                         <div style={{'background-color':'#fff', margin:'0 10px'}}>
                             <ArticlesList/>
@@ -44,10 +43,10 @@ class CatalogIndex extends Action {
                 <MobileView>
                   TODO MOBILE CatalogIndex
                 </MobileView>
-            </React.Fragment>
+            </div>
         );
     }
 }
 
 
-export default connect(MapStateToProps)(withRouter(CatalogIndex))
+export default connect(MapStateToProps, MapDispatchToProps)(withRouter(CatalogIndex))

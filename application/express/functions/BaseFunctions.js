@@ -21,15 +21,13 @@ const Fs = require('fs');
 const Messages = require('application/express/settings/Messages');
 const Pbkdf2 = require('pbkdf2')
 const FtpServersConfig = require('application/express/settings/gitignore/FtpServers');
-const Ftp = require('application/express/components/base/Ftp');
-
 
 const ErrorCodes = require('application/express/settings/ErrorCodes');
 
 const ImageMagick = require('imagemagick');
 const Deasync = require('deasync');
 const _lang = require('lodash/lang');
-
+const CommonBaseFunctions = require('application/common/functions/BaseFunctions');
 
 
 
@@ -985,7 +983,7 @@ function hashEqualsToValue(value, hash)
  *
  * @return {string} - prepared path
  */
-function preparePhotoPath(id, name, prefix, onlyDir = false, isUrl = false, serviceName = null)
+function preparePhotoPath(id, name, prefix, onlyDir = false, isUrl = false, serviceName)
 {
     let _photoPath = Consts.FILES_DIR + 'map/' + serviceName + '/' + id + '/' + prefix + name;
     let _photoName = '';
@@ -1005,8 +1003,8 @@ function preparePhotoPath(id, name, prefix, onlyDir = false, isUrl = false, serv
          if (!onlyDir) {
             _photoName = prefix + name;
         }
-        let _config = Ftp.getConfig();
-        _currentPhotoPath = 'http://' + _config.url + '/' + _config.rootDirectory + '/map/' + serviceName + '/' + id + '/' + _photoName;
+
+        _currentPhotoPath = 'http://' + FtpServersConfig.url + '/' + FtpServersConfig.rootDirectory + '/map/' + serviceName + '/' + id + '/' + _photoName;
     }
     return _currentPhotoPath;
 }
@@ -1060,17 +1058,33 @@ function getCroppedText(text, length, dots = true, self)
  *
  * @param {string} text - text for preparing
  *
- * @return {string} = prepared text
+ * @return {string} - prepared text
  */
 function clearSpecialSymbols(text)
 {
     return text.replace(/[ \,\|«»]\'\"\`\!/g, ' ');
 }
 
-
-
+/*
+ * Reset array keys
+ *  For example: [[5]:1,[9]:2] will become [1,2]
+ *
+ * @param {array} arr
+ *
+ * @return {array} - prepared new array
+ */
+function resetArrayKeys(arr)
+{
+    let _result = [];
+    for (let _index in arr) {
+        _result.push(arr[_index]);
+    }
+    return _result;
+}
 
 module.exports = {
+    ...CommonBaseFunctions,
+    resetArrayKeys,
     clearSpecialSymbols,
     quote,
     getCroppedText,

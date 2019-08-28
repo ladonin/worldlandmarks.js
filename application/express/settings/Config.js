@@ -217,7 +217,7 @@ module.exports = {
     // ATTENTION - обратите внимание
     // allows
     // Application restrinctions
-    restrictions: require('application/express/settings/Restrictions'),
+    restrictions: require('./../../common/settings/Restrictions'),
     // Screen size settings
     dimentions: {
         // Mobile version
