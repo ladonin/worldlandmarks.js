@@ -24,8 +24,8 @@ class Errors extends CommonController {
      */
     action_error404() {
 
-        this.addDynamicData({errorMessage: 'errorMessageerrorMessageerrorMessageerrorMessage'});////ATTENTION - обратите внимание
-        this.sendMe('error404');
+        this.addActionData({errorMessage: 'errorMessageerrorMessageerrorMessageerrorMessage'});////ATTENTION - обратите внимание
+        this.sendMe();
 
 
 

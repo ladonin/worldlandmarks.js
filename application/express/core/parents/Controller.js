@@ -38,24 +38,32 @@ class Controller extends Component {
     /*
      * Send result to client who send this request
      *
-     * @param {string} actionName - controller action name
+     * @param {boolean} isBackground - whether request is background (like ajax)
      * @param {string} eventName - socket event name
      */
-    sendMe(actionName = null, eventName = 'api') {
-        if (actionName) {
-            this.addStaticData(actionName);
-        }
+    sendMe(isBackground = false, eventName = 'api') {
+        this.addStaticData(isBackground);
         this.sendbySocket(eventName);
     }
 
     /*
-     * Add dynamic data to controller's responce (data from dbase, etc)
+     * Add action data to controller's responce (data from dbase, etc)
+     * Data for action component on client side
      *
      * @param {object} data - added data
      */
-    addDynamicData(data) {
-        this.data[Constants.DYNAMIC_DATA] = {...this.data[Constants.DYNAMIC_DATA], ...data};
+    addActionData(data) {
+        this.data[Constants.ACTION_DATA] = {...this.data[Constants.ACTION_DATA], ...data};
     }
 
+    /*
+     * Add background data
+     * Data for block component on client side (like ajax request)
+     *
+     * @param {object} data - added data
+     */
+    addBackgroundData(data) {
+        this.data[Constants.BACKGROUND_DATA] = {...this.data[Constants.BACKGROUND_DATA], ...data};
+    }
 }
 module.exports = Controller;

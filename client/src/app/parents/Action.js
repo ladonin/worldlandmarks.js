@@ -9,41 +9,13 @@ import { Component } from 'react';
 import Router from 'src/modules/Router';
 import Consts from 'src/settings/Constants';
 import Socket from 'src/app/socket/Socket';
-import Common, {UpdateStyleData, RemoveDynamicData, RemoveStyleData} from 'src/app/parents/Common';
+import Common, {UpdateStyleData, ClearActionData, ClearStyleData} from 'src/app/parents/Common';
 
 export default class Action extends Common {
 
-    constructor(){
-        super();
-        this.firstRender = true;
-        this.getActionClass = this.getActionClass.bind(this);
-    }
-
-    /*
-     * Get css class name for action component
-     *  Note: at first render action class value will be equal its old value (usually 'showed'),
-     *  so we must at first render hide action component, until it gets page data from server
-     *  At second render actionClass will be equal current action class value (after dispatch will have worked)
-     *
-     *  @return {string} - action css class name
-     */
-    getActionClass(){
-        if (this.firstRender === true) {
-            this.firstRender = false;
-            return '';
-        }
-        return this.props.redux.actionClass;
-    }
-
-    componentDidUpdate(){
-        // Only if data has came
-        if (Object.keys(this.props.redux.dynamicData).length && !window.$('#action').hasClass('showed')){
-            this.props.updateStyleData({'#action':{class:'+showed'}});
-        }
-    }
     componentWillUnmount(){
-        this.props.removeDynamicData();
-        this.props.removeStyleData();
+        this.props.clearActionData();
+        this.props.clearStyleData();
     }
 
     componentDidMount() {
@@ -51,24 +23,39 @@ export default class Action extends Common {
     }
 }
 
-export function MapStateToProps(state) {
+export const MapDispatchToProps = {
+    updateStyleData: UpdateStyleData,
+    clearActionData: ClearActionData,
+    clearStyleData: ClearStyleData
+}
 
-    let _actionClass = '';
+// Only for this controller/action
+// Get state data only after the data will comes from necessary controller/action
 
-    if (state.styleData['#action']) {
-        _actionClass = state.styleData['#action'].class;
+// Note: when old component unmounts and new one mounts
+// then the new component mounts with old state data and only then updated with new state data
+// (old data cleared in componentWillUnmount event, but new component is already mounted)
+// and we need to prevent mounting a new component with previous component's data (it happens on mount level)
+/*
+ * @param {object} state - redux state
+ * @param {string} controller - accepted controller name
+ * @param {string} action - accepted action name
+ *
+ * @param {object/null} - state result for actions
+ */
+export function GetState(state, controller, action) {               console.log('GetState');console.log(state);
+
+    if ((state.staticData['controller']
+            && state.staticData['action']
+            && (state.staticData['controller'] !== controller
+                || state.staticData['action'] !== action))
+            || typeof state.staticData['controller'] === 'undefined') {
+        return {};
     }
-
     return {
         redux:{
             staticData:state.staticData,
-            dynamicData:state.dynamicData,
-            actionClass:_actionClass
+            actionData:state.actionData,
         }
     };
-}
-export const MapDispatchToProps = {
-    updateStyleData: UpdateStyleData,
-    removeDynamicData: RemoveDynamicData,
-    removeStyleData: RemoveStyleData
 }

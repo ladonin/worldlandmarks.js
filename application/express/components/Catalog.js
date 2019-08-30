@@ -20,7 +20,7 @@ const MapDataModel = require('application/express/models/dbase/mysql/MapData');
 const Config = require('application/express/settings/Config');
 const CountryStatesCitiesTranslationsModel = require('application/express/models/dbase/mysql/CountryStatesCitiesTranslations');
 const Placemarks = require('application/express/components/Placemarks');
-
+const RequestsPool = require('application/express/core/RequestsPool');
 class Catalog extends Component {
 
     constructor() {
@@ -364,7 +364,7 @@ class Catalog extends Component {
     {
         let _countryCode = Countries.getInstance(this.requestId).getCountryCodeFromRequest();
 
-        let _stateCode = this.getFromRequest(Consts.ACTION_NAME_STATE, required = true);
+        let _stateCode = this.getFromRequest(Consts.ACTION_NAME_STATE);
 
         if (Countries.getInstance(this.requestId).hasStates(_countryCode)) {
             return this.getPlacemarks(_countryCode, _stateCode, this.getLanguage());
@@ -445,7 +445,7 @@ class Catalog extends Component {
                 _keywords,
                 _limit,
                 _language,
-                needResult = false
+                false
             );
 
             for (let _index in _placemarks) {
@@ -461,7 +461,9 @@ class Catalog extends Component {
 
         }
 
-        _result = Placemarks.getInstance(this.requestId).getPlacemarksDataByIds(_ids, true, false, undefined, false, false, 1);
+        _result = _ids.length
+            ? Placemarks.getInstance(this.requestId).getPlacemarksDataByIds(_ids, true, false, undefined, false, false, 1)
+            : [];
 
         for (let _index in _result) {
             let _placemark = _result[_index];
@@ -483,8 +485,9 @@ class Catalog extends Component {
      */
     getBreadcrumbsData()
     {
-        let _countryCode = this.getFromRequest(Consts.ACTION_NAME_COUNTRY, false);
-        let _stateCode = this.getFromRequest(Consts.ACTION_NAME_STATE, false);
+        let _countryCode = this.getFromRequest(Consts.CATALOG_COUNTRY_VAR_NAME, false);
+        let _stateCode = this.getFromRequest(Consts.CATALOG_STATE_VAR_NAME, false);
+
         let _idPlacemark = BaseFunctions.toInt(this.getFromRequest(Consts.ID_VAR_NAME, false));
         let _language = this.getLanguage();
 

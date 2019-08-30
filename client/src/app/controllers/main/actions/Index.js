@@ -10,13 +10,13 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 
 import { Link } from 'react-router-dom';
-import Action, {MapStateToProps, MapDispatchToProps} from 'src/app/parents/Action';
+import Action, {GetState, MapDispatchToProps} from 'src/app/parents/Action';
 import Consts from 'src/settings/Constants';
 
 // Components
 import MainLinks from 'src/app/common/blocks/main/index/MainLinks';
 import PlacemarksList from 'src/app/common/blocks/PlacemarksList';
-
+import CssTransition from 'src/app/common/CssTransition';
 
 class MainIndex extends Action {
 
@@ -25,16 +25,23 @@ class MainIndex extends Action {
     }
     scroll2(){
        this.showCategoryViewer(3);
-        //Socket.backgroundQuery(Consts.CONTROLLER_NAME_CATALOG, 'get_placemarks_list', {[Consts.ID_VAR_NAME]:921})
+        //Socket.backgroundQuery(Consts.CONTROLLER_NAME_CATALOG, 'get_placemarks_list', this.props.match.params, {[Consts.ID_VAR_NAME]:921})
     }
     render() {
+        if (!this.props.redux) {
+            return null;
+        }
         return (
-                <div id='action' className={this.getActionClass()}><div onClick={this.scroll2}>scroll</div>
+                <CssTransition><div onClick={this.scroll2}>scroll</div>
                     <MainLinks/>
-                    <PlacemarksList/>
-                </div>
+                    <PlacemarksList controller={Consts.CONTROLLER_NAME_CATALOG} action="get_placemarks_list"/>
+                </CssTransition>
                 );
     }
+}
+
+function MapStateToProps(state) {
+    return GetState(state, Consts.CONTROLLER_NAME_MAIN, Consts.ACTION_NAME_INDEX)
 }
 
 export default connect(MapStateToProps, MapDispatchToProps)(withRouter(MainIndex))

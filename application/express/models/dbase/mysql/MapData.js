@@ -494,13 +494,13 @@ class MapDataModel extends DBaseMysql
         }
 
         if (category !== false){
-            _condition += " AND (c.category = " + category + " OR c.subcategories REGEXP '[[:<:]]" + category + "[[:>:]]')";
+            _condition += " AND (c.category = '" + category + "' OR c.subcategories REGEXP '[[:<:]]" + category + "[[:>:]]')";
         }
         if (country) {
-            _condition += ' AND LOWER(geo.country_code) = LOWER(' + country + ')';
+            _condition += ' AND LOWER(geo.country_code) = LOWER("' + country + '")';
         }
         if (state) {
-            _condition += ' AND LOWER(geo.state_code) = LOWER(' + state + ')';
+            _condition += ' AND LOWER(geo.state_code) = LOWER("' + state + '")';
         }
         if (keywords) {
             _condition += " AND LOWER(c.title) LIKE '%" + keywords + "%'";

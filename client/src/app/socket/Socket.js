@@ -50,17 +50,22 @@ export default {
     actionQuery(matchParams, data = {}) {
         data = {
             [Consts.REQUEST_FORM_DATA]:{},
-            ...data,
             controller: Router.getControllerName(matchParams),
             service: Service.getName(),
             language: Language.getName(),
             isMobile: isMobile ? true : false,
+            ...data,
         }
 
         // Prepare request data (see method description)
         data = Router.getActionData(data, matchParams);
-        //console.log('>>>>>>> Sending action socket request');
-        //console.log(data);
+        console.log('>>>>>>> Sending action socket request');
+        console.log(data);
+
+        // Here client and server controller/action are the same
+        // Thanks to it there will be able to figure out for what request the response belongs to
+        data.clientController = data.controller;
+        data.clientAction = data.action;
 
         Socket.emit('api', data);
         //    for (let i=0; i<1000; i++){
@@ -74,20 +79,26 @@ export default {
      *
      * @param {object} controller
      * @param {object} action
+     * @param {object} matchParams - react rooter match parameters
      * @param {object} data - additional data
      */
-    backgroundQuery(controller, action, data = {}) {
+    backgroundQuery(controller, action, matchParams, data = {}) {
         data = {
-            ...data,
             controller: controller,
             action: action,
             service: Service.getName(),
             language: Language.getName(),
-            isMobile: isMobile ? true : false
+            isMobile: isMobile ? true : false,
+            ...data
         }
 
-        //console.log('>>>>>>> Sending background socket request');
-        //console.log(data);
+        // Here client and server controller/action are the same
+        // Thanks to it there will be able to figure out for what request the response belongs to
+        data.clientController = Router.getControllerName(matchParams);
+        data.clientAction = Router.getActionName(matchParams);
+
+        console.log('>>>>>>> Sending background socket request');
+        console.log(data);
 
         Socket.emit('api', data);
         //    for (let i=0; i<1000; i++){
@@ -95,12 +106,6 @@ export default {
         //    }
         //ATTENTION - обратите внимание
     },
-
-
-
-
-
-
 
     getSocket(){
         return Socket;

@@ -17,7 +17,7 @@ import BaseFunctions from 'src/functions/BaseFunctions';
 import ConfigRestrictions from 'src/../../application/common/settings/Restrictions';
 
 import CategoryViewer from 'src/modules/CategoryViewer';
-import {UpdateStyleData} from 'src/app/parents/Common';
+import {UpdateStyleData, RemoveBackgroundData} from 'src/app/parents/Common';
 
 import Block from 'src/app/parents/Block';
 import Socket from 'src/app/socket/Socket';
@@ -49,6 +49,7 @@ class PlacemarksList extends Block {
 
     componentWillUnmount(){
         Events.remove('scroll', this.onScroll);
+        this.props.removeBackgroundData('scroll_data');
     }
 
     componentDidMount(){
@@ -59,7 +60,14 @@ class PlacemarksList extends Block {
 
     getList(){
         this.block = true;
-        Socket.backgroundQuery(Consts.CONTROLLER_NAME_CATALOG, 'get_placemarks_list', {[Consts.ID_VAR_NAME]:this.idNext})
+        Socket.backgroundQuery(
+                this.props.controller,
+                this.props.action,
+                this.props.match.params,
+                {
+                    [Consts.ID_VAR_NAME]:this.idNext,
+                    [Consts.REQUEST_FORM_DATA]:this.props.data
+                })
     }
 
     onScroll(){
@@ -118,7 +126,7 @@ class PlacemarksList extends Block {
         let _catalogScrollPlacemarkRowPhotoWidth;
 
         for (let _index in _subcategories) {
-            let _subcategory = _subcategories[_index].trim();
+            let _subcategory = parseInt(_subcategories[_index].trim());
             _categories.push(<img src={CategoryViewer.getCategoryImageUrl(_subcategory)} onClick={this.seeCategory(_subcategory)}/>);
         }
 
@@ -222,10 +230,10 @@ function mapStateToProps(state) {
 
     return {
         redux:{
-            placemarks:state.dynamicData['scroll_data'],
-            linkToMapText:state.staticData['catalog/placemark/link_to_map/text'],
+            placemarks:state.backgroundData['scroll_data'],
+            linkToMapText:state.staticData['catalog_placemark_link_to_map_text'],
         }
     };
 }
 
-export default connect(mapStateToProps,{updateStyleData:UpdateStyleData})(withRouter(PlacemarksList))
+export default connect(mapStateToProps,{removeBackgroundData:RemoveBackgroundData})(withRouter(PlacemarksList))

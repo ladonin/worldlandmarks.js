@@ -18,12 +18,32 @@ function staticData(state = {}, action) {
     }
 }
 
-function dynamicData(state = {}, action) {
+function backgroundData(state = {}, action) {
     switch (action.type) {
         case Constants.UPDATE_PAGE:
-            return Object.assign({}, state, action.data[Constants.DYNAMIC_DATA]);
+            return Object.assign({}, state, action.data[Constants.BACKGROUND_DATA]);
 
-        case Constants.REMOVE_DYNAMIC_DATA:
+        case Constants.REMOVE_BACKGROUND_DATA:
+            let newState = Object.assign({}, state);
+            delete newState[action.prop]
+            return newState;
+
+        case Constants.CLEAR_BACKGROUND_DATA:
+            return {};
+
+        default:
+            return state;
+    }
+}
+
+
+
+function actionData(state = {}, action) {
+    switch (action.type) {
+        case Constants.UPDATE_PAGE:
+            return Object.assign({}, state, action.data[Constants.ACTION_DATA]);
+
+        case Constants.CLEAR_ACTION_DATA:
             return {};
 
         default:
@@ -211,7 +231,7 @@ function styleData(state = {}, action) {
             }
             return _newState;
 
-        case Constants.REMOVE_STYLE_DATA:
+        case Constants.CLEAR_STYLE_DATA:
             return {};
         default:
             return state;
@@ -220,8 +240,9 @@ function styleData(state = {}, action) {
 
 const rootReducer = combineReducers({
     staticData,
-    dynamicData,
-    styleData
+    actionData,
+    styleData,
+    backgroundData
 })
 
 export default rootReducer

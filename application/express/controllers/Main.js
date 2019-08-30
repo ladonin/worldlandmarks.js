@@ -34,11 +34,9 @@ console.log(this.getRequestFormData().a);
 
       //  console.log(DBaseMysql.getInstance(this.requestId).getBySql("insert into users values(NULL, 'vhervehve','hgjhj',345435,345335)", [] , false));
 
-        this.addDynamicData({
-            'title':111,
-});
 
-        this.sendMe('index');
+
+        this.sendMe();
 
 
 

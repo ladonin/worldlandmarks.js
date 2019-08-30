@@ -14,8 +14,8 @@ let _Consts = {
     FORM_TEXT_TAG_CODE_IMAGE_ADVANCED: 'image_advanced',
     FORM_TEXT_TAG_CODE_P: 'p',
     STYLE_DATA: 'style_data',
-    UPDATE_STYLE_DATA: 'update_style_data',
-    REMOVE_STYLE_DATA:'remove_style_data'
+    UPDATE_STYLE_DATA: 'UPDATE_STYLE_DATA',
+    CLEAR_STYLE_DATA:'CLEAR_STYLE_DATA'
 
 
 

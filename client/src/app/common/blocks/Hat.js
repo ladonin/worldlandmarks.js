@@ -46,7 +46,6 @@ class Hat extends Block {
                         </BrowserView>
                         <MobileView></MobileView>
                     </div>
-                    <div className="padding_after_hat"></div>
                 </div>
         );
     }
@@ -59,7 +58,7 @@ function mapStateToProps(state) {
     return {
         redux: {
             domainName:state.staticData['domain_name'],
-            logoUnderText:state.staticData['hat/logo/under_text']
+            logoUnderText:state.staticData['hat_logo_under_text']
         }
     }
 }

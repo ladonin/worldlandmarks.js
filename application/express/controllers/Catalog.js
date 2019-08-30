@@ -28,7 +28,7 @@ class Catalog extends CommonController {
      * Action index
      */
     action_index() {
-        this.addDynamicData({
+        this.addActionData({
             'title':Seo.getInstance(this.requestId).getTitle('catalog/index'),
             'keywords':Seo.getInstance(this.requestId).getKeywords('catalog/index'),
             'description':Seo.getInstance(this.requestId).getDescription('catalog/index'),
@@ -38,7 +38,7 @@ class Catalog extends CommonController {
             'articles':ArticlesModel.getInstance(this.requestId).getLastArticles(Service.getInstance(this.requestId).getMaxLastArticlesList())
         });
 
-        this.sendMe('index');
+        this.sendMe();
     }
 
     /*
@@ -50,7 +50,7 @@ class Catalog extends CommonController {
         let _countryName = Countries.getInstance(this.requestId).getCountryNameFromRequest();
         let _countryCode = Countries.getInstance(this.requestId).getCountryCodeFromRequest();
 
-        this.addDynamicData({
+        this.addActionData({
             'title': Seo.getInstance(this.requestId).getTitle('catalog/country', {'country':_countryName}),
             'keywords': Seo.getInstance(this.requestId).getKeywords('catalog/country'),
             'description': Seo.getInstance(this.requestId).getDescription('catalog/country'),
@@ -66,35 +66,26 @@ class Catalog extends CommonController {
             'back_url': '/' + this.getControllerName() + '/',
             'current_url': '/' + this.getControllerName() + '/' + _countryCode + '/',
             'has_states': Countries.getInstance(this.requestId).hasStates(_countryCode) ? true : false,
-            'placemarks_count': CatalogComponent.getInstance(this.requestId).getPlacemarksCountInCountry(_countryCode)
+            'placemarks_count': CatalogComponent.getInstance(this.requestId).getPlacemarksCountInCountry(_countryCode),
+            'breadcrumbs': CatalogComponent.getInstance(this.requestId).getBreadcrumbsData(),
         });
 
-        this.sendMe('country');
+        this.sendMe();
     }
-
 
 
     action_get_placemarks_list()
     {
         let _idStart = BaseFunctions.toInt(this.getFromRequest(Consts.ID_VAR_NAME, false));
 
-        this.addDynamicData({
+        this.addBackgroundData({
             scroll_data: CatalogComponent.getInstance(this.requestId).getPlacemarksList(_idStart).reverse()
         });
 
-        this.sendMe('get_placemarks_list');
+        this.sendMe(true);
     }
-
-
-
-
-
-
-
 }
-
 
 
 Catalog.instanceId = BaseFunctions.unique_id();
 module.exports = Catalog;
-

@@ -65,10 +65,18 @@ export function UpdateStyleData(data) {
     return {type:Consts.UPDATE_STYLE_DATA, data}
 }
 
-export function RemoveDynamicData() {
-    return {type:Consts.REMOVE_DYNAMIC_DATA}
+export function ClearActionData() {
+    return {type:Consts.CLEAR_ACTION_DATA}
 }
 
-export function RemoveStyleData() {
-    return {type:Consts.REMOVE_STYLE_DATA}
+export function ClearStyleData() {
+    return {type:Consts.CLEAR_STYLE_DATA}
+}
+
+export function RemoveBackgroundData(prop) {
+    return {type:Consts.REMOVE_BACKGROUND_DATA, prop}
+}
+
+export function ClearBackgroundData() {
+    return {type:Consts.CLEAR_BACKGROUND_DATA}
 }

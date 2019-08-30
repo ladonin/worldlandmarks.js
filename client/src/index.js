@@ -8,14 +8,18 @@ import {Store} from 'src/app/redux/Init';
 import App from './app/App';
 
 // Other components
-import Hat from 'src/app/common/blocks/Hat';
 import CategoryViewer from 'src/app/common/blocks/CategoryViewer';
+
+// Block components
+import Breadcrumbs from 'src/app/common/blocks/Breadcrumbs';
+import Hat from 'src/app/common/blocks/Hat';
 
 render(
         <BrowserRouter>
             <Provider store={Store}>
                 <CategoryViewer/>
                 <Hat/>
+                <Breadcrumbs/>
                 <App/>
             </Provider>
         </BrowserRouter>

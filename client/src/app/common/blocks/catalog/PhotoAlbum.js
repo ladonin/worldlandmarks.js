@@ -104,7 +104,7 @@ class PhotoAlbum extends Block {
         }
     }
 
-    componentDidUpdate(){
+    componentDidMount(){
         // Run photoalbum library
         // Note: we do it in componentDidUpdate because the data is passed on component updating, but not mounting
         window.$("a[rel^='prettyPhoto']").prettyPhoto({
@@ -369,7 +369,7 @@ function mapStateToProps(state) {
 
     return {
         redux:{
-            photos: state.dynamicData['data'] ? state.dynamicData['data']['photos'] : undefined,
+            photos: state.actionData['data'] ? state.actionData['data']['photos'] : undefined,
             title: state.staticData['catalog_photoalbum_title_text'],
             defaultTitlePart: state.staticData['default_title_part']
         }

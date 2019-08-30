@@ -53,7 +53,7 @@ function mapStateToProps(state) {
 
   return {
       redux:{
-        errorMessage:state.dynamicData.errorMessage
+        errorMessage:state.actionData.errorMessage
     }
   }
 }

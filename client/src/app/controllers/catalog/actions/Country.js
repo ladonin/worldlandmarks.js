@@ -11,12 +11,14 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 
 import { Link } from 'react-router-dom';
-import Action, {MapStateToProps, MapDispatchToProps} from 'src/app/parents/Action';
+import Action, {GetState, MapDispatchToProps} from 'src/app/parents/Action';
 import Router from 'src/modules/Router';
 import Consts from 'src/settings/Constants';
 
 // Components
 import PhotoAlbum from 'src/app/common/blocks/catalog/PhotoAlbum';
+import CssTransition from 'src/app/common/CssTransition';
+import PlacemarksList from 'src/app/common/blocks/PlacemarksList';
 
 class CatalogCountry extends Action {
 
@@ -24,15 +26,12 @@ class CatalogCountry extends Action {
         super();
     }
 
-
-
-
     getlastArticles() {
 
         let _articlesList = [];
-        if (this.props.redux.dynamicData.data && this.props.redux.dynamicData.data.articles) {
-            for (let _index in this.props.redux.dynamicData.data.articles) {
-                let _article = this.props.redux.dynamicData.data.articles[_index];
+        if (this.props.redux.actionData.data && this.props.redux.actionData.data.articles) {
+            for (let _index in this.props.redux.actionData.data.articles) {
+                let _article = this.props.redux.actionData.data.articles[_index];
                 _articlesList.push(
                     <div class="catalog_country_page_article_item">
                         <a onClick={this.goTo} data-url={'/' + Consts.CONTROLLER_NAME_ARTICLE + '/' + _article['id']}>{_article['title']}</a>
@@ -60,28 +59,28 @@ class CatalogCountry extends Action {
     }
 
     render() {
+        if (!this.props.redux) {
+            return null;
+        }
 
         let _statesList = [];
 
-        if (this.props.redux.dynamicData.data && this.props.redux.dynamicData.data.states) {
-            for (let _index in this.props.redux.dynamicData.data.states) {
-                let _state = this.props.redux.dynamicData.data.states[_index];
-                    _statesList.push(
-                            <div className="catalog_country_state_row">
-                                <a onClick={this.goTo} data-url={this.props.redux.dynamicData['current_url']+this.props.redux.dynamicData.data.states[_index]['state_code']}>{this.props.redux.dynamicData.data.states[_index]['state']}</a>
-                            </div>
+        if (this.props.redux.actionData.data && this.props.redux.actionData.data.states) {
+            for (let _index in this.props.redux.actionData.data.states) {
+                _statesList.push(
+                        <div className="catalog_country_state_row">
+                            <a onClick={this.goTo} data-url={this.props.redux.actionData['current_url']+this.props.redux.actionData.data.states[_index]['state_code']}>{this.props.redux.actionData.data.states[_index]['state']}</a>
+                        </div>
                 );
             }
         }
 
         return (
-                <div id='action' className={this.getActionClass()}>
+                <CssTransition>
                     <BrowserView>
                         <div id="catalog_country_block">
                             {this.props.redux.staticData['is_admin'] === true &&
-                                <h2>
-                                  <div style={{'margin-bottom':'10px', 'text-align':'right'}}><a style={{color:'#f00', 'font-size':'14px'}} href={'/admin/_e5b7rnijjrnrnnb_export_photos?code_type=country&country_code='+this.props.redux.dynamicData['country_code']}>[скачать архив фотографий данной страны]</a></div>
-                                </h2>
+                                <div style={{'margin-bottom':'10px', 'text-align':'right'}}><a style={{color:'#f00', 'font-size':'14px'}} href={'/admin/_e5b7rnijjrnrnnb_export_photos?code_type=country&country_code='+this.props.redux.actionData['country_code']}>[скачать архив фотографий данной страны]</a></div>
                             }
                             <div id="catalog_country_states_block">
                                 <div id="catalog_country_states_title">
@@ -91,21 +90,30 @@ class CatalogCountry extends Action {
                                     {_statesList}
                                 </div>
                             </div>
-
                             <div id="catalog_country_photos_block">
                                 <PhotoAlbum/>
                             </div>
                             <div class="clear"></div>
                             {this.getlastArticles()}
                         </div>
+                        <PlacemarksList
+                            controller={Consts.CONTROLLER_NAME_CATALOG}
+                            action="get_placemarks_list"
+                            data={{isSearch: 1, country: this.props.match.params[Consts.URL_VAR_2_NAME]}}
+                            photoWidth="290"
+                            photoHeight="230"
+                        />
                     </BrowserView>
                     <MobileView>
                       TODO MOBILE CatalogIndex
                     </MobileView>
-                </div>
+                </CssTransition>
                 );
     }
 }
 
+function MapStateToProps(state) {
+    return GetState(state, Consts.CONTROLLER_NAME_CATALOG, Consts.ACTION_NAME_COUNTRY)
+}
 
 export default connect(MapStateToProps,MapDispatchToProps)(withRouter(CatalogCountry))

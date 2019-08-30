@@ -57,33 +57,10 @@ function mapStateToProps(state) {
 
     return {
         redux: {
-            data:state.dynamicData['data'],
+            data:state.actionData['data'],
             placemarks_count:state.staticData['placemarks_count'],
-            //last_articles:state.staticData['last_articles']//ATTENTION - обратите внимание
         }
     }
 }
 
 export default connect(mapStateToProps)(withRouter(CountriesList))
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

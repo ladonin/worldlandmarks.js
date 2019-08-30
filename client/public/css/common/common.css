@@ -483,7 +483,7 @@ border-color: #faebcc;
     background-color: #fff;
 }
 .breadcrumbs a, .breadcrumbs span{
-    padding-right:10px;
+    padding-right:15px;
 }
 .breadcrumbs h3,.breadcrumbs{
     font-size: 19px;
@@ -629,13 +629,6 @@ border-color: #faebcc;
 
 }
 
-
-#action{
-    transition: 0.2s;
-    opacity:0;
-}
-
-
 .hidden{
     display:none !important;
     opacity:0 !important;
@@ -643,4 +636,25 @@ border-color: #faebcc;
 .showed{
     display:block !important;
     opacity:100 !important;
+}
+
+#category_info_content_row_block_selected{
+    height:50px;
+}
+
+
+
+
+
+
+
+
+
+.react-transition-appear {
+  opacity: 0.01;
+}
+
+.react-transition-appear.react-transition-appear-active {
+  opacity: 1;
+  transition: .2s;
 }

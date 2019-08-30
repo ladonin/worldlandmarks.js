@@ -63,7 +63,7 @@ function mapStateToProps(state) {
 
     return {
         redux:{
-            articles:state.dynamicData['articles'],
+            articles:state.actionData['articles'],
             seeAll:state.staticData['see_all']
         }
     };

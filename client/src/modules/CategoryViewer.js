@@ -73,7 +73,7 @@ function getCategories(){
  */
 function getCategoryImageUrl(categoryId) {
     if (typeof (getCategories()[categoryId]) !== 'undefined') {
-        return Consts.SERVICE_IMGS_URL_CATEGORIES + getCategories()[categoryId].code + '.png';
+        return Consts.SERVICE_IMGS_URL + Service.getName() + '/categories/' + getCategories()[categoryId].code + '.png';
     } else {
         return Consts.IMG_URL + 'other.png';
     }

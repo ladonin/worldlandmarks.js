@@ -39,9 +39,15 @@ class CategoryViewer extends Block {
     }
 
     componentWillUnmount() {
-       Events.remove(Consts.EVENT_SHOW_CATEGORY_VIEWER);
-       Events.remove(Consts.EVENT_HIDE_CATEGORY_VIEWER);
+        Events.remove(Consts.EVENT_SHOW_CATEGORY_VIEWER);
+        Events.remove(Consts.EVENT_HIDE_CATEGORY_VIEWER);
     }
+
+    componentDidUpdate() {
+
+
+    }
+
 
     render() {
 
@@ -56,7 +62,7 @@ class CategoryViewer extends Block {
             _categoriesList.push(
                 <div className={"category_info_content_row_block "+_additionalClasses} id={'category_info_content_row_block_' + _category.id}>
                     <div className="category_info_content_row_img">
-                        <img src={Consts.SERVICE_IMGS_URL_CATEGORIES + _category.code + '.png'}/>
+                        <img src={CategoryViewerModule.getCategoryImageUrl(_category.id)}/>
                     </div>
                     <div className={"category_info_content_row_title " + this.props.redux.styleData.class4} id={'category_info_content_row_title_' + _category.id}>
                         <div>
@@ -68,23 +74,23 @@ class CategoryViewer extends Block {
         }
 
         return (
-            <div id="category_info_block" class={this.props.redux.styleData.class3} onClick={this.hideCategoryViewer} style={{height:BaseFunctions.getHeight(window) + 'px'}}>
-                <div class="category_info_content">
-                    <div class="category_info_content_title">
+            <div id="category_info_block" className={this.props.redux.styleData.class3} onClick={this.hideCategoryViewer} style={{height:BaseFunctions.getHeight(window) + 'px'}}>
+                <div className="category_info_content">
+                    <div className="category_info_content_title">
                         {this.props.redux.title}
                     </div>
-                    <div class="category_info_content_close">
+                    <div className="category_info_content_close">
                         X
                     </div>
-                    <div class="clear"></div>
+                    <div className="clear"></div>
 
-                    <div class="category_info_content_row_block"
+                    <div className="category_info_content_row_block"
                         id="category_info_content_row_block_selected"
                         dangerouslySetInnerHTML={{__html: this.props.redux.styleData.html2}}></div>
 
-                    <div class="clear"></div>
+                    <div className="clear"></div>
                     {_categoriesList}
-                    <div class="clear"></div>
+                    <div className="clear"></div>
                 </div>
             </div>
         );
