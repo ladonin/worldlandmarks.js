@@ -236,4 +236,4 @@ function mapStateToProps(state) {
     };
 }
 
-export default connect(mapStateToProps,{removeBackgroundData:RemoveBackgroundData})(withRouter(PlacemarksList))
+export default connect(mapStateToProps,{updateStyleData:UpdateStyleData, removeBackgroundData:RemoveBackgroundData})(withRouter(PlacemarksList))

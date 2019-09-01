@@ -32,14 +32,11 @@ class Common extends Component {
         //ATTENTION - обратите внимание
         this.props.updateStyleData(
             {
-                ['#category_info_content_row_block_']:
-                        {class:'+hidden', ending: id},
-
-                '#category_info_content_row_block_selected':
-                        {html:document.getElementById('category_info_content_row_block_' + id).innerHTML},
-
                 '#category_info_block':
-                        {class:'-hidden +showed'}
+                    {
+                        class:'-hidden +showed',
+                        arbitrary:{item:id}
+                    }
             }
         );
     }
@@ -50,8 +47,6 @@ class Common extends Component {
     hideCategoryViewer(){
         this.props.updateStyleData(
             {
-                '.category_info_content_row_title':
-                    {class:'-category_info_selected'},
                 '#category_info_block':
                     {class:'+hidden -showed'}
             }

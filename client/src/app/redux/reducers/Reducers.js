@@ -64,7 +64,8 @@ function styleData(state = {}, action) {
              *     html: {
              *         content: string,
              *         action: string
-             *     }
+             *     },
+             *     arbitrary:object
              * }
              *
              * or
@@ -115,6 +116,14 @@ function styleData(state = {}, action) {
              *          }
              *      means selector #myid_3
              *
+             *  'arbitrary':
+             *      Arbitary data - you put here all what you want
+             *
+             *      For example:
+             *      '#categories_list':{
+             *          arbitrary:{number:4}
+             *      }
+             *      means that fourth element must be processed anyway in block list with id="categories_list"
              *
              *
              *  Examples:
@@ -138,6 +147,9 @@ function styleData(state = {}, action) {
              *      '.turned_':{
              *          ending: 'on'
              *          html: '<b>html text4</b> simple text4'
+             *      },
+             *      '#categories_list':{
+             *          arbitrary:{number:4}
              *      }
              *  }
              *
@@ -171,9 +183,7 @@ function styleData(state = {}, action) {
 
                     if (_attributeName === 'ending') {
                         _newState[_selectorName][_attributeName] = _attributeData;
-                    }
-
-                    if (_attributeName === 'class') {
+                    } else if (_attributeName === 'class') {
 
                         let _classesData = _attributeData.split(' ');
                         for (let _index in _classesData) {
@@ -223,9 +233,8 @@ function styleData(state = {}, action) {
                             // Only replace content
                             _newState[_selectorName][_attributeName] = _attributeData;
                         }
-
-
-
+                    } else if (_attributeName === "arbitrary") {
+                        _newState[_selectorName][_attributeName] = _attributeData;
                     }
                 }
             }
