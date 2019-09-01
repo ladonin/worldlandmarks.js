@@ -25,11 +25,11 @@ class CategoryViewer extends Block {
         this.hide = this.hide.bind(this)
     }
 
-    show(e){
+    show(e) {
         this.showCategoryViewer(e.detail.id)
     }
 
-    hide(){
+    hide() {
         this.hideCategoryViewer()
     }
 
@@ -48,101 +48,85 @@ class CategoryViewer extends Block {
 
     }
 
-
     render() {
 
         let _categories = CategoryViewerModule.getCategories();
         let _categoriesList = [];
 
-
-        let _categoriesItem = (category) => {
-            if (!category) {return null;}
+        let _categoriesItem = (category, selected = false) => {
+            if (!category) {
+                return null;
+            }
 
             return [
-                <React.Fragment>
-                                        <div className="category_info_content_row_img">
-                            <img src={CategoryViewerModule.getCategoryImageUrl(category.id)}/>
+                <React.Fragment key={'item_' + category.id + (selected ? '_selected' : '')}>
+                    <div className="category_info_content_row_img">
+                        <img src={CategoryViewerModule.getCategoryImageUrl(category.id)}/>
+                    </div>
+                    <div className="category_info_content_row_title" id={'category_info_content_row_title_' + category.id}>
+                        <div>
+                            {category.title}
                         </div>
-                        <div className="category_info_content_row_title" id={'category_info_content_row_title_' + category.id}>
-                            <div>
-                                {category.title}
-                            </div>
-                        </div>
-                        </React.Fragment>
-        ]};
-
-
-
-
-
-
+                    </div>
+                </React.Fragment>
+            ]
+        };
 
         for (let _index in _categories) {
             let _category = _categories[_index];
 
-            if (this.props.redux.styleData.selectedItem !== _category.id) {
+            //if (this.props.redux.styleData.selectedItem !== _category.id) {
                 _categoriesList.push(
-                    <div key={_category.id} className="category_info_content_row_block" id={'category_info_content_row_block_' + _category.id}>
+                    <div key={'category_list_' + _category.id} className="category_info_content_row_block" id={'category_info_content_row_block_' + _category.id}>
                         {_categoriesItem(_category)}
                     </div>
-                );
-            }
+                    );
+            //}
         }
 
-
         return (
-            <div id="category_info_block" className={this.props.redux.styleData.class} onClick={this.hideCategoryViewer} style={{height:BaseFunctions.getHeight(window) + 'px'}}>
-                <div className="category_info_content">
-                    <div className="category_info_content_title">
-                        {this.props.redux.title}
+                <div id="category_info_block" className={this.props.redux.styleData.class} onClick={this.hideCategoryViewer} style={{height: BaseFunctions.getHeight(window) + 'px'}}>
+                    <div className="category_info_content">
+                        <div className="category_info_content_title">
+                            {this.props.redux.title}
+                        </div>
+                        <div className="category_info_content_close">
+                            X
+                        </div>
+                        <div className="clear"></div>
+
+                        <div className="category_info_content_row_block"
+                             id="category_info_content_row_block_selected"
+                             >
+                            {_categoriesItem(_categories[this.props.redux.styleData.selectedItem])}
+                        </div>
+
+                        <div className="clear"></div>
+                        {_categoriesList}
+                        <div className="clear"></div>
                     </div>
-                    <div className="category_info_content_close">
-                        X
-                    </div>
-                    <div className="clear"></div>
-
-                    <div className="category_info_content_row_block"
-                        id="category_info_content_row_block_selected"
-                        >
-
-
-
-                {_categoriesItem(_categories[this.props.redux.styleData.selectedItem])}
-
-
-
-
-
-
-
-            </div>
-
-                    <div className="clear"></div>
-                    {_categoriesList}
-                    <div className="clear"></div>
                 </div>
-            </div>
-        );
+                );
     }
 
 }
-function mapStateToProps(state) {console.log(1111111111);
+function mapStateToProps(state) {
 
-    let _selectedItem,_class = null;
+    let _selectedItem, _class = null;
     if (state.styleData['#category_info_block']) {
         _selectedItem = state.styleData['#category_info_block'].arbitrary.item;
         _class = state.styleData['#category_info_block'].class;
     }
 
     return {
-        redux:{
-            styleData:{
-                selectedItem:_selectedItem,
-                class:_class
+        redux: {
+            styleData: {
+                selectedItem: _selectedItem,
+                class: _class
             },
-            title:state.staticData['category_info_title_text'],
+            title: state.staticData['category_info_title_text']
         }
     };
 }
 
-export default connect(mapStateToProps,{updateStyleData:UpdateStyleData})(withRouter(CategoryViewer))
+export default connect(mapStateToProps, {updateStyleData: UpdateStyleData})(withRouter(CategoryViewer))

@@ -118,7 +118,7 @@ class PlacemarksList extends Block {
         // Categories
         let _categories = [];
 
-        _categories.push(<img src={CategoryViewer.getCategoryImageUrl(data['category'])} onClick={this.seeCategory(data['category'])}/>);
+        _categories.push(<img key={'category_'+data['id']+'_'+data['category']} src={CategoryViewer.getCategoryImageUrl(data['category'])} onClick={this.seeCategory(data['category'])}/>);
 
         let _subcategories = data['subcategories'] ? data['subcategories'].split(',') : [];
         let _photoInsert;
@@ -127,7 +127,7 @@ class PlacemarksList extends Block {
 
         for (let _index in _subcategories) {
             let _subcategory = parseInt(_subcategories[_index].trim());
-            _categories.push(<img src={CategoryViewer.getCategoryImageUrl(_subcategory)} onClick={this.seeCategory(_subcategory)}/>);
+            _categories.push(<img key={'category_'+data['id']+'_'+_subcategory} src={CategoryViewer.getCategoryImageUrl(_subcategory)} onClick={this.seeCategory(_subcategory)}/>);
         }
 
         if (IsMobile) {
@@ -142,7 +142,7 @@ class PlacemarksList extends Block {
                     false);
 
             _photoInsert =
-                <div class='cropped_image_div' style={{width: this.photoWidth + "px", height: this.photoHeight + "px", overflow: 'hidden'}}>
+                <div className='cropped_image_div' style={{width: this.photoWidth + "px", height: this.photoHeight + "px", overflow: 'hidden'}}>
                     <img src={_photo['dir'] + "6_" + _photo['name']} style={{width: _cropData.width + "px", height: _cropData.height + "px", position: 'relative', top: _cropData.top + "px", left: _cropData.left + "px"}}/>
                 </div>;
 
@@ -151,27 +151,27 @@ class PlacemarksList extends Block {
         }
 
         return (
-                <div class="catalog_scroll_placemark_row">
-                    <div class="catalog_scroll_placemark_row_photo"
+                <div key={'item_'+data['id']} className="catalog_scroll_placemark_row">
+                    <div className="catalog_scroll_placemark_row_photo"
                         style={_catalogScrollPlacemarkRowPhotoWidth ? {width:_catalogScrollPlacemarkRowPhotoWidth + 'px'} : {}}
                         onClick={this.goTo} data-url={_placemarkUrl}>
                         {_photoInsert}
                     </div>
-                    <div class="catalog_scroll_placemark_row_content"
+                    <div className="catalog_scroll_placemark_row_content"
                         style={_catalogScrollPlacemarkRowContentWidth ? {width:_catalogScrollPlacemarkRowContentWidth + 'px'} : {}}>
                         {data['title']&&
-                        <div class="catalog_scroll_placemark_row_content_title"><a onClick={this.goTo} data-url={_placemarkUrl}>{data['title']}</a></div>
+                        <div className="catalog_scroll_placemark_row_content_title"><a onClick={this.goTo} data-url={_placemarkUrl}>{data['title']}</a></div>
                         }
-                        <div class="catalog_scroll_placemark_row_content_description">
-                            <div class="catalog_scroll_placemark_row_content_comment">{data['comment']}</div>
-                            <div class="catalog_scroll_placemark_row_content_adress" dangerouslySetInnerHTML={{__html:data['formatted_address']}}></div>
-                            <div class="catalog_scroll_placemark_row_content_category">{_categories}</div>
-                            <div class="clear"></div>
-                            <div class="catalog_scroll_placemark_row_content_map_lnk"><a onClick={this.goTo} data-url={'/' + Consts.CONTROLLER_NAME_MAP + '/' + data['id']}><img src="/img/map_240.png" style={{'margin-left':'1px', display: 'inline-block', width: '24px', 'vertical-align': 'bottom', 'margin-right': '5px'}}/>{this.props.redux.linkToMapText}</a></div>
+                        <div className="catalog_scroll_placemark_row_content_description">
+                            <div className="catalog_scroll_placemark_row_content_comment">{data['comment']}</div>
+                            <div className="catalog_scroll_placemark_row_content_adress" dangerouslySetInnerHTML={{__html:data['formatted_address']}}></div>
+                            <div className="catalog_scroll_placemark_row_content_category">{_categories}</div>
+                            <div className="clear"></div>
+                            <div className="catalog_scroll_placemark_row_content_map_lnk"><a onClick={this.goTo} data-url={'/' + Consts.CONTROLLER_NAME_MAP + '/' + data['id']}><img src="/img/map_240.png" style={{'marginLeft':'1px', display: 'inline-block', width: '24px', 'verticalAlign': 'bottom', 'marginRight': '5px'}}/>{this.props.redux.linkToMapText}</a></div>
                         </div>
                     </div>
-                    <div class="clear"></div>
-                    <div class="line_under"></div>
+                    <div className="clear"></div>
+                    <div className="line_under"></div>
                 </div>);
     }
 
