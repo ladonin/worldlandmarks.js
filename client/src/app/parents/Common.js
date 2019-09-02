@@ -34,7 +34,6 @@ class Common extends Component {
             {
                 '#category_info_block':
                     {
-                        class:'-hidden +showed',
                         arbitrary:{item:id}
                     }
             }
@@ -48,7 +47,9 @@ class Common extends Component {
         this.props.updateStyleData(
             {
                 '#category_info_block':
-                    {class:'+hidden -showed'}
+                    {
+                        arbitrary:{item:null}
+                    }
             }
         );
     }

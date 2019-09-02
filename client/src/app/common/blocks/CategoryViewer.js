@@ -50,6 +50,7 @@ class CategoryViewer extends Block {
 
     render() {
 
+        let _selectedItem = this.props.redux.styleData.selectedItem;
         let _categories = CategoryViewerModule.getCategories();
         let _categoriesList = [];
 
@@ -75,17 +76,16 @@ class CategoryViewer extends Block {
         for (let _index in _categories) {
             let _category = _categories[_index];
 
-            //if (this.props.redux.styleData.selectedItem !== _category.id) {
-                _categoriesList.push(
-                    <div key={'category_list_' + _category.id} className="category_info_content_row_block" id={'category_info_content_row_block_' + _category.id}>
-                        {_categoriesItem(_category)}
-                    </div>
-                    );
-            //}
+            _categoriesList.push(
+                <div key={'category_list_' + _category.id} className={'category_info_content_row_block' + (_selectedItem === _category.id ? ' hidden' : '')} id={'category_info_content_row_block_' + _category.id}>
+                    {_categoriesItem(_category)}
+                </div>
+                );
+
         }
 
         return (
-                <div id="category_info_block" className={this.props.redux.styleData.class} onClick={this.hideCategoryViewer} style={{height: BaseFunctions.getHeight(window) + 'px'}}>
+                <div id="category_info_block" className={_selectedItem === null ? '' : 'showed'} onClick={this.hideCategoryViewer} style={{height: BaseFunctions.getHeight(window) + 'px'}}>
                     <div className="category_info_content">
                         <div className="category_info_content_title">
                             {this.props.redux.title}
@@ -97,9 +97,7 @@ class CategoryViewer extends Block {
 
                         <div className="category_info_content_row_block"
                              id="category_info_content_row_block_selected"
-                             >
-                            {_categoriesItem(_categories[this.props.redux.styleData.selectedItem])}
-                        </div>
+                             >{_selectedItem !== null ? _categoriesItem(_categories[_selectedItem]) : ''}</div>
 
                         <div className="clear"></div>
                         {_categoriesList}
@@ -112,17 +110,16 @@ class CategoryViewer extends Block {
 }
 function mapStateToProps(state) {
 
-    let _selectedItem, _class = null;
-    if (state.styleData['#category_info_block']) {
+    let _selectedItem = null;
+    if (state.styleData['#category_info_block']
+            && state.styleData['#category_info_block'].arbitrary) {
         _selectedItem = state.styleData['#category_info_block'].arbitrary.item;
-        _class = state.styleData['#category_info_block'].class;
     }
 
     return {
         redux: {
             styleData: {
-                selectedItem: _selectedItem,
-                class: _class
+                selectedItem: _selectedItem
             },
             title: state.staticData['category_info_title_text']
         }
