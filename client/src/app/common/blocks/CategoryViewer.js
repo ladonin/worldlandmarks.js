@@ -81,7 +81,6 @@ class CategoryViewer extends Block {
                     {_categoriesItem(_category)}
                 </div>
                 );
-
         }
 
         return (

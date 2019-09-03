@@ -1,6 +1,6 @@
 /*
  * File src/app/controllers/catalog/actions/Country.js
- * import MainIndex from 'src/app/controllers/catalog/actions/Country';
+ * import CatalogCountry from 'src/app/controllers/catalog/actions/Country';
  *
  * Country action component for Catalog controller
  */
@@ -78,10 +78,11 @@ class CatalogCountry extends Action {
         return (
                 <CssTransition>
                     <BrowserView>
-                        <div id="catalog_country_block">
+                        <div id="catalog_country_state_block">
                             {this.props.redux.staticData['is_admin'] === true &&
                                 <div style={{'margin-bottom':'10px', 'text-align':'right'}}><a style={{color:'#f00', 'font-size':'14px'}} href={'/admin/_e5b7rnijjrnrnnb_export_photos?code_type=country&country_code='+this.props.redux.actionData['country_code']}>[скачать архив фотографий данной страны]</a></div>
                             }
+                            {this.props.redux.actionData['has_states'] === true &&
                             <div id="catalog_country_states_block">
                                 <div id="catalog_country_states_title">
                                     {this.props.redux.staticData['catalog_states_regions_list_title']}
@@ -90,15 +91,14 @@ class CatalogCountry extends Action {
                                     {_statesList}
                                 </div>
                             </div>
+                            }
                             <div id="catalog_country_photos_block">
-                                <PhotoAlbum/>
+                                <PhotoAlbum hasStates={this.props.redux.actionData['has_states']}/>
                             </div>
                             <div class="clear"></div>
                             {this.getlastArticles()}
                         </div>
                         <PlacemarksList
-                            controller={Consts.CONTROLLER_NAME_CATALOG}
-                            action="get_placemarks_list"
                             data={{isSearch: 1, country: this.props.match.params[Consts.URL_VAR_2_NAME]}}
                             photoWidth="290"
                             photoHeight="230"

@@ -1,6 +1,6 @@
 /*
  * File src/app/controllers/catalog/actions/Index.js
- * import MainIndex from 'src/app/controllers/catalog/actions/Index';
+ * import CatalogIndex from 'src/app/controllers/catalog/actions/Index';
  *
  * Index action component for Catalog controller
  */

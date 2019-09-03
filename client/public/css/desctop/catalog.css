@@ -315,7 +315,7 @@ min-height: 90px;
 .catalog_state_placemarks_counter_title{
     font-size:15px;
 }
-.catalog_country_back_link,#catalog_country_block,#catalog_state_block{
+.catalog_country_back_link,#catalog_country_state_block{
     margin:0px auto 20px auto;
     text-align:center;
     font-size:17px;
@@ -325,7 +325,7 @@ min-height: 90px;
     text-align:left;
     font-size:14px;
 }
-#catalog_country_block,#catalog_state_block{
+#catalog_country_state_block{
     width:900px;
 }
 

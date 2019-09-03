@@ -43,13 +43,15 @@ export const MapDispatchToProps = {
  *
  * @param {object/null} - state result for actions
  */
-export function GetState(state, controller, action) {               console.log('GetState');console.log(state);
+export function GetState(state, controller, action) {
 
-    if ((state.staticData['controller']
-            && state.staticData['action']
-            && (state.staticData['controller'] !== controller
-                || state.staticData['action'] !== action))
-            || typeof state.staticData['controller'] === 'undefined') {
+    // NOTE: case when state.staticData['controller'] === 'undefined' means that data has came for the first time (first request at all)
+    // In the future, the names of controller and action in staic data will be updated only
+    if (typeof state.staticData['controller'] === 'undefined'
+            || typeof state.staticData['action'] === 'undefined'
+            || state.staticData['controller'] !== controller
+            || state.staticData['action'] !== action
+            ) {
         return {};
     }
     return {

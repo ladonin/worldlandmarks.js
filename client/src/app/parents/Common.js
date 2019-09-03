@@ -33,9 +33,9 @@ class Common extends Component {
         this.props.updateStyleData(
             {
                 '#category_info_block':
-                    {
-                        arbitrary:{item:id}
-                    }
+                {
+                    arbitrary:{item:id}
+                }
             }
         );
     }
@@ -47,9 +47,9 @@ class Common extends Component {
         this.props.updateStyleData(
             {
                 '#category_info_block':
-                    {
-                        arbitrary:{item:null}
-                    }
+                {
+                    arbitrary:{item:null}
+                }
             }
         );
     }

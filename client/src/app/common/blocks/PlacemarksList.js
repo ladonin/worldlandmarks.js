@@ -49,7 +49,7 @@ class PlacemarksList extends Block {
 
     componentWillUnmount(){
         Events.remove('scroll', this.onScroll);
-        this.props.removeBackgroundData('scroll_data');
+        this.props.removeBackgroundData('placemarks_data');
     }
 
     componentDidMount(){
@@ -61,8 +61,8 @@ class PlacemarksList extends Block {
     getList(){
         this.block = true;
         Socket.backgroundQuery(
-                this.props.controller,
-                this.props.action,
+                Consts.CONTROLLER_NAME_CATALOG,
+                'get_placemarks_list',
                 this.props.match.params,
                 {
                     [Consts.ID_VAR_NAME]:this.idNext,
@@ -230,7 +230,7 @@ function mapStateToProps(state) {
 
     return {
         redux:{
-            placemarks:state.backgroundData['scroll_data'],
+            placemarks:state.backgroundData['placemarks_data'],
             linkToMapText:state.staticData['catalog_placemark_link_to_map_text'],
         }
     };

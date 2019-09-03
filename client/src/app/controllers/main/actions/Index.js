@@ -21,20 +21,17 @@ import CssTransition from 'src/app/common/CssTransition';
 class MainIndex extends Action {
 
     constructor() {
-        super();this.scroll2 = this.scroll2.bind(this);
+        super();
     }
-    scroll2(){
-       this.showCategoryViewer(3);
-        //Socket.backgroundQuery(Consts.CONTROLLER_NAME_CATALOG, 'get_placemarks_list', this.props.match.params, {[Consts.ID_VAR_NAME]:921})
-    }
+
     render() {
         if (!this.props.redux) {
             return null;
         }
         return (
-                <CssTransition><div onClick={this.scroll2}>scroll</div>
+                <CssTransition>
                     <MainLinks/>
-                    <PlacemarksList controller={Consts.CONTROLLER_NAME_CATALOG} action="get_placemarks_list"/>
+                    <PlacemarksList/>
                 </CssTransition>
                 );
     }

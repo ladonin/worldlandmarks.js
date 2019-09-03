@@ -60,26 +60,50 @@ class Catalog extends CommonController {
                 articles:ArticlesModel.getInstance(this.requestId).getLastCountryArticles(_countryCode)
             },
             'country': _countryName,
-            'country_params': Countries.getInstance(this.requestId).getCountryParamsByCode(_countryCode),
             'country_code': _countryCode,
-            'scroll_url': '/' + this.getControllerName() + '/scroll',
-            'back_url': '/' + this.getControllerName() + '/',
             'current_url': '/' + this.getControllerName() + '/' + _countryCode + '/',
             'has_states': Countries.getInstance(this.requestId).hasStates(_countryCode) ? true : false,
-            'placemarks_count': CatalogComponent.getInstance(this.requestId).getPlacemarksCountInCountry(_countryCode),
             'breadcrumbs': CatalogComponent.getInstance(this.requestId).getBreadcrumbsData(),
         });
 
         this.sendMe();
     }
 
+    /*
+     * Action state
+     */
+    action_state()
+    {
+
+        let _countryName = Countries.getInstance(this.requestId).getCountryNameFromRequest();
+        let _countryCode = Countries.getInstance(this.requestId).getCountryCodeFromRequest();
+        let _stateName = Countries.getInstance(this.requestId).getStateNameFromRequest();
+        let _stateCode = this.getFromRequest(Consts.CATALOG_STATE_VAR_NAME);
+
+        this.addActionData({
+            'title': Seo.getInstance(this.requestId).getTitle('catalog/state', {'country':_countryName, 'state': _stateName}),
+            'keywords': Seo.getInstance(this.requestId).getKeywords('catalog/state'),
+            'description': Seo.getInstance(this.requestId).getDescription('catalog/state'),
+            'data': {
+                photos:CatalogComponent.getInstance(this.requestId).getStatePhotosData(_countryCode, _stateCode)
+            },
+            'country': _countryName,
+            'country_code': _countryCode,
+            'state': _stateName,
+            'state_code': _stateCode,
+            'current_url': '/' + this.getControllerName() + '/' + _countryCode + '/' + _stateCode + '/',
+            'breadcrumbs': CatalogComponent.getInstance(this.requestId).getBreadcrumbsData(),
+        });
+
+        this.sendMe();
+    }
 
     action_get_placemarks_list()
     {
         let _idStart = BaseFunctions.toInt(this.getFromRequest(Consts.ID_VAR_NAME, false));
 
         this.addBackgroundData({
-            scroll_data: CatalogComponent.getInstance(this.requestId).getPlacemarksList(_idStart).reverse()
+            placemarks_data: CatalogComponent.getInstance(this.requestId).getPlacemarksList(_idStart).reverse()
         });
 
         this.sendMe(true);

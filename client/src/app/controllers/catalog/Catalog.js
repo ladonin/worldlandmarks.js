@@ -15,6 +15,7 @@ import Router from 'src/modules/Router';
 // Action components
 import CatalogIndex from 'src/app/controllers/catalog/actions/Index';
 import CatalogCountry from 'src/app/controllers/catalog/actions/Country';
+import CatalogState from 'src/app/controllers/catalog/actions/State';
 
 import { withRouter } from 'react-router-dom';
 
@@ -25,13 +26,15 @@ class Catalog extends Controller {
     }
 
     render() {
-
+        let _actionName = this.getActionName();
         let _actionComponent;
-        switch (this.getActionName()) {
+        switch (_actionName) {
             case Consts.ACTION_NAME_INDEX:
                 _actionComponent = <CatalogIndex/>; break;
             case Consts.ACTION_NAME_COUNTRY:
                 _actionComponent = <CatalogCountry/>; break;
+            case Consts.ACTION_NAME_STATE:
+                _actionComponent = <CatalogState/>; break;
             default:
                 _actionComponent = <CatalogIndex/>;
         }

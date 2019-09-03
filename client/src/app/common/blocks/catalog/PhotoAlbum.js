@@ -39,7 +39,7 @@ class PhotoAlbum extends Block {
         if (IsMobile) {
             // Mobile device
 
-            if (this.isCountryPage()) {
+            if ((this.isCountryPage()) && (this.props.hasStates)) {
                 // Country page
 
                 this.viewSettings = {
@@ -52,7 +52,7 @@ class PhotoAlbum extends Block {
                     'placemark' : true
                 }
             } else {
-                // State page
+                // State page or country page without states
                 this.viewSettings = {
                     'cols' : 4,
                     'rows' : 5
@@ -67,7 +67,7 @@ class PhotoAlbum extends Block {
         } else {
             // Desctop device
 
-            if (this.isCountryPage()) {
+            if ((this.isCountryPage()) && (this.props.hasStates)) {
 
                 // Country page
                 this.viewSettings = {
@@ -82,7 +82,7 @@ class PhotoAlbum extends Block {
                 }
 
             } else {
-                // State page
+                // State page or country page without states
                 this.viewSettings = {
                     'cols' : 6,
                     'rows' : 4,

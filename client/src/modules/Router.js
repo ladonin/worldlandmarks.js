@@ -62,7 +62,10 @@ function getActionData(data = {}, matchParams) {
                 return data;
             } else if (matchParams[Consts.URL_VAR_3_NAME]) {
                 // State page
-
+                data[Consts.ACTION_VAR_NAME] = Consts.ACTION_NAME_STATE;
+                data[Consts.CATALOG_COUNTRY_VAR_NAME] = matchParams[Consts.URL_VAR_2_NAME];
+                data[Consts.CATALOG_STATE_VAR_NAME] = matchParams[Consts.URL_VAR_3_NAME];
+                console.log('>>>>>>>>>is Country page');
                 return data;
             } else if (matchParams[Consts.URL_VAR_2_NAME]) {
                 // Country page
