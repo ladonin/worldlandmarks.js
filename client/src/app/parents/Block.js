@@ -8,13 +8,17 @@
 import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom';
 import Common from 'src/app/parents/Common';
-import CommonBaseFunctions from 'src/../../application/common/functions/BaseFunctions';
+import CommonBaseFunctions from 'src/../../server/common/functions/BaseFunctions';
 
 
 class Block extends Common {
 
     shouldComponentUpdate(nextProps, nextState){
-        return !CommonBaseFunctions.whetherEqualObjects(nextProps.redux,this.props.redux);
+        if (typeof nextProps.redux === 'undefined') {
+            return !CommonBaseFunctions.areObjectsEqual(nextProps,this.props);
+        }
+
+        return !CommonBaseFunctions.areObjectsEqual(nextProps.redux,this.props.redux);
     }
 
 }

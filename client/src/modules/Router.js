@@ -46,40 +46,46 @@ function getActionData(data = {}, matchParams) {
     if (!matchParams[Consts.CONTROLLER_VAR_NAME]) {
         // Main page
         data[Consts.ACTION_VAR_NAME] = Consts.ACTION_NAME_INDEX;
-        console.log('>>>>>>>>>is Main page');
         return data;
     }
 
 
     if (matchParams[Consts.CONTROLLER_VAR_NAME] === Consts.CONTROLLER_NAME_CATALOG) {
 
-        if ((matchParams[Consts.URL_VAR_2_NAME] !== Consts.ACTION_NAME_INDEX)
+        if ((matchParams[Consts.URL_VAR_2_NAME]
+                && matchParams[Consts.URL_VAR_2_NAME] !== Consts.ACTION_NAME_INDEX)
                 && (matchParams[Consts.URL_VAR_2_NAME] !== Consts.ACTION_NAME_SEARCH)) {
 
             if (matchParams[Consts.URL_VAR_4_NAME]) {
                 // Placemark page
-
+                data[Consts.ACTION_VAR_NAME] = Consts.ACTION_NAME_PLACEMARK;
+                data[Consts.ID_VAR_NAME] = matchParams[Consts.URL_VAR_4_NAME];
+                data[Consts.CATALOG_COUNTRY_VAR_NAME] = matchParams[Consts.URL_VAR_2_NAME];
+                data[Consts.CATALOG_STATE_VAR_NAME] = matchParams[Consts.URL_VAR_3_NAME];
+                return data;
+            } else if (parseInt(matchParams[Consts.URL_VAR_3_NAME]) > 0) {
+                // Placemark page
+                data[Consts.ACTION_VAR_NAME] = Consts.ACTION_NAME_PLACEMARK;
+                data[Consts.ID_VAR_NAME] = matchParams[Consts.URL_VAR_3_NAME];
+                data[Consts.CATALOG_COUNTRY_VAR_NAME] = matchParams[Consts.URL_VAR_2_NAME];
                 return data;
             } else if (matchParams[Consts.URL_VAR_3_NAME]) {
                 // State page
                 data[Consts.ACTION_VAR_NAME] = Consts.ACTION_NAME_STATE;
                 data[Consts.CATALOG_COUNTRY_VAR_NAME] = matchParams[Consts.URL_VAR_2_NAME];
                 data[Consts.CATALOG_STATE_VAR_NAME] = matchParams[Consts.URL_VAR_3_NAME];
-                console.log('>>>>>>>>>is Country page');
                 return data;
             } else if (matchParams[Consts.URL_VAR_2_NAME]) {
                 // Country page
                 data[Consts.ACTION_VAR_NAME] = Consts.ACTION_NAME_COUNTRY;
                 data[Consts.CATALOG_COUNTRY_VAR_NAME] = matchParams[Consts.URL_VAR_2_NAME];
-                console.log('>>>>>>>>>is Country page');
                 return data;
             }
+        } else {
+            // Countries list page
+            data[Consts.ACTION_VAR_NAME] = Consts.ACTION_NAME_INDEX;
+            return data;
         }
-
-        // Countries list page
-        data[Consts.ACTION_VAR_NAME] = Consts.ACTION_NAME_INDEX;
-        console.log('>>>>>>>>>is Countries list page');
-        return data;
     }
 
     return data;

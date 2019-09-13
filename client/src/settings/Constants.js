@@ -5,7 +5,7 @@
 
 
 
-import CommonConsts from 'src/../../application/common/settings/Constants';
+import CommonConsts from 'src/../../server/common/settings/Constants';
 
 let _Consts = {
     FORM_TEXT_TAG_CODE_A: 'a',

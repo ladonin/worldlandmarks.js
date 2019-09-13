@@ -22,31 +22,29 @@ class Hat extends Block {
 
     render() {
         return (
-                <div id="hat">
-                    <div className="hat">
-                        <BrowserView>
-                            <div className="hat_logo">
-                                <div className="hat_logo_img">
-                                    <a onClick={this.goTo} data-url='/'>
-                                        <img src="/img/logo.png"/>
-                                    </a>
-                                </div>
-                                <div className="hat_logo_text_main">
-                                    <a onClick={this.goTo} data-url='/'>{this.props.redux.domainName}</a>
-                                </div>
-                                <div className="hat_logo_text_under">{this.props.redux.logoUnderText}</div>
-                            </div>
-                            <div className="hat_menu">
-                                <div id="open_panel">
-                                    <div className="icon">
-                                        <img src="/img/icons_desctop.png"/></div>
-                                </div>
-                            </div>
-                            <div className="clear"></div>
-                        </BrowserView>
-                        <MobileView></MobileView>
+            <div className="hat">
+                <BrowserView>
+                    <div className="hat_logo">
+                        <div className="hat_logo_img">
+                            <a onClick={this.goTo} data-url='/'>
+                                <img src="/img/logo.png"/>
+                            </a>
+                        </div>
+                        <div className="hat_logo_text_main">
+                            <a onClick={this.goTo} data-url='/'>{this.props.redux.domainName}</a>
+                        </div>
+                        <div className="hat_logo_text_under">{this.props.redux.logoUnderText}</div>
                     </div>
-                </div>
+                    <div className="hat_menu">
+                        <div id="open_panel">
+                            <div className="icon">
+                                <img src="/img/icons_desctop.png"/></div>
+                        </div>
+                    </div>
+                    <div className="clear"></div>
+                </BrowserView>
+                <MobileView></MobileView>
+            </div>
         );
     }
 }

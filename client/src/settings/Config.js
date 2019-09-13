@@ -3,9 +3,9 @@
  * import Config from 'src/settings/Config';
  */
 
-import LandmarksConfig from 'src/../../application/common/services/landmarks/settings/Config';
-import LandmarksLanguageEn from 'src/../../application/common/services/landmarks/language/En';
-import LandmarksLanguageRu from 'src/../../application/common/services/landmarks/language/Ru';
+import LandmarksConfig from 'src/../../server/common/services/landmarks/settings/Config';
+import LandmarksLanguageEn from 'src/../../server/common/services/landmarks/language/En';
+import LandmarksLanguageRu from 'src/../../server/common/services/landmarks/language/Ru';
 
 
 

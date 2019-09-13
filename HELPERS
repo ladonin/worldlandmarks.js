@@ -12,3 +12,11 @@ this.props.match.params
 <a onClick={this.goTo} data-url={'/' + Consts.CONTROLLER_NAME_ARTICLE + '/' + _article['id']}>{_article['title']}</a>
 
 onclick="window.dispatchEvent('${Consts.EVENT_GOTO}', {url:'/'+${Consts.CONTROLLER_NAME_CATALOG}+'/' + ${window._ppAs[id + '_cc']}})"
+
+_photoInsert = <CroppedPhoto
+    blockWidth = {this.photoWidth}
+    blockHeight ={this.photoHeight}
+    photoWidth = {_photo['width']}
+    photoHeight = {_photo['height']}
+    photoSrc = {_photo['dir'] + "6_" + _photo['name']}
+/>;

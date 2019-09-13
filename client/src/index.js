@@ -21,6 +21,7 @@ render(
                 <Hat/>
                 <Breadcrumbs/>
                 <App/>
+
             </Provider>
         </BrowserRouter>
         , document.getElementById('container'));

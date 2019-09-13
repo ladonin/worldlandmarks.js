@@ -6,11 +6,11 @@ var server = require('http').Server(app);
 var io = require('socket.io')(server);
 
 
-const Application = require('application/express/components/base/Application');
-const RequestsPool = require('application/express/core/RequestsPool');
-const SocketsPool = require('application/express/core/SocketsPool');
-const DBase = require('application/express/components/base/DBase');
-const Ftp = require('application/express/components/base/Ftp');
+const Application = require('server/src/components/base/Application');
+const RequestsPool = require('server/src/core/RequestsPool');
+const SocketsPool = require('server/src/core/SocketsPool');
+const DBase = require('server/src/components/base/DBase');
+const Ftp = require('server/src/components/base/Ftp');
 
 SocketsPool.setIO(io);
 

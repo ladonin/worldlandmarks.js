@@ -13,11 +13,12 @@ import { withRouter } from 'react-router-dom';
 
 import Consts from 'src/settings/Constants';
 import Action, {GetState, MapDispatchToProps} from 'src/app/parents/Action';
+
 // Components
 import CountriesList from 'src/app/common/blocks/catalog/index/CountriesList';
 import ArticlesList from 'src/app/common/blocks/ArticlesList';
 import CssTransition from 'src/app/common/CssTransition';
-
+import Bottom from 'src/app/common/blocks/Bottom';
 
 class CatalogIndex extends Action {
 
@@ -37,7 +38,7 @@ class CatalogIndex extends Action {
                         <div className="clear"></div>
                         <div className="catalog_block_last_articles_title" style={{position:'relative'}}>
                             <img style={{display: 'inline-block',width: '40px'}} src="/img/article_icon.png"/>
-                            <span style={{display: 'block', position: 'absolute',top: '20px',left: '60px', color:'#333'}}>{this.props.redux.staticData.last_articles}</span>
+                            <span style={{display: 'block', position: 'absolute',top: '20px',left: '60px', color:'#333'}}>{this.props.redux.staticData.last_articles_text}</span>
                         </div>
                         <div style={{'backgroundColor':'#fff', margin:'0 10px'}}>
                             <ArticlesList/>
@@ -48,6 +49,7 @@ class CatalogIndex extends Action {
                 <MobileView>
                   TODO MOBILE CatalogIndex
                 </MobileView>
+                <Bottom/>
             </CssTransition>
         );
     }

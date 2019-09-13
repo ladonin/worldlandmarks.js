@@ -19,6 +19,7 @@ import Consts from 'src/settings/Constants';
 import PhotoAlbum from 'src/app/common/blocks/catalog/PhotoAlbum';
 import CssTransition from 'src/app/common/CssTransition';
 import PlacemarksList from 'src/app/common/blocks/PlacemarksList';
+import Bottom from 'src/app/common/blocks/Bottom';
 
 class CatalogCountry extends Action {
 
@@ -102,6 +103,7 @@ class CatalogCountry extends Action {
                             data={{isSearch: 1, country: this.props.match.params[Consts.URL_VAR_2_NAME]}}
                             photoWidth="290"
                             photoHeight="230"
+                            bottomComponent={Bottom}
                         />
                     </BrowserView>
                     <MobileView>

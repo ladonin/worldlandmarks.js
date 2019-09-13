@@ -30,51 +30,18 @@ import "./Css";
 
 
 class App extends Component {
-    constructor(){
-        super();
-        this.initSettings();
 
+    render() {
+        return (
+                <Switch>
+                <Route exact path='/' component={Main}/>
+                <Route path={'/:controller(' + Consts.CONTROLLER_NAME_MAP + ')/:var2?'} component={Map}/>
+                <Route path={'/:controller(' + Consts.CONTROLLER_NAME_CATALOG + ')/:var2?/:var3?/:var4?'} component={Catalog}/>
+                <Route path={'/:controller(' + Consts.CONTROLLER_NAME_ARTICLE + ')/:var2?'} component={Article}/>
+                <Route component={Error404}/>
+                </Switch>
+                );
     }
-
-    componentDidMount() {
-
-        //console.log('App componentWillMount');
-
-    }
-    componentDidUpdate() {
-        alert(11111);
-    }
-    initSettings(){
-        //Localization.changeLang(Consts.LANGUAGE_EN);
-    }
-
-//  rr(){
-//     Socket.getSocket().emit('api', {data:{a:1,b:2}, controller: 'main', action: 'index', service:'landmarks', language:Language.getName()});
-//  }
-
-    componentDidMount(){
-    }
-  render() {
-
-    const App = () => (
-      <div onClick={this.rr}>
-
-        <Switch>
-          <Route exact path='/' component={Main}/>
-          <Route path={'/:controller('+Consts.CONTROLLER_NAME_MAP+')/:var2?'} component={Map}/>
-          <Route path={'/:controller('+Consts.CONTROLLER_NAME_CATALOG+')/:var2?/:var3?/:var4?'} component={Catalog}/>
-          <Route path={'/:controller('+Consts.CONTROLLER_NAME_ARTICLE+')/:var2?'} component={Article}/>
-          <Route component={Error404}/>
-        </Switch>
-      </div>
-    );
-
-    return (
-      <div>
-        <App/>
-      </div>
-    );
-  }
 }
 
 

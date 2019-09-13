@@ -14,7 +14,7 @@ import Consts from 'src/settings/Constants';
 import CategoryViewerModule from 'src/modules/CategoryViewer';
 import Block from 'src/app/parents/Block';
 import {UpdateStyleData} from 'src/app/parents/Common';
-import CommonBaseFunctions from 'src/../../application/common/functions/BaseFunctions';
+import CommonBaseFunctions from 'src/../../server/common/functions/BaseFunctions';
 import BaseFunctions from 'src/functions/BaseFunctions';
 import Events from 'src/modules/Events';
 
@@ -23,6 +23,7 @@ class CategoryViewer extends Block {
         super();
         this.show = this.show.bind(this);
         this.hide = this.hide.bind(this)
+        this.categories = CategoryViewerModule.getCategories();
     }
 
     show(e) {
@@ -51,7 +52,7 @@ class CategoryViewer extends Block {
     render() {
 
         let _selectedItem = this.props.redux.styleData.selectedItem;
-        let _categories = CategoryViewerModule.getCategories();
+
         let _categoriesList = [];
 
         let _categoriesItem = (category, selected = false) => {
@@ -73,8 +74,8 @@ class CategoryViewer extends Block {
             ]
         };
 
-        for (let _index in _categories) {
-            let _category = _categories[_index];
+        for (let _index in this.categories) {
+            let _category = this.categories[_index];
 
             _categoriesList.push(
                 <div key={'category_list_' + _category.id} className={'category_info_content_row_block' + (_selectedItem === _category.id ? ' hidden' : '')} id={'category_info_content_row_block_' + _category.id}>
@@ -96,7 +97,7 @@ class CategoryViewer extends Block {
 
                         <div className="category_info_content_row_block"
                              id="category_info_content_row_block_selected"
-                             >{_selectedItem !== null ? _categoriesItem(_categories[_selectedItem]) : ''}</div>
+                             >{_selectedItem !== null ? _categoriesItem(this.categories[_selectedItem]) : ''}</div>
 
                         <div className="clear"></div>
                         {_categoriesList}

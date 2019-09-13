@@ -13,6 +13,12 @@ import Common, {UpdateStyleData, ClearActionData, ClearStyleData} from 'src/app/
 
 export default class Action extends Common {
 
+    constructor(){
+        super();
+        this.currentUrl = null;
+    }
+
+
     componentWillUnmount(){
         this.props.clearActionData();
         this.props.clearStyleData();
@@ -20,6 +26,15 @@ export default class Action extends Common {
 
     componentDidMount() {
         Socket.actionQuery(this.props.match.params);
+        this.currentUrl = this.props.match.url;
+    }
+
+
+    componentDidUpdate() {
+        if (this.currentUrl !== this.props.match.url) {
+            Socket.actionQuery(this.props.match.params);
+        }
+        this.currentUrl = this.props.match.url;
     }
 }
 

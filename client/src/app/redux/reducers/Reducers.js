@@ -5,7 +5,7 @@
 
 import { combineReducers } from 'redux';
 import Constants from 'src/settings/Constants';
-import CommonBaseFunctions from 'src/../../application/common/functions/BaseFunctions';
+import CommonBaseFunctions from 'src/../../server/common/functions/BaseFunctions';
 
 
 function staticData(state = {}, action) {
@@ -61,6 +61,10 @@ function styleData(state = {}, action) {
              * htmlSelector:{
              *     ending: integer/string
              *     class: string,
+             *     style: {
+             *         marginTop: 10px,
+             *         padding: 10px
+             *     },
              *     html: {
              *         content: string,
              *         action: string
@@ -85,6 +89,10 @@ function styleData(state = {}, action) {
              *         -className - remove existed class
              *         =className - new class attribute value
              *         =className1,className2,className3 - new class attribute value will be className1 className2 className3
+             *  'style':
+             *      {option:value}:
+             *          'option' - css style name
+             *          'value' - css style value
              *
              *  'html':
              *      {content, action}:
@@ -142,7 +150,8 @@ function styleData(state = {}, action) {
              *          }
              *      },
              *      '#myid_3':{
-             *          html: '<b>html text3</b> simple text3'
+             *          html: '<b>html text3</b> simple text3',
+             *          style: {marginTop:10px'}
              *      },
              *      '.turned_':{
              *          ending: 'on'
@@ -176,7 +185,12 @@ function styleData(state = {}, action) {
 
                     // If selector in state does not have this attribute yet
                     if (_stateAttributeData === false) {
-                        _newState[_selectorName][_attributeName] = '';
+
+                        if (_attributeName === "style") {
+                            _newState[_selectorName][_attributeName] = {};
+                        } else {
+                            _newState[_selectorName][_attributeName] = '';
+                        }
                     }
 
                     //console.log('    attribute: ' + _attributeName);
@@ -235,6 +249,10 @@ function styleData(state = {}, action) {
                         }
                     } else if (_attributeName === "arbitrary") {
                         _newState[_selectorName][_attributeName] = _attributeData;
+                    } else if (_attributeName === "style") {
+                        for (let _name in _attributeData) {
+                            _newState[_selectorName][_attributeName][_name] = _attributeData[_name];
+                        }
                     }
                 }
             }

@@ -8,7 +8,7 @@ import Consts from 'src/settings/Constants';
 import Config from 'src/settings/Config';
 import Service from 'src/modules/Service';
 import Language from 'src/modules/Language';
-import CommonBaseFunctions from 'src/../../application/common/functions/BaseFunctions';
+import CommonBaseFunctions from 'src/../../server/common/functions/BaseFunctions';
 
 
 let _config = Config.serviceSettings[Service.getName()];
@@ -119,7 +119,7 @@ function getBaloonImage(categoryId, isSelected) {
  *
  * @return {boolean}
  */
-function whetherPhotoByCategory(photoUrl) {
+function isCategoryPhoto(photoUrl) {
     let _categories = getCategories();
     for (let _index in _categories) {
         if (photoUrl === (_categories[_index].code + '.jpg')) {
@@ -131,7 +131,7 @@ function whetherPhotoByCategory(photoUrl) {
 
 
 export default {
-    whetherPhotoByCategory,
+    isCategoryPhoto,
     getBaloonImage,
     getCategoryTitle,
     getCategoryImageUrl,

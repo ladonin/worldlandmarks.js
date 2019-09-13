@@ -11,16 +11,16 @@ import { withRouter } from 'react-router-dom';
 import {BrowserView, MobileView, isBrowser, IsMobile} from "react-device-detect";
 
 
-import ConfigRestrictions from 'src/../../application/common/settings/Restrictions';
+import ConfigRestrictions from 'src/../../server/common/settings/Restrictions';
 import Consts from 'src/settings/Constants';
 import BaseFunctions from 'src/functions/BaseFunctions';
-import CommonBaseFunctions from 'src/../../application/common/functions/BaseFunctions';
+import CommonBaseFunctions from 'src/../../server/common/functions/BaseFunctions';
 import ImageDimensions from 'src/modules/ImageDimensions';
 
 import Block from 'src/app/parents/Block';
 import Router from 'src/modules/Router';
 
-
+import CroppedPhoto from 'src/app/common/blocks/CroppedPhoto';
 
 
 class PhotoAlbum extends Block {
@@ -311,18 +311,14 @@ class PhotoAlbum extends Block {
 
             let _smallPhoto = '';
             if (_whetherShowSmallPhotos) {
-                let _cropData = CommonBaseFunctions.viewCroppedPhoto(
-                    null,
-                    _photo['photo']['ph_width'],
-                    _photo['photo']['ph_height'],
-                    _ppPsw,
-                    _ppPsh,
-                    false);
+                _smallPhoto = <CroppedPhoto
+                    blockWidth = {_ppPsw}
+                    blockHeight ={_ppPsh}
+                    photoWidth = {_photo['photo']['ph_width']}
+                    photoHeight = {_photo['photo']['ph_height']}
+                    photoSrc = {_photo['photo']['dir'] + _ppPsPref + _photo['photo']['ph_path']}
+                />;
 
-                _smallPhoto =
-                    <div class='cropped_image_div' style={{width: _ppPsw + "px", height: _ppPsh + "px", overflow: 'hidden'}}>
-                        <img src={_photo['photo']['dir'] + _ppPsPref + _photo['photo']['ph_path']} style={{width: _cropData.width + "px", height: _cropData.height + "px", position: 'relative', top: _cropData.top + "px", left: _cropData.left + "px"}}/>
-                    </div>;
             }
             _smallPhotosList.push(<li className="pp_pi2"
                 style={_style}

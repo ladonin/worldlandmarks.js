@@ -633,6 +633,10 @@ border-color: #faebcc;
     display:none !important;
     opacity:0 !important;
 }
+.hidden2{
+    opacity:0 !important;
+}
+
 .showed{
     display:block !important;
     opacity:100 !important;

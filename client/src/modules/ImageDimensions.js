@@ -9,8 +9,8 @@ import Consts from 'src/settings/Constants';
 import Config from 'src/settings/Config';
 import Service from 'src/modules/Service';
 import Language from 'src/modules/Language';
-import CommonBaseFunctions from 'src/../../application/common/functions/BaseFunctions';
-import ConfigRestrictions from 'src/../../application/common/settings/Restrictions';
+import CommonBaseFunctions from 'src/../../server/common/functions/BaseFunctions';
+import ConfigRestrictions from 'src/../../server/common/settings/Restrictions';
 
 /*
  * Return image size prefix. Image width must be >= than container width in order not to lose quality
@@ -78,12 +78,25 @@ function getPrefix(width, amendment) {
     return _contentImagePrefix;
 }
 
+function prepareContentImageDimentions(width, height, blockWidth, blockHeight) {
 
-export default {
-    getPrefix
+    let _dimention = {};
+
+    //width и height реальные значения - надо преобразовать их в content совместимые значения
+    let _dWidth = blockWidth;
+    let _dHeight = Math.floor((_dWidth * height) / width);
+
+    if (_dHeight >= blockHeight) {
+        _dimention.height = blockHeight;
+        _dimention.width = Math.floor((blockWidth * blockHeight) / _dHeight);
+    } else {
+        _dimention.width = _dWidth;
+        _dimention.height = _dHeight;
+    }
+    return _dimention;
 }
 
-
-
-
-
+export default {
+    getPrefix,
+    prepareContentImageDimentions
+}

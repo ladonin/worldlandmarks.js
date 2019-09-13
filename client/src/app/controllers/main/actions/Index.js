@@ -17,6 +17,7 @@ import Consts from 'src/settings/Constants';
 import MainLinks from 'src/app/common/blocks/main/index/MainLinks';
 import PlacemarksList from 'src/app/common/blocks/PlacemarksList';
 import CssTransition from 'src/app/common/CssTransition';
+import Bottom from 'src/app/common/blocks/Bottom';
 
 class MainIndex extends Action {
 
@@ -25,13 +26,14 @@ class MainIndex extends Action {
     }
 
     render() {
+
         if (!this.props.redux) {
             return null;
         }
         return (
                 <CssTransition>
                     <MainLinks/>
-                    <PlacemarksList/>
+                    <PlacemarksList bottomComponent={Bottom}/>
                 </CssTransition>
                 );
     }
