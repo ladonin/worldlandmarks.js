@@ -150,9 +150,9 @@ module.exports = {
         // Custom variablles
         [Consts.SERVICE_VAR_NAME]: {rules: ['get_query_string_var_value', 'not_empty']},
         [Consts.ID_VAR_NAME]: {rules: ['numeric', 'not_empty']},
-        [Consts.CATALOG_CATEGORY_VAR_NAME]: {rules: ['get_query_string_var_value', 'not_empty']},
-        [Consts.CATALOG_COUNTRY_VAR_NAME]: {rules: ['get_query_string_var_value', 'not_empty']},
-        [Consts.CATALOG_STATE_VAR_NAME]: {rules: ['get_query_string_var_value', 'not_empty']},
+        [Consts.CATEGORY_VAR_NAME]: {rules: ['get_query_string_var_value', 'not_empty']},
+        [Consts.COUNTRY_VAR_NAME]: {rules: ['get_query_string_var_value', 'not_empty']},
+        [Consts.STATE_VAR_NAME]: {rules: ['get_query_string_var_value', 'not_empty']},
         [Consts.CATALOG_PAGE_NUMBER_VAR_NAME]: {rules: ['numeric', 'not_empty']},
         [Consts.SPAM_TRANSFERED_EMAIL_ID_VAR_NAME]: {rules: ['numeric', 'not_empty']},
         [Consts.SPAM_TRANSFERED_EMAIL_CODE_VAR_NAME]: {rules: ['numeric', 'not_empty']},

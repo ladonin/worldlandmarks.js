@@ -66,7 +66,7 @@ class CountryStatesModel extends DBaseMysql
      */
     getStateIdByCode(code, needResult = true)
     {
-        let _data = this.getBySql("SELECT id FROM " + this.getTableName(this.tableInitNames.COUNTRY_STATES) + " WHERE url_code = ?", [code], needResult);
+        let _data = this.getBySql("SELECT id FROM " + this.getTableName() + " WHERE url_code = ?", [code], needResult);
         return _data[0].id ? _data[0].id : null;
     }
 
@@ -89,7 +89,7 @@ class CountryStatesModel extends DBaseMysql
     {
         let _sql = `SELECT cs.is_administrative_center
                     FROM ${this.getTableName(this.tableInitNames.COUNTRY)} c
-                    LEFT JOIN ${this.getTableName(this.tableInitNames.COUNTRY_STATES)} cs on c.id = cs.country_id
+                    LEFT JOIN ${this.getTableName()} cs on c.id = cs.country_id
                     WHERE c.local_code = ? AND cs.url_code=?`;
 
         let _data = this.getBySql(_sql, [countryCode, stateCode]);

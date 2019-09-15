@@ -1,8 +1,8 @@
 /*
- * File src/app/controllers/main/Main.js
- * import MainIndex from 'src/app/controllers/main/Main';
+ * File src/app/controllers/catalog/Catalog.js
+ * import Catalog from 'src/app/controllers/catalog/Catalog';
  *
- * Main controller
+ * Catalog controller
  */
 
 import React, { Component } from 'react';

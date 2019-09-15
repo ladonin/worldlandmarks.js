@@ -1,6 +1,6 @@
 /*
  * File src/app/controllers/main/Main.js
- * import MainIndex from 'src/app/controllers/main/Main';
+ * import Main from 'src/app/controllers/main/Main';
  *
  * Main controller
  */

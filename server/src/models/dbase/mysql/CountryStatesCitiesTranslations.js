@@ -54,7 +54,7 @@ class CountryStatesCitiesTranslationsModel extends DBaseMysql
     getStateTranslation(countryCode, stateName, language, needResult = true){
 
         let _sql = `SELECT ct.*, cs.url_code FROM ${this.getTableName(this.tableInitNames.COUNTRY)} c
-                    LEFT JOIN ${this.getTableName(this.tableInitNames.COUNTRY_STATES_CITIES_TRANSLATIONS)} ct on c.id = ct.country_id
+                    LEFT JOIN ${this.getTableName()} ct on c.id = ct.country_id
                     LEFT JOIN ${this.getTableName(this.tableInitNames.COUNTRY_STATES)} cs on cs.id = ct.only_for_state
                     WHERE c.local_code = ? AND ct.google_name = ? AND language = ? AND is_city=0`;
 
@@ -123,7 +123,7 @@ class CountryStatesCitiesTranslationsModel extends DBaseMysql
         if (countryHaveStates) {
         let _sql = `SELECT ct.translate
             FROM ${this.getTableName(this.tableInitNames.COUNTRY)} c
-            LEFT JOIN ${this.getTableName(this.tableInitNames.COUNTRY_STATES_CITIES_TRANSLATIONS)} ct on c.id = ct.country_id
+            LEFT JOIN ${this.getTableName()} ct on c.id = ct.country_id
             LEFT JOIN ${this.getTableName(this.tableInitNames.COUNTRY_STATES)} cs on cs.id = ct.only_for_state
             WHERE cs.url_code = ? AND c.local_code = ? AND ct.google_name = ? AND language = ? AND is_city=1
             LIMIT 1`;
@@ -132,7 +132,7 @@ class CountryStatesCitiesTranslationsModel extends DBaseMysql
         } else {
             let _sql = `SELECT ct.translate
             FROM ${this.getTableName(this.tableInitNames.COUNTRY)} c
-            LEFT JOIN ${this.getTableName(this.tableInitNames.COUNTRY_STATES_CITIES_TRANSLATIONS)} ct on c.id = ct.country_id
+            LEFT JOIN ${this.getTableName()} ct on c.id = ct.country_id
             LEFT JOIN ${this.getTableName(this.tableInitNames.COUNTRY_STATES)} cs on cs.id = ct.only_for_state
             WHERE c.local_code = ? AND ct.google_name = ? AND language = ? AND is_city=1
             LIMIT 1`;

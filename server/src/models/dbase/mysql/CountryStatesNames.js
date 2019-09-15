@@ -72,7 +72,7 @@ class CountryStatesNamesModel extends DBaseMysql
 
         let _sql = `SELECT csn.name
                     FROM ${this.getTableName(this.tableInitNames.COUNTRY_STATES)} cs
-                    LEFT JOIN ${this.getTableName(this.tableInitNames.COUNTRY_STATES_NAMES)} csn on cs.id = csn.state_id
+                    LEFT JOIN ${this.getTableName()} csn on cs.id = csn.state_id
                     WHERE cs.url_code = ? AND csn.language = ?`;
 
         let _data = this.getBySql(_sql, [code, language], needResult);

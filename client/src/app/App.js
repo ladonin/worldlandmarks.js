@@ -37,7 +37,7 @@ class App extends Component {
                 <Route exact path='/' component={Main}/>
                 <Route path={'/:controller(' + Consts.CONTROLLER_NAME_MAP + ')/:var2?'} component={Map}/>
                 <Route path={'/:controller(' + Consts.CONTROLLER_NAME_CATALOG + ')/:var2?/:var3?/:var4?'} component={Catalog}/>
-                <Route path={'/:controller(' + Consts.CONTROLLER_NAME_ARTICLE + ')/:var2?'} component={Article}/>
+                <Route path={'/:controller(' + Consts.CONTROLLER_NAME_ARTICLE + ')/:var2?/:var3?/:var4?'} component={Article}/>
                 <Route component={Error404}/>
                 </Switch>
                 );

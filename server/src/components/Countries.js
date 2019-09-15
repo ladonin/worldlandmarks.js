@@ -75,7 +75,7 @@ class Countries extends Component {
      */
     getCountryNameFromRequest()
     {
-        let _country = this.getFromRequest(Consts.CATALOG_COUNTRY_VAR_NAME)
+        let _country = this.getFromRequest(Consts.COUNTRY_VAR_NAME)
         return this.getCountryNameByCode(_country);
     }
 
@@ -390,7 +390,7 @@ class Countries extends Component {
     getStateNameFromRequest(needResult = true)
     {
 
-        let _stateCode = this.getFromRequest(Consts.CATALOG_STATE_VAR_NAME, needResult);
+        let _stateCode = this.getFromRequest(Consts.STATE_VAR_NAME, needResult);
         if (!_stateCode && needResult === false) {
             return null;
         }
@@ -419,7 +419,7 @@ class Countries extends Component {
             return _result;
         }
 
-        let _countryCode = this.getFromRequest(Consts.CATALOG_COUNTRY_VAR_NAME);
+        let _countryCode = this.getFromRequest(Consts.COUNTRY_VAR_NAME);
         let _stateName = CountryStatesNamesModel.getInstance(this.requestId).getStateNameByCode(stateCode, _language, false)
 
         if (!_stateName && needResult) {

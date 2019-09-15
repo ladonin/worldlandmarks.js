@@ -449,8 +449,8 @@ class Catalog extends Component {
      */
     getBreadcrumbsData()
     {
-        let _countryCode = this.getFromRequest(Consts.CATALOG_COUNTRY_VAR_NAME, false);
-        let _stateCode = this.getFromRequest(Consts.CATALOG_STATE_VAR_NAME, false);
+        let _countryCode = this.getFromRequest(Consts.COUNTRY_VAR_NAME, false);
+        let _stateCode = this.getFromRequest(Consts.STATE_VAR_NAME, false);
 
         let _idPlacemark = BaseFunctions.toInt(this.getFromRequest(Consts.ID_VAR_NAME, false));
         let _language = this.getLanguage();

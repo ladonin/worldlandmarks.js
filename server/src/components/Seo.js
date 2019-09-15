@@ -53,7 +53,7 @@ class Seo extends Component {
             } else if (_action === Consts.ACTION_NAME_STATE) {
 
                 let _countryCode = Countries.getInstance(this.requestId).getCountryCodeFromRequest();
-                let _stateCode = this.getFromRequest(Consts.CATALOG_STATE_VAR_NAME);
+                let _stateCode = this.getFromRequest(Consts.STATE_VAR_NAME);
                 let _countryData = Countries.getInstance(this.requestId).getStateAndCountryNameByCode(_countryCode, _stateCode);
                 return _countryData['country'] + ',' + _countryData['state'];
 

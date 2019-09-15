@@ -20,3 +20,7 @@ _photoInsert = <CroppedPhoto
     photoHeight = {_photo['height']}
     photoSrc = {_photo['dir'] + "6_" + _photo['name']}
 />;
+
+
+this.props.redux.staticData
+this.props.redux.actionData

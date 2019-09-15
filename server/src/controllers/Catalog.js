@@ -5,7 +5,6 @@
  */
 
 const BaseFunctions = require('server/src/functions/BaseFunctions');
-const Language = require('server/src/core/Language');
 const ErrorCodes = require('server/src/settings/ErrorCodes');
 const Consts = require('server/src/settings/Constants');
 const Seo = require('server/src/components/Seo');
@@ -78,7 +77,7 @@ class Catalog extends CommonController {
         let _countryName = Countries.getInstance(this.requestId).getCountryNameFromRequest();
         let _countryCode = Countries.getInstance(this.requestId).getCountryCodeFromRequest();
         let _stateName = Countries.getInstance(this.requestId).getStateNameFromRequest();
-        let _stateCode = this.getFromRequest(Consts.CATALOG_STATE_VAR_NAME);
+        let _stateCode = this.getFromRequest(Consts.STATE_VAR_NAME);
 
         this.addActionData({
             'title': Seo.getInstance(this.requestId).getTitle('catalog/state', {'country':_countryName, 'state': _stateName}),
@@ -121,7 +120,7 @@ class Catalog extends CommonController {
         let _countryName = Countries.getInstance(this.requestId).getCountryNameFromRequest();
         let _countryCode = Countries.getInstance(this.requestId).getCountryCodeFromRequest();
         let _stateName = Countries.getInstance(this.requestId).getStateNameFromRequest(false);
-        let _stateCode = this.getFromRequest(Consts.CATALOG_STATE_VAR_NAME, false);
+        let _stateCode = this.getFromRequest(Consts.STATE_VAR_NAME, false);
 
         if (!GeocodeCollectionModel.getInstance(this.requestId).checkPlacemark(_placemarkId, _countryCode, _stateCode)){
             this.error(ErrorCodes.ERROR_CATALOG_WRONG_PLACEMARK_ADDRESS_OR_ID);

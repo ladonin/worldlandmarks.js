@@ -52,41 +52,74 @@ function getActionData(data = {}, matchParams) {
 
     if (matchParams[Consts.CONTROLLER_VAR_NAME] === Consts.CONTROLLER_NAME_CATALOG) {
 
-        if ((matchParams[Consts.URL_VAR_2_NAME]
-                && matchParams[Consts.URL_VAR_2_NAME] !== Consts.ACTION_NAME_INDEX)
-                && (matchParams[Consts.URL_VAR_2_NAME] !== Consts.ACTION_NAME_SEARCH)) {
-
-            if (matchParams[Consts.URL_VAR_4_NAME]) {
-                // Placemark page
-                data[Consts.ACTION_VAR_NAME] = Consts.ACTION_NAME_PLACEMARK;
-                data[Consts.ID_VAR_NAME] = matchParams[Consts.URL_VAR_4_NAME];
-                data[Consts.CATALOG_COUNTRY_VAR_NAME] = matchParams[Consts.URL_VAR_2_NAME];
-                data[Consts.CATALOG_STATE_VAR_NAME] = matchParams[Consts.URL_VAR_3_NAME];
-                return data;
-            } else if (parseInt(matchParams[Consts.URL_VAR_3_NAME]) > 0) {
-                // Placemark page
-                data[Consts.ACTION_VAR_NAME] = Consts.ACTION_NAME_PLACEMARK;
-                data[Consts.ID_VAR_NAME] = matchParams[Consts.URL_VAR_3_NAME];
-                data[Consts.CATALOG_COUNTRY_VAR_NAME] = matchParams[Consts.URL_VAR_2_NAME];
-                return data;
-            } else if (matchParams[Consts.URL_VAR_3_NAME]) {
-                // State page
-                data[Consts.ACTION_VAR_NAME] = Consts.ACTION_NAME_STATE;
-                data[Consts.CATALOG_COUNTRY_VAR_NAME] = matchParams[Consts.URL_VAR_2_NAME];
-                data[Consts.CATALOG_STATE_VAR_NAME] = matchParams[Consts.URL_VAR_3_NAME];
-                return data;
-            } else if (matchParams[Consts.URL_VAR_2_NAME]) {
-                // Country page
-                data[Consts.ACTION_VAR_NAME] = Consts.ACTION_NAME_COUNTRY;
-                data[Consts.CATALOG_COUNTRY_VAR_NAME] = matchParams[Consts.URL_VAR_2_NAME];
-                return data;
-            }
+        if (matchParams[Consts.URL_VAR_2_NAME] === Consts.ACTION_NAME_SEARCH) {
+            // Search page
+            data[Consts.ACTION_VAR_NAME] = Consts.ACTION_NAME_SEARCH;
+            return data;
+        } else if (matchParams[Consts.URL_VAR_4_NAME]) {
+            // Placemark page
+            data[Consts.ACTION_VAR_NAME] = Consts.ACTION_NAME_PLACEMARK;
+            data[Consts.ID_VAR_NAME] = matchParams[Consts.URL_VAR_4_NAME];
+            data[Consts.COUNTRY_VAR_NAME] = matchParams[Consts.URL_VAR_2_NAME];
+            data[Consts.STATE_VAR_NAME] = matchParams[Consts.URL_VAR_3_NAME];
+            return data;
+        } else if (parseInt(matchParams[Consts.URL_VAR_3_NAME]) > 0) {
+            // Placemark page
+            data[Consts.ACTION_VAR_NAME] = Consts.ACTION_NAME_PLACEMARK;
+            data[Consts.ID_VAR_NAME] = matchParams[Consts.URL_VAR_3_NAME];
+            data[Consts.COUNTRY_VAR_NAME] = matchParams[Consts.URL_VAR_2_NAME];
+            return data;
+        } else if (matchParams[Consts.URL_VAR_3_NAME]) {
+            // State page
+            data[Consts.ACTION_VAR_NAME] = Consts.ACTION_NAME_STATE;
+            data[Consts.COUNTRY_VAR_NAME] = matchParams[Consts.URL_VAR_2_NAME];
+            data[Consts.STATE_VAR_NAME] = matchParams[Consts.URL_VAR_3_NAME];
+            return data;
+        } else if (matchParams[Consts.URL_VAR_2_NAME]) {
+            // Country page
+            data[Consts.ACTION_VAR_NAME] = Consts.ACTION_NAME_COUNTRY;
+            data[Consts.COUNTRY_VAR_NAME] = matchParams[Consts.URL_VAR_2_NAME];
+            return data;
         } else {
             // Countries list page
             data[Consts.ACTION_VAR_NAME] = Consts.ACTION_NAME_INDEX;
             return data;
         }
     }
+    else if (matchParams[Consts.CONTROLLER_VAR_NAME] === Consts.CONTROLLER_NAME_ARTICLE) {
+
+        if (matchParams[Consts.URL_VAR_2_NAME] === Consts.ACTION_NAME_CATEGORIES) {
+            data[Consts.ACTION_VAR_NAME] = Consts.ACTION_NAME_CATEGORIES;
+            return data;
+        } else if (matchParams[Consts.URL_VAR_2_NAME] === Consts.ACTION_NAME_COUNTRY
+                && matchParams[Consts.URL_VAR_3_NAME]
+                && matchParams[Consts.URL_VAR_4_NAME]) {
+            data[Consts.ACTION_VAR_NAME] = Consts.ACTION_NAME_COUNTRY;
+            data[Consts.COUNTRY_VAR_NAME] = matchParams[Consts.URL_VAR_3_NAME];
+            data[Consts.PAGE_NUMBER_VAR_NAME] = matchParams[Consts.URL_VAR_4_NAME];
+            return data;
+        } else if (matchParams[Consts.URL_VAR_2_NAME] === Consts.ACTION_NAME_CATEGORY
+                && matchParams[Consts.URL_VAR_3_NAME]
+                && matchParams[Consts.URL_VAR_4_NAME]) {
+            data[Consts.ACTION_VAR_NAME] = Consts.ACTION_NAME_CATEGORY;
+            data[Consts.CATEGORY_VAR_NAME] = matchParams[Consts.URL_VAR_3_NAME];
+            data[Consts.PAGE_NUMBER_VAR_NAME] = matchParams[Consts.URL_VAR_4_NAME];
+            return data;
+        } else {
+            data[Consts.ACTION_VAR_NAME] = Consts.ACTION_NAME_COUNTRIES;
+            return data;
+        }
+    }
+
+
+
+
+
+
+
+
+
+
 
     return data;
 }

@@ -64,7 +64,6 @@ ACTION_VAR_NAME:'action',
     CONTROLLER_NAME_CATALOG: 'catalog',
     CONTROLLER_NAME_ARTICLE: 'article',
 
-
     ACTION_NAME_SEARCH: 'search',
     ACTION_NAME_INDEX: 'index',
     ACTION_NAME_COUNTRY: 'country',
@@ -73,10 +72,9 @@ ACTION_VAR_NAME:'action',
     ACTION_NAME_SITEMAP_COUNTRIES: 'sitemap_countries',
     ACTION_NAME_SITEMAP_CATEGORIES: 'sitemap_categories',
     ACTION_NAME_VIEW: 'view',
-
-    ACTION_NAME_ARTICLES_COUNTRIES_NAME: 'countries',
-    ACTION_NAME_ARTICLES_CATEGORIES_NAME: 'categories',
-
+    ACTION_NAME_COUNTRIES: 'countries',
+    ACTION_NAME_CATEGORIES: 'categories',
+    ACTION_NAME_CATEGORY: 'category',
     UNDEFINED_VALUE: 'undefined',
     SERVICE_VAR_NAME: 'service',//ATTENTION - обратите внимание
     ID_VAR_NAME: 'id',
@@ -89,10 +87,10 @@ ACTION_VAR_NAME:'action',
     CLIENT_CONTROLLER_VAR_NAME:'clientController',
     CLIENT_ACTION_VAR_NAME:'clientAction',
 
-    CATALOG_CATEGORY_VAR_NAME: 'category',
-    CATALOG_COUNTRY_VAR_NAME: 'country',
-    CATALOG_STATE_VAR_NAME: 'state',
-    CATALOG_PAGE_NUMBER_VAR_NAME: 'page_number',
+    CATEGORY_VAR_NAME: 'category',
+    COUNTRY_VAR_NAME: 'country',
+    STATE_VAR_NAME: 'state',
+    PAGE_NUMBER_VAR_NAME: 'page_number',
 
     TOO_BIG_MAP_REQUEST_AREA_CODE: 'too_big_map_area',
 
@@ -317,9 +315,9 @@ ACTION_VAR_NAME:'action',
  define('MY_VAR_CATEGORY_USER', 'user');
  define('MY_SERVICE_VAR_NAME', 'type');
  define('MY_ID_VAR_NAME', 'id');
- define('MY_CATALOG_CATEGORY_VAR_NAME', 'category');
- define('MY_CATALOG_COUNTRY_VAR_NAME', 'country');
- define('MY_CATALOG_STATE_VAR_NAME', 'state');
+ define('MY_CATEGORY_VAR_NAME', 'category');
+ define('MY_COUNTRY_VAR_NAME', 'country');
+ define('MY_STATE_VAR_NAME', 'state');
  define('MY_CATALOG_PAGE_NUMBER_VAR_NAME', 'page_number');
 
 

@@ -72,10 +72,10 @@ class Bottom extends Block {
                         <a onClick={this.goTo} data-url={'/' + Consts.CONTROLLER_NAME_CATALOG + '/' + Consts.SITEMAP_CATEGORIES_NAME}>{this.props.redux.text['6']}</a>
                     </div>
                     <div className="page_bottom_column_row">
-                        <a onClick={this.goTo} data-url={'/' + Consts.CONTROLLER_NAME_ARTICLE + '/' + Consts.ACTION_NAME_ARTICLES_COUNTRIES_NAME}>{this.props.redux.text['7']}</a>
+                        <a onClick={this.goTo} data-url={'/' + Consts.CONTROLLER_NAME_ARTICLE + '/' + Consts.ACTION_NAME_COUNTRIES}>{this.props.redux.text['7']}</a>
                     </div>
                     <div className="page_bottom_column_row">
-                        <a onClick={this.goTo} data-url={'/' + Consts.CONTROLLER_NAME_ARTICLE + '/' + Consts.ACTION_NAME_ARTICLES_CATEGORIES_NAME}>{this.props.redux.text['8']}</a>
+                        <a onClick={this.goTo} data-url={'/' + Consts.CONTROLLER_NAME_ARTICLE + '/' + Consts.ACTION_NAME_CATEGORIES}>{this.props.redux.text['8']}</a>
                     </div>
                 </div>
                 <div className="clear"></div>
