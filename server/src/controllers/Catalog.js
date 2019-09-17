@@ -154,6 +154,27 @@ class Catalog extends CommonController {
         this.sendMe();
     }
 
+
+    /*
+     * Action placemark
+     */
+    action_search()
+    {
+
+        let _formData = this.getFromRequest(Consts.REQUEST_FORM_DATA);
+        this.addActionData({
+
+            'breadcrumbs': CatalogComponent.getInstance(this.requestId).getBreadcrumbsData(),
+            'whetherToUseTitles': Service.getInstance(this.requestId).whetherToUseTitles(),
+            'formData': _formData,
+            'countries': Countries.getInstance(this.requestId).getCountriesData(true)
+        });
+        this.sendMe();
+    }
+
+
+
+
 }
 
 

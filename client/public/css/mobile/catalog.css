@@ -170,9 +170,7 @@ font-weight: lighter;
 .catalog_scroll_placemark_row_content{
     padding: 10px 10px 0 10px;
 }
-.catalog_scroll_placemark_row_photo img,.catalog_scroll_placemark_row_content_category img{
-    cursor:pointer;
-}
+
 
 .catalog_scroll_placemark_row_content_category img{
     float:left;

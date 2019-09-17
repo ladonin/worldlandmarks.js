@@ -144,7 +144,23 @@ class GeocodeCollectionModel extends DBaseMysql
 
 
 
-
+    /*
+     * Return all countries codes
+     *
+     * @return {array of objects}
+     */
+    getPlacemarksCountriesCodes()
+    {
+        return this.getByCondition(
+            /*condition*/"1",
+            /*order*/'',
+            /*group*/'',
+            /*select*/'DISTINCT country_code',
+            /*where_values*/[],
+            /*limit*/false,
+            /*need_result*/false
+        );
+    }
 
 
     /*
@@ -188,7 +204,7 @@ class GeocodeCollectionModel extends DBaseMysql
      * @param {string} countryCode
      * @param {string} stateCode
      * @param {string} language
-     * @param {boolean} needResult - is result required
+     * @param {boolean} needResult - whether result is required
      *
      * @return {object} - geodata of each found placemark
      */
@@ -300,7 +316,7 @@ class GeocodeCollectionModel extends DBaseMysql
      *
      * @param {integer} idPlacemark - placemark id
      * @param {string} language
-     * @param {boolean} needResult - is result required
+     * @param {boolean} needResult - whether result is required
      *
      * @return  {array of objects}
      */
@@ -323,7 +339,7 @@ class GeocodeCollectionModel extends DBaseMysql
      * @param {string} countryCode - country code
      * @param {string} stateCode - state code
      * @param {string} language
-     * @param {boolean} needResult - is result required
+     * @param {boolean} needResult - whether result is required
      *
      * @return  {array of objects}
      */
@@ -346,7 +362,7 @@ class GeocodeCollectionModel extends DBaseMysql
      *
      * @param {string} countryCode - country code
      * @param {string} language
-     * @param {boolean} needResult - is result required
+     * @param {boolean} needResult - whether result is required
      *
      * @return  {array of objects}
      */

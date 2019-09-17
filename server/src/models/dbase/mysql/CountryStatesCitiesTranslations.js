@@ -47,7 +47,7 @@ class CountryStatesCitiesTranslationsModel extends DBaseMysql
      * @param {string} countryCode - country code
      * @param {string} stateName - state name
      * @param {string} language - on what language translate
-     * @param {boolean} needResult - is result required
+     * @param {boolean} needResult - whether result is required
      *
      * @return {string} - translated state name
      */
@@ -115,7 +115,7 @@ class CountryStatesCitiesTranslationsModel extends DBaseMysql
      * @param {string} cityName - city name
      * @param {string} language - on what language translate
      * @param {boolean} countryHaveStates - is country have states or not (small country)
-     * @param {boolean} needResult - is result required
+     * @param {boolean} needResult - whether result is required
      *
      * @return {string} - translated state name
      */

@@ -105,7 +105,7 @@ class MapDataModel extends DBaseMysql
      * @param {string} order - fetch order
      * @param {boolean} needPlainText - whether placemark description (plain text) is necessary
      * @param {boolean} needText - whether placemark description (main text with html) is necessary
-     * @param {boolean} needResult - is result required
+     * @param {boolean} needResult - whether result is required
      *
      * @return {array of objects} - placemarks data
      */
@@ -403,7 +403,7 @@ class MapDataModel extends DBaseMysql
      * @param {integer} offset - selection offset
      * @param {integer} limit - selection limit
      * @param {string} language - language
-     * @param {boolean} needResult - is result required
+     * @param {boolean} needResult - whether result is required
      *
      * @return {array of objects} - DESCRIPTION
      */
@@ -437,7 +437,7 @@ class MapDataModel extends DBaseMysql
      * @param {integer} offset - selection offset
      * @param {integer} limit - selection limit
      * @param {string} language - language
-     * @param {boolean} needResult - is result required
+     * @param {boolean} needResult - whether result is required
      *
      * @return {array of objects}
      */
@@ -476,12 +476,13 @@ class MapDataModel extends DBaseMysql
      * @param {string} keywords - placemark keywords (separate field)
      * @param {integer} limit - selection limit
      * @param {string} language - language
-     * @param {boolean} needResult - is result required
+     * @param {boolean} needResult - whether result is required
      *
      * @return  {array of objects}
      */
     getPlacemarksSeacrhList(idStart = 0, category = false, country = '', state = '', keywords = '', limit, language, needResult)
     {
+        category = category === '' ? false : category;
         category = category !== false ? BaseFunctions.toInt(category) : category;
         country = BaseFunctions.quote(country);
         state = BaseFunctions.quote(state);
@@ -597,7 +598,7 @@ class MapDataModel extends DBaseMysql
      *
      * @param {string} code - country code
      * @param {string} language - in what language country name will be get
-     * @param {boolean} needResult - is result required
+     * @param {boolean} needResult - whether result is required
      *
      * @return {string} - country name
      */

@@ -17,7 +17,7 @@ import Consts from 'src/settings/Constants';
 import Main from './controllers/main/Main';
 import Map from './controllers/map/Map';
 import Catalog from './controllers/catalog/Catalog';
-import Article from './controllers/article/Article';
+import Articles from './controllers/articles/Articles';
 
 import Error404 from './controllers/errors/Error404';
 
@@ -37,7 +37,7 @@ class App extends Component {
                 <Route exact path='/' component={Main}/>
                 <Route path={'/:controller(' + Consts.CONTROLLER_NAME_MAP + ')/:var2?'} component={Map}/>
                 <Route path={'/:controller(' + Consts.CONTROLLER_NAME_CATALOG + ')/:var2?/:var3?/:var4?'} component={Catalog}/>
-                <Route path={'/:controller(' + Consts.CONTROLLER_NAME_ARTICLE + ')/:var2?/:var3?/:var4?'} component={Article}/>
+                <Route path={'/:controller(' + Consts.CONTROLLER_NAME_ARTICLES + ')/:var2?/:var3?/:var4?'} component={Articles}/>
                 <Route component={Error404}/>
                 </Switch>
                 );

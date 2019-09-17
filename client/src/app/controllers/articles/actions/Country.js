@@ -1,8 +1,8 @@
 /*
- * File src/app/controllers/article/actions/Country.js
- * import ArticleCountry from 'src/app/controllers/article/actions/Country';
+ * File src/app/controllers/articles/actions/Country.js
+ * import ArticleCountry from 'src/app/controllers/articles/actions/Country';
  *
- * Country action component for Article controller
+ * Country action component for Articles controller
  */
 
 import React, { Component } from 'react';
@@ -35,7 +35,7 @@ class ArticleCountry extends Action {
             let _country = this.props.redux.actionData.countriesData[_index];
             _countriesList.push(
                     <div className="sitemap_country_row">
-                        <a onClick={this.goTo} data-url={'/' + Consts.CONTROLLER_NAME_ARTICLE + '/' + Consts.ACTION_NAME_COUNTRY + '/' + _country['country_code'] + '/1'}>{_country['name']}</a>
+                        <a onClick={this.goTo} data-url={'/' + Consts.CONTROLLER_NAME_ARTICLES + '/' + Consts.ACTION_NAME_COUNTRY + '/' + _country['country_code'] + '/1'}>{_country['name']}</a>
                     </div>);
         }
 
@@ -45,33 +45,19 @@ class ArticleCountry extends Action {
             if (_i === parseInt(this.props.redux.actionData.currentPage)) {
                 _pagesList.push(<a className='sitemap_current_page'>{_i}</a>);
             } else {
-                _pagesList.push(<a onClick={this.goTo} data-url={'/' + Consts.CONTROLLER_NAME_ARTICLE + '/' + Consts.ACTION_NAME_COUNTRY + '/' + this.props.redux.actionData.countryCode + '/' + _i}>{_i}</a>);
+                _pagesList.push(<a onClick={this.goTo} data-url={'/' + Consts.CONTROLLER_NAME_ARTICLES + '/' + Consts.ACTION_NAME_COUNTRY + '/' + this.props.redux.actionData.countryCode + '/' + _i}>{_i}</a>);
             }
         }
 
 
         let _articlesList = [];
-
         for (let _index in this.props.redux.actionData.articlesData) {
             let _article = this.props.redux.actionData.articlesData[_index];
             _articlesList.push(
             <div className="sitemap_placemark_row">
-                <a onClick={this.goTo} data-url={'/' + Consts.CONTROLLER_NAME_ARTICLE + '/' + _article.id}>{_article.title}</a>
+                <a onClick={this.goTo} data-url={'/' + Consts.CONTROLLER_NAME_ARTICLES + '/' + _article.id}>{_article.title}</a>
             </div>);
         }
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
         return (
@@ -98,7 +84,7 @@ class ArticleCountry extends Action {
                             <div className="clear"></div>
                             <div className="h_15px"></div>
                             <div className="padding_left_10">
-                                <a onClick={this.goTo} data-url={'/' + Consts.CONTROLLER_NAME_ARTICLE + '/' + Consts.ACTION_NAME_CATEGORIES}>
+                                <a onClick={this.goTo} data-url={'/' + Consts.CONTROLLER_NAME_ARTICLES + '/' + Consts.ACTION_NAME_CATEGORIES}>
                                     <i>{this.props.redux.staticData.articles_categories_header}</i>
                                 </a>
                             </div>
@@ -114,7 +100,7 @@ class ArticleCountry extends Action {
 }
 
 function MapStateToProps(state) {
-    return GetState(state, Consts.CONTROLLER_NAME_ARTICLE, Consts.ACTION_NAME_COUNTRY)
+    return GetState(state, Consts.CONTROLLER_NAME_ARTICLES, Consts.ACTION_NAME_COUNTRY)
 }
 
 export default connect(MapStateToProps, MapDispatchToProps)(withRouter(ArticleCountry))

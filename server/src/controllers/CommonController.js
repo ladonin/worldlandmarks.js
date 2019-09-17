@@ -61,6 +61,18 @@ class CommonController extends Controller {
                 'articles_categories_header':this.getText('page_bottom/articles_categories/text'),
                 'select_a_country_text':this.getText('select_a_country_text'),
                 'select_a_category_text':this.getText('select_a_category_text'),
+                'another_articles_title':this.getText('another_articles/title/text'),
+                'catalog_search_form_title_label':this.getText('site/title/catalog/search/form/title/label'),
+                'catalog_search_form_category_label':this.getText('site/title/catalog/search/form/category/label'),
+                'catalog_search_form_all_categories':this.getText('site/title/catalog/search/form/all_categories'),
+                'catalog_search_form_country_label':this.getText('site/title/catalog/search/form/country/label'),
+                'catalog_search_form_all_countries':this.getText('site/title/catalog/search/form/all_countries'),
+                'catalog_search_form_submit_text':this.getText('site/title/catalog/search/submit/text'),
+                'nothing_found':this.getText('warning/search/empty_result'),
+
+
+
+
 
 
             }

@@ -80,7 +80,7 @@ module.exports = {
     'catalog/panel_tools/link/catalog/search': 'Search',
     'catalog/panel_tools/link/article': 'Articles',
     'breadcrumbs/catalog/text': 'Catalog',
-    'breadcrumbs/article/text': 'Articles',
+    'breadcrumbs/articles/text': 'Articles',
     'map/panel_tools/link/all_placemarks': 'All placemarks',
     'map/panel_tools/link/filter': 'Search',
     'text/new_point/step_1': 'Description.',

@@ -64,7 +64,7 @@ class CountryStatesNamesModel extends DBaseMysql
      *
      * @param {string} code - state code
      * @param {string} language - in what language state name will be get
-     * @param {boolean} needResult - is result required
+     * @param {boolean} needResult - whether result is required
      *
      * @return {string} - state name
      */

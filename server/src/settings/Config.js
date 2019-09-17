@@ -31,7 +31,7 @@ module.exports = {
             [Consts.CONTROLLER_NAME_MAP]: 'Map',
             [Consts.CONTROLLER_NAME_MAIN]: 'Main',
             [Consts.CONTROLLER_NAME_CATALOG]: 'Catalog',
-            [Consts.CONTROLLER_NAME_ARTICLE]: 'Article',
+            [Consts.CONTROLLER_NAME_ARTICLES]: 'Articles',
             [Consts.CONTROLLER_NAME_ADMIN_ACCESS]: 'AdminAccess',
             [Consts.CONTROLLER_NAME_ERRORS]: 'Errors',
         }

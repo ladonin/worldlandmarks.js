@@ -36,7 +36,7 @@ module.exports = {
     CONTROLLER_NAME_MAP: 'map',
     CONTROLLER_NAME_MAIN: 'main',
     CONTROLLER_NAME_CATALOG: 'catalog',
-    CONTROLLER_NAME_ARTICLE: 'article',
+    CONTROLLER_NAME_ARTICLES: 'articles',
     CONTROLLER_NAME_ADMIN_ACCESS: 'admin_access',
     CONTROLLER_NAME_ERRORS: 'errors',
 
@@ -59,10 +59,7 @@ module.exports = {
 CONTROLLER_VAR_NAME:'controller',
 
 ACTION_VAR_NAME:'action',
-    CONTROLLER_NAME_MAP: 'map',
-    CONTROLLER_NAME_MAIN: 'main',
-    CONTROLLER_NAME_CATALOG: 'catalog',
-    CONTROLLER_NAME_ARTICLE: 'article',
+
 
     ACTION_NAME_SEARCH: 'search',
     ACTION_NAME_INDEX: 'index',
@@ -75,6 +72,7 @@ ACTION_VAR_NAME:'action',
     ACTION_NAME_COUNTRIES: 'countries',
     ACTION_NAME_CATEGORIES: 'categories',
     ACTION_NAME_CATEGORY: 'category',
+    ACTION_NAME_ARTICLE: 'article',
     UNDEFINED_VALUE: 'undefined',
     SERVICE_VAR_NAME: 'service',//ATTENTION - обратите внимание
     ID_VAR_NAME: 'id',
@@ -168,7 +166,7 @@ ACTION_VAR_NAME:'action',
      CONTROLLER_NAME_MAP:'map',
      CONTROLLER_NAME_MAIN:'main',
      CONTROLLER_NAME_CATALOG:'catalog',
-     CONTROLLER_NAME_ARTICLE:'article',
+     CONTROLLER_NAME_ARTICLES:'article',
 
      ACTION_NAME_INDEX:'index',
 
@@ -282,7 +280,7 @@ ACTION_VAR_NAME:'action',
  define('MY_CONTROLLER_NAME_MAP', 'map');
  define('MY_CONTROLLER_NAME_MAIN', 'main');
  define('MY_CONTROLLER_NAME_CATALOG', 'catalog');
- define('MY_CONTROLLER_NAME_ARTICLE', 'article');
+ define('MY_CONTROLLER_NAME_ARTICLES', 'article');
 
 
 

@@ -94,7 +94,7 @@ class Seo extends Component {
                     ? _placemark['seo_description']
                     : BaseFunctions.getCroppedText(_placemark['comment_plain'], Config['restrictions']['max_cropped_seo_description_length'], true, this);
             }
-        } else if (_controller === Consts.CONTROLLER_NAME_ARTICLE) {
+        } else if (_controller === Consts.CONTROLLER_NAME_ARTICLES) {
 
             if (_action === Consts.ACTION_NAME_VIEW) {
 

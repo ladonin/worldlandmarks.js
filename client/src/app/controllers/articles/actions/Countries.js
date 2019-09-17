@@ -1,8 +1,8 @@
 /*
- * File src/app/controllers/article/actions/Categories.js
- * import ArticleCategories from 'src/app/controllers/article/actions/Categories';
+ * File src/app/controllers/articles/actions/Countries.js
+ * import ArticleCountries from 'src/app/controllers/articles/actions/Countries';
  *
- * Categories action component for Article controller
+ * Countries action component for Articles controller
  */
 
 import React, { Component } from 'react';
@@ -18,23 +18,23 @@ import Action, {GetState, MapDispatchToProps} from 'src/app/parents/Action';
 import CssTransition from 'src/app/common/CssTransition';
 import Bottom from 'src/app/common/blocks/Bottom';
 
-class ArticleCategories extends Action {
+class ArticleCountries extends Action {
 
     constructor() {
         super();
     }
 
-    render() {console.log(this.props);
+    render() {
         if (!this.props.redux) {
             return null;
         }
 
-        let _categoriesList = [];
-        for (let _index in this.props.redux.actionData.categoriesData) {
-            let _category = this.props.redux.actionData.categoriesData[_index];
-            _categoriesList.push(
-                    <div className="sitemap_category_row">
-                        <a onClick={this.goTo} data-url={'/' + Consts.CONTROLLER_NAME_ARTICLE + '/' + Consts.ACTION_NAME_CATEGORY + '/' + _category['id'] + '/1'}>{_category['title']}</a>
+        let _countriesList = [];
+        for (let _index in this.props.redux.actionData.countriesData) {
+            let _country = this.props.redux.actionData.countriesData[_index];
+            _countriesList.push(
+                    <div className="sitemap_country_row">
+                        <a onClick={this.goTo} data-url={'/' + Consts.CONTROLLER_NAME_ARTICLES + '/' + Consts.ACTION_NAME_COUNTRY + '/' + _country['country_code'] + '/1'}>{_country['name']}</a>
                     </div>);
         }
 
@@ -43,28 +43,28 @@ class ArticleCategories extends Action {
                     <BrowserView>
                         <div className="sitemap_block">
                             <div className="sitemap_header">
-                                {this.props.redux.staticData.articles_categories_header}
+                                {this.props.redux.staticData.articles_countries_header}
                             </div>
 
-                            <div className="sitemap_category_block">
-                                {_categoriesList}
+                            <div className="sitemap_country_block">
+                                {_countriesList}
                                 <div className="clear"></div>
                             </div>
                             <div className="sitemap_header">
                                 <h3>
-                                    {this.props.redux.staticData.select_a_category_text}
+                                    {this.props.redux.staticData.select_a_country_text}
                                     <div className="h_10px"></div>
                                 </h3>
                             </div>
                             <div className="padding_left_10">
-                                <a onClick={this.goTo} data-url={'/' + Consts.CONTROLLER_NAME_ARTICLE + '/' + Consts.ACTION_NAME_COUNTRIES}>
-                                    <i>{this.props.redux.staticData.articles_countries_header}</i>
+                                <a onClick={this.goTo} data-url={'/' + Consts.CONTROLLER_NAME_ARTICLES + '/' + Consts.ACTION_NAME_CATEGORIES}>
+                                    <i>{this.props.redux.staticData.articles_categories_header}</i>
                                 </a>
                             </div>
                         </div>
                     </BrowserView>
                     <MobileView>
-                        TODO MOBILE ArticleCategories
+                        TODO MOBILE ArticleCountries
                     </MobileView>
                     <Bottom/>
                 </CssTransition>
@@ -73,7 +73,7 @@ class ArticleCategories extends Action {
 }
 
 function MapStateToProps(state) {
-    return GetState(state, Consts.CONTROLLER_NAME_ARTICLE, Consts.ACTION_NAME_CATEGORIES)
+    return GetState(state, Consts.CONTROLLER_NAME_ARTICLES, Consts.ACTION_NAME_COUNTRIES)
 }
 
-export default connect(MapStateToProps, MapDispatchToProps)(withRouter(ArticleCategories))
+export default connect(MapStateToProps, MapDispatchToProps)(withRouter(ArticleCountries))

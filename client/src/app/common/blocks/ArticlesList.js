@@ -32,7 +32,7 @@ class ArticlesList extends Block {
             let _item = this.props.redux.articles[_index];
             _articlesList.push(
                 <div className="cataolg_page_article_item">
-                    <a onClick={this.goTo} data-url={'/' + Consts.CONTROLLER_NAME_ARTICLE + "/" + _item.id}>
+                    <a onClick={this.goTo} data-url={'/' + Consts.CONTROLLER_NAME_ARTICLES + "/" + _item.id}>
                         {_item.title}
                     </a>
                 </div>
@@ -45,7 +45,7 @@ class ArticlesList extends Block {
                         <div className="cataolg_page_article_items_list">
                             {_articlesList}
                             <div className="cataolg_page_article_item padding_bottom_10 padding_top_5">
-                                <a onClick={this.goTo} data-url={'/' + Consts.CONTROLLER_NAME_ARTICLE}>
+                                <a onClick={this.goTo} data-url={'/' + Consts.CONTROLLER_NAME_ARTICLES}>
                                     <i>{this.props.redux.seeAll}</i>
                                 </a>
                             </div>

@@ -6,7 +6,7 @@
  * Common base functions collection
  */
 
-
+const LodashLang = require('lodash/lang');
 
 /*
  * Prepare array of objects
@@ -161,8 +161,13 @@ function viewCroppedPhoto(path, widthOriginal, heightOriginal, widthNew, heightN
     return _result;
 }
 
+function clone(obj) {
+    return LodashLang.cloneDeep(obj);
+}
+
 
 module.exports = {
+    clone,
     viewCroppedPhoto,
     areObjectsEqual,
     fieldToProperty,

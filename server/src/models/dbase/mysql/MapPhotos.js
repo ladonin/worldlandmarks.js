@@ -71,7 +71,7 @@ class MapPhotosModel extends DBaseMysql
      * Get all photos of one placemark by placemark id starting with last photo
      *
      * @param {integer} id - placemark id
-     * @param {boolean} needResult - is result required
+     * @param {boolean} needResult - whether result is required
      *
      * @return {array of objects}
      */
@@ -96,7 +96,7 @@ class MapPhotosModel extends DBaseMysql
      * Get all photos of placemarks by placemark ids starting with last photo
      *
      * @param {array} ids - placemark ids
-     * @param {boolean} needResult - is result required
+     * @param {boolean} needResult - whether result is required
      *
      * @return {array of objects}
      */

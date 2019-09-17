@@ -157,10 +157,11 @@ class DBaseMysql extends Model
      * @param {integer} idValue - id key value
      * @param {array} select - fields to be selected (by default - all)
      * //@param {boolean} async - whether we use async query or sync
+     * @param {boolean} needResult - whether result is required
      *
      * @return {array of objects / promise}
      */
-    getById(idValue, select = '*')//, async = false
+    getById(idValue, select = '*', needResult = true)//, async = false
     {
         let _id = BaseFunctions.toInt(idValue);
 
@@ -396,7 +397,7 @@ class DBaseMysql extends Model
      *
      * @param {string} sql - sql query
      * @param {array} whereValues - values to be escaped for 'WHERE' condition
-     * @param {boolean} needResult - is result required
+     * @param {boolean} needResult - whether result is required
      * //@param {boolean} async - whether we use async query or sync
      *
      * @return {array of objects / promise} - fetched data
@@ -440,7 +441,7 @@ class DBaseMysql extends Model
      *
      * @param {string} sql
      * @param {array} whereValues - values to be escaped for 'WHERE' condition
-     * @param {boolean} needResult - is result required
+     * @param {boolean} needResult - whether result is required
      * //@param {boolean} async - whether we use async query or sync
      *
      * @return {array of objects / promise} - fetched data

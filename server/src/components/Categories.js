@@ -126,6 +126,38 @@ class Categories extends Component {
     }
 
     /*
+     * Return category data by code
+     *
+     * @param {string} code - category code
+     *
+     * @return {object}
+     */
+    getCategoryByCode(code)
+    {
+        let _categories = this.getCategories();
+
+        for (let _index in _categories) {
+            let _category = _categories[_index];
+
+                if (_category['code'] === code) {
+                return _category;
+            }
+        }
+        this.error(ErrorCodes.ERROR_FUNCTION_ARGUMENTS, 'code[' + code + ']', undefined, false);
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+    /*
      * Return all available categories data according with controller name
      *
      * @return {array of objects}
@@ -139,7 +171,7 @@ class Categories extends Component {
             _categories[_index]['title'] = this.getText('category/name/' + _categories[_index]['id']);
         }
 
-        if (this.getControllerName() === Consts.CONTROLLER_NAME_ARTICLE){
+        if (this.getControllerName() === Consts.CONTROLLER_NAME_ARTICLES){
 
             for (let _index in _categories) {
                 _categories[_index]['title'] = Categories.getInstance(this.requestId).prepareNameForArticles(_categories[_index]['code'], _categories[_index]['title']);

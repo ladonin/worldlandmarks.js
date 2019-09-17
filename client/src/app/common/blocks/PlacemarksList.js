@@ -14,6 +14,7 @@ import Consts from 'src/settings/Constants';
 import ImageDimensions from 'src/modules/ImageDimensions';
 import BaseFunctions from 'src/functions/BaseFunctions';
 import ConfigRestrictions from 'src/../../server/common/settings/Restrictions';
+import CommonBaseFunctions from 'src/../../server/common/functions/BaseFunctions';
 
 import CategoryViewer from 'src/modules/CategoryViewer';
 import {UpdateStyleData, RemoveBackgroundData} from 'src/app/parents/Common';
@@ -30,6 +31,8 @@ class PlacemarksList extends Block {
         super();
 
         this.onScroll = this.onScroll.bind(this);
+        this.onSearch = this.onSearch.bind(this);
+
         this.init = this.init.bind(this);
 
         this.list = [];
@@ -43,25 +46,40 @@ class PlacemarksList extends Block {
         this.idNext = 0;
 
         this.correction = 200;
-        this.isSearch = 0;
+        this.searchData = {};
         this.photoWidth = 340;
         this.photoHeight = 260;
+        this.currentState = {};
+        this.shouldBottomUpdate = 1;
     }
 
+    reset(){
+        this.list = [];
+        this.block = false;
+        this.isRetry = false;
+        this.idCurrent = 0;
+        this.idNext = 0;
+    }
+
+
     shouldComponentUpdate(nextProps, nextState){
-        if (!nextProps.redux.placemarks || !nextProps.redux.placemarks.length) {
+        if (!nextProps.redux.placemarks
+                || CommonBaseFunctions.areObjectsEqual(this.currentState,nextProps.redux.placemarks)) {
             return false;
         }
+        this.currentState = CommonBaseFunctions.clone(nextProps.redux.placemarks);
         return true;
     }
 
     componentWillUnmount(){
         Events.remove('scroll', this.onScroll);
+        Events.remove('search', this.onSearch);
         this.props.removeBackgroundData('placemarksData');
     }
 
     componentDidMount(){
         Events.add('scroll', this.onScroll);
+        Events.add('search', this.onSearch);
         this.init();
         this.getList();
     }
@@ -69,13 +87,21 @@ class PlacemarksList extends Block {
     getList(){
         this.block = true;
         Socket.backgroundQuery(
-                Consts.CONTROLLER_NAME_CATALOG,
-                'get_placemarks_list',
-                this.props.match.params,
-                {
-                    [Consts.ID_VAR_NAME]:this.idNext,
-                    [Consts.REQUEST_FORM_DATA]:this.props.data
-                })
+            Consts.CONTROLLER_NAME_CATALOG,
+            'get_placemarks_list',
+            this.props.match.params,
+            {
+                [Consts.ID_VAR_NAME]:this.idNext,
+                [Consts.REQUEST_FORM_DATA]:this.searchData
+            })
+    }
+
+    onSearch(e){
+        this.reset();
+        this.shouldBottomUpdate++;
+        this.searchData = {...e.detail, isSearch:1};
+        this.props.removeBackgroundData('placemarksData');
+        this.getList();
     }
 
     onScroll(){
@@ -160,7 +186,7 @@ class PlacemarksList extends Block {
     }
 
     render() {
-        if (!this.props.redux.placemarks || !this.props.redux.placemarks.length) {
+        if (!this.props.redux.placemarks) {
             return null;
         }
 
@@ -181,8 +207,11 @@ class PlacemarksList extends Block {
         }
 
         // If nothing to fetch - 0 found
+        let _notFound ='';
         if (!this.idCurrent && !this.idNext){
-            alert('nothing to fetch - 0 found TODO');////ATTENTION - обратите внимание   my_get_message('<?php echo(my_pass_through(@self::trace('warning/search/empty_result'))); ?>', 'warning');
+            _notFound = <div className="catalog_scroll_placemark_row">
+                            <div className='padding_10'>{this.props.redux.nothing_found}</div>
+                        </div>;
         }
 
         this.idNext = this.idCurrent;
@@ -200,12 +229,12 @@ class PlacemarksList extends Block {
         return (
                 <React.Fragment>
                     <BrowserView>
-                        {this.list}
+                        {this.list}{_notFound}
                     </BrowserView>
                     <MobileView>
                         TODO MOBILE ArticlesList
                     </MobileView>
-                    {this.props.bottomComponent&&<this.props.bottomComponent/>}
+                    {this.props.bottomComponent&&<this.props.bottomComponent key={this.shouldBottomUpdate}/>}
                 </React.Fragment>
         );
     }
@@ -217,6 +246,7 @@ function mapStateToProps(state) {
         redux:{
             placemarks:state.backgroundData['placemarksData'],
             linkToMapText:state.staticData['catalog_placemark_link_to_map_text'],
+            nothing_found:state.staticData['nothing_found'],
         }
     };
 }

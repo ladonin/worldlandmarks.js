@@ -16,6 +16,7 @@ const CountryStatesCitiesTranslationsModel = require('server/src/models/dbase/my
 const CountryParamsModel = require('server/src/models/dbase/mysql/CountryParams');
 const CountryStatesNamesModel = require('server/src/models/dbase/mysql/CountryStatesNames');
 const CountriesNamesReplaces = require('server/src/settings/CountriesNamesReplaces');
+const GeocodeCollectionModel = require('server/src/models/dbase/mysql/GeocodeCollection');
 
 class Countries extends Component {
 
@@ -27,6 +28,34 @@ class Countries extends Component {
          */
         this.countriesNamesReplaces = CountriesNamesReplaces;
     }
+
+
+    /*
+     * return all countries data
+     *
+     * @param {boolean} withPlacemarks - select countries with only placemarks or all
+     *
+     * @return {array of objects}
+     */
+    getCountriesData(withPlacemarks = false){
+        let _result = [];
+
+        let _countriesCodes = withPlacemarks === false
+            ? CountriesModel.getInstance(this.requestId).getAllCountriesCodes()
+            : GeocodeCollectionModel.getInstance(this.requestId).getPlacemarksCountriesCodes();
+
+        for (let _index in _countriesCodes) {
+            let _code = _countriesCodes[_index].local_code
+                ? _countriesCodes[_index].local_code
+                : _countriesCodes[_index].country_code;
+            _result.push({
+                code:_code,
+                name:this.getCountryNameByCode(_code)
+            });
+        }
+        return _result;
+    }
+
 
     /*
      * Prepare country name
@@ -383,7 +412,7 @@ class Countries extends Component {
     /*
      * Get state name from request url
      *
-     * @param {boolean} needResult - is result required
+     * @param {boolean} needResult - whether result is required
      *
      * @return {string}
      */
@@ -401,7 +430,7 @@ class Countries extends Component {
      * Get state name by state code
      *
      * @param {string} stateCode - state code
-     * @param {boolean} needResult - is result required
+     * @param {boolean} needResult - whether result is required
      *
      * @return {string}
      */
@@ -490,6 +519,28 @@ class Countries extends Component {
         this.cache.get('countriesDataById', _serviceName, _language)[id] = _result;
         return _result;
     }
+
+
+    /*
+     * Return country code by id
+     *
+     * @param {integer} id - country id
+     *
+     * @return {string}
+     */
+    getСountryCodeById(id)
+    {
+        return this.getСountryDataById(id)['local_code'];
+    }
+
+
+
+
+
+
+
+
+
 }
 
 Countries.instanceId = BaseFunctions.unique_id();

@@ -419,9 +419,6 @@ function unique_id() {
     return toInt(LodashUtil.uniqueId());
 }
 
-function clone(obj) {
-    return LodashLang.cloneDeep(obj);
-}
 
 function isSet(val) {
     return !isUndefined(val);
@@ -490,7 +487,7 @@ function ltrim(text, val) {
 }
 
 function toInt(val) {
-    return LodashLang.toInteger(val);
+    return parseInt(val);
 }
 
 function toString(val) {
@@ -1096,7 +1093,6 @@ module.exports = {
     toFloat,
     deleteFile,
     unique_id,
-    clone,
     isSet,
     isNull,
     isUndefined,

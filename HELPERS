@@ -22,5 +22,5 @@ _photoInsert = <CroppedPhoto
 />;
 
 
-this.props.redux.staticData
-this.props.redux.actionData
+this.props.redux.staticData.
+this.props.redux.actionData.

@@ -82,7 +82,7 @@ module.exports = {
     'catalog/panel_tools/link/catalog/search': 'Поиск',
     'catalog/panel_tools/link/article': 'Статьи',
     'breadcrumbs/catalog/text': 'Каталог',
-    'breadcrumbs/article/text': 'Статьи',
+    'breadcrumbs/articles/text': 'Статьи',
     'map/panel_tools/link/all_placemarks': 'Все метки',
     'map/panel_tools/link/filter': 'Поиск',
     'text/new_point/step_1': 'Описание места.',

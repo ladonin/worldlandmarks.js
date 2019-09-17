@@ -10,6 +10,7 @@ const BaseFunctions = require('server/src/functions/BaseFunctions');
 const Service = require('server/src/core/Service');
 const Countries = require('server/src/components/Countries');
 const Categories = require('server/src/components/Categories');
+const ErrorCodes = require('server/src/settings/ErrorCodes');
 
 class ArticlesModel extends DBaseMysql
 {
@@ -108,18 +109,17 @@ class ArticlesModel extends DBaseMysql
      */
     getCountryArticles(countryCode, offset, limit)
     {
-        let _condition = '';
+        let _condition = '1';
         if (countryCode) {
             let _countryId = Countries.getInstance(this.requestId).getCountryDataByCode(countryCode)['id'];
-            _condition += "country_id=" + _countryId;
+            _condition = "country_id=" + _countryId;
         }
 
-        let _limit = '';
+        let _limit = false;
         if (BaseFunctions.isSet(offset) && BaseFunctions.isSet(limit)) {
             _limit = parseInt(offset) + ', ' + parseInt(limit);
-        } else {
-            _limit = false;
         }
+
         return this.getByCondition(
             /*condition*/ _condition,
             /*order*/ '',
@@ -177,7 +177,7 @@ class ArticlesModel extends DBaseMysql
         for (let _index in _categoriesList) {
             let _categories = _categoriesList[_index]['categories'].split(',');
             for (let _index in _categories) {
-                _categoriesArray[_categories[_index]] = true;
+                _categoriesArray[parseInt(_categories[_index])] = true;
             }
         }
 
@@ -215,6 +215,135 @@ class ArticlesModel extends DBaseMysql
             /*need_result*/ true
         )[0]['count'];
     }
+
+
+
+    /*
+     * Return articles for current category
+     *
+     * @param {number} categoryId - category id
+     * @param {number} offset - starting id
+     * @param {number} limit - articles count to return
+     *
+     * @return {array of objects}
+     */
+    getCategoryArticles(categoryId, offset, limit)
+    {
+        let _condition = "categories REGEXP '[[:<:]]" + parseInt(categoryId) + "[[:>:]]'";
+
+        let _limit = false;
+        if (BaseFunctions.isSet(offset) && BaseFunctions.isSet(limit)) {
+            _limit = parseInt(offset) + ', ' + parseInt(limit);
+        }
+
+        return this.getByCondition(
+            /*condition*/ _condition,
+            /*order*/ '',
+            /*group*/ '',
+            /*select*/ 'id, title',
+            /*where_values*/ [],
+            /*limit*/ _limit,
+            /*need_result*/ false
+        );
+    }
+
+    /*
+     * Return articles count for current category
+     *
+     * @param {number} categoryId
+     *
+     * @return {number}
+     */
+    getArticlesCountForCategory(categoryId)
+    {
+        let _condition = "categories REGEXP '[[:<:]]" + parseInt(categoryId) + "[[:>:]]'";
+
+        return this.getByCondition(
+            /*condition*/ _condition,
+            /*order*/ '',
+            /*group*/ '',
+            /*select*/ 'COUNT(*) as count',
+            /*where_values*/ [],
+            /*limit*/ false,
+            /*need_result*/ true
+        )[0]['count'];
+
+    }
+
+
+    /*
+     * Return article data by id
+     *
+     * @param {number} id - article id
+     *
+     * @return {object}
+     */
+    getArticle(id)
+    {
+        return this.getByCondition(
+            /*condition*/ 'id=' + parseInt(id),
+            /*order*/ '',
+            /*group*/ '',
+            /*select*/ 'id, categories, content, country_id, keywords, seo_description, title',
+            /*where_values*/ [],
+            /*limit*/ 1,
+            /*need_result*/ false
+        )[0]
+    }
+
+    /*
+     * Return random articles list
+     *
+     * @param {number} ignoreId - article id to be ignored
+     *
+     * @return {array of objects}
+     */
+    getRandomArticles(ignoreId){
+
+        let _maxRandomArticles = Service.getInstance(this.requestId).getMaxRandomArticles();
+        ignoreId = parseInt(ignoreId);
+
+        return this.getArticlesData([ignoreId], true, true, _maxRandomArticles)
+    }
+
+
+    /*
+     * Return articles data
+     *
+     * @param {array} ids - article ids to be ignored or fetch
+     * @param {boolean} ignore - either articles ids must be ignored or fetched
+     * @param {boolean} random - mix articles list or not
+     * @param {number} limit - result limit
+     * @param {string} select - fields for select
+     *
+     * @return {array of objects}
+     */
+    getArticlesData(ids = [], ignore = false, random = false, limit = 10, select = 'id, title')
+    {
+
+        ids = BaseFunctions.prepareToIntArray(ids);
+
+        let _idsString = ids.join(',');
+        let _condition = _idsString ? ("id " + (ignore === true ? "NOT" : "") + " IN (" + _idsString + ")") : '';
+        let _order = (random === true) ? 'RAND()' : '';
+
+        return this.getByCondition(
+            /*condition*/ _condition,
+            /*order*/ _order,
+            /*group*/ '',
+            /*select*/ select,
+            /*where_values*/ [],
+            /*limit*/ limit,
+            /*need_result*/ false
+        );
+    }
+
+
+
+
+
+
+
 
 }
 
@@ -274,31 +403,7 @@ module.exports = ArticlesModel;
 
 
 
-    public function get_category_articles($category_id = null, $offset = null, $limit = null)
-    {
 
-        $articles_db_model = self::get_model(MY_MODEL_NAME_DB_ARTICLES);
-
-        $config = self::get_config();
-
-        if (!is_null($category_id)) {
-            $category_id = (int) $category_id;
-            $condition = "categories REGEXP '[[:<:]]" . $category_id . "[[:>:]]'";
-        } else {
-            $condition = "";
-        }
-
-        $order = '';
-        $select = '*';
-        if (!is_null($offset) && !is_null($limit)) {
-            $limit = (int) $offset . ', ' . (int) $limit;
-        } else {
-            $limit = false;
-        }
-        $need_result = false;
-
-        return $articles_db_model->get_by_condition($condition, $order, '', $select, $limit, $need_result);
-    }
 
 
     public function update_article()
@@ -360,54 +465,11 @@ module.exports = ArticlesModel;
     }
 
 
-    public function get_article_data($id = null)
-    {
-        if (!(int)$id) {
-            self::concrete_error(array(MY_ERROR_FUNCTION_ARGUMENTS, 'id:' . $id));
-        }
-        $id = (int)$id;
-
-        $article_model = self::get_model(MY_MODEL_NAME_DB_ARTICLES);
-        $condition = "id = $id";
-        $order = '';
-        $select = '*';
-        $group = '';
-        $limit = 1;
-        $need_result = false;
-        $result = $article_model->get_by_condition($condition, $order, '', $select, $limit, $need_result);
-
-        $country_component = components\Countries::get_instance();
-        $country_data = $country_component->get_country_data_by_id($result['country_id']);
-        $result['country_code'] = $country_data['local_code'];
-        $result['country_name'] = $country_component->get_country_name_by_code($result['country_code']);
-
-        return $result;
-    }
 
 
 
-    public function get_articles_data($ids = array(), $ignore = false, $random = false, $limit = 10)
-    {
 
-        $ids = my_prepare_int_array($ids);
-        $article_model = self::get_model(MY_MODEL_NAME_DB_ARTICLES);
-        $ids = implode(',', $ids);
-        $condition = $ids ? ("id " . ($ignore === true ? "NOT" : "") . " IN ($ids)") : '';
-         $order = $random === true ? 'RAND()' : '';
-        $select = '*';
-        $group = '';
-        $need_result = false;
-        $articles = $article_model->get_by_condition($condition, $order, '', $select, $limit, $need_result);
-        $country_component = components\Countries::get_instance();
 
-        foreach($articles as &$article) {
-
-            $country_data = $country_component->get_country_data_by_id($article['country_id']);
-            $article['country_code'] = $country_data['local_code'];
-            $article['country_name'] = $country_component->get_country_name_by_code($article['country_code']);
-        }
-        return $articles;
-    }
 
 
 
@@ -444,89 +506,12 @@ module.exports = ArticlesModel;
 
 
 
-    public function get_articles_count_by_category($category_id = null)
-    {
-        $article_model = self::get_model(MY_MODEL_NAME_DB_ARTICLES);
-
-
-        if (!is_null($category_id)) {
-            $category_id = (int) $category_id;
-            $condition = "categories REGEXP '[[:<:]]" . $category_id . "[[:>:]]'";
-        } else {
-            $condition = '';
-        }
-
-
-        $order = '';
-        $select = 'COUNT(*) as count';
-        $group = '';
-        $limit = 1;
-        $need_result = false;
-        $result = $article_model->get_by_condition($condition, $order, '', $select, $limit, $need_result);
-
-        return $result['count'];
-    }
 
 
 
 
-    public function get_random_articles(){
-
-        $max_random_articles = self::get_module(MY_MODULE_NAME_SERVICE)->get_max_random_articles();
-        // берем данные из сессии, которые не нужно выбирать
-        $ignore_ids = @$_SESSION['article']['random_articles']['ids'];
-
-        $ignore_ids = my_array_is_not_empty($ignore_ids) ? $ignore_ids : array();
 
 
-        //делаем запрос на выборку статей с учетом данных из сесии
-        $articles = $this->get_articles_data($ignore_ids, true, true, $max_random_articles);
-
-        //если получили мало статей
-        if (count($articles) < $max_random_articles){
-            // то чистим сессию
-            $_SESSION['article']['random_articles']['ids'] = array();
-
-            // и делаем выборку снова
-            $articles = $this->get_articles_data(array(), true, true, $max_random_articles);
-        }
-
-        // заносим полученные данные в сессию
-        foreach($articles as $article) {
-            $_SESSION['article']['random_articles']['ids'][] = $article['id'];
-        }
-
-        //возвращаем результат
-        return $articles;
-    }
-
-    public function get_breadcrumbs_data()
-    {
-
-        $id = $this->get_get_var(MY_ID_VAR_NAME);
 
 
-        if ($id) {
-
-
-            $data = $this->get_article_data($id);
-            return array(
-                0 => array(
-                    'url' => MY_DOMEN . '/' . MY_MODULE_NAME_ARTICLE,
-                    'name' => self::trace('breadcrumbs/' . get_controller_name() . '/text')
-                ),
-                1 => array(
-                    'url' => MY_DOMEN . '/' . MY_MODULE_NAME_ARTICLE . '/' . MY_ACTION_NAME_ARTICLES_COUNTRIES_NAME . '/' . $data['country_code'] . '/1',
-                    'name' => $data['country_name']
-                )
-            );
-        } else {
-            return array(
-                0 => array(
-                    'url' => MY_DOMEN . '/' . MY_MODULE_NAME_ARTICLE,
-                    'name' => self::trace('breadcrumbs/' . get_controller_name() . '/text')
-                )
-            );
-        }
-    }
  */

@@ -20,7 +20,7 @@ module.exports = {
         Consts.CONTROLLER_NAME_MAP,
         Consts.CONTROLLER_NAME_MAIN,
         Consts.CONTROLLER_NAME_CATALOG,
-        Consts.CONTROLLER_NAME_ARTICLE
+        Consts.CONTROLLER_NAME_ARTICLES
     ],
 
     generic: {

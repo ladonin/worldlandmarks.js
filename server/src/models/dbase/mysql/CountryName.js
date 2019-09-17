@@ -38,7 +38,7 @@ class CountryNameModel extends DBaseMysql
      *
      * @param {string} code - country code
      * @param {string} language - in what language country name will be get
-     * @param {boolean} needResult - is result required
+     * @param {boolean} needResult - whether result is required
      *
      * @return {string} - country name
      */

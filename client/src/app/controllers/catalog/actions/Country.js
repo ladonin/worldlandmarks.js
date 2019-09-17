@@ -35,7 +35,7 @@ class CatalogCountry extends Action {
                 let _article = this.props.redux.actionData.data.articles[_index];
                 _articlesList.push(
                     <div class="catalog_country_page_article_item">
-                        <a onClick={this.goTo} data-url={'/' + Consts.CONTROLLER_NAME_ARTICLE + '/' + _article['id']}>{_article['title']}</a>
+                        <a onClick={this.goTo} data-url={'/' + Consts.CONTROLLER_NAME_ARTICLES + '/' + _article['id']}>{_article['title']}</a>
                     </div>);
             }
         }
@@ -49,7 +49,7 @@ class CatalogCountry extends Action {
                 <div className="catalog_country_page_article_items_list">
                     {_articlesList}
                     <div className="catalog_country_page_article_item padding_bottom_10 padding_top_5">
-                        <a onClick={this.goTo} data-url={'/' + Consts.CONTROLLER_NAME_ARTICLE + '/' + Consts.ACTION_NAME_ARTICLES_COUNTRIES_NAME + '/' + Router.getControllerName(this.props.match.params) + '/1'}>
+                        <a onClick={this.goTo} data-url={'/' + Consts.CONTROLLER_NAME_ARTICLES + '/' + Consts.ACTION_NAME_ARTICLES_COUNTRIES_NAME + '/' + Router.getControllerName(this.props.match.params) + '/1'}>
                             <i>{this.props.redux.staticData['see_all']}</i>
                         </a>
                     </div>
@@ -69,9 +69,9 @@ class CatalogCountry extends Action {
         if (this.props.redux.actionData.data && this.props.redux.actionData.data.states) {
             for (let _index in this.props.redux.actionData.data.states) {
                 _statesList.push(
-                        <div className="catalog_country_state_row">
-                            <a onClick={this.goTo} data-url={this.props.redux.actionData['current_url']+this.props.redux.actionData.data.states[_index]['state_code']}>{this.props.redux.actionData.data.states[_index]['state']}</a>
-                        </div>
+                    <div className="catalog_country_state_row">
+                        <a onClick={this.goTo} data-url={this.props.redux.actionData['current_url']+this.props.redux.actionData.data.states[_index]['state_code']}>{this.props.redux.actionData.data.states[_index]['state']}</a>
+                    </div>
                 );
             }
         }

@@ -20,7 +20,7 @@ function checkConrtollerName(name) {
     if ((Consts.CONTROLLER_NAME_MAP === name)
             || (Consts.CONTROLLER_NAME_MAIN === name)
             || (Consts.CONTROLLER_NAME_CATALOG === name)
-            || (Consts.CONTROLLER_NAME_ARTICLE === name)
+            || (Consts.CONTROLLER_NAME_ARTICLES === name)
             || (Consts.CONTROLLER_NAME_ERRORS === name))
     {
         return true;
@@ -86,7 +86,7 @@ function getActionData(data = {}, matchParams) {
             return data;
         }
     }
-    else if (matchParams[Consts.CONTROLLER_VAR_NAME] === Consts.CONTROLLER_NAME_ARTICLE) {
+    else if (matchParams[Consts.CONTROLLER_VAR_NAME] === Consts.CONTROLLER_NAME_ARTICLES) {
 
         if (matchParams[Consts.URL_VAR_2_NAME] === Consts.ACTION_NAME_CATEGORIES) {
             data[Consts.ACTION_VAR_NAME] = Consts.ACTION_NAME_CATEGORIES;
@@ -104,6 +104,10 @@ function getActionData(data = {}, matchParams) {
             data[Consts.ACTION_VAR_NAME] = Consts.ACTION_NAME_CATEGORY;
             data[Consts.CATEGORY_VAR_NAME] = matchParams[Consts.URL_VAR_3_NAME];
             data[Consts.PAGE_NUMBER_VAR_NAME] = matchParams[Consts.URL_VAR_4_NAME];
+            return data;
+        } else if (parseInt(matchParams[Consts.URL_VAR_2_NAME])) {
+            data[Consts.ACTION_VAR_NAME] = Consts.ACTION_NAME_ARTICLE;
+            data[Consts.ID_VAR_NAME] = matchParams[Consts.URL_VAR_2_NAME];
             return data;
         } else {
             data[Consts.ACTION_VAR_NAME] = Consts.ACTION_NAME_COUNTRIES;

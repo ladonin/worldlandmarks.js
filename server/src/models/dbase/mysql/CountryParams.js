@@ -56,7 +56,7 @@ class CountryParamsModel extends DBaseMysql
      * Get country parameters by country id
      *
      * @param {integer} countryId - country id
-     * @param {boolean} needResult - is result required
+     * @param {boolean} needResult - whether result is required
      *
      *@return {boolean}
      */

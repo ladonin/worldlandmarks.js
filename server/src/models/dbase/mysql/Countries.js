@@ -34,7 +34,7 @@ class CountriesModel extends DBaseMysql
      * Get country data by country code
      *
      * @param {string} code - country code
-     * @param {boolean} needResult - is result required
+     * @param {boolean} needResult - whether result is required
      *
      * @return {object} - country data
      */
@@ -50,6 +50,7 @@ class CountriesModel extends DBaseMysql
         );
         return _data[0].id ? _data[0] : null;
     }
+
 
     /*
      * Get all countries codes

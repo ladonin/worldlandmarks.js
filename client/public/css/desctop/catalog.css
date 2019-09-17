@@ -209,7 +209,9 @@ h3.catalog_placemark_title{
 }
 
 
-.catalog_scroll_placemark_row_photo img,.catalog_scroll_placemark_row_content_category img{
+.catalog_scroll_placemark_row_photo img,
+.catalog_scroll_placemark_row_content_category img,
+img.category{
     cursor:pointer;
 }
 

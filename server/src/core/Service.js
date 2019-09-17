@@ -491,7 +491,7 @@ class Service extends Core
      *
      * @return integer
      */
-    get_max_random_articles()
+    getMaxRandomArticles()
     {
         if (Functions.isSet(this.get_data().config.generic.max_random_articles)) {
             return this.data.config.generic.max_random_articles;

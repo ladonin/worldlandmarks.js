@@ -11,7 +11,7 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 
 import BaseFunctions from 'src/functions/BaseFunctions';
-import {UpdateStyleData} from 'src/app/parents/Common';
+import {UpdateStyleData, ClearStyleData} from 'src/app/parents/Common';
 
 import Block from 'src/app/parents/Block';
 import Consts from 'src/settings/Constants';
@@ -21,11 +21,15 @@ class Bottom extends Block {
 
     constructor() {
         super();
+        this.firstRender = true;
     }
 
+    componentWillUnmount(){
+        this.props.clearStyleData();
+    }
 
     componentDidMount(){
-
+        this.firstRender = false;
         let _marginTop = 30;
         if (BaseFunctions.getHeight(window) - BaseFunctions.getHeight('#container') > _marginTop) {
             _marginTop += BaseFunctions.getHeight(window) - BaseFunctions.getHeight('#container');
@@ -51,7 +55,7 @@ class Bottom extends Block {
         }
 
         return (
-            <div className={"page_bottom_block hidden2 " + this.props.redux.class} style={this.props.redux.style}>
+            <div className={"page_bottom_block hidden2 " + (this.firstRender ? '' : this.props.redux.class)} style={this.firstRender ? {} : this.props.redux.style}>
                 <div className="page_bottom_column_1">
                     <div className="page_bottom_column_row_header">
                         {this.props.redux.text['1']}
@@ -72,10 +76,10 @@ class Bottom extends Block {
                         <a onClick={this.goTo} data-url={'/' + Consts.CONTROLLER_NAME_CATALOG + '/' + Consts.SITEMAP_CATEGORIES_NAME}>{this.props.redux.text['6']}</a>
                     </div>
                     <div className="page_bottom_column_row">
-                        <a onClick={this.goTo} data-url={'/' + Consts.CONTROLLER_NAME_ARTICLE + '/' + Consts.ACTION_NAME_COUNTRIES}>{this.props.redux.text['7']}</a>
+                        <a onClick={this.goTo} data-url={'/' + Consts.CONTROLLER_NAME_ARTICLES + '/' + Consts.ACTION_NAME_COUNTRIES}>{this.props.redux.text['7']}</a>
                     </div>
                     <div className="page_bottom_column_row">
-                        <a onClick={this.goTo} data-url={'/' + Consts.CONTROLLER_NAME_ARTICLE + '/' + Consts.ACTION_NAME_CATEGORIES}>{this.props.redux.text['8']}</a>
+                        <a onClick={this.goTo} data-url={'/' + Consts.CONTROLLER_NAME_ARTICLES + '/' + Consts.ACTION_NAME_CATEGORIES}>{this.props.redux.text['8']}</a>
                     </div>
                 </div>
                 <div className="clear"></div>
@@ -98,4 +102,4 @@ function mapStateToProps(state) {
     }
 }
 
-export default connect(mapStateToProps, {updateStyleData: UpdateStyleData})(withRouter(Bottom))
+export default connect(mapStateToProps, {updateStyleData: UpdateStyleData, clearStyleData:ClearStyleData})(withRouter(Bottom))

@@ -217,7 +217,7 @@ class Catalog extends Component {
      * @param {string} countryCode
      * @param {string} stateCode
      * @param {string} language
-     * @param {boolean} needResult - is result required
+     * @param {boolean} needResult - whether result is required
      *
      * @return {object} - geodata of each found placemark
      * {
@@ -426,7 +426,7 @@ class Catalog extends Component {
         }
 
         _result = _ids.length
-            ? Placemarks.getInstance(this.requestId).getPlacemarksDataByIds(_ids, true, false, undefined, false, false, 1)
+            ? Placemarks.getInstance(this.requestId).getPlacemarksDataByIds(_ids, true, false, undefined, false, false, 1, false)
             : [];
 
         for (let _index in _result) {
@@ -437,6 +437,7 @@ class Catalog extends Component {
             }
 
             _result[_index]['comment'] = BaseFunctions.getCroppedText(_placemark['comment_plain'], Config['restrictions']['max_cropped_text_length'], undefined, this);
+            _result[_index]['comment_plain'] = null;
         }
         return _result;
     }
@@ -559,7 +560,7 @@ class Catalog extends Component {
             return _return;
         }
 
-        if (_actionName === Consts.CONTROLLER_NAME_SEARCH) {
+        if (_actionName === Consts.ACTION_NAME_SEARCH) {
 
             _return[0] = _countries;
 

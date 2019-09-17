@@ -17,6 +17,7 @@ import CatalogIndex from 'src/app/controllers/catalog/actions/Index';
 import CatalogCountry from 'src/app/controllers/catalog/actions/Country';
 import CatalogState from 'src/app/controllers/catalog/actions/State';
 import CatalogPlacemark from 'src/app/controllers/catalog/actions/Placemark';
+import CatalogSearch from 'src/app/controllers/catalog/actions/Search';
 
 import { withRouter } from 'react-router-dom';
 
@@ -38,6 +39,8 @@ class Catalog extends Controller {
                 _actionComponent = <CatalogState/>; break;
             case Consts.ACTION_NAME_PLACEMARK:
                 _actionComponent = <CatalogPlacemark/>; break;
+            case Consts.ACTION_NAME_SEARCH:
+                _actionComponent = <CatalogSearch/>; break;
             default:
                 _actionComponent = <CatalogIndex/>;
         }
