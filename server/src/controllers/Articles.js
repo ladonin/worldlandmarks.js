@@ -136,5 +136,5 @@ class Articles extends CommonController {
 }
 
 
-Articles.instanceId = BaseFunctions.unique_id();
+Articles.instanceId = BaseFunctions.uniqueId();
 module.exports = Articles;

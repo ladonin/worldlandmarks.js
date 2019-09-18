@@ -674,6 +674,6 @@ class Service extends Core
     }
 }
 
-Service.instanceId = BaseFunctions.unique_id();
+Service.instanceId = BaseFunctions.uniqueId();
 
 module.exports = Service;

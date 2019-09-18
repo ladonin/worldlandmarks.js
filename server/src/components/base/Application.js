@@ -439,6 +439,6 @@ class Application extends Component {
     }
 };
 
-Application.instanceId = BaseFunctions.unique_id();
+Application.instanceId = BaseFunctions.uniqueId();
 
 module.exports = Application;

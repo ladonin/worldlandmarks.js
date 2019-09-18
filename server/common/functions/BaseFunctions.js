@@ -52,6 +52,7 @@ function fieldToProperty(data, fieldName, oneObjectOnProperty = false)
     return _result;
 }
 
+
 /*
  * Check whether word exists in string list
  *  For example:

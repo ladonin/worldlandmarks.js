@@ -72,6 +72,6 @@ class CreatePointForm extends Form
 
 }
 
-CreatePointForm.instanceId = BaseFunctions.unique_id();
+CreatePointForm.instanceId = BaseFunctions.uniqueId();
 
 module.exports = CreatePointForm;

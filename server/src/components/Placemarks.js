@@ -637,6 +637,6 @@ class Placemarks extends Component {
 }
 
 
-Placemarks.instanceId = BaseFunctions.unique_id();
+Placemarks.instanceId = BaseFunctions.uniqueId();
 
 module.exports = Placemarks;

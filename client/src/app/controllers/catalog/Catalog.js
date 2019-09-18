@@ -19,6 +19,13 @@ import CatalogState from 'src/app/controllers/catalog/actions/State';
 import CatalogPlacemark from 'src/app/controllers/catalog/actions/Placemark';
 import CatalogSearch from 'src/app/controllers/catalog/actions/Search';
 
+import SitemapCategories from 'src/app/controllers/catalog/actions/SitemapCategories';
+import SitemapCategory from 'src/app/controllers/catalog/actions/SitemapCategory';
+import SitemapCountries from 'src/app/controllers/catalog/actions/SitemapCountries';
+import SitemapCountry from 'src/app/controllers/catalog/actions/SitemapCountry';
+
+
+
 import { withRouter } from 'react-router-dom';
 
 class Catalog extends Controller {
@@ -41,6 +48,14 @@ class Catalog extends Controller {
                 _actionComponent = <CatalogPlacemark/>; break;
             case Consts.ACTION_NAME_SEARCH:
                 _actionComponent = <CatalogSearch/>; break;
+            case Consts.ACTION_NAME_SITEMAP_CATEGORIES:
+                _actionComponent = <SitemapCategories/>; break;
+            case Consts.ACTION_NAME_SITEMAP_CATEGORY:
+                _actionComponent = <SitemapCategory/>; break;
+            case Consts.ACTION_NAME_SITEMAP_COUNTRIES:
+                _actionComponent = <SitemapCountries/>; break;
+            case Consts.ACTION_NAME_SITEMAP_COUNTRY:
+                _actionComponent = <SitemapCountry/>; break;
             default:
                 _actionComponent = <CatalogIndex/>;
         }

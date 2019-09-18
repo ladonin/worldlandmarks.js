@@ -163,7 +163,7 @@ function styleData(state = {}, action) {
              *  }
              *
              */
-            let _newState = Object.assign({}, state);
+            let _newState = CommonBaseFunctions.clone(state);
 
             // For each tag selectors
             for (let _selectorName in action.data) {

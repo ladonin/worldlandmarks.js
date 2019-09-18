@@ -873,6 +873,6 @@ class Map extends Component {
 
 }
 
-Map.instanceId = BaseFunctions.unique_id();
+Map.instanceId = BaseFunctions.uniqueId();
 
 module.exports = Map;

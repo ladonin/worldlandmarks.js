@@ -124,5 +124,5 @@ class DBase extends Core {
 
 }
 
-DBase.instanceId = BaseFunctions.unique_id();
+DBase.instanceId = BaseFunctions.uniqueId();
 module.exports = DBase;

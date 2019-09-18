@@ -52,5 +52,5 @@ class EmailsSendsModel extends DBaseMysql
     }
 }
 
-EmailsSendsModel.instanceId = BaseFunctions.unique_id();
+EmailsSendsModel.instanceId = BaseFunctions.uniqueId();
 module.exports = EmailsSendsModel;

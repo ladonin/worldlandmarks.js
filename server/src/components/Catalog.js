@@ -107,7 +107,7 @@ class Catalog extends Component {
             this.error(ErrorCodes.ERROR_FUNCTION_ARGUMENTS, 'country code [' + countryCode + ']', undefined, false);
         }
 
-        return MapDataModel.getInstance(this.requestId).getCountryPlacemarks(countryCode, offset, limit, this.getLanguage(), needResult = false);
+        return MapDataModel.getInstance(this.requestId).getCountryPlacemarks(countryCode, offset, limit, this.getLanguage(), false);
     }
 
     /*
@@ -125,7 +125,7 @@ class Catalog extends Component {
             this.error(ErrorCodes.ERROR_FUNCTION_ARGUMENTS, 'category id [' + categoryId + ']', undefined, false);
         }
 
-        return MapDataModel.getInstance(this.requestId).getCategoryPlacemarks(categoryId, offset, limit, this.getLanguage(), needResult = false);
+        return MapDataModel.getInstance(this.requestId).getCategoryPlacemarks(categoryId, offset, limit, this.getLanguage(), false);
     }
 
 
@@ -595,5 +595,5 @@ class Catalog extends Component {
 
 }
 
-Catalog.instanceId = BaseFunctions.unique_id();
+Catalog.instanceId = BaseFunctions.uniqueId();
 module.exports = Catalog;

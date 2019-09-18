@@ -75,6 +75,6 @@ class CountryParamsModel extends DBaseMysql
 
 }
 
-CountryParamsModel.instanceId = BaseFunctions.unique_id();
+CountryParamsModel.instanceId = BaseFunctions.uniqueId();
 
 module.exports = CountryParamsModel;

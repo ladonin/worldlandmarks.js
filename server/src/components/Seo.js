@@ -111,6 +111,6 @@ class Seo extends Component {
 }
 
 
-Seo.instanceId = BaseFunctions.unique_id();
+Seo.instanceId = BaseFunctions.uniqueId();
 
 module.exports = Seo;

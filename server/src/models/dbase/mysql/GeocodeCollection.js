@@ -381,5 +381,5 @@ class GeocodeCollectionModel extends DBaseMysql
 
 }
 
-GeocodeCollectionModel.instanceId = BaseFunctions.unique_id();
+GeocodeCollectionModel.instanceId = BaseFunctions.uniqueId();
 module.exports = GeocodeCollectionModel;

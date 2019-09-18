@@ -15,6 +15,8 @@ const ArticlesModel = require('server/src/models/dbase/mysql/Articles');
 const Config = require('server/src/settings/Config');
 const Service = require('server/src/core/Service');
 const Placemarks = require('server/src/components/Placemarks');
+const Categories = require('server/src/components/Categories');
+const ConfigRestrictions = require('server/common/settings/Restrictions');
 
 const CommonController = require('server/src/controllers/CommonController');
 
@@ -172,11 +174,94 @@ class Catalog extends CommonController {
         this.sendMe();
     }
 
+    /*
+     * Action sitemap categories
+     */
+    action_sitemap_categories() {
+        this.addActionData({
+            'categoriesData':Categories.getInstance(this.requestId).getCategories()
+        });
 
+        this.sendMe();
+    }
+
+
+
+    /*
+     * Action sitemap countries
+     */
+    action_sitemap_countries() {
+        this.addActionData({
+            'countriesData':Countries.getInstance(this.requestId).getCountriesData(true)
+        });
+
+        this.sendMe();
+    }
+
+
+
+
+    /*
+     * Action sitemap country
+     */
+    action_sitemap_country() {
+        let _countriesData = Countries.getInstance(this.requestId).getCountriesData(true);
+        let _countryCode = Countries.getInstance(this.requestId).getCountryCodeFromRequest();
+        let _countryName = Countries.getInstance(this.requestId).getCountryNameFromRequest();
+        let _currentPage = this.getFromRequest(Consts.PAGE_NUMBER_VAR_NAME);
+        let _limit = ConfigRestrictions['max_pager_rows'];
+        let _placemarksCount = GeocodeCollectionModel.getInstance(this.requestId).getPlacemarksCountInCountry(_countryCode);
+
+        let _pagesCount =  Math.ceil(_placemarksCount/_limit);
+        let _offset = (_currentPage - 1) * _limit;
+
+
+        this.addActionData({
+            'countryName':_countryName,
+            'countryCode':_countryCode,
+            'countriesData':_countriesData,
+            'placemarksData': CatalogComponent.getInstance(this.requestId).getCountryPlacemarks(_countryCode, _offset, _limit),
+            'currentPage':_currentPage,
+            'pagesCount':_pagesCount,
+        });
+
+        this.sendMe();
+    }
+
+
+
+    /*
+     * Action sitemap category
+     */
+    action_sitemap_category() {
+        let _categoriesData = Categories.getInstance(this.requestId).getCategories();
+
+        let _categoryCode = this.getFromRequest(Consts.CATEGORY_VAR_NAME);
+        let _categoryData = Categories.getInstance(this.requestId).getCategoryByCode(_categoryCode);
+
+        let _currentPage = this.getFromRequest(Consts.PAGE_NUMBER_VAR_NAME);
+        let _limit = ConfigRestrictions['max_pager_rows'];
+        let _placemarksCount = CatalogComponent.getInstance(this.requestId).getPlacemarksCountByCategory(_categoryData.id);
+
+        let _pagesCount =  Math.ceil(_placemarksCount/_limit);
+        let _offset = (_currentPage - 1) * _limit;
+
+        this.addActionData({
+            'categoryTitle':_categoryData.title,
+            'categoryId':_categoryData.id,
+            'categoryCode':_categoryCode,
+            'categoriesData':_categoriesData,
+            'placemarksData': CatalogComponent.getInstance(this.requestId).getCategoryPlacemarks(_categoryData.id, _offset, _limit),
+            'currentPage':_currentPage,
+            'pagesCount':_pagesCount,
+        });
+
+        this.sendMe();
+    }
 
 
 }
 
 
-Catalog.instanceId = BaseFunctions.unique_id();
+Catalog.instanceId = BaseFunctions.uniqueId();
 module.exports = Catalog;

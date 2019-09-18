@@ -166,7 +166,7 @@ class Language extends Core {
 
 
 
-Language.instanceId = BaseFunctions.unique_id();
+Language.instanceId = BaseFunctions.uniqueId();
 
 module.exports = Language;
 

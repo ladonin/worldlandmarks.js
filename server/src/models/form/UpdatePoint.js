@@ -47,6 +47,6 @@ class UpdatePointForm extends CreatePointForm
     }
 }
 
-UpdatePointForm.instanceId = BaseFunctions.unique_id();
+UpdatePointForm.instanceId = BaseFunctions.uniqueId();
 
 module.exports = UpdatePointForm;

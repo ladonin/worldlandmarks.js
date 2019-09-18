@@ -123,6 +123,6 @@ class MapPhotosModel extends DBaseMysql
 
 }
 
-MapPhotosModel.instanceId = BaseFunctions.unique_id();
+MapPhotosModel.instanceId = BaseFunctions.uniqueId();
 
 module.exports = MapPhotosModel;

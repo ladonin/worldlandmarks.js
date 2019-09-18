@@ -175,6 +175,6 @@ class Geo extends Component {
 }
 
 
-Geo.instanceId = BaseFunctions.unique_id();
+Geo.instanceId = BaseFunctions.uniqueId();
 
 module.exports = Geo;

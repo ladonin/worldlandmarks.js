@@ -61,7 +61,7 @@ class Users extends DBaseMysql
 
 }
 
-Users.instanceId = BaseFunctions.unique_id();
+Users.instanceId = BaseFunctions.uniqueId();
 
 module.exports = Users;
 

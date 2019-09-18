@@ -36,5 +36,5 @@ class Responce extends Component{
 }
 
 
-Responce.instanceId = BaseFunctions.unique_id();
+Responce.instanceId = BaseFunctions.uniqueId();
 module.exports = Responce;

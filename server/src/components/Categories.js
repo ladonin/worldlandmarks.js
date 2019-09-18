@@ -204,7 +204,7 @@ class Categories extends Component {
 
 }
 
-Categories.instanceId = BaseFunctions.unique_id();
+Categories.instanceId = BaseFunctions.uniqueId();
 
 module.exports = Categories;
 

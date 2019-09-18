@@ -35,6 +35,6 @@ class Errors extends CommonController {
 
 
 
-Errors.instanceId = BaseFunctions.unique_id();
+Errors.instanceId = BaseFunctions.uniqueId();
 module.exports = Errors;
 

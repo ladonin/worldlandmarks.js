@@ -58,6 +58,6 @@ class States extends Component {
 
 
 
-States.instanceId = BaseFunctions.unique_id();
+States.instanceId = BaseFunctions.uniqueId();
 
 module.exports = States;

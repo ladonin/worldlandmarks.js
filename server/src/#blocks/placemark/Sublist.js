@@ -111,5 +111,5 @@ class SublistBlock extends Component {
     }
 }
 
-SublistBlock.instanceId = BaseFunctions.unique_id();
+SublistBlock.instanceId = BaseFunctions.uniqueId();
 module.exports = SublistBlock;

@@ -79,5 +79,5 @@ class Accounts extends Component {
 
 }
 
-Accounts.instanceId = BaseFunctions.unique_id();
+Accounts.instanceId = BaseFunctions.uniqueId();
 module.exports = Accounts;

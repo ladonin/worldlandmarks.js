@@ -59,5 +59,5 @@ class ErrorHandler extends Component {
 }
 
 
-ErrorHandler.instanceId = BaseFunctions.unique_id();
+ErrorHandler.instanceId = BaseFunctions.uniqueId();
 module.exports = ErrorHandler;

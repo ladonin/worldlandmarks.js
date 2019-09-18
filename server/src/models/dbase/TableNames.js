@@ -61,6 +61,6 @@ class TableNames extends Component
 
 }
 
-TableNames.instanceId = BaseFunctions.unique_id();
+TableNames.instanceId = BaseFunctions.uniqueId();
 
 module.exports = TableNames;

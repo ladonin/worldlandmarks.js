@@ -84,5 +84,5 @@ module.exports =  {
 
 }
 
-Request.instanceId = BaseFunctions.unique_id();
+Request.instanceId = BaseFunctions.uniqueId();
 module.exports = Request;

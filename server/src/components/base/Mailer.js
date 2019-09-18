@@ -119,5 +119,5 @@ class Mailer extends Component {
 
 }
 
-Mailer.instanceId = BaseFunctions.unique_id();
+Mailer.instanceId = BaseFunctions.uniqueId();
 module.exports = Mailer;

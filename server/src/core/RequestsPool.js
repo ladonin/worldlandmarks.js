@@ -74,7 +74,7 @@ module.exports = {
      */
     init(data, token) {
 
-        let _reqId = BaseFunctions.unique_id();
+        let _reqId = BaseFunctions.uniqueId();
         _instances_pool[_reqId] = {request: data, socketToken: token};
         return _reqId;
     },

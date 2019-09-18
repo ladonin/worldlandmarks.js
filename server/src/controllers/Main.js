@@ -181,6 +181,6 @@ console.log(this.getRequestFormData().a);
  */
 
 
-Main.instanceId = BaseFunctions.unique_id();
+Main.instanceId = BaseFunctions.uniqueId();
 module.exports = Main;
 

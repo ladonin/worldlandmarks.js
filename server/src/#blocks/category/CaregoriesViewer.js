@@ -38,5 +38,5 @@ class CaregoriesViewerBlock extends Component {
     }
 }
 
-CaregoriesViewerBlock.instanceId = BaseFunctions.unique_id();
+CaregoriesViewerBlock.instanceId = BaseFunctions.uniqueId();
 module.exports = CaregoriesViewerBlock;

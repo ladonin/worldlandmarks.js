@@ -307,14 +307,6 @@ class MapDataModel extends DBaseMysql
                 );
     }
 
-
-
-
-
-
-
-
-
     /*
      * Return placemarks count by category id
      *
@@ -620,6 +612,6 @@ class MapDataModel extends DBaseMysql
 
 }
 
-MapDataModel.instanceId = BaseFunctions.unique_id();
+MapDataModel.instanceId = BaseFunctions.uniqueId();
 
 module.exports = MapDataModel;

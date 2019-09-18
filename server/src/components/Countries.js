@@ -543,7 +543,7 @@ class Countries extends Component {
 
 }
 
-Countries.instanceId = BaseFunctions.unique_id();
+Countries.instanceId = BaseFunctions.uniqueId();
 module.exports = Countries;
 
 

@@ -1,8 +1,8 @@
 /*
- * File src/app/controllers/articles/actions/Countries.js
- * import ArticleCountries from 'src/app/controllers/articles/actions/Countries';
+ * File src/app/controllers/catalog/actions/SitemapCountries.js
+ * import SitemapCountries from 'src/app/controllers/catalog/actions/SitemapCountries';
  *
- * Countries action component for Articles controller
+ * Sitemap Countries action component for Catalog controller
  */
 
 import React, { Component } from 'react';
@@ -19,13 +19,11 @@ import Common from 'src/app/controllers/articles/actions/_Common';
 import CssTransition from 'src/app/common/CssTransition';
 import Bottom from 'src/app/common/blocks/Bottom';
 
-class ArticleCountries extends Common {
+class SitemapCountries extends Common {
 
     constructor() {
         super();
     }
-
-
 
     render() {
         if (!this.props.redux) {
@@ -37,7 +35,7 @@ class ArticleCountries extends Common {
             let _country = this.props.redux.actionData.countriesData[_index];
             _countriesList.push(
                     <div className="sitemap_country_row">
-                        <a onClick={this.goTo} data-url={'/' + Consts.CONTROLLER_NAME_ARTICLES + '/' + Consts.ACTION_NAME_COUNTRY + '/' + _country['country_code'] + '/1'}>{_country['name']}</a>
+                        <a onClick={this.goTo} data-url={'/' + Consts.CONTROLLER_NAME_CATALOG + '/' + Consts.ACTION_NAME_SITEMAP_COUNTRY + '/' + _country['code'] + '/1'}>{_country['name']}</a>
                     </div>);
         }
 
@@ -61,8 +59,8 @@ class ArticleCountries extends Common {
                                     </h3>
                                 </div>
                                 <div className="padding_left_10">
-                                    <a onClick={this.goTo} data-url={'/' + Consts.CONTROLLER_NAME_ARTICLES + '/' + Consts.ACTION_NAME_CATEGORIES}>
-                                        <i>{this.props.redux.staticData.articles_categories_header}</i>
+                                    <a onClick={this.goTo} data-url={'/' + Consts.CONTROLLER_NAME_CATALOG + '/' + Consts.ACTION_NAME_SITEMAP_CATEGORIES}>
+                                        <i>{this.props.redux.staticData.catalog_sitemap_categories_header}</i>
                                     </a>
                                 </div>
                             </div>
@@ -78,7 +76,7 @@ class ArticleCountries extends Common {
 }
 
 function MapStateToProps(state) {
-    return GetState(state, Consts.CONTROLLER_NAME_ARTICLES, Consts.ACTION_NAME_COUNTRIES)
+    return GetState(state, Consts.CONTROLLER_NAME_CATALOG, Consts.ACTION_NAME_SITEMAP_COUNTRIES)
 }
 
-export default connect(MapStateToProps, MapDispatchToProps)(withRouter(ArticleCountries))
+export default connect(MapStateToProps, MapDispatchToProps)(withRouter(SitemapCountries))

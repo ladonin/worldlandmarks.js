@@ -1,8 +1,8 @@
 /*
- * File src/app/controllers/articles/actions/Country.js
- * import ArticleCountry from 'src/app/controllers/articles/actions/Country';
+ * File src/app/controllers/catalog/actions/SitemapCountry.js
+ * import SitemapCountry from 'src/app/controllers/catalog/actions/SitemapCountry';
  *
- * Country action component for Articles controller
+ * Sitemap Country action component for Catalog controller
  */
 
 import React, { Component } from 'react';
@@ -14,14 +14,13 @@ import { withRouter } from 'react-router-dom';
 import Consts from 'src/settings/Constants';
 import {GetState, MapDispatchToProps} from 'src/app/parents/Action';
 import BaseFunctions from 'src/functions/BaseFunctions';
-import CommonBaseFunctions from 'src/../../server/common/functions/BaseFunctions';
 import Common from 'src/app/controllers/articles/actions/_Common';
 
 // Components
 import CssTransition from 'src/app/common/CssTransition';
 import Bottom from 'src/app/common/blocks/Bottom';
 
-class ArticleCountry extends Common {
+class SitemapCountry extends Common {
 
     constructor() {
         super();
@@ -37,7 +36,7 @@ class ArticleCountry extends Common {
             let _country = this.props.redux.actionData.countriesData[_index];
             _countriesList.push(
                     <div className="sitemap_country_row">
-                        <a onClick={this.goTo} data-url={'/' + Consts.CONTROLLER_NAME_ARTICLES + '/' + Consts.ACTION_NAME_COUNTRY + '/' + _country['country_code'] + '/1'}>{_country['name']}</a>
+                        <a onClick={this.goTo} data-url={'/' + Consts.CONTROLLER_NAME_CATALOG + '/' + Consts.ACTION_NAME_SITEMAP_COUNTRY + '/' + _country['code'] + '/1'}>{_country['name']}</a>
                     </div>);
         }
 
@@ -47,17 +46,20 @@ class ArticleCountry extends Common {
             if (_i === parseInt(this.props.redux.actionData.currentPage)) {
                 _pagesList.push(<a className='sitemap_current_page'>{_i}</a>);
             } else {
-                _pagesList.push(<a onClick={this.goTo} data-url={'/' + Consts.CONTROLLER_NAME_ARTICLES + '/' + Consts.ACTION_NAME_COUNTRY + '/' + this.props.redux.actionData.countryCode + '/' + _i}>{_i}</a>);
+                _pagesList.push(<a onClick={this.goTo} data-url={'/' + Consts.CONTROLLER_NAME_CATALOG + '/' + Consts.ACTION_NAME_SITEMAP_COUNTRY + '/' + this.props.redux.actionData.countryCode + '/' + _i}>{_i}</a>);
             }
         }
 
 
-        let _articlesList = [];
-        for (let _index in this.props.redux.actionData.articlesData) {
-            let _article = this.props.redux.actionData.articlesData[_index];
-            _articlesList.push(
+        let _placemarksList = [];
+        for (let _index in this.props.redux.actionData.placemarksData) {
+            let _placemark = this.props.redux.actionData.placemarksData[_index];
+
+            let _urlPart =  _placemark.state_code === 'undefined' ? '/' : ('/' + _placemark.state_code + '/');
+
+            _placemarksList.push(
             <div className="sitemap_placemark_row">
-                <a onClick={this.goTo} data-url={'/' + Consts.CONTROLLER_NAME_ARTICLES + '/' + _article.id}>{_article.title}</a>
+                <a onClick={this.goTo} data-url={'/' + Consts.CONTROLLER_NAME_CATALOG + '/' + _placemark.country_code + _urlPart + _placemark.id}>{_placemark.title}</a>
             </div>);
         }
 
@@ -67,7 +69,7 @@ class ArticleCountry extends Common {
                         <BrowserView>
                             <div className="sitemap_block">
                                 <div className="sitemap_header">
-                                    {this.props.redux.staticData.articles_countries_header}
+                                    {this.props.redux.staticData.catalog_sitemap_countries_header}
                                 </div>
 
                                 <div className="sitemap_country_block">
@@ -82,28 +84,28 @@ class ArticleCountry extends Common {
                                 <div className="sitemap_pages_block">
                                     {_pagesList}
                                 </div>
-                                {_articlesList}
+                                {_placemarksList}
                                 <div className="clear"></div>
                                 <div className="h_15px"></div>
                                 <div className="padding_left_10">
-                                    <a onClick={this.goTo} data-url={'/' + Consts.CONTROLLER_NAME_ARTICLES + '/' + Consts.ACTION_NAME_CATEGORIES}>
-                                        <i>{this.props.redux.staticData.articles_categories_header}</i>
+                                    <a onClick={this.goTo} data-url={'/' + Consts.CONTROLLER_NAME_CATALOG + '/' + Consts.ACTION_NAME_SITEMAP_CATEGORIES}>
+                                        <i>{this.props.redux.staticData.catalog_sitemap_categories_header}</i>
                                     </a>
                                 </div>
                             </div>
                         </BrowserView>
                         <MobileView>
-                            TODO MOBILE ArticleCountry
+                            TODO MOBILE
                         </MobileView>
                     </CssTransition>
                     <Bottom key={this.shouldBottomUpdate}/>
                 </React.Fragment>
-            );
+                );
     }
 }
 
 function MapStateToProps(state) {
-    return GetState(state, Consts.CONTROLLER_NAME_ARTICLES, Consts.ACTION_NAME_COUNTRY)
+    return GetState(state, Consts.CONTROLLER_NAME_CATALOG, Consts.ACTION_NAME_SITEMAP_COUNTRY)
 }
 
-export default connect(MapStateToProps, MapDispatchToProps)(withRouter(ArticleCountry))
+export default connect(MapStateToProps, MapDispatchToProps)(withRouter(SitemapCountry))

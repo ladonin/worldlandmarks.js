@@ -46,7 +46,7 @@ class Articles extends Component {
     }
 }
 
-Articles.instanceId = BaseFunctions.unique_id();
+Articles.instanceId = BaseFunctions.uniqueId();
 
 module.exports = Articles;
 

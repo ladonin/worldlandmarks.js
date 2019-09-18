@@ -11,11 +11,12 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 
 import BaseFunctions from 'src/functions/BaseFunctions';
+import CommonBaseFunctions from 'src/../../server/common/functions/BaseFunctions';
 import {UpdateStyleData, ClearStyleData} from 'src/app/parents/Common';
 
 import Block from 'src/app/parents/Block';
 import Consts from 'src/settings/Constants';
-
+import CssTransition from 'src/app/common/CssTransition';
 
 class Bottom extends Block {
 
@@ -24,8 +25,11 @@ class Bottom extends Block {
         this.firstRender = true;
     }
 
-    componentWillUnmount(){
-        this.props.clearStyleData();
+    shouldComponentUpdate(nextProps, nextState){
+        if (typeof nextProps.redux === 'undefined') {
+            return false;
+        }
+        return true;
     }
 
     componentDidMount(){
@@ -54,7 +58,7 @@ class Bottom extends Block {
             return null;
         }
 
-        return (
+        return (<CssTransition>
             <div className={"page_bottom_block hidden2 " + (this.firstRender ? '' : this.props.redux.class)} style={this.firstRender ? {} : this.props.redux.style}>
                 <div className="page_bottom_column_1">
                     <div className="page_bottom_column_row_header">
@@ -70,10 +74,10 @@ class Bottom extends Block {
                         <a onClick={this.goTo} data-url={'/' + Consts.CONTROLLER_NAME_CATALOG + '/' + Consts.ACTION_NAME_SEARCH}>{this.props.redux.text['4']}</a>
                     </div>
                     <div className="page_bottom_column_row">
-                        <a onClick={this.goTo} data-url={'/' + Consts.CONTROLLER_NAME_CATALOG + '/' + Consts.SITEMAP_COUNTRIES_NAME}>{this.props.redux.text['5']}</a>
+                        <a onClick={this.goTo} data-url={'/' + Consts.CONTROLLER_NAME_CATALOG + '/' + Consts.ACTION_NAME_SITEMAP_COUNTRIES}>{this.props.redux.text['5']}</a>
                     </div>
                     <div className="page_bottom_column_row">
-                        <a onClick={this.goTo} data-url={'/' + Consts.CONTROLLER_NAME_CATALOG + '/' + Consts.SITEMAP_CATEGORIES_NAME}>{this.props.redux.text['6']}</a>
+                        <a onClick={this.goTo} data-url={'/' + Consts.CONTROLLER_NAME_CATALOG + '/' + Consts.ACTION_NAME_SITEMAP_CATEGORIES}>{this.props.redux.text['6']}</a>
                     </div>
                     <div className="page_bottom_column_row">
                         <a onClick={this.goTo} data-url={'/' + Consts.CONTROLLER_NAME_ARTICLES + '/' + Consts.ACTION_NAME_COUNTRIES}>{this.props.redux.text['7']}</a>
@@ -83,11 +87,9 @@ class Bottom extends Block {
                     </div>
                 </div>
                 <div className="clear"></div>
-                <div className="page_bottom_rights">
-                    {this.props.redux.text['9']}
-                </div>
+                <div className="page_bottom_rights" dangerouslySetInnerHTML={{__html:this.props.redux.text['9']}}></div>
 
-            </div>
+            </div></CssTransition>
         );
     }
 }

@@ -69,12 +69,8 @@ class CommonController extends Controller {
                 'catalog_search_form_all_countries':this.getText('site/title/catalog/search/form/all_countries'),
                 'catalog_search_form_submit_text':this.getText('site/title/catalog/search/submit/text'),
                 'nothing_found':this.getText('warning/search/empty_result'),
-
-
-
-
-
-
+                'catalog_sitemap_countries_header':this.getText('page_bottom/sitemap_countries/text'),
+                'catalog_sitemap_categories_header':this.getText('page_bottom/sitemap_categories/text')
             }
         };
     }

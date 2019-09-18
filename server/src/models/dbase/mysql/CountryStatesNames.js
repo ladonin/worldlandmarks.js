@@ -92,6 +92,6 @@ class CountryStatesNamesModel extends DBaseMysql
 
 }
 
-CountryStatesNamesModel.instanceId = BaseFunctions.unique_id();
+CountryStatesNamesModel.instanceId = BaseFunctions.uniqueId();
 
 module.exports = CountryStatesNamesModel;

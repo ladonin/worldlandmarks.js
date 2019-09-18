@@ -415,7 +415,7 @@ function deleteFile(path) {
     }
 }
 
-function unique_id() {
+function uniqueId() {
     return toInt(LodashUtil.uniqueId());
 }
 
@@ -1092,7 +1092,7 @@ module.exports = {
     //checkCoordinate,
     toFloat,
     deleteFile,
-    unique_id,
+    uniqueId,
     isSet,
     isNull,
     isUndefined,

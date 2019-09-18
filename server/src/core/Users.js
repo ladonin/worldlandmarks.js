@@ -66,7 +66,7 @@ class Users extends Core
 }
 
 
-Users.instanceId = BaseFunctions.unique_id();
+Users.instanceId = BaseFunctions.uniqueId();
 
 
 module.exports = Users;

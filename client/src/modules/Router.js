@@ -49,12 +49,31 @@ function getActionData(data = {}, matchParams) {
         return data;
     }
 
-
     if (matchParams[Consts.CONTROLLER_VAR_NAME] === Consts.CONTROLLER_NAME_CATALOG) {
 
         if (matchParams[Consts.URL_VAR_2_NAME] === Consts.ACTION_NAME_SEARCH) {
             // Search page
             data[Consts.ACTION_VAR_NAME] = Consts.ACTION_NAME_SEARCH;
+            return data;
+        } else if (matchParams[Consts.URL_VAR_2_NAME] === Consts.ACTION_NAME_SITEMAP_COUNTRIES) {
+            // Sitemap page
+            data[Consts.ACTION_VAR_NAME] = Consts.ACTION_NAME_SITEMAP_COUNTRIES;
+            return data;
+        } else if (matchParams[Consts.URL_VAR_2_NAME] === Consts.ACTION_NAME_SITEMAP_COUNTRY) {
+            // Sitemap page
+            data[Consts.ACTION_VAR_NAME] = Consts.ACTION_NAME_SITEMAP_COUNTRY;
+            data[Consts.COUNTRY_VAR_NAME] = matchParams[Consts.URL_VAR_3_NAME];
+            data[Consts.PAGE_NUMBER_VAR_NAME] = matchParams[Consts.URL_VAR_4_NAME];
+            return data;
+        } else if (matchParams[Consts.URL_VAR_2_NAME] === Consts.ACTION_NAME_SITEMAP_CATEGORIES) {
+            // Sitemap page
+            data[Consts.ACTION_VAR_NAME] = Consts.ACTION_NAME_SITEMAP_CATEGORIES;
+            return data;
+        } else if (matchParams[Consts.URL_VAR_2_NAME] === Consts.ACTION_NAME_SITEMAP_CATEGORY) {
+            // Sitemap page
+            data[Consts.ACTION_VAR_NAME] = Consts.ACTION_NAME_SITEMAP_CATEGORY;
+            data[Consts.CATEGORY_VAR_NAME] = matchParams[Consts.URL_VAR_3_NAME];
+            data[Consts.PAGE_NUMBER_VAR_NAME] = matchParams[Consts.URL_VAR_4_NAME];
             return data;
         } else if (matchParams[Consts.URL_VAR_4_NAME]) {
             // Placemark page

@@ -77,6 +77,6 @@ class CountryStatesCitiesTranslationsModel extends DBaseMysql
 
 }
 
-CountryStatesCitiesTranslationsModel.instanceId = BaseFunctions.unique_id();
+CountryStatesCitiesTranslationsModel.instanceId = BaseFunctions.uniqueId();
 
 module.exports = CountryStatesCitiesTranslationsModel;

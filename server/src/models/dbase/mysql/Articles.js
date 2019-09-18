@@ -186,7 +186,7 @@ class ArticlesModel extends DBaseMysql
 
             let _categoryData = Categories.getInstance(this.requestId).getCategory(_categoryId);
             _result.push({
-                id:_categoryData.code,
+                code:_categoryData.code,
                 title:Categories.getInstance(this.requestId).prepareNameForArticles(_categoryData.code, _categoryData.title)
             });
         }
@@ -348,7 +348,7 @@ class ArticlesModel extends DBaseMysql
 }
 
 
-ArticlesModel.instanceId = BaseFunctions.unique_id();
+ArticlesModel.instanceId = BaseFunctions.uniqueId();
 
 module.exports = ArticlesModel;
 

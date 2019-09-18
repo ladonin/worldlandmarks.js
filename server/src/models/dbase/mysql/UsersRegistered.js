@@ -39,6 +39,6 @@ class UsersRegistered extends DBaseMysql
 
 
 
-UsersRegistered.instanceId = BaseFunctions.unique_id();
+UsersRegistered.instanceId = BaseFunctions.uniqueId();
 
 module.exports = UsersRegistered;
