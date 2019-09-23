@@ -13,15 +13,16 @@ import CategoryViewer from 'src/app/common/blocks/CategoryViewer';
 // Block components
 import Breadcrumbs from 'src/app/common/blocks/Breadcrumbs';
 import Hat from 'src/app/common/blocks/Hat';
+import Alert from 'src/app/common/Alert';
 
 render(
         <BrowserRouter>
             <Provider store={Store}>
+                <Alert/>
                 <CategoryViewer/>
                 <Hat/>
                 <Breadcrumbs/>
                 <App/>
-
             </Provider>
         </BrowserRouter>
         , document.getElementById('container'));

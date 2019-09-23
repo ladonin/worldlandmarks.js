@@ -1,57 +1,31 @@
+/*
+ * File src/app/controllers/map/Map.js
+ * import Map from 'src/app/controllers/map/Map';
+ *
+ * Map controller
+ */
+
 import React, { Component } from 'react';
+import { withRouter } from 'react-router-dom';
+import { connect } from 'react-redux';
 
-class Map extends Component {
+import Controller from 'src/app/parents/Controller';
+import Consts from 'src/settings/Constants';
+import Router from 'src/modules/Router';
 
-  // Initialize the state
-  constructor(props){
-    super(props);
-    this.state = {
-      list: []
+// Action components
+import MapIndex from 'src/app/controllers/map/actions/Index';
+
+
+class Map extends Controller {
+
+    constructor() {
+        super();
     }
-  }
 
-  // Fetch the list on first mount
-  componentDidMount() {
-    this.getUsers();
-  }
-
-  // Retrieves the list of items from the Express app
-  getUsers = () => {
-    fetch('/api/get_users')
-    .then(res => res.json())
-    .then(list => this.setState({ list }))
-  }
-
-
-  render() {
-    const { list } = this.state;
-
-    return (
-      <div className="App">
-        <h1>List of Users</h1>
-        {
-        /* Render the list of items */
-        list.length ? (
-          <div>
-            {
-            /* Render the list of items */
-            list.map((item) => {
-              return(
-                <div>
-                  {item}
-                </div>
-              );
-            })}
-          </div>
-        ) : (
-          <div>
-
-          </div>
-        )
-      }
-      </div>
-    );
-  }
+    render() {
+        return <MapIndex/>;
+    }
 }
 
-export default Map;
+export default connect()(withRouter(Map))

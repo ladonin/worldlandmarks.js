@@ -7,7 +7,6 @@
 
 
 import Consts from 'src/settings/Constants';
-import ErrorHandler from 'src/modules/ErrorHandler';
 import ErrorCodes from 'src/settings/ErrorCodes';
 
 /*
@@ -132,17 +131,12 @@ function getActionData(data = {}, matchParams) {
             data[Consts.ACTION_VAR_NAME] = Consts.ACTION_NAME_COUNTRIES;
             return data;
         }
+    } else if (matchParams[Consts.CONTROLLER_VAR_NAME] === Consts.CONTROLLER_NAME_MAP) {
+        data[Consts.ACTION_VAR_NAME] = Consts.ACTION_NAME_INDEX;
+        if (matchParams[Consts.URL_VAR_2_NAME]) data[Consts.ID_VAR_NAME] = matchParams[Consts.URL_VAR_2_NAME];
+
+        return data;
     }
-
-
-
-
-
-
-
-
-
-
 
     return data;
 }

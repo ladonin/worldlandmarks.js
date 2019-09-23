@@ -21,6 +21,9 @@ class Hat extends Block {
     }
 
     render() {
+        if (!this.props.redux.domainName || this.props.redux.controller === Consts.CONTROLLER_NAME_MAP) {
+            return null;
+        }
         return (
             <div className="hat">
                 <BrowserView>
@@ -55,6 +58,7 @@ function mapStateToProps(state) {
 
     return {
         redux: {
+            controller:state.staticData['controller'],
             domainName:state.staticData['domain_name'],
             logoUnderText:state.staticData['hat_logo_under_text']
         }

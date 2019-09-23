@@ -26,6 +26,7 @@ class MainLinks extends Block {
         return (
                 <React.Fragment>
                     <BrowserView>
+                    <div className="padding_after_hat"></div>
                     <div className="main_block">
                         <div className="main_block_map_block">
                             <img src={Consts.DOMAIN + '/img/map_240.png'} onClick={this.goTo} data-url="map"/>

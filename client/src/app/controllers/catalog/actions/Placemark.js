@@ -14,18 +14,16 @@ import { Link } from 'react-router-dom';
 import Action, {GetState, MapDispatchToProps} from 'src/app/parents/Action';
 import Router from 'src/modules/Router';
 import Consts from 'src/settings/Constants';
-import ConfigRestrictions from 'src/../../server/common/settings/Restrictions';
-import BaseFunctions from 'src/functions/BaseFunctions';
-import ImageDimensions from 'src/modules/ImageDimensions';
 
 // Components
-import PhotoAlbum from 'src/app/common/blocks/catalog/PhotoAlbum';
 import CssTransition from 'src/app/common/CssTransition';
 import PlacemarksList from 'src/app/common/blocks/PlacemarksList';
-import PhotosNavigator from 'src/app/common/blocks/catalog/placemark/PhotosNavigator';
 import PlacemarkCaregories from 'src/app/common/blocks/PlacemarkCaregories';
 import PlacemarksSublist from 'src/app/common/blocks/PlacemarksSublist';
 import Bottom from 'src/app/common/blocks/Bottom';
+import PlacemarkAdminLinks from 'src/app/common/PlacemarkAdminLinks';
+import PhotosList from 'src/app/common/PhotosList';
+
 
 class CatalogPlacemark extends Action {
 
@@ -36,32 +34,6 @@ class CatalogPlacemark extends Action {
     render() {
         if (!this.props.redux) {
             return null;
-        }
-
-        let _photosList = [];
-        for (let _index in this.props.redux.actionData.data['photos']) {
-            let _number = parseInt(_index);
-            let _photo =  this.props.redux.actionData.data['photos'][_index];
-            let _dimentions = ImageDimensions.prepareContentImageDimentions(
-                    _photo['width'],
-                    _photo['height'],
-                    ConfigRestrictions['desctop_content_width'],
-                    (BaseFunctions.getHeight(window) - 100));
-
-            _photosList.push(
-                <React.Fragment>
-                    <div className="placemark_photo_navigator" id={'placemark_photo_'+_number+'_navigator'}>
-                        <PhotosNavigator scrollBlockIdName='body, html' photosCount={this.props.redux.actionData.data['photos'].length} contentBlockIdName='catalog_placemark_comment' number={_number}/>
-                    </div>
-                    <a href={_photo['dir'] + '1_' + _photo['name']}><img
-                        style={{
-                            width: _dimentions.width + 'px',
-                            height: _dimentions.height + 'px'
-                        }}
-                        id={'catalog_placemark_photo_'+_number}
-                        src={_photo['dir'] + '10_' + _photo['name']}
-                        alt={this.props.redux.actionData.data['title']}/></a>
-                </React.Fragment>);
         }
 
         return (
@@ -75,13 +47,11 @@ class CatalogPlacemark extends Action {
                                 </h3>
                             </React.Fragment>}
 
-                        {this.props.redux.staticData['is_admin']&&
-                            <React.Fragment>
-                                <div style={{margin:'10px 20px', textAlign:'left'}}><a target="_blank" style={{color:'#f00'}} href={"/admin/update_placemark_adress?map_data_id="+this.props.redux.actionData.data['id']}>[поменять адрес]</a></div>
-                                <div style={{margin:'10px 20px', textAlign:'left'}}><a target="_blank" style={{color:'#f00'}} href={"/admin/update_placemark_categories?map_data_id="+this.props.redux.actionData.data['id']+"&category_id="+this.props.redux.actionData.data['category']}>[управление категориями и релевантностью]</a></div>
-                                <div style={{margin:'10px 20px', textAlign:'left'}}><a target="_blank" style={{color:'#f00'}} href={"/admin/update_placemark_seo?map_data_id="+this.props.redux.actionData.data['id']+"&category_id="+this.props.redux.actionData.data['category']}>[управление SEO]</a></div>
-                                <div style={{margin:'10px 20px', textAlign:'left'}}><a style={{color:'#f00'}} href={"/admin/export_placemarks?id="+this.props.redux.actionData.data['id']}>[скачать архив]</a></div>
-                            </React.Fragment>}
+                        <PlacemarkAdminLinks
+                            isAdmin={this.props.redux.staticData['is_admin']}
+                            id={this.props.redux.actionData.data['id']}
+                            category={this.props.redux.actionData.data['category']}/>
+
                         <PlacemarkCaregories subcategories={this.props.redux.actionData.data['subcategories']} category={this.props.redux.actionData.data['category']}/>
                         <div className="catalog_placemark_map_lnk">
                             <a onClick={this.goTo} data-url={'/' + Consts.CONTROLLER_NAME_MAP + '/' + this.props.redux.actionData.data['id']}><img
@@ -93,15 +63,13 @@ class CatalogPlacemark extends Action {
                                     marginRight:'5px'
                                 }}/>{this.props.redux.staticData['catalog_placemark_link_to_map_text']}</a>
                         </div>
-                        <div className="catalog_placemark_address" dangerouslySetInnerHTML={{__html:'<span>'+this.props.redux.actionData.data['formatted_address_with_route']+'</span>'}}>
-
-                        </div>
+                        <div className="catalog_placemark_address" dangerouslySetInnerHTML={{__html:'<span>'+this.props.redux.actionData.data['formatted_address_with_route']+'</span>'}}></div>
                         <div className="catalog_placemark_photo">
-                            {_photosList}
+                            <PhotosList photos={this.props.redux.actionData.data['photos']}/>
                         </div>
                         <div
                             className="catalog_placemark_comment"
-                            id="catalog_placemark_comment"
+                            id="placemark_comment"
                             dangerouslySetInnerHTML={{__html:this.props.redux.actionData.data['comment']}}>
                         </div>
                         <div className="catalog_placemark_map_lnk">

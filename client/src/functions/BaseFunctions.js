@@ -30,5 +30,37 @@ module.exports = {
     getScrollTop(selector) {
         // Use universal multibrowser function on jquery
         return window.$(selector).scrollTop();
+    },
+    getCss(selector, param) {
+        // Use universal multibrowser function on jquery
+        return window.$(selector).css(param);
+    },
+    setHeight(selector, value) {
+        // Use universal multibrowser function on jquery
+        window.$(selector).height(value);
+    },
+    setWidth(selector, value) {
+        // Use universal multibrowser function on jquery
+        window.$(selector).width(value);
+    },
+    setCss(selector, param, value) {
+        // Use universal multibrowser function on jquery
+        window.$(selector).css(param, value);
+    },
+    show(selector) {
+        // Use universal multibrowser function on jquery
+        window.$(selector).show();
+    },
+    hide(selector) {
+        // Use universal multibrowser function on jquery
+        window.$(selector).hide();
+    },
+    is(selector, what) {
+        // Use universal multibrowser function on jquery
+        window.$(selector).is(what);
+    },
+    niceScroll(selector) {
+        // Use universal multibrowser function on jquery
+        window.$(selector).niceScroll({cursorcolor: "#444"});
     }
 }

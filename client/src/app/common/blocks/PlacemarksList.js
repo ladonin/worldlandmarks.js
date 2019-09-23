@@ -89,10 +89,9 @@ class PlacemarksList extends Block {
         Socket.backgroundQuery(
             Consts.CONTROLLER_NAME_CATALOG,
             'get_placemarks_list',
-            this.props.match.params,
             {
                 [Consts.ID_VAR_NAME]:this.idNext,
-                [Consts.REQUEST_FORM_DATA]:this.searchData
+                [Consts.REQUEST_FORM_DATA]:this.props.data ? this.props.data : this.searchData
             })
     }
 

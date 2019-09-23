@@ -15,11 +15,8 @@ let _Consts = {
     FORM_TEXT_TAG_CODE_P: 'p',
     STYLE_DATA: 'style_data',
     UPDATE_STYLE_DATA: 'UPDATE_STYLE_DATA',
-    CLEAR_STYLE_DATA:'CLEAR_STYLE_DATA'
-
-
-
-
+    CLEAR_STYLE_DATA:'CLEAR_STYLE_DATA',
+    YMAP_ZOOM:'ymapZoom'
 }
 export default {...CommonConsts, ..._Consts}
 

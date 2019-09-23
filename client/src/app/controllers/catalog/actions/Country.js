@@ -27,7 +27,7 @@ class CatalogCountry extends Action {
         super();
     }
 
-    getlastArticles() {
+    getLastArticles() {
 
         let _articlesList = [];
         if (this.props.redux.actionData.data && this.props.redux.actionData.data.articles) {
@@ -97,7 +97,7 @@ class CatalogCountry extends Action {
                                 <PhotoAlbum hasStates={this.props.redux.actionData['has_states']}/>
                             </div>
                             <div class="clear"></div>
-                            {this.getlastArticles()}
+                            {this.getLastArticles()}
                         </div>
                         <PlacemarksList
                             data={{isSearch: 1, country: this.props.match.params[Consts.URL_VAR_2_NAME]}}

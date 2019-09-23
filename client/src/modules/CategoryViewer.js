@@ -98,17 +98,14 @@ function getCategoryTitle(categoryId) {
  *
  * @return {object}
  */
-function getBaloonImage(categoryId, isSelected) {
+function getBaloonImage(categoryId, isSelected = false) {
     setToMapApi();
     if (typeof (categoryId) === 'undefined') {
         return {};
     }
-    let _selected = '';
-    if ((typeof (isSelected) !== 'undefined') && (isSelected)) {
-        _selected = '_selected';
-    }
+
     return {
-        preset: 'custom#' + getCategories()[categoryId].code + _selected
+        preset: 'custom#' + getCategories()[categoryId].code + (isSelected === true ? '_selected' : '')
     };
 }
 

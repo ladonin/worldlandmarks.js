@@ -44,7 +44,7 @@ class Breadcrumbs extends Block {
                 </React.Fragment>);
         }
 
-        return <div className="padding_after_hat"></div>;
+        return null;
     }
 }
 

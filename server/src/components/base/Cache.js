@@ -35,7 +35,7 @@ module.exports = {
         }
 
         if (!BaseFunctions.isEmpty(_cache[service][language][name])) {
-            console.log('> GOT FROM CACHE: ' + service + ' ' + language + ' ' + name);
+            //console.log('> GOT FROM CACHE: ' + service + ' ' + language + ' ' + name);
         }
         return _cache[service][language][name];
     }

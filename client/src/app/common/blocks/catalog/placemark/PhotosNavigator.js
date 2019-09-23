@@ -29,7 +29,7 @@ class PhotosNavigator extends Block {
     }
 
     scrollTop() {
-        window.$(this.props.scrollBlockIdName).animate({scrollTop: 0}, 0);
+        window.$(this.props.scrollBlockSelector).animate({scrollTop: 0}, 0);
     }
 
     emptyButton(width) {
@@ -37,7 +37,7 @@ class PhotosNavigator extends Block {
     }
 
     scrollTo(to){
-        let _from = this.props.scrollBlockIdName;
+        let _from = this.props.scrollBlockSelector;
         return function(){
             window.$(_from).scrollTo(to);
         }

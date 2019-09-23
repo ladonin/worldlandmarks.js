@@ -170,7 +170,16 @@ class Placemarks extends Component {
 
         let _language = this.getLanguage();
 
-        let _result = MapDataModel.getInstance(this.requestId).getPointsDataByIds(ids, _language, order, needPlainText, needText, true);
+        let _result = MapDataModel.getInstance(this.requestId).getPointsDataByIds(ids, _language, order, needPlainText, needText, false);
+
+        if (!_result.length) {
+            this.error(
+                ErrorCodes.ERROR_ID_NOT_FOUND,
+                undefined,
+                undefined,
+                false
+            );
+        }
 
         return this.prepareResult(_result, needRelevant, needAnother, needPhotos, addressWithRoute, addressWithoutRoute);
     }

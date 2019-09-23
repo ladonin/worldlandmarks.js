@@ -46,6 +46,7 @@ class CommonController extends Controller {
                 'domain_name': this.getText('domain_name'),
                 'hat_logo_under_text': this.getText('hat/logo/under_text'),
                 'catalog_placemark_link_to_map_text':this.getText('catalog/placemark/link_to_map/text'),
+                'map_placemark_link_to_catalog_text':this.getText('map/placemark/link_to_catalog/text'),
                 'bottom':{
                     '1': this.getText('page_bottom/column_1/header/text'),
                     '2': this.getText('page_bottom/catalog/text'),
@@ -70,7 +71,8 @@ class CommonController extends Controller {
                 'catalog_search_form_submit_text':this.getText('site/title/catalog/search/submit/text'),
                 'nothing_found':this.getText('warning/search/empty_result'),
                 'catalog_sitemap_countries_header':this.getText('page_bottom/sitemap_countries/text'),
-                'catalog_sitemap_categories_header':this.getText('page_bottom/sitemap_categories/text')
+                'catalog_sitemap_categories_header':this.getText('page_bottom/sitemap_categories/text'),
+
             }
         };
     }

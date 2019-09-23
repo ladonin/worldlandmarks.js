@@ -15,7 +15,8 @@ import Router from 'src/modules/Router';
 import Language from 'src/modules/Language';
 import Service from 'src/modules/Service';
 import {isMobile} from "react-device-detect";
-
+import Events from 'src/modules/Events';
+import ErrorsText from 'src/modules/ErrorsText';
 
 const Socket = SocketIO(Config.apiServer.socketUrl, {
     query: {
@@ -27,6 +28,15 @@ const Socket = SocketIO(Config.apiServer.socketUrl, {
 Socket.on('error-catch', function (data) {
     console.log('on error-catch');
     console.log(data.message);////ATTENTION - обратите внимание
+
+    Events.dispatch('alert', {
+        text:ErrorsText.get(data.message),
+        classNAme:'error'
+    });
+
+//ATTENTION - обратите внимание
+
+    //ERROR_ID_NOT_FOUND => trace('errors/link_id_not_found')
     //ERROR_PASSWORD_NOT_PASSED => trace('errors/update_point/empty_password')
     //ERROR_WRONG_PASSWORD => trace('errors/update_point/wrong_password')
     //ERROR_FORM_POINT_A_LOT_OF_PHOTOS
@@ -79,10 +89,9 @@ export default {
      *
      * @param {object} controller
      * @param {object} action
-     * @param {object} matchParams - react rooter match parameters
      * @param {object} data - additional data
      */
-    backgroundQuery(controller, action, matchParams, data = {}) {
+    backgroundQuery(controller, action, data = {}) {
         data = {
             controller: controller,
             action: action,
@@ -91,11 +100,6 @@ export default {
             isMobile: isMobile ? true : false,
             ...data
         }
-
-        // Here client and server controller/action are the same
-        // Thanks to it there will be able to figure out for what request the response belongs to
-        data.clientController = Router.getControllerName(matchParams);
-        data.clientAction = Router.getActionName(matchParams);
 
         console.log('>>>>>>> Sending background socket request');
         console.log(data);

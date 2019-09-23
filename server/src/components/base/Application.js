@@ -409,13 +409,12 @@ class Application extends Component {
             if (!e.syntCode) {
                 console.log('system error!');
                 console.log(e);
-            }
-            if (Config.debug === 1) {
-                _errorMessage = e.syntMessage;
-                console.log('error: ' + _errorMessage);
+                _errorMessage = 'system';
             } else {
                 _errorMessage = e.syntCode;
+                console.log('error: ' + e.syntMessage);
             }
+
             SocketsPool.sendPrivate(token, {message: _errorMessage}, 'error-catch');
             console.log('<<<<<<<<<<<<<<<<---------------              CATCHED\n\n\n');
         })
