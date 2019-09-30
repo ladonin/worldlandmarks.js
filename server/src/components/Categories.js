@@ -77,7 +77,7 @@ class Categories extends Component {
      */
     getCategoryCode(id)
     {
-        id = BaseFunctions.toInt(id);
+        id = parseInt(id);
         let _categories = Service.getInstance(this.requestId).getCategories();
 
         for (let _index in _categories) {
@@ -112,7 +112,7 @@ class Categories extends Component {
      */
     getCategory(id)
     {
-        id = BaseFunctions.toInt(id);
+        id = parseInt(id);
         let _categories = this.getCategories();
 
         for (let _index in _categories) {

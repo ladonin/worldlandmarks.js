@@ -16,7 +16,7 @@ import Language from 'src/modules/Language';
 import Service from 'src/modules/Service';
 import {isMobile} from "react-device-detect";
 import Events from 'src/modules/Events';
-import ErrorsText from 'src/modules/ErrorsText';
+import AlertsText from 'src/modules/AlertsText';
 
 const Socket = SocketIO(Config.apiServer.socketUrl, {
     query: {
@@ -30,7 +30,7 @@ Socket.on('error-catch', function (data) {
     console.log(data.message);////ATTENTION - обратите внимание
 
     Events.dispatch('alert', {
-        text:ErrorsText.get(data.message),
+        text:AlertsText.get(data.message, 'error'),
         classNAme:'error'
     });
 

@@ -560,7 +560,7 @@ class Map extends Component {
      */
     deletePoint(data)
     {
-        let _dataId = BaseFunctions.toInt(data['id']);
+        let _dataId = parseInt(data['id']);
         let _password = '';
         if (_dataId && data['password']) {
             _password = data['password'];
@@ -602,7 +602,7 @@ class Map extends Component {
      */
     deletePhotos(dataId)
     {
-        dataId = BaseFunctions.toInt(dataId);
+        dataId = parseInt(dataId);
 
         if (!dataId) {
             this.error(ErrorCodes.ERROR_FUNCTION_ARGUMENTS, 'data id [' + dataId + ']', undefined, false);

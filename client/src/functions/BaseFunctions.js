@@ -6,16 +6,21 @@
  */
 
 module.exports = {
-    uniqueString(length = 10){
+    uniqueString(length = 10) {
         let _uniq = Math.random().toString(36).slice(2);
         // toString(36) can return string with 0 on the end, wich will be removed automatically
         // So we add 10 symbols just in case
         _uniq += '0000000000';
 
         // Then crop
-        return _uniq.slice(0,length);
+        return _uniq.slice(0, length);
     },
-    getFlagUrl(countryCode){
+    kickNicescroll(id) {
+        // "Run" this sheet by stuff
+        document.getElementById(id).scrollTop = 0;
+        window.$('#' + id).append('<br>');
+    },
+    getFlagUrl(countryCode) {
         return '/img/flags/' + countryCode + '.png';
     },
     getWidth(selector) {
@@ -30,6 +35,10 @@ module.exports = {
     getScrollTop(selector) {
         // Use universal multibrowser function on jquery
         return window.$(selector).scrollTop();
+    },
+    setScrollTop(selector, value) {
+        // Use universal multibrowser function on jquery
+        return window.$(selector).scrollTop(value);
     },
     getCss(selector, param) {
         // Use universal multibrowser function on jquery
@@ -62,5 +71,17 @@ module.exports = {
     niceScroll(selector) {
         // Use universal multibrowser function on jquery
         window.$(selector).niceScroll({cursorcolor: "#444"});
+    },
+    setVal(selector, value) {
+        // Use universal multibrowser function on jquery
+        window.$(selector).val(value);
+    },
+    highlight(target) {
+        let _r = document.createRange();
+        _r.selectNode(target);
+        document.getSelection().addRange(_r);
+    },
+    trigger(selector, name, value) {
+        window.$(selector).trigger(name, value);
     }
 }

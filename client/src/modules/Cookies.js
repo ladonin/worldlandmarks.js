@@ -11,7 +11,7 @@ export default {
     getCookie(name) {
         return Cookies.get(name)
     },
-    setCookie(name, value, options) {
+    setCookie(name, value, options = { expires: 365 }) {
         Cookies.set(name, value, options);
     },
     deleteCookie(name) {

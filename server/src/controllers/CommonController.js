@@ -9,6 +9,7 @@ const Constants = require('server/src/settings/Constants');
 const Users = require('server/src/core/Users');
 const Catalog = require('server/src/components/Catalog');
 const Articles = require('server/src/components/Articles');
+const Map = require('server/src/components/Map');
 
 class CommonController extends Controller {
 
@@ -72,7 +73,8 @@ class CommonController extends Controller {
                 'nothing_found':this.getText('warning/search/empty_result'),
                 'catalog_sitemap_countries_header':this.getText('page_bottom/sitemap_countries/text'),
                 'catalog_sitemap_categories_header':this.getText('page_bottom/sitemap_categories/text'),
-
+                'map_placemark_link_text':this.getText('map/placemark/link/text'),
+                'is_available_to_change':Map.getInstance(this.requestId).isAvailableToChange(),
             }
         };
     }

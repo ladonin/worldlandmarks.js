@@ -159,7 +159,7 @@ class Model extends Component {
 
             // Lead to integer value
             if (BaseFunctions.inArray("to_integer", _field['processing'])) {
-                value = BaseFunctions.toInt(value);
+                value = parseInt(value);
             }
 
             // Lead to string value
@@ -272,7 +272,7 @@ class Model extends Component {
 
             // Lead to integer value
             if (BaseFunctions.inArray("to_integer", field['processing'])) {
-                field['value'] = BaseFunctions.toInt(field['value']);
+                field['value'] = parseInt(field['value']);
             }
 
             // Lead to string value

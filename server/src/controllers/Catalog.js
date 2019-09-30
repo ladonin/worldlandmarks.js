@@ -104,7 +104,7 @@ class Catalog extends CommonController {
      */
     action_get_placemarks_list()
     {
-        let _idStart = BaseFunctions.toInt(this.getFromRequest(Consts.ID_VAR_NAME, false));
+        let _idStart = parseInt(this.getFromRequest(Consts.ID_VAR_NAME, false));
 
         this.addBackgroundData({
             placemarksData: CatalogComponent.getInstance(this.requestId).getPlacemarksList(_idStart).reverse()
@@ -118,7 +118,7 @@ class Catalog extends CommonController {
      */
     action_placemark()
     {
-        let _placemarkId = BaseFunctions.toInt(this.getFromRequest(Consts.ID_VAR_NAME));
+        let _placemarkId = parseInt(this.getFromRequest(Consts.ID_VAR_NAME));
         let _countryName = Countries.getInstance(this.requestId).getCountryNameFromRequest();
         let _countryCode = Countries.getInstance(this.requestId).getCountryCodeFromRequest();
         let _stateName = Countries.getInstance(this.requestId).getStateNameFromRequest(false);

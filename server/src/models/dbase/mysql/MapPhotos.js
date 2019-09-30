@@ -54,7 +54,7 @@ class MapPhotosModel extends DBaseMysql
     delete(placemarkId, photoName, mustBeDeleted = true) {
 
         let _result = this.getByCondition(
-                /*condition*/'map_data_id=' + BaseFunctions.toInt(placemarkId) + ' AND path=?',
+                /*condition*/'map_data_id=' + parseInt(placemarkId) + ' AND path=?',
                 /*order*/'',
                 /*group*/'',
                 /*select*/'id',

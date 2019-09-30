@@ -453,7 +453,7 @@ class Catalog extends Component {
         let _countryCode = this.getFromRequest(Consts.COUNTRY_VAR_NAME, false);
         let _stateCode = this.getFromRequest(Consts.STATE_VAR_NAME, false);
 
-        let _idPlacemark = BaseFunctions.toInt(this.getFromRequest(Consts.ID_VAR_NAME, false));
+        let _idPlacemark = parseInt(this.getFromRequest(Consts.ID_VAR_NAME, false));
         let _language = this.getLanguage();
 
         let _return = [];

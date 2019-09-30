@@ -174,7 +174,7 @@ class GeocodeCollectionModel extends DBaseMysql
      */
     checkPlacemark(id, countryCode, stateCode)
     {
-        id = BaseFunctions.toInt(id);
+        id = parseInt(id);
 
         let _condition = "map_data_id = ? AND country_code = ? ";
         let _whereValues = [id, countryCode];

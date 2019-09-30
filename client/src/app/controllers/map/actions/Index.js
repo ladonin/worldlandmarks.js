@@ -14,6 +14,8 @@ import Consts from 'src/settings/Constants';
 import MapModule from 'src/modules/Map';
 import BaseFunctions from 'src/functions/BaseFunctions';
 import MapPlacemark from 'src/app/common/blocks/map/Placemark';
+import MapBaloon from 'src/app/common/blocks/map/Baloon';
+
 
 class MapIndex extends Action {
 
@@ -23,7 +25,7 @@ class MapIndex extends Action {
 
     componentDidMount() {
         super.componentDidMount();
-        MapModule.init([0, 0], this.props.match.params);
+        MapModule.init(this.props.match.params, this.props.redux.staticData['is_available_to_change']);
     }
 
     render() {
@@ -31,6 +33,7 @@ class MapIndex extends Action {
         return (
                 <React.Fragment>
                     <MapPlacemark/>
+                    <MapBaloon/>
                     <div className="map" id="YMapsID"></div>
                 </React.Fragment>
                 );

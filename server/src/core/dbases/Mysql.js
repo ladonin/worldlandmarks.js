@@ -163,7 +163,7 @@ class DBaseMysql extends Model
      */
     getById(idValue, select = '*', needResult = true)//, async = false
     {
-        let _id = BaseFunctions.toInt(idValue);
+        let _id = parseInt(idValue);
 
         if (!_id) {
             this.error(ErrorCodes.ERROR_FUNCTION_ARGUMENTS, 'id [ ' + BaseFunctions.toString(idValue) + ']');
@@ -198,7 +198,7 @@ class DBaseMysql extends Model
     update(idValue)
     {
 
-        let _id = BaseFunctions.toInt(idValue);
+        let _id = parseInt(idValue);
 
         if (!_id) {
             this.error(ErrorCodes.ERROR_FUNCTION_ARGUMENTS, 'id [ ' + BaseFunctions.toString(idValue) + ']');
@@ -231,7 +231,7 @@ class DBaseMysql extends Model
                 array_values.push(_field['value']);
             }
         }
-        _sql += ' where id = ' + BaseFunctions.toInt(_id);
+        _sql += ' where id = ' + parseInt(_id);
 
         this.query(_sql, array_values);
 
@@ -291,7 +291,7 @@ class DBaseMysql extends Model
      */
     delete(idValue)
     {
-        let _id = BaseFunctions.toInt(idValue);
+        let _id = parseInt(idValue);
 
         if (!_id) {
             this.error(ErrorCodes.ERROR_FUNCTION_ARGUMENTS, 'id [ ' + BaseFunctions.toString(idValue) + ']');
@@ -351,10 +351,10 @@ class DBaseMysql extends Model
      */
     return_limit(limit = [1])
     {
-        if (BaseFunctions.toInt(limit[1]) > 0) {
-            return  BaseFunctions.toInt(limit[0]) + ',' + BaseFunctions.toInt(limit[1]);
-        } else if (BaseFunctions.toInt(limit[0]) > 0) {
-            return BaseFunctions.toInt(limit[0]);
+        if (parseInt(limit[1]) > 0) {
+            return  parseInt(limit[0]) + ',' + parseInt(limit[1]);
+        } else if (parseInt(limit[0]) > 0) {
+            return parseInt(limit[0]);
         } else {
             return '1';
     }

@@ -295,7 +295,7 @@ class MapDataModel extends DBaseMysql
      */
     getAnotherPlacemarksByCategory(categoryId, pointId, select = '*')
     {
-        categoryId = BaseFunctions.toInt(categoryId);
+        categoryId = parseInt(categoryId);
         return this.getByCondition(
                 /*condition*/"id!=? AND (category = ? OR subcategories REGEXP '[[:<:]]" + categoryId + "[[:>:]]')",
                 /*order*/'RAND()',
@@ -316,7 +316,7 @@ class MapDataModel extends DBaseMysql
      */
     getPlacemarksCountByCategory(id)
     {
-        id = BaseFunctions.toInt(id);
+        id = parseInt(id);
         return this.getByCondition(
                 /*condition*/"category = ? OR subcategories REGEXP '[[:<:]]" + id + "[[:>:]]'",
                 /*order*/'',
@@ -435,7 +435,7 @@ class MapDataModel extends DBaseMysql
      */
     getCategoryPlacemarks(categoryId, offset, limit, language, needResult = true) {
 
-        categoryId = BaseFunctions.toInt(categoryId);
+        categoryId = parseInt(categoryId);
 
         let _sql = `SELECT
                 c.id as id,
@@ -475,7 +475,7 @@ class MapDataModel extends DBaseMysql
     getPlacemarksSeacrhList(idStart = 0, category = false, country = '', state = '', keywords = '', limit, language, needResult)
     {
         category = category === '' ? false : category;
-        category = category !== false ? BaseFunctions.toInt(category) : category;
+        category = category !== false ? parseInt(category) : category;
         country = BaseFunctions.quote(country);
         state = BaseFunctions.quote(state);
         keywords = BaseFunctions.quote(keywords.toLowerCase());

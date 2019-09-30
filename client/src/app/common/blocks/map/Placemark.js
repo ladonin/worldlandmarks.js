@@ -12,7 +12,7 @@ import {BrowserView, MobileView, isBrowser, isMobile} from "react-device-detect"
 
 import MapModule from 'src/modules/Map';
 import Consts from 'src/settings/Constants';
-
+import BaseFunctions from 'src/functions/BaseFunctions';
 
 import Block from 'src/app/parents/Block';
 
@@ -30,11 +30,13 @@ class MapPlacemark extends Block {
     componentDidUpdate() {
         if (typeof this.props.redux.atCluster === 'undefined') {
             MapModule.preparePlacemarkContentDimensions(this.props.redux.atCluster);
+
+
         }
     }
 
     componentWillUnmount(){
-        this.props.removeBackgroundData('data');
+        this.props.removeBackgroundData('placemarkData');
     }
 
     render() {
@@ -55,7 +57,7 @@ class MapPlacemark extends Block {
 
             MapModule.setCenter(_id);
             MapModule.setZoom('whereAmI');
-
+            MapModule.actionsAfterShowPointData(_id, this.props.redux.atCluster)
 
             _content =
                     <React.Fragment>
@@ -82,6 +84,7 @@ class MapPlacemark extends Block {
                             id="placemark_comment"
                             dangerouslySetInnerHTML={{__html: this.props.redux.data['comment']}}>
                         </div>
+                        <div className="link_1" id={"placemark_link_" + _id}>{this.props.redux.staticData['map_placemark_link_text']}<span  onClick = {(e)=>{BaseFunctions.highlight(e.target)}}>{Consts.DOMAIN + '/' + Consts.CONTROLLER_NAME_MAP + '/' + _id}</span></div>
                         <div className="link_1">
                             <a onClick={this.goTo} data-url={'/' + Consts.CONTROLLER_NAME_CATALOG + '/' + this.props.redux.data['country_code'] + (this.props.redux.data['state_code'] === 'undefined' ? '' : ('/' + this.props.redux.data['state_code'])) + '/' + this.props.redux.data['id']}><img
                                     src="/img/catalog_240.png"
@@ -138,8 +141,8 @@ function mapStateToProps(state) {
 
     return {
         redux: {
-            atCluster: state.backgroundData['data'] ? state.backgroundData['data'].atCluster : undefined,
-            data: state.backgroundData['data'],
+            atCluster: state.backgroundData['placemarkData'] ? state.backgroundData['placemarkData'].atCluster : undefined,
+            data: state.backgroundData['placemarkData'],
             staticData: state.staticData
         }
     };

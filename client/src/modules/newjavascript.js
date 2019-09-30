@@ -202,64 +202,6 @@ $this->trace_block('_models' . MY_DS . 'placemark_photos_viewer', false);
 
 
 
-    // подготавливаем габариты окна просмотра балуна - NOTE:  нельзя прописать это в css, потому что теги еще не существуют
-    var prepare_placemark_viewer_dimensions = function (id, is_at_cluster, is_from_cluster) {
-
-        $(placemark_content_block_selector + ' div.text_1').css('margin-top', placemark_content_margin + 'px');
-        $(placemark_content_block_selector + ' div.header_1').css('padding-top', placemark_content_margin * 2 + 'px');
-        $(placemark_content_block_selector + ' div.header_1').css('padding-bottom', '0px');
-        /*$(placemark_content_block_selector + ' div.link_1').css('padding-top', placemark_content_margin*2 + 'px');*/
-
-
-        $(placemark_content_block_selector).css('padding-bottom', placemark_content_margin + 'px');
-        $(placemark_list_element_selector).css('padding', placemark_content_margin + 'px'); //'.placemark_list_element';
-        $(placemark_list_element_div_selector).css('margin-bottom', placemark_content_margin + 'px');
-        if (device_type === device_mobile_name) {
-            $(_placemarkBlockSelector).width(window_width);
-            $(placemark_buttons_block_selector).width(window_width);
-            <?php if ($available_to_change): ?>
-                $(placemark_close_selector).width(Math.floor(window_width / 3) - parseFloat($(placemark_close_selector).css('margin-right')) + 'px');
-                $(placemark_toggle_selector).width(Math.floor(window_width / 3) - parseFloat($(placemark_toggle_selector).css('margin-right')) + 'px');
-                $(placemark_update_open_from_viewer_selector).width(window_width - $(placemark_close_selector).width() - $(placemark_toggle_selector).width()
-                        - parseFloat($(placemark_close_selector).css('margin-right'))
-                        - parseFloat($(placemark_toggle_selector).css('margin-right'))
-                        - (parseFloat($(placemark_update_open_from_viewer_selector).css('margin-right')) * 2)
-                        + 'px'); //подгоняем без приближений
-            <?php else: ?>
-                $(placemark_close_selector).width(Math.floor(window_width / 2) - parseFloat($(placemark_close_selector).css('margin-right')) - Math.ceil(parseFloat($(placemark_close_selector).css('margin-right'))/2) + 'px');
-                $(placemark_toggle_selector).width(Math.floor(window_width / 2) - parseFloat($(placemark_toggle_selector).css('margin-right')) - Math.floor(parseFloat($(placemark_toggle_selector).css('margin-right'))/2) + 'px');
-            <?php endif; ?>
-
-            $(placemark_add_set_point_selector).width(window_width - (parseFloat($(placemark_add_set_point_selector).css('margin-right')) * 2) + 'px');
-            $(placemark_add_cancel_selector).width(Math.floor(window_width / 2) - parseFloat($(placemark_add_cancel_selector).css('margin-right')) - Math.ceil(parseFloat($(placemark_add_cancel_selector).css('margin-right'))/2) + 'px');
-            $(placemark_add_commit_selector).width(Math.floor(window_width / 2) - parseFloat($(placemark_add_commit_selector).css('margin-right')) - Math.floor(parseFloat($(placemark_add_commit_selector).css('margin-right'))/2) + 'px');
-
-            $('.sublist_placemarks_block .placemarks_category_html_content').hide();
-            if (is_at_cluster) {
-                $('.sublist_placemarks_block').width($(placemark_content_block_selector).width());
-                    $('.sublist_placemarks_content').width($('.sublist_placemarks_block').width() - $('.cropped_image_div').width() - 30);
-            } else {
-                if ($(placemark_content_block_selector).width() < ($('.cropped_image_div').width() * 6)) {
-                    $('.sublist_placemarks_block').width($(placemark_content_block_selector).width());
-                }
-                else {
-                     $('.sublist_placemarks_block').width(($(placemark_content_block_selector).width() / 2));
-                }
-                $('.sublist_placemarks_content').width($('.sublist_placemarks_block').width() - $('.cropped_image_div').width() - 30);
-            }
-
-        } else {
-            if (is_at_cluster) {
-                    $('.sublist_placemarks_block').width($(placemark_content_block_selector).width() - 30);
-                    $('.sublist_placemarks_content').width($('.sublist_placemarks_block').width() - $('.cropped_image_div').width() - 10);
-            } else {
-                    $('.sublist_placemarks_block').width(($(placemark_content_block_selector).width() / 2) - 30);
-                    $('.sublist_placemarks_content').width($('.sublist_placemarks_block').width() - $('.cropped_image_div').width() - 10);
-            }
-        }
-        $(placemark_close_side_1_selector).width(Math.floor((window_width - $(_placemarkBlockSelector).width()) / 2));
-        $(placemark_close_side_2_selector).width($(placemark_close_side_1_selector).width());
-    }
 
 
 
@@ -277,10 +219,8 @@ $this->trace_block('_models' . MY_DS . 'placemark_photos_viewer', false);
 
 
 
-    // подготавливаем просмотр метки
-    var get_placemark_link = function (id) {
-        return '<?php echo(MY_DOMEN . '/' . $controller . '/'); ?>' + id;
-    }
+
+
 
 
 
@@ -452,17 +392,7 @@ $this->trace_block('_models' . MY_DS . 'placemark_photos_viewer', false);
 
 
 
-    var add_target_placemark = function (coords) {
-        if (typeof (target_placemark) === 'object') {
-    //перемещаем
-        target_placemark.geometry.setCoordinates(coords);
-        } else if (typeof (target_placemark) === 'undefined') {
-        target_placemark = new ymaps.Placemark(coords, {}, {
-        preset: preset_placemark_new
-        });
-                map.geoObjects.add(target_placemark);
-        }
-    }
+
 
 
 
@@ -551,39 +481,7 @@ $this->trace_block('_models' . MY_DS . 'placemark_photos_viewer', false);
 
 
 
-    var prepare_loaded_placemarks = function (data, is_bunch) {
-        try {
-            var result = JSON.parse(data);
-            if (result['status'] === '<?php echo(MY_SUCCESS_CODE); ?>') {
-                if (typeof (result['data']) === 'object') {
-                    var is_set_placemarks_data = false;
-                    $.each(result['data'], function (index, value) {
-                        if (set_placemarks_data(value) === true) {
-                            is_set_placemarks_data = true;
-                            //$.each(value['photos'], function (index, value) {/////////////////////////////////////////////////
-                            //    // подгружаем её картинки
-                            //    $([value['path']]).preload();
-                            //});
-                        }
-                    });
-                    // Если хоть одна новая метка добавилась
-                    if (is_set_placemarks_data === true) {
-                        add_and_clustering();
-                    }
-                    if ((typeof(is_bunch)==='undefined') || (!is_bunch)){
-                        is_too_big_requested_area=0;
-                    }
-                } else if (result['data']==='<?php echo(MY_TOO_BIG_MAP_REQUEST_AREA_CODE);?>'){
-                    if ((typeof(is_bunch)==='undefined') || (!is_bunch)){
-                        is_too_big_requested_area=1;
-                    }
 
-                }
-            }
-        } catch (error) {
-            my_get_message('<?php echo(my_pass_through(@self::trace('errors/system'))); ?>', 'error');
-        }
-    }
 
 
 
@@ -646,39 +544,7 @@ $this->trace_block('_models' . MY_DS . 'placemark_photos_viewer', false);
     }
 
 
-    var load_by_coords = function (coords) {
-        if (typeof (coords) === 'undefined') {
-            var coords_array = map.getBounds();
-            var params = {
-                'Y1': coords_array[1][0],
-                'Y2': coords_array[0][0],
-                'X1': coords_array[0][1],
-                'X2': coords_array[1][1]
-            };
-        } else {
-            params = coords;
-        }
 
-        params.zoom = map.getZoom();
-        params.center = map.getCenter();
-
-        $.ajax({
-            type: "POST",
-            url: '<?php echo (self::get_path('get_placemarks_by_coords')); ?>',
-            data: params,
-            success: function (data) {
-                prepare_loaded_placemarks(data);
-            },
-            error: function (jqXHR) {
-                var text = jqXHR.responseText;
-                if (!text) {
-                    text = '<?php echo(my_pass_through(@self::trace('errors/system'))); ?>';
-                }
-                my_get_message(text, 'error');
-            }
-        }).always(function () {
-        });
-    }
 
 
 
@@ -868,93 +734,6 @@ $this->trace_block('_models' . MY_DS . 'placemark_photos_viewer', false);
 
 
 
-
-                /**
-                 * Кластеризатор расширяет коллекцию, что позволяет использовать один обработчик
-                 * для обработки событий всех геообъектов.
-                 * Будем менять цвет иконок и кластеров при наведении.
-                 */
-                clusterer.events
-        //при клике на кластер, подгружаем данные первого в списке элемента
-                    .add(['click'], function (e) {
-
-                    if ($(placemark_add_buttons_selector).is(":visible") != true) {
-
-
-                    var target = e.get('target');
-        // только для кластера с элементами
-                            if (typeof target.getGeoObjects === "function") {
-                    show_cluster_list(target);
-        // переводим скролл вверх, если вдруг он не там
-                            document.getElementById("placemark_list").scrollTop = 0;
-                    }
-                    } else {
-                    my_get_message('<?php echo(my_pass_through(@self::trace('errors/new_point/another_actions'))); ?>', 'error');
-                    }
-
-
-                    });
-        // события:
-        // при клике по полю, в случае добавления новой точки или смены координат существующей, определяем координаты клика и записываем их форму
-                    map.events.add('click', function (e) {
-                    if ((is_enable_to_change_map() && $(panel_tools_selector).is(":visible") !== true) && ($(placemark_toggle_selector).is(":visible") !== true) && ($(placemark_add_selector).is(":visible") !== true)) {
-                    var coords = e.get('coords');
-                            $(y_add_new_point_selector).val(coords[0].toPrecision(6));
-                            $(x_add_new_point_selector).val(coords[1].toPrecision(6));
-        //если редактируем
-                            if (is_redacted() === true) {
-        // меняем местоположение метки
-                    placemarks[current_placemark_id]['object'].geometry.setCoordinates(coords);
-                    } else {
-                    add_target_placemark(coords);
-                    }
-                    my_get_message('<?php echo(my_pass_through(@self::trace('success/new_point/placemark_added'))); ?>', 'success');
-                            clearTimeout(placemark_add_set_point_timer);
-                            placemark_add_set_point_timer = setTimeout(function () {
-                            if ($(placemark_add_selector).is(":visible") !== true) {
-                            $(placemark_add_set_point_selector).trigger('click');
-                            }
-                            kick_1_nicescroll('placemark_add_block');
-                            kick_1_nicescroll('placemark_list');
-                            }, 2000);
-                    }
-                    }).add('boundschange', function (event) {
-
-            // Если масштаб не меньше допустимого
-            // if (newZoom <= gZoomMinForLoad) {
-                        /*
-             var old_coords = event.get("oldBounds");
-             // верх по y
-             var old_Y1 = old_coords[1][0];
-             // низ по y
-             var old_Y2 = old_coords[0][0];
-             // лево по х
-             var old_X1 = old_coords[0][1];
-             // право по x
-             var old_X2 = old_coords[1][1];
-             var new_coords = event.get("newBounds");
-             // верх по y
-             var new_Y1 = new_coords[1][0];
-             // низ по y
-             var new_Y2 = new_coords[0][0];
-             // лево по х
-             var new_X1 = new_coords[0][1];
-             // право по x
-             var new_X2 = new_coords[1][1];
-             var coords = {
-             'old_Y1': old_Y1,
-             'old_X1': old_X1,
-             'old_Y2': old_Y2,
-             'old_X2': old_X2,
-             'Y1': new_Y1,
-             'X1': new_X1,
-             'Y2': new_Y2,
-             'X2': new_X2
-             };
-             load_by_coords(coords);*/
-            load_by_coords(); /////////////////
-//}
-            });
 
 
 
