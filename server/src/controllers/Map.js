@@ -41,7 +41,7 @@ class Map extends CommonController {
         let _id = parseInt(this.getFromRequest(Consts.ID_VAR_NAME, false));
 
         this.addBackgroundData({
-            placemarkData: {...Placemarks.getInstance(this.requestId).getPlacemarksDataByIds([_id], /*needPlainText*/ true, /*needText*/ true, /*order*/ null, /*needRelevant*/ true, /*needAnother*/ true, /*needPhotos*/ true, /*addressWithRoute*/ true, /*addressWithoutRoute*/ false)[0], atCluster:this.getFromRequest('atCluster', false)}});
+            map_placemarkData: {...Placemarks.getInstance(this.requestId).getPlacemarksDataByIds([_id], /*needPlainText*/ true, /*needText*/ true, /*order*/ null, /*needRelevant*/ true, /*needAnother*/ true, /*needPhotos*/ true, /*addressWithRoute*/ true, /*addressWithoutRoute*/ false)[0], atCluster:this.getFromRequest('atCluster', false)}});
 
         this.sendMe(true);
     }
@@ -59,11 +59,24 @@ class Map extends CommonController {
         let _zoom = parseInt(this.getFromRequest('zoom'));
 
         this.addBackgroundData({
-            placemarksData: MapComponent.getInstance(this.requestId).getPointsShortDataByCoords({Y1:_Y1,Y2:_Y2,X1:_X1,X2:_X2,zoom:_zoom})
+            map_baloonsData:
+                BaseFunctions.clearNullDataInArrayOfObjects(MapComponent.getInstance(this.requestId).getPointsShortDataByCoords({Y1:_Y1,Y2:_Y2,X1:_X1,X2:_X2,zoom:_zoom}))
         });
         this.sendMe(true);
     }
 
+    /*
+     * Background action that fill placemarks on map in random mode
+     */
+    action_fill_placemarks_on_map()
+    {
+
+        this.addBackgroundData({
+            map_baloonsAutoFillData:
+                BaseFunctions.clearNullDataInArrayOfObjects(MapComponent.getInstance(this.requestId).getPointsBunch())
+        });
+        this.sendMe(true);
+    }
 
 }
 

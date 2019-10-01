@@ -107,7 +107,7 @@ class Catalog extends CommonController {
         let _idStart = parseInt(this.getFromRequest(Consts.ID_VAR_NAME, false));
 
         this.addBackgroundData({
-            placemarksData: CatalogComponent.getInstance(this.requestId).getPlacemarksList(_idStart).reverse()
+            catalog_placemarksData: CatalogComponent.getInstance(this.requestId).getPlacemarksList(_idStart).reverse()
         });
 
         this.sendMe(true);

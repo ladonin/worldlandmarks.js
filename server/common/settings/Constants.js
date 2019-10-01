@@ -118,7 +118,6 @@ ACTION_VAR_NAME:'action',
     LANGUAGE_EN: 'en',
 
     COOKIE_EMAIL_PLACEMARK: 'email_placemark',
-    SERVICE_IMGS_URL_CATEGORIES_PHOTOS:'/img/categories/photos/',
 
 
 

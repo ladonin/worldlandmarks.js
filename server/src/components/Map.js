@@ -121,6 +121,11 @@ class Map extends Component {
     getPointsShortDataByCoords(data)
     {
         let _result = this.getPointsByCoordsNaked(data);
+
+        if (_result === Consts.TOO_BIG_MAP_REQUEST_AREA_CODE) {
+            return _result;
+        }
+
         if (!_result || !_result.length) {
             return [];
         }
@@ -188,7 +193,7 @@ class Map extends Component {
      */
     getAlreadySentIdsStringFromSession()
     {
-        if (this.getSocketData()['map_placemarks_loaded_ids'].length) {
+        if (this.getSocketData()['map_placemarks_loaded_ids'] && this.getSocketData()['map_placemarks_loaded_ids'].length) {
             return this.getSocketData()['map_placemarks_loaded_ids'].join(',');
         } else {
             return '';
@@ -212,11 +217,11 @@ class Map extends Component {
             for (let index in placemarks) {
                 let _placemark = placemarks[index];
 
-                if (!_placemark['c_id']) {
+                if (!_placemark['id']) {
                     this.error(ErrorCodes.ERROR_FUNCTION_ARGUMENTS, 'placemarks [' + BaseFunctions.toString(placemarks) + ']', undefined, false);
                 }
 
-                this.getSocketData()['map_placemarks_loaded_ids'].push(_placemark['c_id']);
+                this.getSocketData()['map_placemarks_loaded_ids'].push(_placemark['id']);
             }
         }
     }
@@ -230,7 +235,7 @@ class Map extends Component {
     {
         let _result = this.getPointsByLimitNaked();
 
-        _result = _result ? Placemarks.getInstance(this.requestId).prepareResult(_result, false, false, 1) : _result;
+        _result = _result ? Placemarks.getInstance(this.requestId).prepareResult(_result, false, false, 1, false, false) : _result;
 
         return _result;
     }

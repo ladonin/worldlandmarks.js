@@ -5,7 +5,7 @@
  */
 
 module.exports = {
-    'errors': {
+    'error': {
         'new_point/photos_upload': 'Пожалуйста, приложите хотя бы одно фото.',
         'new_point/photos_uploaded_yet': 'Фотографии еще загружаются.',
         'new_point/photos_upload_more_than_available': 'Количество фотографий больше допустимого. Количество превышено на:',

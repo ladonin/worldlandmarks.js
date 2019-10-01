@@ -24,7 +24,7 @@ let _transporter = Nodemailer.createTransport(_config.smtp);
  */
 _transporter.verify(function (error, success) {
     if (error) {
-        BaseFunctions.processError(ErrorCodes.ERROR_MAILER_CONNECTION, 'err[' + console.log(error.response) + ']');
+        BaseFunctions.processError(ErrorCodes.ERROR_MAILER_CONNECTION, 'err[' + error.response + ']', undefined, undefined, true, true);
     } else {
         console.log('Mailer OK');
     }

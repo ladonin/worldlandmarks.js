@@ -24,20 +24,26 @@ import PlacemarksSublist from 'src/app/common/blocks/PlacemarksSublist';
 import {RemoveBackgroundData} from 'src/app/parents/Common';
 
 class MapPlacemark extends Block {
+
     constructor() {
         super();
+        this.hide = this.hide.bind(this);
     }
+
     componentDidUpdate() {
-        if (typeof this.props.redux.atCluster === 'undefined') {
-            MapModule.preparePlacemarkContentDimensions(this.props.redux.atCluster);
-
-
-        }
+        //if (typeof this.props.redux.atCluster === 'undefined') {
+        MapModule.preparePlacemarkContentDimensions(this.props.redux.atCluster);
+        //}
     }
 
     componentWillUnmount(){
-        this.props.removeBackgroundData('placemarkData');
+        this.props.removeBackgroundData('map_placemarkData');
     }
+
+    hide(){
+        this.props.removeBackgroundData('map_placemarkData');
+    }
+
 
     render() {
 
@@ -58,6 +64,8 @@ class MapPlacemark extends Block {
             MapModule.setCenter(_id);
             MapModule.setZoom('whereAmI');
             MapModule.actionsAfterShowPointData(_id, this.props.redux.atCluster)
+            MapModule.setAvailableToChange(this.props.redux.staticData['is_available_to_change']);
+
 
             _content =
                     <React.Fragment>
@@ -68,14 +76,10 @@ class MapPlacemark extends Block {
                             category={this.props.redux.data['category']}/>
                         <div className="map_placemark_categories"><PlacemarkCaregories subcategories={this.props.redux.data['subcategories']} category={this.props.redux.data['category']}/></div>
                         <div className="link_1">
-                            <a onClick={this.goTo} data-url={'/' + Consts.CONTROLLER_NAME_CATALOG + '/' + this.props.redux.data['country_code'] + (this.props.redux.data['state_code'] === 'undefined' ? '' : ('/' + this.props.redux.data['state_code'])) + '/' + this.props.redux.data['id']}><img
-                                    src="/img/catalog_240.png"
-                                    style={{
-                                            display: 'inline-block',
-                                            width: '25px',
-                                            verticalAlign: 'bottom',
-                                            marginRight: '5px'
-                                        }}/>{this.props.redux.staticData['map_placemark_link_to_catalog_text']}</a>
+                            <a onClick={this.goTo} data-url={'/' + Consts.CONTROLLER_NAME_CATALOG + '/' + this.props.redux.data['country_code'] + (this.props.redux.data['state_code'] === 'undefined' ? '' : ('/' + this.props.redux.data['state_code'])) + '/' + this.props.redux.data['id']}>
+                                <div className='mapLinkToCatalog'><img src="/img/catalog_240.png"/></div>
+                                {this.props.redux.staticData['map_placemark_link_to_catalog_text']}
+                            </a>
                         </div>
                         <div className="address_1" dangerouslySetInnerHTML={{__html: '<span>' + this.props.redux.data['formatted_address_with_route'] + '</span>'}}></div>
                         <PhotosList scrollBlockSelector='#placemark_content' photos={this.props.redux.data['photos']}/>
@@ -86,14 +90,10 @@ class MapPlacemark extends Block {
                         </div>
                         <div className="link_1" id={"placemark_link_" + _id}>{this.props.redux.staticData['map_placemark_link_text']}<span  onClick = {(e)=>{BaseFunctions.highlight(e.target)}}>{Consts.DOMAIN + '/' + Consts.CONTROLLER_NAME_MAP + '/' + _id}</span></div>
                         <div className="link_1">
-                            <a onClick={this.goTo} data-url={'/' + Consts.CONTROLLER_NAME_CATALOG + '/' + this.props.redux.data['country_code'] + (this.props.redux.data['state_code'] === 'undefined' ? '' : ('/' + this.props.redux.data['state_code'])) + '/' + this.props.redux.data['id']}><img
-                                    src="/img/catalog_240.png"
-                                    style={{
-                                            display: 'inline-block',
-                                            width: '25px',
-                                            verticalAlign: 'bottom',
-                                            marginRight: '5px'
-                                        }}/>{this.props.redux.staticData['map_placemark_link_to_catalog_text']}</a>
+                            <a onClick={this.goTo} data-url={'/' + Consts.CONTROLLER_NAME_CATALOG + '/' + this.props.redux.data['country_code'] + (this.props.redux.data['state_code'] === 'undefined' ? '' : ('/' + this.props.redux.data['state_code'])) + '/' + this.props.redux.data['id']}>
+                                <div className='mapLinkToCatalog'><img src="/img/catalog_240.png"/></div>
+                                {this.props.redux.staticData['map_placemark_link_to_catalog_text']}
+                            </a>
                         </div>
                         {this.props.redux.data['relevant_placemarks'] &&
                         <PlacemarksSublist
@@ -113,20 +113,22 @@ class MapPlacemark extends Block {
                             title = {this.props.redux.data['another_placemarks'].data.title}
                             />;
                         </React.Fragment>
+        } else {
+            MapModule.actionsAfterHidePointData();
         }
 
         return (
                 <React.Fragment>
                     <BrowserView>
-                        <div id="placemark" class={_hidden}>
-                            <div id="placemark_close_side_1"></div>
+                        <div id="placemark" className={_hidden}>
+                            <div id="placemark_close_side_1" onClick={this.hide}></div>
                             <div id="placemark_block">
                                 <div id="placemark_content">
                                     <div id="placemark_content_block">{_content}</div>
                                 </div>
                                 <div id="placemark_list"><div id="placemark_list_block"><PlacemarksList/></div></div>
                             </div>
-                            <div id="placemark_close_side_2"></div>
+                            <div id="placemark_close_side_2" onClick={this.hide}></div>
                         </div>
                     </BrowserView>
                     <MobileView>
@@ -138,11 +140,11 @@ class MapPlacemark extends Block {
 }
 
 function mapStateToProps(state) {
-
+console.log(state);
     return {
         redux: {
-            atCluster: state.backgroundData['placemarkData'] ? state.backgroundData['placemarkData'].atCluster : undefined,
-            data: state.backgroundData['placemarkData'],
+            atCluster: state.backgroundData['map_placemarkData'] ? state.backgroundData['map_placemarkData'].atCluster : undefined,
+            data: state.backgroundData['map_placemarkData'],
             staticData: state.staticData
         }
     };

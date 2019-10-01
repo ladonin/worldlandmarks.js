@@ -9,7 +9,7 @@ import { Component } from 'react';
 import Router from 'src/modules/Router';
 import Consts from 'src/settings/Constants';
 import Socket from 'src/app/socket/Socket';
-import Common, {UpdateStyleData, ClearActionData, ClearStyleData} from 'src/app/parents/Common';
+import Common, {UpdateStyleData, ClearActionData, ClearStyleData, ClearBackgroundData} from 'src/app/parents/Common';
 
 export default class Action extends Common {
 
@@ -22,6 +22,7 @@ export default class Action extends Common {
     componentWillUnmount(){
         this.props.clearActionData();
         this.props.clearStyleData();
+        this.props.clearBackgroundData();
     }
 
     componentDidMount() {
@@ -41,7 +42,8 @@ export default class Action extends Common {
 export const MapDispatchToProps = {
     updateStyleData: UpdateStyleData,
     clearActionData: ClearActionData,
-    clearStyleData: ClearStyleData
+    clearStyleData: ClearStyleData,
+    clearBackgroundData: ClearBackgroundData
 }
 
 // Only for this controller/action

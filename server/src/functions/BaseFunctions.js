@@ -404,7 +404,18 @@ function auto_translate_state(state_name, state_code, requestId)
 
 
 
+function clearNullDataInArrayOfObjects(data) {
 
+    for (let _index in data) {
+        let _obj = data[_index];
+        for (let _key in _obj) {
+            if (_obj[_key] === null) {
+                delete _obj[_key];
+            }
+        }
+    }
+    return data;
+}
 
 
 
@@ -800,7 +811,7 @@ function get_flag_url(country_code)
  *  in this case we should show the error message directly by console.log
  *
  */
-function processError(errorCode, message = '', requestData = 'not set', log_type = Consts.LOG_APPLICATION_TYPE, writeToLog = true, outerCall = false) {
+function processError(errorCode, message = '', requestData = 'not set', log_type = Consts.LOG_APPLICATION_TYPE, writeToLog = true, traceInConsole = false) {
 
     message += ' url[' + toString(requestData) + '] ';
 
@@ -821,7 +832,8 @@ function processError(errorCode, message = '', requestData = 'not set', log_type
             _filename = 'db.log';
         }
         Fs.appendFileSync("log/" + _filename, _logMessage);
-    } else if ((Config.debug === 1) && (outerCall === true)) {
+    }
+    if ((Config.debug === 1) && (traceInConsole === true)) {
         console.log(_logMessage);
     }
 
@@ -1140,7 +1152,8 @@ module.exports = {
     getImageDimentions,
     check_coords,
     array_is_empty,
-    get_image_type
+    get_image_type,
+    clearNullDataInArrayOfObjects
 };
 
 

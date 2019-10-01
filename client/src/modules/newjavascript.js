@@ -175,24 +175,7 @@ $this->trace_block('_models' . MY_DS . 'placemark_photos_viewer', false);
 
 
 
-    // подготавливаем габариты окна просмотра балуна - NOTE:  нельзя прописать это в css, потому что теги еще не существуют
-    var prepare_placemark_content_dimensions = function (is_at_cluster) {
-        $(placemark_list_selector).width(_clusterListImageWidth+ (placemark_content_margin * 2)); // отступ только слева у него
-                if (device_type === device_mobile_name) {
-        if (is_at_cluster) {
-        $(placemark_content_selector).width(window_width - $(placemark_list_selector).width()); //'#placemark_content';
-        } else {
-        $(placemark_content_selector).width(window_width); //'#placemark_content';
-        }
 
-        } else {
-        if (is_at_cluster) {
-        $(placemark_content_selector).width($(_placemarkBlockSelector).width() - $(placemark_list_selector).width()); //'#placemark_content';
-        } else {
-        $(placemark_content_selector).width($(_placemarkBlockSelector).width()); //'#placemark_content';
-        }
-        }
-    }
 
 
 
@@ -303,16 +286,7 @@ $this->trace_block('_models' . MY_DS . 'placemark_photos_viewer', false);
         }
     }
 
-// возвращаем метку в кластер
-    var move_to_cluster = function (id) {
 
-        if ((typeof (placemarks[id]) !== 'undefined') && (typeof (placemarks[id]['object']) !== 'undefined')) {
-
-        clusterer.add(placemarks[id]['object']);
-                map.geoObjects.remove(placemarks[id]['object']);
-                map.geoObjects.add(clusterer);
-        }
-    }
 
 
 
@@ -422,46 +396,6 @@ $this->trace_block('_models' . MY_DS . 'placemark_photos_viewer', false);
 
 
 
-    var show_cluster_list = function (target) {
-
-        if (typeof (target) === 'undefined') {
-            return;
-        }
-
-
-        //задаем размеры блоков - content и cluster list
-        prepare_placemark_content_dimensions(1);
-        var content = '';
-        var first_id = null;
-        // выбираем все данные кластера и отображаем их в попапе
-        $.each(target.getGeoObjects(), function (id, value) {
-            var id = value.properties.get('own_id');
-            if (first_id === null) {
-                first_id = id;
-            }
-
-            var photo = placemarks[id]['data']['photos'][0];
-            var element = '\
-                <div class="placemark_list_element" id="placemark_list_element_' + id + '" \
-                onclick="my_map_vendor.placemark_preview(' + id + ', 1,1)">\
-                ' + view_cropped_photo(photo['dir'] + cluster_list_image_prefix + photo['name'], photo['width'], photo['height'], cluster_list_image_width, cluster_list_image_height) + '\
-                <?php if (self::get_module(MY_MODULE_NAME_SERVICE)->is_use_titles()): ?><div class="placemark_list_element_title">' + placemarks[id]['data']['title'] + '</div>\<?php endif; ?>
-                </div>';
-                content += element;
-        });
-        $(placemark_list_block_selector).html(content);
-        $(placemark_list_selector).show();
-        //$(shadow_selector).show();
-
-        $(YMaps_ID_selector).css('opacity', 0.62);
-        $(_placemarkSelector).show();
-        $(placemark_buttons_selector).show();
-        $(ya_shield_1_selector).trigger('show', ['on']);
-        colorize_cluster(target);
-        colorize_placemark(0); // делаем потенциально открытые ранее метки как просмотренные, не знаем какая, но она должна быть закрыта
-        $(placemark_list_block_selector + ' > div:even').addClass('even_cluster_list_element');
-        placemark_preview(first_id, 1, 0);
-    }
 
 
 
@@ -487,61 +421,6 @@ $this->trace_block('_models' . MY_DS . 'placemark_photos_viewer', false);
 
 
 
-    var run_bunch_filling_timer = function () {
-        bunch_filling();//сразу и потом
-        <?php if(self::get_module(MY_MODULE_NAME_SERVICE)->is_map_autofill_enabled()):?>
-        bunch_filling_timer = setInterval(bunch_filling, <?php echo(my_pass_through(@self::get_module(MY_MODULE_NAME_SERVICE)->get_map_autofill_period()));?>);
-        <?php endif;?>
-    }
-
-
-
-    var stop_bunch_filling_timer = function () {
-       clearInterval(bunch_filling_timer);
-       bunch_filling_end=1;
-    }
-
-
-
-
-    var bunch_filling = function () {
-
-        if(is_too_big_requested_area==0){
-            //если запрашиваемая область не велика и может подгружаться с помощью координат, то не "заливаем" карту
-            //эта функция может выполняться только, когда масштаб карты очень маленький
-            return;
-        }
-
-
-        if(bunch_filling_end){
-            //если вдруг еще раз запустили, чтобы не дергать по пустякам сервер
-            return;
-        }
-        $.ajax({
-            type: "POST",
-            url: '<?php echo (self::get_path('fill_placemarks_on_map')); ?>',
-            success: function (data) {
-                var result = JSON.parse(data);
-                // if (typeof (result['data']) === 'object') {
-
-                //}
-                if($.isEmptyObject(result['data'])){
-                    //если нет данных, то останавливаемся
-                    stop_bunch_filling_timer();
-                }
-
-                prepare_loaded_placemarks(data, true);
-            },
-            error: function (jqXHR) {
-                var text = jqXHR.responseText;
-                if (!text) {
-                    text = '<?php echo(my_pass_through(@self::trace('errors/system'))); ?>';
-                }
-                my_get_message(text, 'error');
-            }
-        }).always(function () {
-        });
-    }
 
 
 
@@ -550,22 +429,6 @@ $this->trace_block('_models' . MY_DS . 'placemark_photos_viewer', false);
 
 
 
-    var close_placemark_viewer = function () {
-            colorize_cluster(0);
-            colorize_placemark(0);
-            $(_placemarkSelector).hide();
-            $(placemark_content_block_selector).html('');
-            $(placemark_list_block_selector).html('');
-            $(placemark_buttons_selector).hide();
-            $(ya_shield_1_selector).trigger('show', ['off']);
-            $(placemark_add_open_selector).show();
-            $(open_panel_selector).show();
-            $(YMaps_ID_selector).css('opacity', 1);
-//$(shadow_selector).hide();
-            $(placemark_toggle_selector).html('<?php echo(my_htmlller_buttons(self::trace('buttons/placemark/viewer/hide'))); ?>');
-            $(placemark_toggle_selector + ' ' + button_image_selector).css('top', buttons_placemark_viewer_hide_position);
-            move_to_cluster(current_placemark_id);
-    }
 
 
 
@@ -731,19 +594,8 @@ $this->trace_block('_models' . MY_DS . 'placemark_photos_viewer', false);
 
          sssssssssssssssssssssssssssssssssssssssss
 
-
-
-
-
-
-
-
-
-            run_bunch_filling_timer();
-                        load_by_coords();
-
     //показать метку на карте или вернуться к просмотру
-                        $(placemark_toggle_selector).click(function () {
+            $(placemark_toggle_selector).click(function () {
                 if ($(_placemarkSelector).is(":visible") === true) {
                 $(_placemarkSelector).hide();
                         $(YMaps_ID_selector).css('opacity', 1);
@@ -761,7 +613,11 @@ $this->trace_block('_models' . MY_DS . 'placemark_photos_viewer', false);
     //возвращаем в кластер
                         move_to_cluster(current_placemark_id);
                 }
-                });
+            });
+
+
+
+
                         $(placemark_close_selector).click(function () {
                 close_placemark_viewer();
                 });

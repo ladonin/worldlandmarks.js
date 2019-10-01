@@ -15,10 +15,12 @@ module.exports = {
         // Then crop
         return _uniq.slice(0, length);
     },
-    kickNicescroll(id) {
+    kickNicescroll(selector) {
         // "Run" this sheet by stuff
-        document.getElementById(id).scrollTop = 0;
-        window.$('#' + id).append('<br>');
+        if (document.querySelector(selector)) {
+            document.querySelector(selector).scrollTop = 0;
+            window.$(selector).append('<br>');
+        }
     },
     getFlagUrl(countryCode) {
         return '/img/flags/' + countryCode + '.png';

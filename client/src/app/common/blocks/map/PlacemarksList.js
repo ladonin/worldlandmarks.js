@@ -10,6 +10,7 @@ import { connect } from 'react-redux';
 import {BrowserView, MobileView, isBrowser, isMobile} from "react-device-detect";
 import Events from 'src/modules/Events';
 import MapModule from 'src/modules/Map';
+import CroppedPhoto from 'src/app/common/blocks/CroppedPhoto';
 
 import Consts from 'src/settings/Constants';
 
@@ -22,11 +23,11 @@ class PlacemarksList extends Component {
     }
 
     componentWillUnmount(){
-        Events.remove('mapPlacemarksListChangeSelected', this.onChangeSelected);
+        Events.remove('mapPlacemarksListSelected', this.onChangeSelected);
     }
 
     componentDidMount(){
-        Events.add('mapPlacemarksListChangeSelected', this.onChangeSelected);
+        Events.add('mapPlacemarksListSelected', this.onChangeSelected);
     }
 
     onChangeSelected(e){
@@ -42,18 +43,34 @@ class PlacemarksList extends Component {
             return null;
         }
 
-        let _placemarks = MapModule.getPlacemarksRightList();
+        let _placemarksRightList = MapModule.getPlacemarksRightList();
+        let _placemarks = MapModule.getPlacemarks();
 
+        let _list = [];
 
+        for (let _key in _placemarksRightList) {
+            let _placemarkId = _placemarksRightList[_key];
+            let _photo = _placemarks[_placemarkId]['data']['photos'][0];
+            _list.push(
+                    <React.Fragment>
+                        <div className="placemark_list_element" id={"placemark_list_element_" + _placemarkId}
+                        onClick={()=>{MapModule.placemarkPreview(_placemarkId, true)}}>
+                            <CroppedPhoto
+                                blockWidth = {MapModule.getClusterListImageWidth()}
+                                blockHeight ={MapModule.getClusterListImageHeight}
+                                photoWidth = {_photo['width']}
+                                photoHeight = {_photo['height']}
+                                photoSrc = {_photo['dir'] + MapModule.getClusterListImagePrefix + _photo['name']}
+                            />
+                            {_placemarks[_placemarkId]['data']['title'] && <div className="placemark_list_element_title">{_placemarks[_placemarkId]['data']['title']}</div>}
+                        </div>
+                    </React.Fragment>);
+        }
 
         return (
                 <React.Fragment>
                     <BrowserView>
-
-                    _placemarks
-
-
-
+                        {_list}
                     </BrowserView>
                     <MobileView>
                         TODO MOBILE ArticlesList

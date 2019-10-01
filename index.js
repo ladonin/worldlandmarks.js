@@ -11,6 +11,7 @@ const RequestsPool = require('server/src/core/RequestsPool');
 const SocketsPool = require('server/src/core/SocketsPool');
 const DBase = require('server/src/components/base/DBase');
 const Ftp = require('server/src/components/base/Ftp');
+const Mailer = require('server/src/components/base/Mailer');
 
 SocketsPool.setIO(io);
 

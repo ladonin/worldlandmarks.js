@@ -14,7 +14,7 @@ module.exports = {
         autofill: {
             on: true,
             // How much placemarks at once
-            individual_limit: 30,
+            individual_limit: 100,
             // Period of loading placemark bunches in seconds
             period: 1,
         }

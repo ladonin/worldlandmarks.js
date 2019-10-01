@@ -11,10 +11,10 @@ import Language from 'src/modules/Language';
 import CommonBaseFunctions from 'src/../../server/common/functions/BaseFunctions';
 
 
-let _config = Config.serviceSettings[Service.getName()];
+let _config = Config.getServiceConfig();
 let _categories = false;
 let _isSetToMapApi = false;
-let _categoryTitles = Config.languages[Service.getName()][Language.getName()];
+let _categoryTitles = Config.getText(Language.getName());
 
 /*
  * Set categories to map API
@@ -29,13 +29,13 @@ function setToMapApi(){
 
             window.ymaps.option.presetStorage.add('custom#' + _category.code, {
                 iconLayout: 'default#image',
-                iconImageHref: Consts.SERVICE_IMGS_URL_CATEGORIES + _category.code + '.png',
+                iconImageHref: getCategoryImageUrl(_category.id),
                 iconImageSize: [_config.dimentions.ballon.width, _config.dimentions.ballon.height],
                 iconImageOffset: [_config.dimentions.ballon.top, _config.dimentions.ballon.left]
             });
             window.ymaps.option.presetStorage.add('custom#' + _category.code + '_selected', {
                 iconLayout: 'default#image',
-                iconImageHref: Consts.SERVICE_IMGS_URL_CATEGORIES + _category.code + '_selected.png',
+                iconImageHref: getCategoryImageUrl(_category.id, true),
                 iconImageSize: [_config.dimentions.ballon.width, _config.dimentions.ballon.height],
                 iconImageOffset: [_config.dimentions.ballon.top, _config.dimentions.ballon.left]
             });
@@ -51,7 +51,7 @@ function setToMapApi(){
 function getCategories(){
     if (_categories === false) {
         _categories = {};
-        let _categoryCodes = Config.serviceSettings[Service.getName()].categories.category_codes;
+        let _categoryCodes = Config.getServiceConfig().categories.category_codes;
         for (let _index in _categoryCodes) {
             let _categoryCode = _categoryCodes[_index];
             _categories[_categoryCode.id] = {
@@ -68,12 +68,13 @@ function getCategories(){
  * Return url to category image
  *
  * @param {integer} categoryId
+ * @param {boolean} selected
  *
  * @return {string}
  */
-function getCategoryImageUrl(categoryId) {
+function getCategoryImageUrl(categoryId, selected = false) {
     if (typeof (getCategories()[categoryId]) !== 'undefined') {
-        return Consts.SERVICE_IMGS_URL + Service.getName() + '/categories/' + getCategories()[categoryId].code + '.png';
+        return Consts.SERVICE_IMGS_URL + Service.getName() + '/categories/' + getCategories()[categoryId].code + (selected ? '_selected' : '')+'.png';
     } else {
         return Consts.IMG_URL + 'other.png';
     }

@@ -239,7 +239,7 @@ class Placemarks extends Component {
         // Placemarks ids
         let _ids = [];
         for (let _index in data) {
-            _ids.push(data[_index]['c_id']);
+            _ids.push(data[_index]['id']);
         }
 
         let _photos = (needPhotos === false) ? [] :
@@ -255,71 +255,71 @@ class Placemarks extends Component {
             let _placemark = data[_index];
 
 
-            if (!BaseFunctions.isSet(_result[_placemark['c_id']])) {
-                _result[_placemark['c_id']] = {
+            if (!BaseFunctions.isSet(_result[_placemark['id']])) {
+                _result[_placemark['id']] = {
 
-                    'id':_placemark['c_id'],
-                    'x':_placemark['c_x'],
-                    'y':_placemark['c_y'],
-                    'comment':BaseFunctions.isSet(_placemark['c_comment']) ? _placemark['c_comment'] : null,
-                    'comment_plain':BaseFunctions.isSet(_placemark['c_comment_plain']) ? _placemark['c_comment_plain'] : null,
-                    'formatted_address': (addressWithoutRoute && BaseFunctions.isSet(_placemark['g_country_code'])) ?
+                    'id':_placemark['id'],
+                    'x':_placemark['x'],
+                    'y':_placemark['y'],
+                    'comment':BaseFunctions.isSet(_placemark['comment']) ? _placemark['comment'] : null,
+                    'comment_plain':BaseFunctions.isSet(_placemark['comment_plain']) ? _placemark['comment_plain'] : null,
+                    'formatted_address': (addressWithoutRoute && BaseFunctions.isSet(_placemark['country_code'])) ?
                         this.prepareAddressLink(
-                                _placemark['g_state_code'], _placemark['g_country_code'],
-                                _placemark['g_administrative_area_level_2'],
-                                _placemark['g_administrative_area_level_1'],
-                                _placemark['g_country'],
-                                _placemark['g_locality'])
+                                _placemark['state_code'], _placemark['country_code'],
+                                _placemark['administrative_area_level_2'],
+                                _placemark['administrative_area_level_1'],
+                                _placemark['country'],
+                                _placemark['locality'])
                         :
                         null,
-                    'formatted_address_with_route':(addressWithRoute && BaseFunctions.isSet(_placemark['g_country_code'])) ?
+                    'formatted_address_with_route':(addressWithRoute && BaseFunctions.isSet(_placemark['country_code'])) ?
                         this.prepareAddressLinkWithRoute(
-                                _placemark['g_state_code'],
-                                _placemark['g_country_code'],
-                                _placemark['g_administrative_area_level_2'],
-                                _placemark['g_administrative_area_level_1'],
-                                _placemark['g_country'],
-                                _placemark['g_locality'],
-                                _placemark['g_street'])
+                                _placemark['state_code'],
+                                _placemark['country_code'],
+                                _placemark['administrative_area_level_2'],
+                                _placemark['administrative_area_level_1'],
+                                _placemark['country'],
+                                _placemark['locality'],
+                                _placemark['street'])
                         :
                         null,
-                    'flag_url':BaseFunctions.isSet(_placemark['g_country_code']) ? BaseFunctions.get_flag_url(_placemark['g_country_code']) : null,
-                    'country_code':BaseFunctions.isSet(_placemark['g_country_code']) ? _placemark['g_country_code'] : null,
-                    'state_code':BaseFunctions.isSet(_placemark['g_state_code']) ? _placemark['g_state_code'] : null,
-                    'street':BaseFunctions.isSet(_placemark['g_street']) ? _placemark['g_street'] : null,
-                    'title':_placemark['c_title'],
-                    'category':_placemark['c_category'],
-                    'subcategories':_placemark['c_subcategories'],
-                    'relevant_placemarks':Service.getInstance(this.requestId).whetherToShowRelevantPlacemarks() ? _placemark['c_relevant_placemarks'] : '',
-                    'created':BaseFunctions.isSet(_placemark['c_created']) ? _placemark['c_created'] : null,
-                    'modified':BaseFunctions.isSet(_placemark['c_modified']) ? _placemark['c_modified'] : null
+                    'flag_url':BaseFunctions.isSet(_placemark['country_code']) ? BaseFunctions.get_flag_url(_placemark['country_code']) : null,
+                    'country_code':BaseFunctions.isSet(_placemark['country_code']) ? _placemark['country_code'] : null,
+                    'state_code':BaseFunctions.isSet(_placemark['state_code']) ? _placemark['state_code'] : null,
+                    'street':BaseFunctions.isSet(_placemark['street']) ? _placemark['street'] : null,
+                    'title':_placemark['title'],
+                    'category':_placemark['category'],
+                    'subcategories':_placemark['subcategories'],
+                    'relevant_placemarks':Service.getInstance(this.requestId).whetherToShowRelevantPlacemarks() ? _placemark['relevant_placemarks'] : '',
+                    'created':BaseFunctions.isSet(_placemark['created']) ? _placemark['created'] : null,
+                    'modified':BaseFunctions.isSet(_placemark['modified']) ? _placemark['modified'] : null
                 };
 
                 // --> Prepare catalog_url
                 let _catalogUrl;
-                if (_result[_placemark['c_id']]['country_code']) {
-                    if (Countries.getInstance(this.requestId).hasStates(_result[_placemark['c_id']]['country_code'])) {
-                        _catalogUrl = _result[_placemark['c_id']]['country_code'] + '/' + _result[_placemark['c_id']]['state_code'] + '/' + _result[_placemark['c_id']]['id'];
+                if (_result[_placemark['id']]['country_code']) {
+                    if (Countries.getInstance(this.requestId).hasStates(_result[_placemark['id']]['country_code'])) {
+                        _catalogUrl = _result[_placemark['id']]['country_code'] + '/' + _result[_placemark['id']]['state_code'] + '/' + _result[_placemark['id']]['id'];
                     } else {
-                        _catalogUrl = _result[_placemark['c_id']]['country_code'] + '/' + _result[_placemark['c_id']]['id'];
+                        _catalogUrl = _result[_placemark['id']]['country_code'] + '/' + _result[_placemark['id']]['id'];
                     }
                 } else {
                     _catalogUrl = '';
                 }
-                _result[_placemark['c_id']]['catalog_url'] = _catalogUrl;
+                _result[_placemark['id']]['catalog_url'] = _catalogUrl;
                 // <-- Prepare catalog_url
             }
 
             // Add photos
             if (needPhotos !== false) {
-                _result[_placemark['c_id']]['photos'] = [];
+                _result[_placemark['id']]['photos'] = [];
                 // If the first photo - is a category photo
                 if (Service.getInstance(this.requestId).whetherToAddCategoryPhotoAsFirstInPlacemarkView() === true) {
 
-                    _result[_placemark['c_id']]['photos'].push({
+                    _result[_placemark['id']]['photos'].push({
                         'id':0,
                         'dir':Consts.SERVICE_IMGS_URL_CATEGORIES_PHOTOS,
-                        'name':Categories.getInstance(this.requestId).getCategoryCode(_placemark['c_category']) + '.jpg',
+                        'name':Categories.getInstance(this.requestId).getCategoryCode(_placemark['category']) + '.jpg',
                         'width':Service.getInstance(this.requestId).getCategoriesPhotoInitialWidth(),
                         'height':Service.getInstance(this.requestId).getCategoriesPhotoInitialHeight(),
                         'created':null,
@@ -329,39 +329,39 @@ class Placemarks extends Component {
 
                 // If only one photo is needed for placemark
                 if (needPhotos === 1) {
-                    if (!_result[_placemark['c_id']]['photos'].length) {
-                        _result[_placemark['c_id']]['photos'].push({
-                            'id':_photos[_placemark['c_id']][0]['id'],
-                            'dir': this.getPhotoDir(_placemark['c_id'],_photos[_placemark['c_id']][0]['path']),
-                            'name':_photos[_placemark['c_id']][0]['path'],
-                            'width':_photos[_placemark['c_id']][0]['width'],
-                            'height':_photos[_placemark['c_id']][0]['height'],
-                            'created':_photos[_placemark['c_id']][0]['created'],
-                            'modified':_photos[_placemark['c_id']][0]['modified']
+                    if (!_result[_placemark['id']]['photos'].length) {
+                        _result[_placemark['id']]['photos'].push({
+                            'id':_photos[_placemark['id']][0]['id'],
+                            'dir': this.getPhotoDir(_placemark['id'],_photos[_placemark['id']][0]['path']),
+                            'name':_photos[_placemark['id']][0]['path'],
+                            'width':_photos[_placemark['id']][0]['width'],
+                            'height':_photos[_placemark['id']][0]['height'],
+                            'created':_photos[_placemark['id']][0]['created'],
+                            'modified':_photos[_placemark['id']][0]['modified']
                         });
                     }
                 } else if (needPhotos === true) {
                     // If all photos is needed for placemark
-                    for (let _index in _photos[_placemark['c_id']]) {
-                        _result[_placemark['c_id']]['photos'].push({
-                            'id':_photos[_placemark['c_id']][_index]['id'],
-                            'dir': this.getPhotoDir(_placemark['c_id'],_photos[_placemark['c_id']][_index]['path']),
-                            'name':_photos[_placemark['c_id']][_index]['path'],
-                            'width':_photos[_placemark['c_id']][_index]['width'],
-                            'height':_photos[_placemark['c_id']][_index]['height'],
-                            'created':_photos[_placemark['c_id']][_index]['created'],
-                            'modified':_photos[_placemark['c_id']][_index]['modified']
+                    for (let _index in _photos[_placemark['id']]) {
+                        _result[_placemark['id']]['photos'].push({
+                            'id':_photos[_placemark['id']][_index]['id'],
+                            'dir': this.getPhotoDir(_placemark['id'],_photos[_placemark['id']][_index]['path']),
+                            'name':_photos[_placemark['id']][_index]['path'],
+                            'width':_photos[_placemark['id']][_index]['width'],
+                            'height':_photos[_placemark['id']][_index]['height'],
+                            'created':_photos[_placemark['id']][_index]['created'],
+                            'modified':_photos[_placemark['id']][_index]['modified']
                         });
                     }
                 }
 
                 // If there are no photos - get default
-                if (!_result[_placemark['c_id']]['photos'].length) {
+                if (!_result[_placemark['id']]['photos'].length) {
 
-                    _result[_placemark['c_id']]['photos']=[{
+                    _result[_placemark['id']]['photos']=[{
                         'id':0,
                         'dir':Consts.SERVICE_IMGS_URL_CATEGORIES_PHOTOS,
-                        'name':Categories.getInstance(this.requestId).getCategoryCode(_placemark['c_category']) + '.jpg',
+                        'name':Categories.getInstance(this.requestId).getCategoryCode(_placemark['category']) + '.jpg',
                         'width':Service.getInstance(this.requestId).getCategoriesPhotoInitialWidth(),
                         'height':Service.getInstance(this.requestId).getCategoriesPhotoInitialHeight(),
                         'created':BaseFunctions.isSet(_placemark['ph_created']) ? _placemark['ph_created'] : null,
@@ -372,15 +372,15 @@ class Placemarks extends Component {
 
             if (needRelative) {
                 // Add relative placemarks
-                if (_placemark['c_relevant_placemarks']) {
-                    _result[_placemark['c_id']]['relevant_placemarks'] = {
+                if (_placemark['relevant_placemarks']) {
+                    _result[_placemark['id']]['relevant_placemarks'] = {
                         data: {
                             'ident':'relevant',
                             'image_width':Config['dimentions'][this.getDeviceType()]['sublist_images']['width'],
                             'image_height':Config['dimentions'][this.getDeviceType()]['sublist_images']['height'],
                             'title':this.getText('relevant_placemarks/title/text')
                         },
-                        placemarks: this.getPlacemarksSublist(_placemark['c_relevant_placemarks']),
+                        placemarks: this.getPlacemarksSublist(_placemark['relevant_placemarks']),
                         use_titles: Service.getInstance(this.requestId).whetherToUseTitles()
                     }
                 }
@@ -388,10 +388,10 @@ class Placemarks extends Component {
 
             if (needAnother) {
                 // Add another placemarks related to category
-                let _anotherPlacemarksIds = this.getAnotherPlacemarksIdsByCategory(_placemark['c_category'], _placemark['c_id']);
+                let _anotherPlacemarksIds = this.getAnotherPlacemarksIdsByCategory(_placemark['category'], _placemark['id']);
                 if (_anotherPlacemarksIds.length) {
 
-                    _result[_placemark['c_id']]['another_placemarks'] = {
+                    _result[_placemark['id']]['another_placemarks'] = {
                         data: {
                             'ident':'another',
                             'image_width':Config['dimentions'][this.getDeviceType()]['sublist_images']['width'],
@@ -402,12 +402,12 @@ class Placemarks extends Component {
                         use_titles: Service.getInstance(this.requestId).whetherToUseTitles()
                     }
                 } else {
-                    _result[_placemark['c_id']]['another_placemarks'] = null;
+                    _result[_placemark['id']]['another_placemarks'] = null;
                 }
             }
 
             // Add placemark's categories
-            _result[_placemark['c_id']]['categories_html'] = {'category':_placemark['c_category'],'subcategories':_placemark['c_subcategories']};
+            _result[_placemark['id']]['categories_html'] = {'category':_placemark['category'],'subcategories':_placemark['subcategories']};
 
         }
 

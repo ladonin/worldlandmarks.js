@@ -294,8 +294,8 @@ class Catalog extends Component {
             for (let _index in _photosData) {
                 let _photo = _photosData[_index];
 
-                if (!placemarksData[_photo['c_id']]) {
-                    this.error(ErrorCodes.ERROR_VARIABLE_EMPTY, message = '_placemarksData[\'data\'][_photo[\'c_id\']], _photo[\'c_id\'] =' + _photo['c_id']);
+                if (!placemarksData[_photo['id']]) {
+                    this.error(ErrorCodes.ERROR_VARIABLE_EMPTY, message = '_placemarksData[\'data\'][_photo[\'id\']], _photo[\'id\'] =' + _photo['id']);
                 }
 
                 let _placemarkTitle = _photo['c_title'];
@@ -303,10 +303,10 @@ class Catalog extends Component {
                 _photosResult.push({
                     photo: {
                         ..._photo,
-                        ...{dir:Placemarks.getInstance(this.requestId).getPhotoDir(_photo['c_id'], _photo['ph_path'])}
+                        ...{dir:Placemarks.getInstance(this.requestId).getPhotoDir(_photo['id'], _photo['ph_path'])}
                     },
                     placemark: {
-                        ...placemarksData[_photo['c_id']],
+                        ...placemarksData[_photo['id']],
                         ...{title:_placemarkTitle}
                     }
                 });

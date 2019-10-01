@@ -116,42 +116,42 @@ class MapDataModel extends DBaseMysql
         let _commentPlain = '';
 
         if (needPlainText) {
-            _commentPlain = 'c.comment_plain as c_comment_plain,';
+            _commentPlain = 'c.comment_plain as comment_plain,';
         }
 
         let _comment = '';
 
         if (needText) {
-            _comment = 'c.comment as c_comment,';
+            _comment = 'c.comment as comment,';
         }
 
         let _sql = `SELECT
-                c.id as c_id,
-                c.x as c_x,
-                c.y as c_y,
+                c.id as id,
+                c.x as x,
+                c.y as y,
                 ${_comment}
                 ${_commentPlain}
-                c.title as c_title,
-                c.category as c_category,
-                c.subcategories as c_subcategories,
-                c.relevant_placemarks as c_relevant_placemarks,
-                c.created as c_created,
-                c.modified as c_modified,
+                c.title as title,
+                c.category as category,
+                c.subcategories as subcategories,
+                c.relevant_placemarks as relevant_placemarks,
+                c.created as created,
+                c.modified as modified,
 
-                geo.formatted_address as g_formatted_address,
-                geo.administrative_area_level_1 as g_administrative_area_level_1,
-                geo.administrative_area_level_2 as g_administrative_area_level_2,
-                geo.country_code as g_country_code,
-                geo.country as g_country,
-                geo.state_code as g_state_code,
-                geo.locality as g_locality,
-                geo.street as g_street
+                geo.formatted_address as formatted_address,
+                geo.administrative_area_level_1 as administrative_area_level_1,
+                geo.administrative_area_level_2 as administrative_area_level_2,
+                geo.country_code as country_code,
+                geo.country as country,
+                geo.state_code as state_code,
+                geo.locality as locality,
+                geo.street as street
 
                 FROM ${this.getTableName()} c
                 LEFT JOIN ${this.getTableName(this.tableInitNames.GEOCODE_COLLECTION)} geo on geo.map_data_id = c.id AND geo.language=?
                 WHERE c.id IN (${_idsList}) `;
 
-        let _innerOrder='c_id DESC';
+        let _innerOrder='id DESC';
 
         if (order) {
             _sql += `ORDER by ${order},${_innerOrder}`;
@@ -232,13 +232,13 @@ class MapDataModel extends DBaseMysql
     getPointsByCoordsNaked(x1, x2, y1, y2, ignore)
     {
         let _sql = `SELECT
-                t.id as c_id,
-                t.x as c_x,
-                t.y as c_y,
-                t.title as c_title,
-                t.category as c_category,
-                t.subcategories as c_subcategories,
-                t.relevant_placemarks as c_relevant_placemarks
+                t.id as id,
+                t.x as x,
+                t.y as y,
+                t.title as title,
+                t.category as category,
+                t.subcategories as subcategories,
+                t.relevant_placemarks as relevant_placemarks
 
                 FROM (SELECT * FROM ${this.getTableName()} WHERE `;
 
@@ -256,7 +256,7 @@ class MapDataModel extends DBaseMysql
             _sql += ` WHERE t.id NOT IN (${ignore})`;
         }
 
-        _sql += " GROUP by c_id";
+        _sql += " GROUP by id";
 
         return this.getBySql(_sql, undefined, false);
     }
@@ -272,7 +272,7 @@ class MapDataModel extends DBaseMysql
     getPointsByLimitNaked(limit, ignore)
     {
         return this.getByCondition(
-            /*condition*/`t.id NOT IN (${ignore})`,
+            /*condition*/ignore ? `id NOT IN (${ignore})` : '1',
             /*order*/'RAND()',
             /*group*/'',
             /*select*/'id, x, y, title, category, subcategories, relevant_placemarks',
@@ -359,8 +359,8 @@ class MapDataModel extends DBaseMysql
     {
 
         let _sql = `SELECT
-                    c.id as c_id,
-                    c.title as c_title,
+                    c.id as id,
+                    c.title as title,
 
                     ph.id as ph_id,
                     ph.path as ph_path,

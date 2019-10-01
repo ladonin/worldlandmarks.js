@@ -103,7 +103,7 @@ class MapPhotosModel extends DBaseMysql
     getPhotosByDataIds(ids, needResult = false)
     {
         return this.getByCondition(
-            /*condition*/"map_data_id IN (" + BaseFunctions.rtrim('?,'.repeat(ids.length),',') + ")",
+            /*condition*/ids.length ? "map_data_id IN (" + BaseFunctions.rtrim('?,'.repeat(ids.length),',') + ")" : 1,
             /*order*/'map_data_id, id DESC',
             /*group*/'',
             /*select*/'*',

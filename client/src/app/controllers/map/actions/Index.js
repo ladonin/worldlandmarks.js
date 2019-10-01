@@ -25,7 +25,7 @@ class MapIndex extends Action {
 
     componentDidMount() {
         super.componentDidMount();
-        MapModule.init(this.props.match.params, this.props.redux.staticData['is_available_to_change']);
+        MapModule.init(this.props.match.params);
     }
 
     render() {

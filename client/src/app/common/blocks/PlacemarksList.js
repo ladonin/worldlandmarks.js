@@ -74,7 +74,7 @@ class PlacemarksList extends Block {
     componentWillUnmount(){
         Events.remove('scroll', this.onScroll);
         Events.remove('search', this.onSearch);
-        this.props.removeBackgroundData('placemarksData');
+        this.props.removeBackgroundData('catalog_placemarksData');
     }
 
     componentDidMount(){
@@ -99,7 +99,7 @@ class PlacemarksList extends Block {
         this.reset();
         this.shouldBottomUpdate++;
         this.searchData = {...e.detail, isSearch:1};
-        this.props.removeBackgroundData('placemarksData');
+        this.props.removeBackgroundData('catalog_placemarksData');
         this.getList();
     }
 
@@ -243,7 +243,7 @@ function mapStateToProps(state) {
 
     return {
         redux:{
-            placemarks:state.backgroundData['placemarksData'],
+            placemarks:state.backgroundData['catalog_placemarksData'],
             linkToMapText:state.staticData['catalog_placemark_link_to_map_text'],
             nothing_found:state.staticData['nothing_found'],
         }
