@@ -21,11 +21,25 @@ class MapIndex extends Action {
 
     constructor() {
         super();
+        this.lastUrl = false;
     }
 
     componentDidMount() {
         super.componentDidMount();
+        this.lastUrl = this.props.match.url;
         MapModule.init(this.props.match.params);
+    }
+
+    shouldComponentUpdate(nextProps, nextState){
+        if (this.lastUrl !== nextProps.match.url) {
+            return true;
+        }
+        return false;
+    }
+
+    componentDidUpdate(){
+        this.lastUrl = this.props.match.url
+        MapModule.checkLinkOnId(this.props.match.params);
     }
 
     render() {

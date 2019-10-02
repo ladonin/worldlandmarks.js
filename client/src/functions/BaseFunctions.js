@@ -19,6 +19,7 @@ module.exports = {
         // "Run" this sheet by stuff
         if (document.querySelector(selector)) {
             document.querySelector(selector).scrollTop = 0;
+            window.$(selector +" br").remove();
             window.$(selector).append('<br>');
         }
     },
@@ -37,6 +38,10 @@ module.exports = {
     getScrollTop(selector) {
         // Use universal multibrowser function on jquery
         return window.$(selector).scrollTop();
+    },
+    scrollTo(where, to) {
+        // Use universal multibrowser function on jquery
+        window.$(where).scrollTo(to);
     },
     setScrollTop(selector, value) {
         // Use universal multibrowser function on jquery

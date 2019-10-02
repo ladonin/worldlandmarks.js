@@ -16,32 +16,8 @@ import Consts from 'src/settings/Constants';
 
 
 class PlacemarksList extends Component {
-    constructor() {
-        super();
-        this.onChangeSelected = this.onChangeSelected.bind(this);
-        this.state = {};
-    }
-
-    componentWillUnmount(){
-        Events.remove('mapPlacemarksListSelected', this.onChangeSelected);
-    }
-
-    componentDidMount(){
-        Events.add('mapPlacemarksListSelected', this.onChangeSelected);
-    }
-
-    onChangeSelected(e){
-
-        this.setState({
-          selected: e.detail.id
-        });
-    }
 
     render() {
-
-        if (!this.state.selected) {
-            return null;
-        }
 
         let _placemarksRightList = MapModule.getPlacemarksRightList();
         let _placemarks = MapModule.getPlacemarks();
@@ -50,27 +26,30 @@ class PlacemarksList extends Component {
 
         for (let _key in _placemarksRightList) {
             let _placemarkId = _placemarksRightList[_key];
-            let _photo = _placemarks[_placemarkId]['data']['photos'][0];
+            let _photo = _placemarks['id_'+_placemarkId]['data']['photos'][0];
             _list.push(
                     <React.Fragment>
-                        <div className="placemark_list_element" id={"placemark_list_element_" + _placemarkId}
+                        <div className={"placemark_list_element" + (this.props.selectedId === _placemarkId ? ' placemark_list_element_selected' :'')} id={"placemark_list_element_" + _placemarkId}
                         onClick={()=>{MapModule.placemarkPreview(_placemarkId, true)}}>
                             <CroppedPhoto
                                 blockWidth = {MapModule.getClusterListImageWidth()}
-                                blockHeight ={MapModule.getClusterListImageHeight}
+                                blockHeight ={MapModule.getClusterListImageHeight()}
                                 photoWidth = {_photo['width']}
                                 photoHeight = {_photo['height']}
-                                photoSrc = {_photo['dir'] + MapModule.getClusterListImagePrefix + _photo['name']}
+                                photoSrc = {_photo['dir'] + MapModule.getClusterListImagePrefix() + _photo['name']}
                             />
-                            {_placemarks[_placemarkId]['data']['title'] && <div className="placemark_list_element_title">{_placemarks[_placemarkId]['data']['title']}</div>}
+                            {_placemarks['id_'+_placemarkId]['data']['title'] && <div className="placemark_list_element_title">{_placemarks['id_'+_placemarkId]['data']['title']}</div>}
                         </div>
                     </React.Fragment>);
         }
 
+
+        const List = ()=> _list;
+
         return (
                 <React.Fragment>
                     <BrowserView>
-                        {_list}
+                        <List/>
                     </BrowserView>
                     <MobileView>
                         TODO MOBILE ArticlesList

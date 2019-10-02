@@ -8,7 +8,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
-import {BrowserView, MobileView, isBrowser, isMobile} from "react-device-detect";
+import {BrowserView, MobileView,isMobile} from "react-device-detect";
 
 import MapModule from 'src/modules/Map';
 import Consts from 'src/settings/Constants';
@@ -22,6 +22,7 @@ import PlacemarkCaregories from 'src/app/common/blocks/PlacemarkCaregories';
 import PhotosList from 'src/app/common/PhotosList';
 import PlacemarksSublist from 'src/app/common/blocks/PlacemarksSublist';
 import {RemoveBackgroundData} from 'src/app/parents/Common';
+import CssTransition from 'src/app/common/CssTransition';
 
 class MapPlacemark extends Block {
 
@@ -31,9 +32,9 @@ class MapPlacemark extends Block {
     }
 
     componentDidUpdate() {
-        //if (typeof this.props.redux.atCluster === 'undefined') {
-        MapModule.preparePlacemarkContentDimensions(this.props.redux.atCluster);
-        //}
+        if (typeof this.props.redux.atCluster !== 'undefined') {
+            MapModule.preparePlacemarkContentDimensions(this.props.redux.atCluster, this.props.redux.data.id);
+        }
     }
 
     componentWillUnmount(){
@@ -47,28 +48,39 @@ class MapPlacemark extends Block {
 
     render() {
 
-
-
-        let _content = '';
+        let _id = null;
+        let ContentComponent = () => null;
         let _hidden = 'hidden';
 
         if (this.props.redux.data) {
             _hidden = '';
-            let _id = this.props.redux.data.id;
+            _id = this.props.redux.data.id;
 
             MapModule.saveInPlacemarksData(this.props.redux.data);
             MapModule.addAndClustering();
 
             //подсвечиваем новую метку
 
-            MapModule.setCenter(_id);
-            MapModule.setZoom('whereAmI');
+            if (!1) {
+                MapModule.setCenter(_id);
+                MapModule.setZoom('whereAmI');
+            }
+
+
             MapModule.actionsAfterShowPointData(_id, this.props.redux.atCluster)
-            MapModule.setAvailableToChange(this.props.redux.staticData['is_available_to_change']);
+            //MapModule.setAvailableToChange(this.props.redux.staticData['is_available_to_change']);
 
-
-            _content =
-                    <React.Fragment>
+            let _photoWidth;
+            let _photoPrefix;
+            if (this.props.redux.atCluster) {
+                _photoWidth = MapModule.getContentImageWithClusterWidth();
+                _photoPrefix = MapModule.getContentImageWithClusterPrefix();
+            } else {
+                _photoWidth = MapModule.getContentImageWithoutClusterWidth();
+                _photoPrefix = MapModule.getContentImageWithoutClusterPrefix();
+            }
+            ContentComponent = () => (
+                    <CssTransition>
                         {this.props.redux.data['title'] && <div className="header_1">{this.props.redux.data['title']}</div>}
                         <PlacemarkAdminLinks
                             isAdmin={this.props.redux.staticData['is_admin']}
@@ -82,7 +94,8 @@ class MapPlacemark extends Block {
                             </a>
                         </div>
                         <div className="address_1" dangerouslySetInnerHTML={{__html: '<span>' + this.props.redux.data['formatted_address_with_route'] + '</span>'}}></div>
-                        <PhotosList scrollBlockSelector='#placemark_content' photos={this.props.redux.data['photos']}/>
+
+                        <PhotosList prefix={_photoPrefix} width={_photoWidth} scrollBlockSelector='#placemark_content' photos={this.props.redux.data['photos']}/>
                         <div
                             className="text_1 placemark_comment"
                             id="placemark_comment"
@@ -111,8 +124,8 @@ class MapPlacemark extends Block {
                             imageHeight = {this.props.redux.data['another_placemarks'].data.image_height}
                             ident = {this.props.redux.data['another_placemarks'].data.ident}
                             title = {this.props.redux.data['another_placemarks'].data.title}
-                            />;
-                        </React.Fragment>
+                            />
+                        </CssTransition>);
         } else {
             MapModule.actionsAfterHidePointData();
         }
@@ -124,9 +137,9 @@ class MapPlacemark extends Block {
                             <div id="placemark_close_side_1" onClick={this.hide}></div>
                             <div id="placemark_block">
                                 <div id="placemark_content">
-                                    <div id="placemark_content_block">{_content}</div>
+                                    <div id="placemark_content_block"><ContentComponent/></div>
                                 </div>
-                                <div id="placemark_list"><div id="placemark_list_block"><PlacemarksList/></div></div>
+                                <div id="placemark_list"><div id="placemark_list_block"><PlacemarksList selectedId={_id}/></div></div>
                             </div>
                             <div id="placemark_close_side_2" onClick={this.hide}></div>
                         </div>

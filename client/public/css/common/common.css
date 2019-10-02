@@ -657,11 +657,21 @@ border-color: #faebcc;
 
 
 
-.react-transition-appear {
+.react-transition-appear,
+.react-transition1-appear{
   opacity: 0.01;
 }
 
 .react-transition-appear.react-transition-appear-active {
   opacity: 1;
-  transition: .2s;
+  transition: 0.2s;
+}
+
+.react-transition1-appear.react-transition1-appear-active {
+  opacity: 1;
+  transition: 1s;
+}
+
+.placemarks_category_html_content img{
+    height:40px;
 }

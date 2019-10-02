@@ -27,21 +27,24 @@ class PhotosList extends Component {
             let _dimentions = ImageDimensions.prepareContentImageDimentions(
                     _photo['width'],
                     _photo['height'],
-                    ConfigRestrictions['desctop_content_width'],
+                    this.props.width,
                     (BaseFunctions.getHeight(window) - 100));
+
+
+            let _prefix = this.props.prefix ? this.props.prefix : '10_';
 
             _photosList.push(
                 <React.Fragment>
                     <div className="placemark_photo_navigator" id={'placemark_photo_'+_number+'_navigator'}>
                         <PhotosNavigator scrollBlockSelector={this.props.scrollBlockSelector ? this.props.scrollBlockSelector : 'body, html'} photosCount={this.props.photos.length} contentBlockIdName='placemark_comment' number={_number}/>
                     </div>
-                    <a href={_photo['dir'] + '1_' + _photo['name']}><img
+                    <a href={_photo['dir'] + '1_' + _photo['name']} target="_blank"><img
                         style={{
                             width: _dimentions.width + 'px',
                             height: _dimentions.height + 'px'
                         }}
                         id={'catalog_placemark_photo_'+_number}
-                        src={_photo['dir'] + '10_' + _photo['name']}/></a>
+                        src={_photo['dir'] + _prefix + _photo['name']}/></a>
                 </React.Fragment>);
         }
         return _photosList;

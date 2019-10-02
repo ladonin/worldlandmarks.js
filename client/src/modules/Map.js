@@ -120,7 +120,7 @@ let _placemarkContentMargin;
 let _yaShield1Timer;
 let _placemarkAddSetPointTimer;
 let _contentImageWithClusterWidth;
-let _contentImageWithoutClusterWith;
+let _contentImageWithoutClusterWidth;
 let _clusterListImagePrefix = null;
 let _contentImageWithClusterPrefix = null;
 let _contentImageWithoutClusterPrefix = null;
@@ -140,6 +140,21 @@ function getClusterListImageWidth(){
 function getClusterListImageHeight(){
     return _clusterListImageHeight;
 }
+function getContentImageWithClusterWidth(){
+    return _contentImageWithClusterWidth;
+}
+function getContentImageWithoutClusterWidth(){
+    return _contentImageWithoutClusterWidth;
+}
+function getContentImageWithClusterPrefix(){
+    return _contentImageWithClusterPrefix;
+}
+function getContentImageWithoutClusterPrefix(){
+    return _contentImageWithoutClusterPrefix;
+}
+
+
+
 
 
 
@@ -151,21 +166,21 @@ function prepareGenericDimensions() {
         _clusterListImageHeight = Math.floor(_clusterListImageWidth * 0.75);
         _placemarkContentMargin = 8;
         _contentImageWithClusterWidth = _windowWidth - (_clusterListImageWidth + (_placemarkContentMargin * 2));
-        _contentImageWithoutClusterWith = _windowWidth; // без отступов
+        _contentImageWithoutClusterWidth = _windowWidth; // без отступов
         //my_fileuploader_object.update({statusBarWidth: 184}); //ATTENTION - обратите внимание
     } else {
         _clusterListImageWidth = 210;
         _clusterListImageHeight = 170;
         _placemarkContentMargin = 10;
         _contentImageWithClusterWidth = BaseFunctions.getWidth(_placemarkBlockSelector) - (_clusterListImageWidth + (_placemarkContentMargin * 2));
-        _contentImageWithoutClusterWith = BaseFunctions.getWidth(_placemarkBlockSelector);
+        _contentImageWithoutClusterWidth = BaseFunctions.getWidth(_placemarkBlockSelector);
         //my_fileuploader_object.update({statusBarWidth: 450});//ATTENTION - обратите внимание
     }
 
     let _clusterImageWidthDimension = Math.floor(_clusterListImageWidth * 0.2);
     _clusterListImagePrefix = ImageDimensions.getPrefix(_clusterListImageWidth, _clusterImageWidthDimension);
     _contentImageWithClusterPrefix = ImageDimensions.getPrefix(_contentImageWithClusterWidth, 0);
-    _contentImageWithoutClusterPrefix = ImageDimensions.getPrefix(_contentImageWithoutClusterWith, 0);
+    _contentImageWithoutClusterPrefix = ImageDimensions.getPrefix(_contentImageWithoutClusterWidth, 0);
     BaseFunctions.setHeight(_yMapsIdSelector, _windowHeight);
     BaseFunctions.setHeight(_placemarkSelector, _windowHeight - (parseInt(BaseFunctions.getCss(_placemarkSelector, 'margin-top')) * 2));
     BaseFunctions.setHeight(_placemarkAddSelector, _windowHeight - (parseInt(BaseFunctions.getCss(_placemarkAddSelector, 'margin-top')) * 2));
@@ -307,7 +322,7 @@ function getPlacemarks() {
 
 
 // подготавливаем габариты окна просмотра балуна - NOTE:  нельзя прописать это в css, потому что теги еще не существуют
-function preparePlacemarkContentDimensions(atCluster) {
+function preparePlacemarkContentDimensions(atCluster, id) {
     BaseFunctions.setWidth(_placemarkListSelector, _clusterListImageWidth + (_placemarkContentMargin * 2));
     if (isMobile) {
         if (atCluster) {
@@ -322,14 +337,23 @@ function preparePlacemarkContentDimensions(atCluster) {
             BaseFunctions.setWidth(_placemarkContentSelector, BaseFunctions.getWidth(_placemarkBlockSelector));
         }
     }
+    // переводим скролл вверх, если вдруг он не там
+    BaseFunctions.setScrollTop(_placemarkContentSelector, 0);
+    BaseFunctions.kickNicescroll(_placemarkContentSelector);
+    BaseFunctions.kickNicescroll(_placemarkAddBlockSelector);
+    BaseFunctions.kickNicescroll(_placemarkListSelector);
+
+    if (atCluster && id) {
+        BaseFunctions.scrollTo(_placemarkListSelector, '#placemark_list_element_'+id);
+    }
 }
 
 
 
 
 
-function checkLinkOnId() {
-
+function checkLinkOnId(matchParams) {
+    _linkId = Router.getActionData(undefined, matchParams)[Consts.ID_VAR_NAME];
     if (_linkId) {
         getPlacemark(_linkId);
     }
@@ -411,7 +435,6 @@ function actionsAfterShowPointData(id, atCluster){
 
     preparePlacemarkViewerDimensions(id, atCluster);
     _currentPlacemarkId = id;
-    // переводим скролл вверх, если вдруг он не там
     BaseFunctions.setScrollTop(_placemarkContentSelector, 0);
     BaseFunctions.kickNicescroll(_placemarkContentSelector);
     BaseFunctions.kickNicescroll(_placemarkAddBlockSelector);
@@ -425,6 +448,10 @@ function actionsAfterHidePointData(){
     BaseFunctions.setCss(_yMapsIdSelector, 'opacity', 1);
     BaseFunctions.setCss(_placemarkToggleSelector + ' ' + _buttonImageSelector, 'top', _buttonsPlacemarkViewerHidePosition);
     moveToCluster(_currentPlacemarkId);
+    BaseFunctions.setScrollTop(_placemarkContentSelector, 0);
+    BaseFunctions.kickNicescroll(_placemarkContentSelector);
+    BaseFunctions.kickNicescroll(_placemarkAddBlockSelector);
+    BaseFunctions.kickNicescroll(_placemarkListSelector);
 }
 
 // возвращаем метку в кластер
@@ -441,8 +468,7 @@ function moveToCluster(id) {
 // ПРИ КЛИКЕ НА БАЛУН ВЫЗЫВАЕТСЯ ЭТА ФУНКЦИЯ
 // выводим на экран данные метки - из кластера или из балуна
 function showPointData(id, atCluster) {
-    Events.dispatch('mapPlacemarksListSelected', {id});
-    preparePlacemarkContentDimensions(atCluster);
+    preparePlacemarkContentDimensions(atCluster, id);
     getPlacemark(id, atCluster);
 
 }
@@ -496,7 +522,6 @@ function init(matchParams) {
 
         _windowWidth = BaseFunctions.getWidth(window);
         _windowHeight = BaseFunctions.getHeight(window);
-        _linkId = Router.getActionData(undefined, matchParams)[Consts.ID_VAR_NAME];
 
         CategoryViewerModule.setToMapApi();
         prepareNewPlacemarkBalloonPresets();
@@ -529,7 +554,7 @@ function init(matchParams) {
             openBalloonOnClick: false
         });
 
-        checkLinkOnId();
+        checkLinkOnId(matchParams);
 
         /**
          * Кластеризатор расширяет коллекцию, что позволяет использовать один обработчик
@@ -652,9 +677,9 @@ function showClusterList(target) {
             return;
         }
         //задаем размеры блоков - content и cluster list
-        preparePlacemarkContentDimensions(true);
+        preparePlacemarkContentDimensions(true, null);
 
-
+        _placemarksRightList = {};
         let _firstId = null;
         // выбираем все данные кластера и отображаем их в попапе
 
@@ -772,5 +797,13 @@ export default {
     stopBunchFillingTimer,
     getPlacemarksRightList,
     getPlacemarks,
-    actionsAfterHidePointData
+    actionsAfterHidePointData,
+    getClusterListImageWidth,
+    getClusterListImagePrefix,
+    getClusterListImageHeight,
+    getContentImageWithClusterWidth,
+    getContentImageWithoutClusterWidth,
+    getContentImageWithClusterPrefix,
+    getContentImageWithoutClusterPrefix,
+    checkLinkOnId
 }
