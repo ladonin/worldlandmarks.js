@@ -56,11 +56,15 @@ class Map extends CommonController {
         let _Y2 = parseFloat(this.getFromRequest('Y2'));
         let _X1 = parseFloat(this.getFromRequest('X1'));
         let _X2 = parseFloat(this.getFromRequest('X2'));
+        if (isNaN(_Y1)) {
+            return false;
+        }
         let _zoom = parseInt(this.getFromRequest('zoom'));
+        let _category = this.getFromRequest('filterCategory') === false ? false : parseInt(this.getFromRequest('filterCategory'));
 
         this.addBackgroundData({
             map_baloonsData:
-                BaseFunctions.clearNullDataInArrayOfObjects(MapComponent.getInstance(this.requestId).getPointsShortDataByCoords({Y1:_Y1,Y2:_Y2,X1:_X1,X2:_X2,zoom:_zoom}))
+                BaseFunctions.clearNullDataInArrayOfObjects(MapComponent.getInstance(this.requestId).getPointsShortDataByCoords({Y1:_Y1,Y2:_Y2,X1:_X1,X2:_X2,zoom:_zoom, category:_category}))
         });
         this.sendMe(true);
     }
@@ -70,10 +74,11 @@ class Map extends CommonController {
      */
     action_fill_placemarks_on_map()
     {
+        let _category = this.getFromRequest('filterCategory') === false ? false : parseInt(this.getFromRequest('filterCategory'));
 
         this.addBackgroundData({
             map_baloonsAutoFillData:
-                BaseFunctions.clearNullDataInArrayOfObjects(MapComponent.getInstance(this.requestId).getPointsBunch())
+                BaseFunctions.clearNullDataInArrayOfObjects(MapComponent.getInstance(this.requestId).getPointsBunch(_category))
         });
         this.sendMe(true);
     }

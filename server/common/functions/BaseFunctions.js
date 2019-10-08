@@ -167,7 +167,18 @@ function clone(obj) {
 }
 
 
+function isObjectEmpty(obj) {
+
+    for (let _key in obj) {
+        return false
+    }
+
+    return true;
+}
+
+
 module.exports = {
+    isObjectEmpty,
     clone,
     viewCroppedPhoto,
     areObjectsEqual,

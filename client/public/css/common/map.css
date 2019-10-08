@@ -61,9 +61,9 @@
     overflow:auto;
     width: 100%;
     margin-bottom:0px;
-    display:none;
     position:absolute;
     z-index:3002;
+    bottom:0;
 }
 
 
@@ -244,7 +244,6 @@ input[type="checkbox"].delete_existing_photo_checkbox:checked + label span {
     position:absolute;
     z-index:3005;
     right:0px;
-    display:none;
     /*box-shadow: 0 0 10px 0px #666;*/
 }
 #open_panel:hover{

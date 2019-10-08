@@ -122,6 +122,8 @@ ACTION_VAR_NAME:'action',
 
 
     // Events
+    EVENT_SHOW_TOOLS_PANEL_BUTTON:'app:show_tools_panel_button',
+    EVENT_TOOLS_PANEL_SET_STATUS:'app:tools_panel_set_status',
     EVENT_SHOW_CATEGORY_VIEWER:'app:show_category_viewer',
     EVENT_HIDE_CATEGORY_VIEWER:'app:hide_category_viewer',
     EVENT_GOTO:'app:goto',

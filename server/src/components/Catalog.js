@@ -401,7 +401,7 @@ class Catalog extends Component {
             let _state = _requestFormData['state'];
             let _keywords = _requestFormData['keywords'];
 
-            let _placemarks = MapDataModel.getInstance(this.requestId).getPlacemarksSeacrhList(
+            let _placemarks = MapDataModel.getInstance(this.requestId).getPlacemarksSeachcList(
                 idStart,
                 _category,
                 _country,

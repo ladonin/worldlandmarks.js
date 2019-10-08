@@ -19,8 +19,8 @@ module.exports = {
         // "Run" this sheet by stuff
         if (document.querySelector(selector)) {
             document.querySelector(selector).scrollTop = 0;
-            window.$(selector +" br").remove();
             window.$(selector).append('<br>');
+            window.$(selector +" > br").remove();
         }
     },
     getFlagUrl(countryCode) {
@@ -43,7 +43,7 @@ module.exports = {
         // Use universal multibrowser function on jquery
         window.$(where).scrollTo(to);
     },
-    setScrollTop(selector, value) {
+    setScrollTop(selector, value = 0) {
         // Use universal multibrowser function on jquery
         return window.$(selector).scrollTop(value);
     },

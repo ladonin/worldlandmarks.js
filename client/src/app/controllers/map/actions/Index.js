@@ -15,7 +15,7 @@ import MapModule from 'src/modules/Map';
 import BaseFunctions from 'src/functions/BaseFunctions';
 import MapPlacemark from 'src/app/common/blocks/map/Placemark';
 import MapBaloon from 'src/app/common/blocks/map/Baloon';
-
+import ToolsPanel from 'src/app/common/blocks/ToolsPanel';
 
 class MapIndex extends Action {
 
@@ -27,7 +27,7 @@ class MapIndex extends Action {
     componentDidMount() {
         super.componentDidMount();
         this.lastUrl = this.props.match.url;
-        MapModule.init(this.props.match.params);
+        MapModule.run(this.props.match.params, 'init');
     }
 
     shouldComponentUpdate(nextProps, nextState){
@@ -49,6 +49,7 @@ class MapIndex extends Action {
                     <MapPlacemark/>
                     <MapBaloon/>
                     <div className="map" id="YMapsID"></div>
+                    <ToolsPanel/>
                 </React.Fragment>
                 );
     }

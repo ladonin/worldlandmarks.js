@@ -154,6 +154,7 @@ class Map extends Component {
             let _x2 = parseFloat(data['X2']);
             let _y1 = parseFloat(data['Y1']);
             let _y2 = parseFloat(data['Y2']);
+            let _category = data['category'];
 
             data['zoom'] = parseInt(data['zoom']);
 
@@ -176,7 +177,7 @@ class Map extends Component {
             // What is already sent
             let _alreadySentIdsFromSession = this.getAlreadySentIdsStringFromSession();
 
-            let _result = MapDataModel.getInstance(this.requestId).getPointsByCoordsNaked(_x1, _x2, _y1, _y2, _alreadySentIdsFromSession);
+            let _result = MapDataModel.getInstance(this.requestId).getPointsByCoordsNaked(_x1, _x2, _y1, _y2, _category, _alreadySentIdsFromSession);
 
             this.setAlreadySentIdsToSession(_result);
 
@@ -229,11 +230,14 @@ class Map extends Component {
     /*
      * Get limited collection of any prepared placemarks in random order
      *
+     * @param {integer} limit - collection limit
+     * @param {integer/boolean} category - filter by category
+     *
      * @return {array of objects}
      */
-    getPointsByLimit()
+    getPointsByLimit(limit, category = false)
     {
-        let _result = this.getPointsByLimitNaked();
+        let _result = this.getPointsByLimitNaked(limit, category);
 
         _result = _result ? Placemarks.getInstance(this.requestId).prepareResult(_result, false, false, 1, false, false) : _result;
 
@@ -246,10 +250,11 @@ class Map extends Component {
      * Get limited collection of any placemarks in random order
      *
      * @param {integer} limit - collection limit
+     * @param {integer/boolean} category - filter by category
      *
      * @return {array of objects}
      */
-    getPointsByLimitNaked(limit)
+    getPointsByLimitNaked(limit, category = false)
     {
         if (!limit) {
             limit = Service.getInstance(this.requestId).getMapAutofillLimit();
@@ -257,7 +262,7 @@ class Map extends Component {
 
         let _alreadySentIdsFromSession = this.getAlreadySentIdsStringFromSession();
 
-        let _result = MapDataModel.getInstance(this.requestId).getPointsByLimitNaked(limit, _alreadySentIdsFromSession);
+        let _result = MapDataModel.getInstance(this.requestId).getPointsByLimitNaked(limit, category, _alreadySentIdsFromSession);
 
         this.setAlreadySentIdsToSession(_result);
 
@@ -268,13 +273,15 @@ class Map extends Component {
     /*
      * Get bunch of random points
      *
+     * @param {integer/boolean} category - filter by category
+     *
      * @return {array of objects}
      */
-    getPointsBunch()
+    getPointsBunch(category = false)
     {
         let _limit = Service.getInstance(this.requestId).getMapAutofillLimit();
 
-        return this.getPointsByLimit(_limit);
+        return this.getPointsByLimit(_limit, category);
     }
 
 

@@ -195,7 +195,7 @@ class Service extends Core
      *
      * @return {array of objects}
      */
-    get_languages()
+    getLanguages()
     {
         if (Functions.isSet(this.get_data().config.languages)) {
             return this.data.config.languages;
@@ -217,7 +217,7 @@ class Service extends Core
         }
 
         this.languagesCodes = [];
-        let _languages = this.get_languages();
+        let _languages = this.getLanguages();
 
         for(let _index in _languages){
             this.languagesCodes.push(_languages[_index].code);

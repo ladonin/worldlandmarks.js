@@ -10,6 +10,7 @@ const Users = require('server/src/core/Users');
 const Catalog = require('server/src/components/Catalog');
 const Articles = require('server/src/components/Articles');
 const Map = require('server/src/components/Map');
+const Service = require('server/src/core/Service');
 
 class CommonController extends Controller {
 
@@ -75,6 +76,29 @@ class CommonController extends Controller {
                 'catalog_sitemap_categories_header':this.getText('page_bottom/sitemap_categories/text'),
                 'map_placemark_link_text':this.getText('map/placemark/link/text'),
                 'is_available_to_change':Map.getInstance(this.requestId).isAvailableToChange(),
+
+                'panel_tools_settings_head':this.getText('panel_tools/settings/head'),
+                'panel_tools_settings_back_title':this.getText('panel_tools/settings_back/title'),
+                'panel_tools_settings_language_title':this.getText('panel_tools/settings/language/title'),
+                'languages':Service.getInstance(this.requestId).getLanguages(),
+                'panel_tools_filter_head':this.getText('map/panel_tools/filter/head'),
+                'panel_tools_filter_back_title':this.getText('map/panel_tools/filter_back/title'),
+                'panel_tools_filter_reset_title':this.getText('map/panel_tools/filter_reset/title'),
+                'panel_tools_filter_category_title':this.getText('map/panel_tools/filter/category/title'),
+                'panel_tools_where_am_i_title':this.getText('map/panel_tools/where_am_i/title'),
+                'panel_tools_filter_title':this.getText('map/panel_tools/filter/title'),
+                'panel_tools_link_main':this.getText('map/panel_tools/link/main'),
+                'panel_tools_link_catalog':this.getText('map/panel_tools/link/catalog'),
+                'panel_tools_link_catalog_search':this.getText('catalog/panel_tools/link/catalog/search'),
+                'panel_tools_link_article':this.getText('catalog/panel_tools/link/article'),
+                'panel_tools_settings_title':this.getText('panel_tools/settings/title'),
+                'panel_tools_filter_category_selected_title':this.getText('map/panel_tools/filter/category/selected/title'),
+
+
+                'whether_to_show_main_pages':Service.getInstance(this.requestId).whetherToShowMainPages(),
+                'whether_to_show_catalog_pages':Service.getInstance(this.requestId).whetherToShowCatalogPages(),
+                'whether_to_show_search_pages':Service.getInstance(this.requestId).whetherToShowSearchPages(),
+                'whether_to_show_article_pages':Service.getInstance(this.requestId).whetherToShowArticlePages(),
             }
         };
     }

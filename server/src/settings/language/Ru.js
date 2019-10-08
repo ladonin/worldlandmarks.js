@@ -51,7 +51,7 @@ module.exports = {
     'map/panel_tools/filter/category/selected/title': 'Выбрано:',
     'map/panel_tools/filter/title': '<br>фильтр',
     'panel_tools/settings/title': 'Настройки/Settings',
-    'panel_tools/settings_back/title': 'Назад',
+    'panel_tools/settings_back/title': '<br>назад',
     'panel_tools/settings/head': 'Настройки',
     'panel_tools/settings/language/title': 'Язык сайта',
     'map/panel_tools/filter/head': 'Фильтр',

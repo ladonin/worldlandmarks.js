@@ -225,11 +225,12 @@ class MapDataModel extends DBaseMysql
      * @param {float} x2 - x2 coordinate
      * @param {float} y1 - y1 coordinate
      * @param {float} y2 - y2 coordinate
+     * @param {integer/boolean} category - filter by category
      * @param {string} ignore - placemarks list to be ignored
      *
      * @return {array of objects} - placemarks data
      */
-    getPointsByCoordsNaked(x1, x2, y1, y2, ignore)
+    getPointsByCoordsNaked(x1, x2, y1, y2, category, ignore)
     {
         let _sql = `SELECT
                 t.id as id,
@@ -250,10 +251,13 @@ class MapDataModel extends DBaseMysql
             _sql += `(x BETWEEN ${x1} AND ${x2}) `;
         }
 
-        _sql += `AND (y BETWEEN ${y2} AND ${y1})) t`;
+        _sql += `AND (y BETWEEN ${y2} AND ${y1})) t WHERE 1`;
 
         if (ignore) {
-            _sql += ` WHERE t.id NOT IN (${ignore})`;
+            _sql += ` AND t.id NOT IN (${ignore})`;
+        }
+        if (category !== false) {
+            _sql += " AND (t.category = '" + category + "' OR t.subcategories REGEXP '[[:<:]]" + category + "[[:>:]]')";
         }
 
         _sql += " GROUP by id";
@@ -265,14 +269,23 @@ class MapDataModel extends DBaseMysql
      * Get limited collection of any placemarks in random order
      *
      * @param {integer} limit - collection limit
+     * @param {integer/boolean} category - filter by category
      * @param {string} ignore - list of placemarks ids to be ignored in fetching
      *
      * @return {array of objects} - placemarks data
      */
-    getPointsByLimitNaked(limit, ignore)
+    getPointsByLimitNaked(limit, category, ignore)
     {
+        let condition = '1';
+        if (category !== false){
+            condition += " AND (category = '" + category + "' OR subcategories REGEXP '[[:<:]]" + category + "[[:>:]]')";
+        }
+        if (ignore){
+            condition += ` AND id NOT IN (${ignore})`;
+        }
+
         return this.getByCondition(
-            /*condition*/ignore ? `id NOT IN (${ignore})` : '1',
+            /*condition*/ condition,
             /*order*/'RAND()',
             /*group*/'',
             /*select*/'id, x, y, title, category, subcategories, relevant_placemarks',
@@ -472,7 +485,7 @@ class MapDataModel extends DBaseMysql
      *
      * @return  {array of objects}
      */
-    getPlacemarksSeacrhList(idStart = 0, category = false, country = '', state = '', keywords = '', limit, language, needResult)
+    getPlacemarksSeachcList(idStart = 0, category = false, country = '', state = '', keywords = '', limit, language, needResult)
     {
         category = category === '' ? false : category;
         category = category !== false ? parseInt(category) : category;

@@ -278,13 +278,7 @@ $this->trace_block('_models' . MY_DS . 'placemark_photos_viewer', false);
 
 
 
-// отделяем от кластера метку
-    var remove_from_cluster = function (id) {
-        if ((typeof (placemarks[id]) !== 'undefined') && (typeof (placemarks[id]['object']) !== 'undefined')) {
-        clusterer.remove(placemarks[id]['object']);
-                map.geoObjects.add(placemarks[id]['object']);
-        }
-    }
+
 
 
 
@@ -319,16 +313,7 @@ $this->trace_block('_models' . MY_DS . 'placemark_photos_viewer', false);
     }
 
 
-    // убираем все метки из карты, в массиве сохраняем
-    var hide_all_placemarks_from_map = function () {
-            placemark_opened_id = undefined;
-            clusterer.removeAll();
-            $.each(placemarks, function (id, value) {
-            if ((typeof (value) !== 'undefined') && (typeof (value['object']) !== 'undefined')) {
-            map.geoObjects.remove(value['object']);
-            }
-            });
-    }
+
 
 
 

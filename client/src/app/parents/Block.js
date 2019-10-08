@@ -13,12 +13,17 @@ import CommonBaseFunctions from 'src/../../server/common/functions/BaseFunctions
 
 class Block extends Common {
 
-    shouldComponentUpdate(nextProps, nextState){
-        if (typeof nextProps.redux === 'undefined') {
-            return !CommonBaseFunctions.areObjectsEqual(nextProps,this.props);
+    shouldComponentUpdate(nextProps, nextState) {
+
+        if (!CommonBaseFunctions.areObjectsEqual(this.state, nextState)) {
+            return true;
         }
 
-        return !CommonBaseFunctions.areObjectsEqual(nextProps.redux,this.props.redux);
+        if (typeof nextProps.redux === 'undefined') {
+            return !CommonBaseFunctions.areObjectsEqual(nextProps, this.props);
+        }
+
+        return !CommonBaseFunctions.areObjectsEqual(nextProps.redux, this.props.redux);
     }
 
 }

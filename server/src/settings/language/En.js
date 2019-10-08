@@ -49,7 +49,7 @@ module.exports = {
     'map/panel_tools/filter/category/selected/title': 'Selected:',
     'map/panel_tools/filter/title': '<br>filter',
     'panel_tools/settings/title': 'Settings',
-    'panel_tools/settings_back/title': 'Back',
+    'panel_tools/settings_back/title': '<br>back',
     'panel_tools/settings/head': 'Settings',
     'panel_tools/settings/language/title': 'Sile language',
     'map/panel_tools/filter/head': 'Filter',

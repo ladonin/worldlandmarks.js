@@ -8,7 +8,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import {BrowserView, MobileView, isBrowser, isMobile} from "react-device-detect";
-import Events from 'src/modules/Events';
 import MapModule from 'src/modules/Map';
 import CroppedPhoto from 'src/app/common/blocks/CroppedPhoto';
 

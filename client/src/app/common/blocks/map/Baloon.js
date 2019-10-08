@@ -20,6 +20,10 @@ class MapBaloon extends Block {
         super();
     }
 
+    shouldComponentUpdate(nextProps, nextState) {
+        return true;
+    }
+
     componentWillUnmount(){
         this.props.removeBackgroundData('map_baloonsData');
     }
@@ -36,9 +40,6 @@ class MapBaloon extends Block {
                 MapModule.prepareLoadedPlacemarks(this.props.redux.autofillData, true)
             }
         }
-
-
-
 
         return null;
     }
