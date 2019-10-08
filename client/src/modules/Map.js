@@ -220,8 +220,9 @@ function saveInPlacemarksData(data) {
     if (_isRedactedStatus === false) {
         _placemarks['id_'+_id] = {};
     }
-
     _placemarks['id_'+_id]['data'] = data;
+    _placemarks['id_'+_id]['data']['categories'] = [data['category'],...(data['categories_html']['subcategories'] !== null ? data['categories_html']['subcategories'].split(',').map((val)=>parseInt(val)) : [])];
+
     return true;
 }
 
@@ -264,7 +265,7 @@ function addAndClustering(init = false) {
         if (init === true || ((typeof (_placemark) !== 'undefined') && (typeof (_placemark['object']) === 'undefined'))) {
             _newPlacemarkData = addPlacemark(_id, _placemark['data']);
 
-            if ((_filterCategory === false) || (_filterCategory === _placemark['data']['category'])) {
+            if ((_filterCategory === false) || (_placemark['data']['categories'].includes(_filterCategory))) {
                 _placemarksToAdd.push(_newPlacemarkData);
                 _clusterIsUpdated = true;
             }

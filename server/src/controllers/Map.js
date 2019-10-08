@@ -56,9 +56,7 @@ class Map extends CommonController {
         let _Y2 = parseFloat(this.getFromRequest('Y2'));
         let _X1 = parseFloat(this.getFromRequest('X1'));
         let _X2 = parseFloat(this.getFromRequest('X2'));
-        if (isNaN(_Y1)) {
-            return false;
-        }
+
         let _zoom = parseInt(this.getFromRequest('zoom'));
         let _category = this.getFromRequest('filterCategory') === false ? false : parseInt(this.getFromRequest('filterCategory'));
 

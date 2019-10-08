@@ -142,6 +142,9 @@ class Map extends Component {
      */
     getPointsByCoordsNaked(data)
     {
+        if (isNaN(data['X1'])) {
+            return [];
+        }
         if (BaseFunctions.isSet(data['X1'])
                 && BaseFunctions.isSet(data['X2'])
                 && BaseFunctions.isSet(data['Y1'])
