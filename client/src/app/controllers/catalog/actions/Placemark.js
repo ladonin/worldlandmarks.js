@@ -14,6 +14,7 @@ import { Link } from 'react-router-dom';
 import Action, {GetState, MapDispatchToProps} from 'src/app/parents/Action';
 import Router from 'src/modules/Router';
 import Consts from 'src/settings/Constants';
+import BaseFunctions from 'src/functions/BaseFunctions';
 
 // Components
 import CssTransition from 'src/app/common/CssTransition';
@@ -29,6 +30,11 @@ class CatalogPlacemark extends Action {
 
     constructor() {
         super();
+    }
+
+    componentDidUpdate(){
+        super.componentDidUpdate();
+        BaseFunctions.scrollTop(window);
     }
 
     render() {

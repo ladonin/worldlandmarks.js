@@ -21,37 +21,26 @@ import Events from 'src/modules/Events';
 class CategoryViewer extends Block {
     constructor() {
         super();
-        this.show = this.show.bind(this);
-        this.hide = this.hide.bind(this)
+        this.toggle = this.toggle.bind(this)
         this.categories = CategoryViewerModule.getCategories();
+        this.state = {id:null}
     }
 
-    show(e) {
-        this.showCategoryViewer(e.detail.id)
-    }
-
-    hide() {
-        this.hideCategoryViewer()
+    toggle(e) {
+        this.setState({id: e.detail.id})
     }
 
     componentDidMount() {
-        Events.add(Consts.EVENT_SHOW_CATEGORY_VIEWER, this.show);
-        Events.add(Consts.EVENT_HIDE_CATEGORY_VIEWER, this.hide);
+        Events.add(Consts.EVENT_TOGGLE_CATEGORY_VIEWER, this.toggle);
     }
 
     componentWillUnmount() {
-        Events.remove(Consts.EVENT_SHOW_CATEGORY_VIEWER);
-        Events.remove(Consts.EVENT_HIDE_CATEGORY_VIEWER);
-    }
-
-    componentDidUpdate() {
-
-
+        Events.remove(Consts.EVENT_TOGGLE_CATEGORY_VIEWER, this.toggle);
     }
 
     render() {
 
-        let _selectedItem = this.props.redux.styleData.selectedItem;
+        let _selectedItem = this.state.id;
 
         let _categoriesList = [];
 

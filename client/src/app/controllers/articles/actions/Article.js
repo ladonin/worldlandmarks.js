@@ -25,6 +25,11 @@ class ArticlesArticle extends Action {
         super();
     }
 
+    componentDidUpdate(){
+        super.componentDidUpdate();
+        BaseFunctions.scrollTop(window);
+    }
+    
     render() {
         if (!this.props.redux) {
             return null;

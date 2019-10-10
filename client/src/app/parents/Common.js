@@ -7,6 +7,7 @@
 
 import { Component } from 'react';
 import Consts from 'src/settings/Constants';
+import Events from 'src/modules/Events';
 
 class Common extends Component {
     constructor() {
@@ -29,29 +30,18 @@ class Common extends Component {
      * @param {integer} id - viewed category id
      */
     showCategoryViewer(id){
-        //ATTENTION - обратите внимание
-        this.props.updateStyleData(
-            {
-                '#category_info_block':
-                {
-                    arbitrary:{item:id}
-                }
-            }
-        );
+        Events.dispatch(Consts.EVENT_TOGGLE_CATEGORY_VIEWER, {
+            id
+        });
     }
 
     /*
      * Hide categories viewer
      */
     hideCategoryViewer(){
-        this.props.updateStyleData(
-            {
-                '#category_info_block':
-                {
-                    arbitrary:{item:null}
-                }
-            }
-        );
+        Events.dispatch(Consts.EVENT_TOGGLE_CATEGORY_VIEWER, {
+            id:null
+        });
     }
 }
 
