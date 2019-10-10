@@ -47,7 +47,7 @@ class SitemapCategory extends Common {
         for (let _index in this.props.redux.actionData.categoriesData) {
             let _category = this.props.redux.actionData.categoriesData[_index];
             _categoriesList.push(
-                <div className="sitemap_category_row">
+                <div key={_category['id']} className="sitemap_category_row">
                     <a onClick={this.goTo} data-url={'/' + Consts.CONTROLLER_NAME_CATALOG + '/' + Consts.ACTION_NAME_SITEMAP_CATEGORY + '/' + _category['code'] + '/1'}>{_category['title']}</a>
                 </div>);
         }
@@ -56,9 +56,9 @@ class SitemapCategory extends Common {
         for (let _i = 1; _i <= this.props.redux.actionData.pagesCount; _i++) {
 
             if (_i === parseInt(this.props.redux.actionData.currentPage)) {
-                _pagesList.push(<a className='sitemap_current_page'>{_i}</a>);
+                _pagesList.push(<a className='sitemap_current_page' key={_i}>{_i}</a>);
             } else {
-                _pagesList.push(<a onClick={this.goTo} data-url={'/' + Consts.CONTROLLER_NAME_CATALOG + '/' + Consts.ACTION_NAME_SITEMAP_CATEGORY + '/' + this.props.redux.actionData.categoryCode + '/' + _i}>{_i}</a>);
+                _pagesList.push(<a onClick={this.goTo} key={_i} data-url={'/' + Consts.CONTROLLER_NAME_CATALOG + '/' + Consts.ACTION_NAME_SITEMAP_CATEGORY + '/' + this.props.redux.actionData.categoryCode + '/' + _i}>{_i}</a>);
             }
         }
 
@@ -70,7 +70,7 @@ class SitemapCategory extends Common {
             let _urlPart =  _placemark.state_code === 'undefined' ? '/' : ('/' + _placemark.state_code + '/');
 
             _placemarksList.push(
-            <div className="sitemap_placemark_row">
+            <div key={_placemark.id} className="sitemap_placemark_row">
                 <a onClick={this.goTo} data-url={'/' + Consts.CONTROLLER_NAME_CATALOG + '/' + _placemark.country_code + _urlPart + _placemark.id}>{_placemark.title}</a>
             </div>);
         }

@@ -26,6 +26,7 @@ class MapBaloon extends Block {
 
     componentWillUnmount(){
         this.props.removeBackgroundData('map_baloonsData');
+        MapModule.suspendBunchFillingTimer();
     }
 
     render() {

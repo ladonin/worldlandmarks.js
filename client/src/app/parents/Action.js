@@ -10,6 +10,7 @@ import Router from 'src/modules/Router';
 import Consts from 'src/settings/Constants';
 import Socket from 'src/app/socket/Socket';
 import Common, {UpdateStyleData, ClearActionData, ClearStyleData, ClearBackgroundData} from 'src/app/parents/Common';
+import Events from 'src/modules/Events';
 
 export default class Action extends Common {
 
@@ -28,6 +29,7 @@ export default class Action extends Common {
     componentDidMount() {
         Socket.actionQuery(this.props.match.params);
         this.currentUrl = this.props.match.url;
+        Events.dispatch(Consts.EVENT_RESET_PAGE_SCROLLING);
     }
 
 

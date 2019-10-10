@@ -34,7 +34,7 @@ class SitemapCategories extends Common {
         for (let _index in this.props.redux.actionData.categoriesData) {
             let _category = this.props.redux.actionData.categoriesData[_index];
             _categoriesList.push(
-                    <div className="sitemap_category_row">
+                    <div key={_category['id']} className="sitemap_category_row">
                         <a onClick={this.goTo} data-url={'/' + Consts.CONTROLLER_NAME_CATALOG + '/' + Consts.ACTION_NAME_SITEMAP_CATEGORY + '/' + _category['code'] + '/1'}>{_category['title']}</a>
                     </div>);
         }

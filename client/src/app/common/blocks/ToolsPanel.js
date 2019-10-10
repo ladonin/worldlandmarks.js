@@ -90,12 +90,10 @@ class ToolsPanel extends Block {
         }
 
 
-
-
-
         return (
                 <React.Fragment>
-                    {this.state.status !== false && <div onClick={this.show}><ToolsPanelButton/></div>}
+                    {this.state.status !== false && <div onClick={this.show}><ToolsPanelButton
+                        top = {this.props.isMap ? ((BaseFunctions.getHeight(window) - 70) / 2) : 0}/></div>}
                     {(this.state.status !== null && this.state.status !== false) &&
                         <React.Fragment>
                             <div id="panel_tools" style={{width: this.localVarsStyles.panelToolsWidth + 'px', height: this.localVarsStyles.panelToolsHeight + 'px'}}>

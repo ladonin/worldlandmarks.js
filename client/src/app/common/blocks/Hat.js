@@ -12,7 +12,7 @@ import { withRouter } from 'react-router-dom';
 
 import Block from 'src/app/parents/Block';
 import Consts from 'src/settings/Constants';
-
+import ToolsPanel from 'src/app/common/blocks/ToolsPanel';
 
 class Hat extends Block {
 
@@ -39,10 +39,7 @@ class Hat extends Block {
                         <div className="hat_logo_text_under">{this.props.redux.logoUnderText}</div>
                     </div>
                     <div className="hat_menu">
-                        <div id="open_panel">
-                            <div className="icon">
-                                <img src="/img/icons_desctop.png"/></div>
-                        </div>
+                        <ToolsPanel/>
                     </div>
                     <div className="clear"></div>
                 </BrowserView>

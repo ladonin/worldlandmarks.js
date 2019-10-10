@@ -20,6 +20,7 @@ import Common from 'src/app/controllers/articles/actions/_Common';
 import CssTransition from 'src/app/common/CssTransition';
 import Bottom from 'src/app/common/blocks/Bottom';
 
+
 class SitemapCountry extends Common {
 
     constructor() {

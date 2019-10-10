@@ -17,6 +17,7 @@ module.exports = {
     PROCESS_PROD: 'production',
     LANGUAGE_RU: 'ru',
     LANGUAGE_EN: 'en',
+    LANGUAGE_NAME:'language',
 
     LANGUAGE_COMMON: 'COMMON',
     SERVICE_LANDMARKS: 'landmarks',
@@ -126,6 +127,7 @@ ACTION_VAR_NAME:'action',
     EVENT_TOOLS_PANEL_SET_STATUS:'app:tools_panel_set_status',
     EVENT_SHOW_CATEGORY_VIEWER:'app:show_category_viewer',
     EVENT_HIDE_CATEGORY_VIEWER:'app:hide_category_viewer',
+    EVENT_RESET_PAGE_SCROLLING:'app:reset_page_scrolling',
     EVENT_GOTO:'app:goto',
 
 

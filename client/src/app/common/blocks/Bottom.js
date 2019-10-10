@@ -58,39 +58,42 @@ class Bottom extends Block {
             return null;
         }
 
-        return (<CssTransition>
-            <div className={"page_bottom_block hidden2 " + (this.firstRender ? '' : this.props.redux.class)} style={this.firstRender ? {} : this.props.redux.style}>
-                <div className="page_bottom_column_1">
-                    <div className="page_bottom_column_row_header">
-                        {this.props.redux.text['1']}
+        return (
+            <React.Fragment>
+                <CssTransition>
+                    <div className={"page_bottom_block hidden2 " + (this.firstRender ? '' : this.props.redux.class)} style={this.firstRender ? {} : this.props.redux.style}>
+                        <div className="page_bottom_column_1">
+                            <div className="page_bottom_column_row_header">
+                                {this.props.redux.text['1']}
+                            </div>
+                            <div className="page_bottom_column_row">
+                                <a onClick={this.goTo} data-url={'/' + Consts.CONTROLLER_NAME_CATALOG}>{this.props.redux.text['2']}</a>
+                            </div>
+                            <div className="page_bottom_column_row">
+                                <a onClick={this.goTo} data-url={'/' + Consts.CONTROLLER_NAME_MAP}>{this.props.redux.text['3']}</a>
+                            </div>
+                            <div className="page_bottom_column_row">
+                                <a onClick={this.goTo} data-url={'/' + Consts.CONTROLLER_NAME_CATALOG + '/' + Consts.ACTION_NAME_SEARCH}>{this.props.redux.text['4']}</a>
+                            </div>
+                            <div className="page_bottom_column_row">
+                                <a onClick={this.goTo} data-url={'/' + Consts.CONTROLLER_NAME_CATALOG + '/' + Consts.ACTION_NAME_SITEMAP_COUNTRIES}>{this.props.redux.text['5']}</a>
+                            </div>
+                            <div className="page_bottom_column_row">
+                                <a onClick={this.goTo} data-url={'/' + Consts.CONTROLLER_NAME_CATALOG + '/' + Consts.ACTION_NAME_SITEMAP_CATEGORIES}>{this.props.redux.text['6']}</a>
+                            </div>
+                            <div className="page_bottom_column_row">
+                                <a onClick={this.goTo} data-url={'/' + Consts.CONTROLLER_NAME_ARTICLES + '/' + Consts.ACTION_NAME_COUNTRIES}>{this.props.redux.text['7']}</a>
+                            </div>
+                            <div className="page_bottom_column_row">
+                                <a onClick={this.goTo} data-url={'/' + Consts.CONTROLLER_NAME_ARTICLES + '/' + Consts.ACTION_NAME_CATEGORIES}>{this.props.redux.text['8']}</a>
+                            </div>
+                        </div>
+                        <div className="clear"></div>
+                        <div className="page_bottom_rights" dangerouslySetInnerHTML={{__html:this.props.redux.text['9']}}></div>
                     </div>
-                    <div className="page_bottom_column_row">
-                        <a onClick={this.goTo} data-url={'/' + Consts.CONTROLLER_NAME_CATALOG}>{this.props.redux.text['2']}</a>
-                    </div>
-                    <div className="page_bottom_column_row">
-                        <a onClick={this.goTo} data-url={'/' + Consts.CONTROLLER_NAME_MAP}>{this.props.redux.text['3']}</a>
-                    </div>
-                    <div className="page_bottom_column_row">
-                        <a onClick={this.goTo} data-url={'/' + Consts.CONTROLLER_NAME_CATALOG + '/' + Consts.ACTION_NAME_SEARCH}>{this.props.redux.text['4']}</a>
-                    </div>
-                    <div className="page_bottom_column_row">
-                        <a onClick={this.goTo} data-url={'/' + Consts.CONTROLLER_NAME_CATALOG + '/' + Consts.ACTION_NAME_SITEMAP_COUNTRIES}>{this.props.redux.text['5']}</a>
-                    </div>
-                    <div className="page_bottom_column_row">
-                        <a onClick={this.goTo} data-url={'/' + Consts.CONTROLLER_NAME_CATALOG + '/' + Consts.ACTION_NAME_SITEMAP_CATEGORIES}>{this.props.redux.text['6']}</a>
-                    </div>
-                    <div className="page_bottom_column_row">
-                        <a onClick={this.goTo} data-url={'/' + Consts.CONTROLLER_NAME_ARTICLES + '/' + Consts.ACTION_NAME_COUNTRIES}>{this.props.redux.text['7']}</a>
-                    </div>
-                    <div className="page_bottom_column_row">
-                        <a onClick={this.goTo} data-url={'/' + Consts.CONTROLLER_NAME_ARTICLES + '/' + Consts.ACTION_NAME_CATEGORIES}>{this.props.redux.text['8']}</a>
-                    </div>
-                </div>
-                <div className="clear"></div>
-                <div className="page_bottom_rights" dangerouslySetInnerHTML={{__html:this.props.redux.text['9']}}></div>
-
-            </div></CssTransition>
-        );
+                </CssTransition>
+            </React.Fragment>
+            );
     }
 }
 

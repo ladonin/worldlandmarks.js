@@ -81,6 +81,13 @@ class Map extends CommonController {
         this.sendMe(true);
     }
 
+    /*
+     * Change language background action
+     */
+    action_change_language()
+    {
+        this.sendMe();
+    }
 }
 
 

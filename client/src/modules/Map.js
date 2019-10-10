@@ -305,8 +305,6 @@ function addPlacemark(id, data) {
     _placemarks['id_'+id]['object'] = _myPlacemark;
 // что делаем при клике на балун
     _myPlacemark.events.add('click', function (e) {
-        _placemarkComponentRef.close();
-        _panelToolsComponentRef.hide();
         if (BaseFunctions.is(_placemarkAddButtonsSelector, ':visible') !== true) {
             _placemarksRightList = {};
             _showRightList = false;
@@ -366,7 +364,7 @@ function preparePlacemarkContentDimensions(atCluster, id) {
         }
     }
     // переводим скролл вверх, если вдруг он не там
-    BaseFunctions.setScrollTop(_placemarkContentSelector, 0);
+    BaseFunctions.scrollTop(_placemarkContentSelector, 0);
     BaseFunctions.kickNicescroll(_placemarkContentSelector);
     BaseFunctions.kickNicescroll(_placemarkAddBlockSelector);
     BaseFunctions.kickNicescroll(_placemarkListSelector);
@@ -388,7 +386,8 @@ function checkLinkOnId(matchParams) {
 }
 
 function getPlacemark(id, atCluster = false) {
-
+    _placemarkComponentRef.close();
+    _panelToolsComponentRef.hide();
     Socket.backgroundQuery(
             Consts.CONTROLLER_NAME_MAP,
             'get_placemark',
@@ -463,7 +462,7 @@ function actionsAfterShowPointData(id, atCluster){
     colorizePlacemark(id);
     preparePlacemarkViewerDimensions(id, atCluster);
     _currentPlacemarkId = id;
-    BaseFunctions.setScrollTop(_placemarkContentSelector, 0);
+    BaseFunctions.scrollTop(_placemarkContentSelector, 0);
     BaseFunctions.kickNicescroll(_placemarkContentSelector);
     BaseFunctions.kickNicescroll(_placemarkAddBlockSelector);
     BaseFunctions.kickNicescroll(_placemarkListSelector);
@@ -476,7 +475,7 @@ function actionsAfterClosePointData(){
     BaseFunctions.setCss(_yMapsIdSelector, 'opacity', 1);
     BaseFunctions.setCss(_placemarkToggleSelector + ' ' + _buttonImageSelector, 'top', _buttonsPlacemarkViewerHidePosition);
     moveToCluster(_currentPlacemarkId);
-    BaseFunctions.setScrollTop(_placemarkContentSelector, 0);
+    BaseFunctions.scrollTop(_placemarkContentSelector, 0);
     BaseFunctions.kickNicescroll(_placemarkContentSelector);
     BaseFunctions.kickNicescroll(_placemarkAddBlockSelector);
     BaseFunctions.kickNicescroll(_placemarkListSelector);
@@ -591,15 +590,13 @@ function init(coords, matchParams) {
     _clusterer.events
         //при клике на кластер, подгружаем данные первого в списке элемента
         .add(['click'], function (e) {
-            _placemarkComponentRef.close();
-            _panelToolsComponentRef.hide();
             if (BaseFunctions.is(_placemarkAddButtonsSelector, ":visible") !== true) {
                 let _target = e.get('target');
                 // только для кластера с элементами
                 if (typeof _target.getGeoObjects === "function") {
                     showClusterList(_target);
                     // переводим скролл вверх, если вдруг он не там
-                    BaseFunctions.setScrollTop(_placemarkListSelector, 0);
+                    BaseFunctions.scrollTop(_placemarkListSelector, 0);
                 }
             } else {
                 Events.dispatch('alert', {
@@ -876,7 +873,7 @@ function getFilterCategory(){
         window.ymaps.geolocation.get({
             provider: 'yandex',
             mapStateAutoApply: true
-        }).then(function (result) {console.log('geolocation');alert(999);
+        }).then(function (result) {
             let _bounds = result.geoObjects.get(0).properties.get('boundedBy');
             let _coords = window.ymaps.util.bounds.getCenter(_bounds);
             if (action === 'init') {

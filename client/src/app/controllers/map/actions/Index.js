@@ -49,7 +49,7 @@ class MapIndex extends Action {
                     <MapPlacemark/>
                     <MapBaloon/>
                     <div className="map" id="YMapsID"></div>
-                    <ToolsPanel/>
+                    <ToolsPanel isMap={true}/>
                 </React.Fragment>
                 );
     }

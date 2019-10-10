@@ -18,36 +18,35 @@ import HtmllerButtons from 'src/modules/HtmllerButtons';
 import CategoryViewer from 'src/modules/CategoryViewer';
 import Router from 'src/modules/Router';
 import Events from 'src/modules/Events';
+import AlertsText from 'src/modules/AlertsText';
 
 class Menu extends Block {
 
     constructor() {
         super();
-
-
-
-
-
-
-
-
-
-
+        this.alert = this.alert.bind(this);
     }
 
-    render() {
 
-        /*
-            <div id="where_am_i">
-                <HtmllerButtons device={Consts.DEVICE_NAME_DESCTOP} text={this.props.redux.staticData.panel_tools_where_am_i_title}/>
-            </div>
-         */
+
+    alert(){
+        Events.dispatch('alert', {
+            text: AlertsText.get('geolocate_error_no_https', 'error'),
+            className: 'error'
+        });
+    }
+
+
+    render() {
 
         let _toolsList = [];
         let _imageStyles = {width:'33px', height:'33px'};
         if (Router.isMapPage(this.props.match.params) === true) {
             _toolsList.push(
                     <React.Fragment>
+                        <div id="where_am_i" onClick={this.alert}>
+                            <HtmllerButtons device={Consts.DEVICE_NAME_DESCTOP} text={this.props.redux.staticData.panel_tools_where_am_i_title}/>
+                        </div>
                         <div id="panel_tools_content_filter" onClick={()=>Events.dispatch(Consts.EVENT_TOOLS_PANEL_SET_STATUS, {value: 2})}>
                             <HtmllerButtons device={Consts.DEVICE_NAME_DESCTOP} text={this.props.redux.staticData.panel_tools_filter_title}/>
                         </div>
@@ -64,6 +63,20 @@ class Menu extends Block {
                         <div className="clear"></div>
                     </React.Fragment>);
         }
+
+
+
+        if (Router.isMapPage(this.props.match.params) === false) {
+            _toolsList.push(
+                    <React.Fragment>
+                        <div className="panel_tools_content_links" style={{width:this.props.width + 'px'}}
+                            onClick={this.goTo} data-url={'/' + Consts.CONTROLLER_NAME_MAP}>
+                            <img style={_imageStyles} src="/img/map_icon_30.png"/>{this.props.redux.staticData.panel_tools_link_map}
+                        </div>
+                        <div className="clear"></div>
+                    </React.Fragment>);
+        }
+
 
         if (this.props.redux.staticData.whether_to_show_catalog_pages === true) {
             _toolsList.push(

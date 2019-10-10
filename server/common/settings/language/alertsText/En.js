@@ -16,7 +16,8 @@ module.exports = {
         'new_point/wrong_email': 'Incorrect email',
         'update_point/wrong_password': 'The password is entered incorrectly, or this isn\'t your entry.',
         'update_point/empty_password': 'You need to enter the password that was previously sent to you by email.',
-        'system': 'System error! Please contact site administrator.'
+        'system': 'System error! Please contact site administrator.',
+        'geolocate_error_no_https': 'Sorry, but this option is temporary inavailable, because the site uses insecure protocol http instead of https',
     },
     'success': {
         'new_point/placemark_added': 'Mark added, now you go into the edit section',

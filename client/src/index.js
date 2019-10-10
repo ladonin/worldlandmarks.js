@@ -14,6 +14,7 @@ import CategoryViewer from 'src/app/common/blocks/CategoryViewer';
 import Breadcrumbs from 'src/app/common/blocks/Breadcrumbs';
 import Hat from 'src/app/common/blocks/Hat';
 import Alert from 'src/app/common/Alert';
+import PageScrolling from 'src/app/common/blocks/PageScrolling';
 
 render(
         <BrowserRouter>
@@ -23,6 +24,7 @@ render(
                 <Hat/>
                 <Breadcrumbs/>
                 <App/>
+                <PageScrolling/>
             </Provider>
         </BrowserRouter>
         , document.getElementById('container'));

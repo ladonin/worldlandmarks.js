@@ -43,8 +43,11 @@ module.exports = {
         // Use universal multibrowser function on jquery
         window.$(where).scrollTo(to);
     },
-    setScrollTop(selector, value = 0) {
+    scrollTop(selector, value = 0, animate = false, duration = 200, callback = null) {
         // Use universal multibrowser function on jquery
+        if (animate === true) {
+            return window.$(selector).animate({scrollTop: value}, duration, callback);
+        }
         return window.$(selector).scrollTop(value);
     },
     getCss(selector, param) {
@@ -90,5 +93,14 @@ module.exports = {
     },
     trigger(selector, name, value) {
         window.$(selector).trigger(name, value);
+    },
+    onScroll(selector, callback) {
+        window.$(selector).scroll(callback);
+    },
+    fadeOut(selector) {
+        window.$(selector).fadeOut();
+    },
+    fadeIn(selector) {
+        window.$(selector).fadeIn();
     }
 }

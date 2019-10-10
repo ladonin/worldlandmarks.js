@@ -10,6 +10,7 @@ import {BrowserView, MobileView, isBrowser, isMobile} from "react-device-detect"
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 
+import Router from 'src/modules/Router';
 import Block from 'src/app/parents/Block';
 import Consts from 'src/settings/Constants';
 import BaseFunctions from 'src/functions/BaseFunctions';
@@ -18,30 +19,13 @@ import HtmllerButtons from 'src/modules/HtmllerButtons';
 
 class ToolsPanelButton extends Block {
 
-    constructor() {
-        super();
-
-        this.localVarsStyles = {
-            height: BaseFunctions.getHeight('#open_panel'),
-            top: (BaseFunctions.getHeight(window) - BaseFunctions.getHeight('#open_panel')) / 2
-        };
-    }
-
     render() {
+        let _style = {
+            top: this.props.top ? this.props.top : 0
+        }
 
-        return (
-                <div id="open_panel" style={{height: this.localVarsStyles.height + 'px', top: this.localVarsStyles.top + 'px'}}><HtmllerButtons/></div>
-                );
+        return (<div id="open_panel" style={{top: _style.top + 'px'}}><HtmllerButtons/></div>);
     }
 }
 
-
-
 export default ToolsPanelButton
-
-
-
-
-
-
-
