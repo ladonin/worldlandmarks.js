@@ -24,7 +24,7 @@ class ToolsPanelButton extends Block {
             top: this.props.top ? this.props.top : 0
         }
 
-        return (<div id="open_panel" style={{top: _style.top + 'px'}}><HtmllerButtons/></div>);
+        return (<div id="open_panel" style={{top: _style.top + 'px'}}><HtmllerButtons device={Consts.DEVICE_NAME_DESCTOP}/></div>);
     }
 }
 

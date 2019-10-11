@@ -4,7 +4,7 @@
     text-align:left;
 
 background-image: url(/img/fon_230.jpg);
-    background-size: 230px auto;
+    background-size: auto 100%;
     background-repeat: no-repeat;
     background-position: top;
 
@@ -34,8 +34,8 @@ background-image: url(/img/fon_230.jpg);
 
 .main_block_map_block_title, .main_block_catalog_block_title,.main_block_search_block_title{
     color:#fff;
-    font-size:14px;
-    text-align: right;
+    font-size:16px;
+    text-align: center;
 }
 
 .main_block_catalog_block_description, .main_block_map_block_description, .main_block_description{
@@ -44,4 +44,8 @@ background-image: url(/img/fon_230.jpg);
 
 .main_block_description,.main_block_catalog_block_description,.main_block_map_block_description{
     font-size:14px;
+}
+
+.main_block_search_block{
+    float:right;
 }

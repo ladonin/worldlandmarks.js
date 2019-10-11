@@ -143,7 +143,7 @@ font-weight: 600;
     float:left;
 }
 
-.hat>div{
+.hat{
     width:100%;
     border-bottom: 0px solid #cbc8b5;
     padding: 0;

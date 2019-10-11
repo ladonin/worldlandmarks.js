@@ -33,3 +33,116 @@ this.props.redux.actionData.
                 [Consts.ID_VAR_NAME]:this.idNext,
                 [Consts.REQUEST_FORM_DATA]:this.props.data ? this.props.data : this.searchData
             })
+
+
+
+
+
+
+
+
+
+
+
+CSSTransition:
+
+import React, { useState, useEffect } from 'react';
+import { CSSTransition  } from 'react-transition-group'
+
+
+function App() {
+  const [inProp, setInProp] = useState(true);
+  return (
+    <div>
+      <CSSTransition
+        appear={true}
+        in={inProp}
+
+        classNames="my-node"
+
+        addEndListener={(node, done) => {
+            // use the css transitionend event to mark the finish of a transition
+            node.addEventListener('transitionend', done, false);
+        }}
+        timeout={7200 /* fallback variant unless addEndListener is provided*/}
+
+
+        onEnter = {(node) => {
+            //alert('enter');
+        }}
+        onEntering = {(node) => {
+            //alert('entering');
+        }}
+        onEntered = {(node) => {
+            //alert('entered');
+        }}
+
+
+        onExit = {(node) => {
+            //alert('Exit');
+        }}
+        onExiting = {(node) => {
+            //alert('Exiting');
+        }}
+        onExited = {(node) => {
+            //alert('Exited');
+        }}
+
+
+
+    >
+        <div>
+          {"I'll receive my-node-* classes " + inProp}
+        </div>
+      </CSSTransition>
+      <button type="button" onClick={() => setInProp(inProp ? false : true)}>
+        Click to Enter
+      </button>
+    </div>
+  );
+}
+
+
+
+export default App
+
+
+
+
+
+
+
+.my-node-appear {
+  opacity: 1;color:#f0f;
+
+}
+.my-node-appear-active {
+  opacity: 1;  color:#00f;
+  transition: all 7200ms;
+}
+
+
+.my-node-enter {
+  opacity: 1;color:#0f0;  left:0px;position:relative;
+}
+.my-node-enter-active {
+  opacity: 1;  color:#0f7;
+  transition: all 7200ms;
+}
+.my-node-enter-done {
+    position:relative;
+  opacity: 1;  color:#0ff;
+  transition: all 7200ms;  left:1000px;
+}
+.my-node-exit {
+  opacity: 1;  color:#f00;
+}
+.my-node-exit-active {
+  opacity: 1;color:#170;
+
+  transition: all 7200ms;
+}
+.my-node-exit-done {
+  opacity: 1;color:#ff7;
+  transition: all 7200ms;
+}

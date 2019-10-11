@@ -29,7 +29,7 @@ class PageScrolling extends Block {
         this.reset = this.reset.bind(this);
     }
 
-    componentWillUnmount() {alert(111);
+    componentWillUnmount() {
         Events.remove(Consts.EVENT_RESET_PAGE_SCROLLING, this.reset);
     }
 
@@ -100,10 +100,10 @@ class PageScrolling extends Block {
     }
 
     show(){
-        this.setState({hidden:false});//BaseFunctions.fadeIn('#my_page_scrolling_button');
+        this.setState({hidden:false});
     }
     hide(){
-        this.setState({hidden:true});//BaseFunctions.fadeOut('#my_page_scrolling_button');
+        this.setState({hidden:true});
     }
 
     arrowUp(){

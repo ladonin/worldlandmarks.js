@@ -36,6 +36,7 @@ export default class Action extends Common {
     componentDidUpdate() {
         if (this.currentUrl !== this.props.match.url) {
             Socket.actionQuery(this.props.match.params);
+            Events.dispatch(Consts.EVENT_RESET_PAGE_SCROLLING);
         }
         this.currentUrl = this.props.match.url;
     }

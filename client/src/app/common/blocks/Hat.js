@@ -24,32 +24,32 @@ class Hat extends Block {
         if (!this.props.redux.domainName || this.props.redux.controller === Consts.CONTROLLER_NAME_MAP) {
             return null;
         }
+
         return (
             <div className="hat">
-                <BrowserView>
-                    <div className="hat_logo">
-                        <div className="hat_logo_img">
-                            <a onClick={this.goTo} data-url='/'>
-                                <img src="/img/logo.png"/>
-                            </a>
-                        </div>
-                        <div className="hat_logo_text_main">
-                            <a onClick={this.goTo} data-url='/'>{this.props.redux.domainName}</a>
-                        </div>
-                        <div className="hat_logo_text_under">{this.props.redux.logoUnderText}</div>
+                <div className="hat_logo">
+                    <div className="hat_logo_img">
+                        <a onClick={this.goTo} data-url='/'>
+                            <img src="/img/logo.png"/>
+                        </a>
                     </div>
-                    <div className="hat_menu">
-                        <ToolsPanel/>
-                    </div>
-                    <div className="clear"></div>
-                </BrowserView>
-                <MobileView></MobileView>
+                    {isBrowser&&
+                        <React.Fragment>
+                            <div className="hat_logo_text_main">
+                                <a onClick={this.goTo} data-url='/'>{this.props.redux.domainName}</a>
+                            </div>
+                            <div className="hat_logo_text_under">{this.props.redux.logoUnderText}</div>
+                        </React.Fragment>
+                    }
+                </div>
+                <div className="hat_menu">
+                    <ToolsPanel/>
+                </div>
+                <div className="clear"></div>
             </div>
         );
     }
 }
-
-
 
 function mapStateToProps(state) {
 
@@ -63,10 +63,3 @@ function mapStateToProps(state) {
 }
 
 export default connect(mapStateToProps)(withRouter(Hat))
-
-
-
-
-
-
-

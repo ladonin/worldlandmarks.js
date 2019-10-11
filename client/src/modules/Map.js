@@ -305,6 +305,8 @@ function addPlacemark(id, data) {
     _placemarks['id_'+id]['object'] = _myPlacemark;
 // что делаем при клике на балун
     _myPlacemark.events.add('click', function (e) {
+        _placemarkComponentRef.close();
+        _panelToolsComponentRef.hide();
         if (BaseFunctions.is(_placemarkAddButtonsSelector, ':visible') !== true) {
             _placemarksRightList = {};
             _showRightList = false;
@@ -381,13 +383,12 @@ function preparePlacemarkContentDimensions(atCluster, id) {
 function checkLinkOnId(matchParams) {
     _linkId = Router.getActionData(undefined, matchParams)[Consts.ID_VAR_NAME];
     if (_linkId) {
+        _panelToolsComponentRef.hide();
         getPlacemark(_linkId);
     }
 }
 
 function getPlacemark(id, atCluster = false) {
-    _placemarkComponentRef.close();
-    _panelToolsComponentRef.hide();
     Socket.backgroundQuery(
             Consts.CONTROLLER_NAME_MAP,
             'get_placemark',
@@ -590,6 +591,8 @@ function init(coords, matchParams) {
     _clusterer.events
         //при клике на кластер, подгружаем данные первого в списке элемента
         .add(['click'], function (e) {
+            _placemarkComponentRef.close();
+            _panelToolsComponentRef.hide();
             if (BaseFunctions.is(_placemarkAddButtonsSelector, ":visible") !== true) {
                 let _target = e.get('target');
                 // только для кластера с элементами

@@ -100,7 +100,6 @@ class ToolsPanel extends Block {
                                 <div id="close_panel" onClick={this.close} style={{width:this.localVarsStyles.closePanelWidth + 'px', height: this.localVarsStyles.closePanelHeight + 'px'}}></div>
                                 <div id="panel_tools_content" style={{right: this.localVarsStyles.panelToolsContentRight + 'px', width: this.localVarsStyles.panelToolsContentWidth + 'px'}}>
                                     <ContentComponent/>
-
                                 </div>
                             </div>
                         </React.Fragment>
@@ -116,7 +115,6 @@ function mapStateToProps(state) {
 
     return {
         redux: {
-            controller: state.staticData['controller'],
             domainName: state.staticData['domain_name'],
             logoUnderText: state.staticData['hat_logo_under_text']
         }

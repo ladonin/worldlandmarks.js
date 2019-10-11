@@ -75,11 +75,9 @@ input[type="text"],input[type="password"],textarea {
 }
 /*#placemark_add_open,*/
 #placemark_buttons_block,
-#open_panel,
 #placemark_update_open_from_viewer,
 #placemark_toggle,
 #placemark_close,
-#placemark_add_set_point,
 #placemark_add_cancel,
 #placemark_add_commit
 {

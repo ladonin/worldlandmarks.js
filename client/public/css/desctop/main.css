@@ -2,7 +2,8 @@
     width:900px;
     margin:0 auto;
     text-align:left;
-    background-color: rgba(65, 75, 97, 0.2);
+    padding-bottom: 10px;
+
 }
 
 
@@ -57,7 +58,9 @@ border-radius: 50px;
 .main_block_map_block img,
 .main_block_catalog_block img,
 .main_block_search_block img{
-    margin: 25px 0 0 30px;
+    margin-top: 25px;
+    height:240px;
+    width:240px;
 }
 
 

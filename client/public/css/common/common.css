@@ -595,7 +595,6 @@ border-color: #faebcc;
     right:10px;
     font-size:21px;
     cursor:pointer;
-    opacity:0.8;
 }
 #my_page_scrolling_button:hover{
     transition: 0.5s;
@@ -659,4 +658,28 @@ border-color: #faebcc;
 
 .placemarks_category_html_content img{
     height:40px;
+}
+
+.react-transition-appear {
+  opacity: 0;
+}
+.react-transition-appear-active {
+  opacity: 1;
+  transition: opacity 200ms;
+}
+
+.react-transition1-appear {
+  opacity: 0;
+}
+.react-transition1-appear-active {
+  opacity: 1;
+  transition: opacity 0.5s;
+}
+
+
+
+.main_block_map_block, .main_block_catalog_block, .main_block_search_block {
+
+    border-radius: 10px;
+
 }
