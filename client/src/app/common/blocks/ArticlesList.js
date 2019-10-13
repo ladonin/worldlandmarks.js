@@ -41,19 +41,14 @@ class ArticlesList extends Block {
 
         return (
                 <React.Fragment>
-                    <BrowserView>
-                        <div className="cataolg_page_article_items_list">
-                            {_articlesList}
-                            <div className="cataolg_page_article_item padding_bottom_10 padding_top_5">
-                                <a onClick={this.goTo} data-url={'/' + Consts.CONTROLLER_NAME_ARTICLES}>
-                                    <i>{this.props.redux.seeAll}</i>
-                                </a>
-                            </div>
+                    <div className="cataolg_page_article_items_list">
+                        {_articlesList}
+                        <div className="cataolg_page_article_item padding_bottom_10 padding_top_5">
+                            <a onClick={this.goTo} data-url={'/' + Consts.CONTROLLER_NAME_ARTICLES}>
+                                <i>{this.props.redux.seeAll}</i>
+                            </a>
                         </div>
-                    </BrowserView>
-                    <MobileView>
-                        TODO MOBILE ArticlesList
-                    </MobileView>
+                    </div>
                 </React.Fragment>
         );
     }

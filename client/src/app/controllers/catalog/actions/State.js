@@ -48,7 +48,7 @@ class CatalogState extends Action {
                                 state: this.props.match.params[Consts.URL_VAR_3_NAME]
                             }}
                             photoWidth="290"
-                            photoHeight="230"
+                            photoHeight="217"
                             bottomComponent={Bottom}
                         />
                     </BrowserView>

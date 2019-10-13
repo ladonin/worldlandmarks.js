@@ -1,29 +1,23 @@
 .main_block .main_block_map_block_title a, .main_block .main_block_catalog_block_title a, .main_block .main_block_search_block_title a{
     text-decoration:none;
-    color:#fff;
+    color: #000;
+    border-radius: 2px;
 }
 .main_block_last_placemarks_title_count{
     float:right;
 }
-.main_block_map_block a{
-background: #333/*rgba(100, 142, 183, 1)*/;
+.main_block_map_block a,.main_block_catalog_block a,.main_block_search_block a{
 padding: 5px 10px;
-border-radius: 999px;
-}
-.main_block_catalog_block a{
-background: #333/*rgba(216, 143, 86,1)*/;
-padding: 5px 10px;
-border-radius: 999px;
-}
-.main_block_search_block a{
-background: #333/*rgba(65, 75, 97,1)*/;
-padding: 5px 10px;
-border-radius: 999px;
 }
 
-.main_block_map_block,.main_block_catalog_block,.main_block_search_block{
-border-radius: 5px;
-}
+
+
+
+
+
+
+
+
 .main_block_map_block{
     float:left;
 }
@@ -45,6 +39,24 @@ border-radius: 5px;
   margin-left: auto;
   margin-right: auto;
 }
-.main_block_map_block,.main_block_catalog_block,.main_block_search_block{
-    background: rgba(65, 75, 97, 0.2)
+.main_block_map_block{
+    background: rgba(100, 183, 105, 0.4);
+}
+.main_block_map_block:hover{
+    background: rgba(100, 183, 105, 0.6);
+}
+.main_block_catalog_block{
+    background: rgba(183, 151, 100, 0.4)
+}
+.main_block_catalog_block:hover{
+    background: rgba(183, 151, 100, 0.6)
+}
+.main_block_search_block{
+    background: rgba(100, 132, 183, 0.4)
+}
+.main_block_search_block:hover{
+    background: rgba(100, 132, 183, 0.6)
+}
+.main_block .main_block_map_block_title a,.main_block .main_block_catalog_block_title a,.main_block .main_block_search_block_title a{
+    background-color: #fff;
 }

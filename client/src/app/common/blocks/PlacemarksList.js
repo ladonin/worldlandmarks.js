@@ -8,7 +8,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
-import {BrowserView, MobileView, IsMobile} from "react-device-detect";
+import {BrowserView, MobileView, isMobile} from "react-device-detect";
 
 import Consts from 'src/settings/Constants';
 import ImageDimensions from 'src/modules/ImageDimensions';
@@ -47,10 +47,11 @@ class PlacemarksList extends Block {
 
         this.correction = 200;
         this.searchData = {};
-        this.photoWidth = 340;
-        this.photoHeight = 260;
+        this.photoWidth = 293;
+        this.photoHeight = 217;
         this.currentState = {};
         this.shouldBottomUpdate = 1;
+        this.languageChanged = false;
     }
 
     reset(){
@@ -59,10 +60,17 @@ class PlacemarksList extends Block {
         this.isRetry = false;
         this.idCurrent = 0;
         this.idNext = 0;
+        this.languageChanged = false;
     }
 
 
     shouldComponentUpdate(nextProps, nextState){
+
+        if (!CommonBaseFunctions.areObjectsEqual(this.props.redux.staticData,nextProps.redux.staticData)) {
+            this.languageChanged = true;
+            return true;
+        }
+
         if (!nextProps.redux.placemarks
                 || CommonBaseFunctions.areObjectsEqual(this.currentState,nextProps.redux.placemarks)) {
             return false;
@@ -141,7 +149,7 @@ class PlacemarksList extends Block {
         let _catalogScrollPlacemarkRowPhotoWidth;
 
 
-        if (IsMobile) {
+        if (isMobile) {
             _photoInsert = <img src={_photo['dir'] + ImageDimensions.getPrefix(BaseFunctions.getWidth(window), 0) + _photo['name']} width={BaseFunctions.getWidth(window) + 'px'}/>;
         } else {
 
@@ -185,9 +193,16 @@ class PlacemarksList extends Block {
     }
 
     render() {
-        if (!this.props.redux.placemarks) {
+        if (!this.props.redux.placemarks && this.languageChanged === false) {
             return null;
         }
+
+        if (this.languageChanged === true) {
+            this.reset();
+            this.getList();
+            return null;
+        }
+
 
         this.isRetry = false;
 
@@ -227,12 +242,7 @@ class PlacemarksList extends Block {
 
         return (
                 <React.Fragment>
-                    <BrowserView>
-                        {this.list}{_notFound}
-                    </BrowserView>
-                    <MobileView>
-                        TODO MOBILE ArticlesList
-                    </MobileView>
+                    {this.list}{_notFound}
                     {this.props.bottomComponent&&<this.props.bottomComponent key={this.shouldBottomUpdate}/>}
                 </React.Fragment>
         );
@@ -240,12 +250,12 @@ class PlacemarksList extends Block {
 }
 
 function mapStateToProps(state) {
-
     return {
         redux:{
             placemarks:state.backgroundData['catalog_placemarksData'],
             linkToMapText:state.staticData['catalog_placemark_link_to_map_text'],
             nothing_found:state.staticData['nothing_found'],
+            staticData:state.staticData
         }
     };
 }

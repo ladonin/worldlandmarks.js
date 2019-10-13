@@ -15,7 +15,9 @@ body {
 
 
 
-
+.catalog_index_country_name{
+    color: #2a5885;
+}
 
 .breadcrumbs{
     padding-right:10px;
@@ -69,23 +71,15 @@ body {
 .category_info_content_title{
     float:left;
     font-weight:bold;
-    font-size:19px;
 }
 
-#category_info_content_close, #category_info_content_close2{
+.category_info_content_close{
     float:right;
-    font-size:19px;
     cursor:pointer;
     padding-left:10px;
 }
-#category_info_content_close{
-    padding-bottom:10px;
-}
-#category_info_content_close2{
-    padding-top:10px;
-}
 
-.category_info_content_title,#category_info_content_close{
+.category_info_content_title,.category_info_content_close{
     font-size:19px;
     margin-bottom:10px;
 }
@@ -250,8 +244,7 @@ body {
 
 
 #my_page_scrolling_button {
-    opacity:0.5;
-    width:50px;
-    height:40px;
+    width:60px;
+    height:60px;
     bottom:20px;
 }

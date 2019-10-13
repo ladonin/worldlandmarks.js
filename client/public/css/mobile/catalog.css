@@ -1,7 +1,15 @@
 .catalog_index_country_row{
-    margin:0 auto;
-    width:100%;
+    padding: 10px 10px 10px 0;
+    background-color: #f6f6f6;
+    margin: 10px 0 0 10px;
+    float: left;
+    width: 50%;
 }
+
+.catalog_index_country_row .flag{
+    width:100px;
+}
+
 .catalog_index_header,.catalog_placemark_title, .catalog_state_header{
     text-align:left;
     font-size:19px;
@@ -137,17 +145,10 @@ font-weight: lighter;
     float:left;
     margin-left:10px;
     margin-top:10px;
-}
-
-
-.catalog_index_country_row{
-    padding:0 0 20px 0;
-}
-.catalog_index_country_row_name{
-    font-size:17px;
+    font-size:15px;
 }
 .catalog_index_country_placemarks_count{
-    font-size:12px;
+    font-size:14px;
     color:#555;
 }
 .catalog_scroll_placemark_row_content_adress{
@@ -274,9 +275,6 @@ font-weight: lighter;
 
 #layout_catalog .padding_after_hat{
     padding-top:0px;
-}
-#layout_catalog.view_index .padding_after_hat{
-    padding-top:20px;
 }
 
 

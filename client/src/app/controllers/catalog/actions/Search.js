@@ -114,7 +114,7 @@ class CatalogSearch extends Action {
 
                         <PlacemarksList
                             photoWidth="290"
-                            photoHeight="230"
+                            photoHeight="217"
                             bottomComponent={Bottom}
                         />
 

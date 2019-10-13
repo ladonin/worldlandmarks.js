@@ -6,6 +6,7 @@ body {
     /*font-family: arial,sans-serif;*/
     /*font: 12px Arial, Helvetica, sans-serif, "Arial Narrow";*/
     font-family: -apple-system,BlinkMacSystemFont,Roboto,Open Sans,Helvetica Neue,sans-serif;
+    background-color: #fff;
 }
 a{
     color: #2a5885;
@@ -594,6 +595,7 @@ border-color: #faebcc;
     bottom:30px; /* отступ кнопки от нижнего края страницы*/
     right:10px;
     font-size:21px;
+    opacity: 0.8;
     cursor:pointer;
 }
 #my_page_scrolling_button:hover{
@@ -654,7 +656,7 @@ border-color: #faebcc;
     height:32px;
 }
 
-.main_block{height:336px}
+
 
 .placemarks_category_html_content img{
     height:40px;
@@ -672,14 +674,6 @@ border-color: #faebcc;
   opacity: 0;
 }
 .react-transition1-appear-active {
-  opacity: 1;
+  opacity: 0.8;
   transition: opacity 0.5s;
-}
-
-
-
-.main_block_map_block, .main_block_catalog_block, .main_block_search_block {
-
-    border-radius: 10px;
-
 }

@@ -67,9 +67,14 @@ class CategoryViewer extends Block {
             let _category = this.categories[_index];
 
             _categoriesList.push(
-                <div key={'category_list_' + _category.id} className={'category_info_content_row_block' + (_selectedItem === _category.id ? ' hidden' : '')} id={'category_info_content_row_block_' + _category.id}>
-                    {_categoriesItem(_category)}
-                </div>
+                    <React.Fragment>
+                        <div key={'category_list_' + _category.id} className={'category_info_content_row_block' + (_selectedItem === _category.id ? ' hidden' : '')} id={'category_info_content_row_block_' + _category.id}>
+                            {_categoriesItem(_category)}
+                        </div>
+                        <MobileView>
+                            <div className="clear"></div>
+                        </MobileView>
+                    </React.Fragment>
                 );
         }
 

@@ -8,9 +8,6 @@
 
 
 
-.main_block .main_block_map_block_title a, .main_block .main_block_catalog_block_title a, .main_block .main_block_search_block_title a{
-    color:#fff;
-}
 
 
 
@@ -40,7 +37,7 @@
 }
 
 .main_block_map_block,.main_block_catalog_block,.main_block_search_block{
-border-radius: 50px;
+border-radius: 0px;
 }
 
 
@@ -49,7 +46,6 @@ border-radius: 50px;
     width:293px;
     cursor:pointer;
 }
-
 .main_block_map_block, .main_block_catalog_block{
     margin-right:10px;
 }
@@ -79,4 +75,8 @@ border-radius: 50px;
 
 .main_block_description,.main_block_catalog_block_description,.main_block_map_block_description{
     font-size:14px;
+}
+
+.main_block{
+    height:336px
 }

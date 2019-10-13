@@ -32,23 +32,18 @@ class CatalogIndex extends Action {
         }
         return (
             <CssTransition>
-                <BrowserView>
-                    <div className="catalog_index_block">
-                        <CountriesList/>
-                        <div className="clear"></div>
-                        <div className="catalog_block_last_articles_title" style={{position:'relative'}}>
-                            <img style={{display: 'inline-block',width: '40px'}} src="/img/article_icon.png"/>
-                            <span style={{display: 'block', position: 'absolute',top: '20px',left: '60px', color:'#333'}}>{this.props.redux.staticData.last_articles_text}</span>
-                        </div>
-                        <div style={{'backgroundColor':'#fff', margin:'0 10px'}}>
-                            <ArticlesList/>
-                        </div>
-                    </div>
+                <div className="catalog_index_block">
+                    <CountriesList/>
                     <div className="clear"></div>
-                </BrowserView>
-                <MobileView>
-                  TODO MOBILE CatalogIndex
-                </MobileView>
+                    <div className="catalog_block_last_articles_title" style={{position:'relative'}}>
+                        <img style={{display: 'inline-block',width: '40px'}} src="/img/article_icon.png"/>
+                        <span style={{display: 'block', position: 'absolute',top: '20px',left: '60px', color:'#333'}}>{this.props.redux.staticData.last_articles_text}</span>
+                    </div>
+                    <div style={{'backgroundColor':'#fff', margin:'0 10px'}}>
+                        <ArticlesList/>
+                    </div>
+                </div>
+                <div className="clear"></div>
                 <Bottom/>
             </CssTransition>
         );

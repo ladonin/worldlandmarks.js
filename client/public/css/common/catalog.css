@@ -207,3 +207,7 @@ font-weight: 600;
 .article_sublist_item{
     padding-bottom:10px;
 }
+
+.catalog_index_country_name{
+    color:#2a5885;
+}

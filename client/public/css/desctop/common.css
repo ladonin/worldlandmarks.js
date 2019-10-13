@@ -1,7 +1,12 @@
 body {
     font-size: 13px;
     color: #000;
-    background-color: #eaedf3;
+    background-color: #fff;
+    background-image: url(/img/fon.jpg);
+    background-attachment: fixed;
+    background-size: 100% auto;
+    background-repeat: no-repeat;
+    background-position: center;
 }
 
 #category_info_block{
@@ -65,7 +70,7 @@ body {
 
 }
 
-.category_info_content_title,category_info_content_close{
+.category_info_content_title,.category_info_content_close{
     font-size:19px;
     margin-bottom:10px;
 }
@@ -219,15 +224,4 @@ body {
 
 ::-webkit-scrollbar{
     width: 11px;
-}
-
-
-
-#container{
-    background-color: #fff;
-    background-image: url(/img/fon.jpg);
-    background-attachment: fixed;
-    background-size: 100% auto;
-    background-repeat: no-repeat;
-    background-position: center;
 }

@@ -100,6 +100,9 @@ class CommonController extends Controller {
                 'whether_to_show_catalog_pages':Service.getInstance(this.requestId).whetherToShowCatalogPages(),
                 'whether_to_show_search_pages':Service.getInstance(this.requestId).whetherToShowSearchPages(),
                 'whether_to_show_article_pages':Service.getInstance(this.requestId).whetherToShowArticlePages(),
+                'main_links_text_catalog': this.getText('map/panel_tools/link/catalog'),
+                'main_links_text_map': this.getText('catalog/panel_tools/link/map'),
+                'main_links_text_search': this.getText('catalog/panel_tools/link/catalog/search'),
             }
         };
     }
