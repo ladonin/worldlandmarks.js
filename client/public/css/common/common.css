@@ -166,12 +166,14 @@ color: #8a6d3b;
 background-color: #fcf8e3;
 border-color: #faebcc;
 }
-
+.padding_bottom_20{
+    padding-bottom:20px !important;
+}
 .padding_bottom_10{
-    padding-bottom:10px;
+    padding-bottom:10px !important;
 }
 .padding_bottom_0{
-    padding-bottom:0;
+    padding-bottom:0 !important;
 }
 .padding_top_5{
     padding-top:5px;
@@ -676,4 +678,12 @@ border-color: #faebcc;
 .react-transition1-appear-active {
   opacity: 0.8;
   transition: opacity 0.5s;
+}
+
+.container{
+    padding-bottom:20px;
+}
+
+.action_index.controller_map.view_index .container{
+    padding-bottom:0px;
 }

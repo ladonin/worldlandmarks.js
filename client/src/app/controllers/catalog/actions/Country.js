@@ -39,7 +39,9 @@ class CatalogCountry extends Action {
                     </div>);
             }
         }
-        let _resut = null;
+        let _resut = <MobileView>
+                    <div className="h_10px"></div>
+                </MobileView>;
         if (_articlesList.length) {
             _resut =
             <div>
@@ -54,6 +56,9 @@ class CatalogCountry extends Action {
                         </a>
                     </div>
                 </div>
+                <MobileView>
+                    <div className="h_10px"></div>
+                </MobileView>
             </div>;
         }
         return _resut;
@@ -76,39 +81,78 @@ class CatalogCountry extends Action {
             }
         }
 
+
+        let _photoalbum = <div id="catalog_country_photos_block">
+                            <PhotoAlbum hasStates={this.props.redux.actionData['has_states']}/>
+                        </div>;
+        let _states = '';
+        if (this.props.redux.actionData['has_states'] === true) {
+            _states = <div id="catalog_country_states_block">
+                            <div id="catalog_country_states_title">
+                                {this.props.redux.staticData['catalog_states_regions_list_title']}
+                            </div>
+                            <div id="catalog_country_states_list">
+                                {_statesList}
+                            </div>
+                        </div>;
+        }
+
+
+
+
+
+
+
+
+
+
         return (
                 <CssTransition>
-                    <BrowserView>
-                        <div id="catalog_country_state_block">
-                            {this.props.redux.staticData['is_admin'] === true &&
-                                <div style={{'margin-bottom':'10px', 'text-align':'right'}}><a style={{color:'#f00', 'font-size':'14px'}} href={'/admin/_e5b7rnijjrnrnnb_export_photos?code_type=country&country_code='+this.props.redux.actionData['country_code']}>[скачать архив фотографий данной страны]</a></div>
-                            }
-                            {this.props.redux.actionData['has_states'] === true &&
-                            <div id="catalog_country_states_block">
-                                <div id="catalog_country_states_title">
-                                    {this.props.redux.staticData['catalog_states_regions_list_title']}
-                                </div>
-                                <div id="catalog_country_states_list">
-                                    {_statesList}
-                                </div>
-                            </div>
-                            }
-                            <div id="catalog_country_photos_block">
-                                <PhotoAlbum hasStates={this.props.redux.actionData['has_states']}/>
-                            </div>
-                            <div class="clear"></div>
-                            {this.getLastArticles()}
-                        </div>
-                        <PlacemarksList
-                            data={{isSearch: 1, country: this.props.match.params[Consts.URL_VAR_2_NAME]}}
-                            photoWidth="290"
-                            photoHeight="217"
-                            bottomComponent={Bottom}
-                        />
-                    </BrowserView>
-                    <MobileView>
-                      TODO MOBILE CatalogIndex
-                    </MobileView>
+                    <div id="catalog_country_state_block">
+                        {this.props.redux.staticData['is_admin'] === true &&
+                            <div style={{'margin-bottom':'10px', 'text-align':'right'}}><a style={{color:'#f00', 'font-size':'14px'}} href={'/admin/_e5b7rnijjrnrnnb_export_photos?code_type=country&country_code='+this.props.redux.actionData['country_code']}>[скачать архив фотографий данной страны]</a></div>
+                        }
+
+
+
+
+
+                        <BrowserView>
+
+                        {_states}
+                        {_photoalbum}
+
+
+                        </BrowserView>
+
+
+
+
+
+
+
+                        <MobileView>
+
+
+                        {_photoalbum}
+                        {_states}
+
+                        </MobileView>
+
+
+                        <MobileView>
+                            <div className="h_10px"></div>
+                        </MobileView>
+
+                        <div class="clear"></div>
+                        {this.getLastArticles()}
+                    </div>
+                    <PlacemarksList
+                        data={{isSearch: 1, country: this.props.match.params[Consts.URL_VAR_2_NAME]}}
+                        photoWidth="290"
+                        photoHeight="217"
+                        bottomComponent={Bottom}
+                    />
                 </CssTransition>
                 );
     }

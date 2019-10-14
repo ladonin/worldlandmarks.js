@@ -211,3 +211,9 @@ font-weight: 600;
 .catalog_index_country_name{
     color:#2a5885;
 }
+
+.catalog_block_last_articles_title,
+.catalog_block_last_articles_title img{
+    height:40px;
+    width:40px;
+}

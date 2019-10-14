@@ -21,17 +21,17 @@ class PhotosList extends Component {
 
     render() {
         let _photosList = [];
+        let _blockWidth = this.props.width ? this.props.width : (isMobile ? BaseFunctions.getWidth(window) : ConfigRestrictions.desctop_content_width);
+        let _prefix = this.props.prefix ? this.props.prefix : ImageDimensions.getPrefix(_blockWidth, this.props.amendment ? this.props.amendment : 0);
+
         for (let _index in this.props.photos) {
             let _number = parseInt(_index);
             let _photo =  this.props.photos[_index];
             let _dimentions = ImageDimensions.prepareContentImageDimentions(
                     _photo['width'],
                     _photo['height'],
-                    this.props.width,
+                    _blockWidth,
                     (BaseFunctions.getHeight(window) - 100));
-
-
-            let _prefix = this.props.prefix ? this.props.prefix : '10_';
 
             _photosList.push(
                 <React.Fragment>

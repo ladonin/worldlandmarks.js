@@ -49,12 +49,18 @@ class CategoryViewer extends Block {
                 return null;
             }
 
+            let _style = {};
+            if (isMobile) {
+                _style = {width:BaseFunctions.getWidth(window) - 50 + 'px'};
+
+            }
+
             return [
                 <React.Fragment key={'item_' + category.id + (selected ? '_selected' : '')}>
                     <div className="category_info_content_row_img">
                         <img src={CategoryViewerModule.getCategoryImageUrl(category.id)}/>
                     </div>
-                    <div className="category_info_content_row_title" id={'category_info_content_row_title_' + category.id}>
+                    <div style={_style} className="category_info_content_row_title" id={'category_info_content_row_title_' + category.id}>
                         <div>
                             {category.title}
                         </div>
@@ -91,7 +97,7 @@ class CategoryViewer extends Block {
 
                         <div className="category_info_content_row_block"
                              id="category_info_content_row_block_selected"
-                             >{_selectedItem !== null ? _categoriesItem(this.categories[_selectedItem]) : ''}</div>
+                             >{_selectedItem !== null ? _categoriesItem(this.categories[_selectedItem]) : ''}<div className="clear"></div></div>
 
                         <div className="clear"></div>
                         {_categoriesList}

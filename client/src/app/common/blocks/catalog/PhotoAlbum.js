@@ -8,7 +8,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
-import {BrowserView, MobileView, isBrowser, IsMobile} from "react-device-detect";
+import {BrowserView, MobileView, isBrowser, isMobile} from "react-device-detect";
 
 
 import ConfigRestrictions from 'src/../../server/common/settings/Restrictions';
@@ -36,7 +36,7 @@ class PhotoAlbum extends Block {
     init() {
 
         // Init settings
-        if (IsMobile) {
+        if (isMobile) {
             // Mobile device
 
             if ((this.isCountryPage()) && (this.props.hasStates)) {
@@ -54,8 +54,8 @@ class PhotoAlbum extends Block {
             } else {
                 // State page or country page without states
                 this.viewSettings = {
-                    'cols' : 4,
-                    'rows' : 5
+                    'cols' : 3,
+                    'rows' : 4
                 };
                 this.linksSettings = {
                     'country' : false,
@@ -118,7 +118,7 @@ class PhotoAlbum extends Block {
         // Prepare outer functions and variables for library
         window._ppAs = {};
         window._ppArrayData = {};
-        window._isMobile = IsMobile;
+        window._isMobile = isMobile;
 
 
         window._ppAs['pp_iba_link_country'] = this.linksSettings['country'] ? 1 : 0;
@@ -137,7 +137,7 @@ class PhotoAlbum extends Block {
             window._ppAs['pp_iba-' + _i + '_s'] = _photo['placemark']['state'];
             window._ppAs['pp_iba-' + _i + '_hs'] = _photo['placemark']['has_states'];
             window._ppAs['pp_iba-' + _i + '_pi'] = _photo['placemark']['placemarks_id'];
-            window._ppAs['pp_iba-' + _i + '_t'] = _photo['placemark']['title'];
+            window._ppAs['pp_iba-' + _i + '_t'] = _photo['photo']['title'];
 
             if (!window._ppAs['pp_iba-' + _i + '_t']){
                 window._ppAs['pp_iba-' + _i + '_t']= this.props.redux.defaultTitlePart + _photo['placemark']['placemarks_id'];
@@ -263,7 +263,7 @@ class PhotoAlbum extends Block {
         let _additionalHeight;
         let _prettyPhotoWidth;
 
-        if (IsMobile) {
+        if (isMobile) {
             if (BaseFunctions.getWidth(window) <= BaseFunctions.getHeight(window)) {
                 _ppPw = BaseFunctions.getWidth(window);
                 _ppPsw = _ppPw / this.viewSettings.cols;
@@ -299,18 +299,18 @@ class PhotoAlbum extends Block {
         // Small showed photos number
         let _i = 0;
         // Flag when we can show small photos on the page, other photos will be included but hidden
-        let _whetherShowSmallPhotos = true;
+        let _whetherToShowSmallPhotos = true;
         for (let _index in this.props.redux.photos) {
             let _photo = this.props.redux.photos[_index];
             let _style = {
                 height:_ppPsh+'px'
             };
-            if (!_whetherShowSmallPhotos) {
+            if (!_whetherToShowSmallPhotos) {
                 _style.display = 'none';
             }
 
             let _smallPhoto = '';
-            if (_whetherShowSmallPhotos) {
+            if (_whetherToShowSmallPhotos) {
                 _smallPhoto = <CroppedPhoto
                     blockWidth = {_ppPsw}
                     blockHeight ={_ppPsh}
@@ -328,7 +328,7 @@ class PhotoAlbum extends Block {
 
             _i++;
             if (this.viewSettings['cols'] * this.viewSettings['rows'] == _i) {
-                _whetherShowSmallPhotos = false;
+                _whetherToShowSmallPhotos = false;
             }
         }
         // <--Prepare small photos collection
@@ -340,22 +340,17 @@ class PhotoAlbum extends Block {
 
         return (
             <React.Fragment>
-                <BrowserView>
-                    <div id="pretty_photo" style={{width:_prettyPhotoWidth+'px'}}
-                        data-photo-width={_ppPw}
-                        data-photo-height={_ppPh + _additionalHeight}
-                        data-content-height="93"
-                        >
-                        <div class="pretty_photo_title">{this.props.redux.title}</div>
-                        <ul class="pretty_photo_portfolio-area" id="pretty_photo_portfolio-area">
-                            {_smallPhotosList}
-                        </ul>
-                        <div class="pretty_photo_column-clear"></div>
-                    </div>
-                </BrowserView>
-                <MobileView>
-                    TODO MOBILE ArticlesList
-                </MobileView>
+                <div id="pretty_photo" style={{width:_prettyPhotoWidth+'px'}}
+                    data-photo-width={_ppPw}
+                    data-photo-height={_ppPh + _additionalHeight}
+                    data-content-height="93"
+                    >
+                    <div class="pretty_photo_title">{this.props.redux.title}</div>
+                    <ul class="pretty_photo_portfolio-area" id="pretty_photo_portfolio-area">
+                        {_smallPhotosList}
+                    </ul>
+                    <div class="pretty_photo_column-clear"></div>
+                </div>
             </React.Fragment>
         );
     }

@@ -16,19 +16,22 @@
 }
 h3.catalog_state_header, h3.catalog_index_header, h3.catalog_placemark_title{
     font-weight:normal;
-    margin-top: 10px;
+    margin-top: 0px;
     margin-bottom: 0;
 }
 
 
 .catalog_block_last_articles_title
 {
-    width:860px;
-    padding:10px;
-    font-size: 21px;
+    width:100%;
+    padding:10px 0px;
+    font-size: 19px;
     text-align: left;
     background-color: #f6f6f6;
     margin-bottom:10px;
+}
+.catalog_block_last_articles_title img{
+    padding-left:10px;
 }
 
 .cataolg_page_article_items_list{
@@ -46,13 +49,15 @@ h3.catalog_state_header, h3.catalog_index_header, h3.catalog_placemark_title{
     padding:10px 10px;
 }
 
-
+#catalog_country_state_block{
+    margin-top:-10px;
+}
 
 .catalog_country_state_row,.catalog_country_back_link,.catalog_placemark_back_link{
     margin:0 auto;
     text-align:left;
     font-size:17px;
-    padding:10px;
+    padding:10px 10px 0 10px;
 }
 .catalog_placemark_comment,.catalog_state_placemarks_counter_title{
     font-size: 15px;
@@ -122,7 +127,9 @@ font-weight: lighter;
 
 
 
-
+.catalog_placemark .placemarks_category_html_content{
+    margin-left:10px;
+}
 
 
 
@@ -297,4 +304,9 @@ font-weight: lighter;
 .catalog_state_page_block_last_articles_title{
     margin-top:10px;
     margin-bottom:10px;
+}
+
+
+.sublist_placemarks{
+    margin-bottom:-10px !important;
 }

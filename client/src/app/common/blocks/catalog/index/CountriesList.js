@@ -49,7 +49,9 @@ class CountriesList extends Block {
         return (
             <React.Fragment>
                 {_countriesList}
-                <div className="clear h_20px"></div>
+                <MobileView>
+                    <div className="clear h_20px"></div>
+                </MobileView>
             </React.Fragment>
         );
     }

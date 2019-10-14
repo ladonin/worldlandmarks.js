@@ -6,7 +6,7 @@
  */
 
 import React from 'react';
-import {BrowserView, MobileView, IsMobile} from "react-device-detect";
+import {BrowserView, MobileView, isMobile} from "react-device-detect";
 import { withRouter } from 'react-router-dom';
 
 import Consts from 'src/settings/Constants';
@@ -53,9 +53,9 @@ class PlacemarksSublist extends Block {
                                         <a onClick={this.goTo} data-url={dataUrl}>{_placemark['title']}</a>
                                     </div>}
                                 <div className="sublist_placemarks_content_adress">
-                                    {IsMobile &&
+                                    {isMobile &&
                                         <img src={_placemark['flag_url']} className='adress_country_flag'/>}
-                                    {!IsMobile &&
+                                    {!isMobile &&
                                         <div dangerouslySetInnerHTML={{__html:_placemark['formatted_address']}}></div>}
                                 </div>
                                 <PlacemarkCaregories

@@ -34,8 +34,9 @@ class Bottom extends Block {
 
     componentDidMount(){
         this.firstRender = false;
-        let _marginTop = 30;
-        if (BaseFunctions.getHeight(window) - BaseFunctions.getHeight('#container') > _marginTop) {
+        let _marginTop = 20;
+
+        if (BaseFunctions.getHeight(window) - BaseFunctions.getHeight('#container') + 20 > _marginTop) {
             _marginTop += BaseFunctions.getHeight(window) - BaseFunctions.getHeight('#container');
         }
 

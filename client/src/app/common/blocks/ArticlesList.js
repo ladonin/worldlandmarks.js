@@ -43,7 +43,7 @@ class ArticlesList extends Block {
                 <React.Fragment>
                     <div className="cataolg_page_article_items_list">
                         {_articlesList}
-                        <div className="cataolg_page_article_item padding_bottom_10 padding_top_5">
+                        <div className="cataolg_page_article_item padding_bottom_0 padding_top_5">
                             <a onClick={this.goTo} data-url={'/' + Consts.CONTROLLER_NAME_ARTICLES}>
                                 <i>{this.props.redux.seeAll}</i>
                             </a>
