@@ -31,7 +31,7 @@ Socket.on('error-catch', function (data) {
 
     Events.dispatch('alert', {
         text:AlertsText.get(data.message, 'error'),
-        classNAme:'error'
+        className:'error'
     });
 
 //ATTENTION - обратите внимание

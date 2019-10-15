@@ -78,41 +78,36 @@ class SitemapCategory extends Common {
         return (
                 <React.Fragment>
                     <CssTransition>
-                        <BrowserView>
-                            <div className="sitemap_block">
-                                <div className="sitemap_header">
-                                    {this.props.redux.staticData.catalog_sitemap_categories_header}
-                                </div>
-
-                                <div className="sitemap_category_block">
-                                    {_categoriesList}
-                                    <div className="clear"></div>
-                                </div>
-                                <div className="sitemap_header">
-                                    <h3>
-                                        <img className="category" style={{display:'inline-block', paddingRight:'5px'}} src={CategoryViewerModule.getCategoryImageUrl(this.props.redux.actionData.categoryId)}
-                                            alt={this.props.redux.actionData.categoryTitle}
-                                            title={this.props.redux.actionData.categoryTitle}
-                                            onClick={this.seeCategory(this.props.redux.actionData.categoryId)}/>
-                                        {this.props.redux.actionData.categoryTitle}
-                                    </h3>
-                                </div>
-                                <div className="sitemap_pages_block">
-                                    {_pagesList}
-                                </div>
-                                {_placemarksList}
-                                <div className="clear"></div>
-                                <div className="h_15px"></div>
-                                <div className="padding_left_10">
-                                    <a onClick={this.goTo} data-url={'/' + Consts.CONTROLLER_NAME_CATALOG + '/' + Consts.ACTION_NAME_SITEMAP_COUNTRIES}>
-                                        <i>{this.props.redux.staticData.catalog_sitemap_countries_header}</i>
-                                    </a>
-                                </div>
+                        <div className="sitemap_block">
+                            <div className="sitemap_header">
+                                {this.props.redux.staticData.catalog_sitemap_categories_header}
                             </div>
-                        </BrowserView>
-                        <MobileView>
-                            TODO MOBILE
-                        </MobileView>
+
+                            <div className="sitemap_category_block">
+                                {_categoriesList}
+                                <div className="clear"></div>
+                            </div>
+                            <div className="sitemap_header">
+                                <h3>
+                                    <img className="category" style={{display:'inline-block', paddingRight:'5px'}} src={CategoryViewerModule.getCategoryImageUrl(this.props.redux.actionData.categoryId)}
+                                        alt={this.props.redux.actionData.categoryTitle}
+                                        title={this.props.redux.actionData.categoryTitle}
+                                        onClick={this.seeCategory(this.props.redux.actionData.categoryId)}/>
+                                    {this.props.redux.actionData.categoryTitle}
+                                </h3>
+                            </div>
+                            <div className="sitemap_pages_block">
+                                {_pagesList}
+                            </div>
+                            {_placemarksList}
+                            <div className="clear"></div>
+                            <div className="h_15px"></div>
+                            <div className="padding_left_10">
+                                <a onClick={this.goTo} data-url={'/' + Consts.CONTROLLER_NAME_CATALOG + '/' + Consts.ACTION_NAME_SITEMAP_COUNTRIES}>
+                                    <i>{this.props.redux.staticData.catalog_sitemap_countries_header}</i>
+                                </a>
+                            </div>
+                        </div>
                     </CssTransition>
                     <Bottom key={this.shouldBottomUpdate}/>
                 </React.Fragment>

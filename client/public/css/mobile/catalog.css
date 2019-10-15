@@ -78,7 +78,7 @@ h3.catalog_state_header, h3.catalog_index_header, h3.catalog_placemark_title{
 
 
 .sitemap_block{
-    margin:20px auto 0 auto;
+    margin:0px auto 0 auto;
 }
 .sitemap_country_row{
 width: 150px;
@@ -170,7 +170,7 @@ font-weight: lighter;
 }
 .catalog_scroll_placemark_row_content_map_lnk,.catalog_placemark_map_lnk{
     font-size:13px;
-    margin-top:5px;
+    margin-top:10px;
 }
 .catalog_scroll_placemark_row_photo{
 
@@ -245,7 +245,7 @@ font-weight: lighter;
 
 #catalog_search_form_submit{
     margin-top:20px;
-    margin-bottom:10px;
+    margin-bottom:20px;
     cursor:pointer;
     width:100px;
     text-align: center;

@@ -63,7 +63,7 @@ class CatalogPlacemark extends Action {
                             src="/img/map_240.png"
                             style={{
                                 display:'inline-block',
-                                width:'25px',
+                                width:'27px',
                                 verticalAlign:'bottom',
                                 marginRight:'5px'
                             }}/>{this.props.redux.staticData['catalog_placemark_link_to_map_text']}</a>
@@ -82,7 +82,7 @@ class CatalogPlacemark extends Action {
                             src="/img/map_240.png"
                             style={{
                                 display:'inline-block',
-                                width:'25px',
+                                width:'27px',
                                 verticalAlign:'bottom',
                                 marginRight:'5px'
                             }}/>{this.props.redux.staticData['catalog_placemark_link_to_map_text']}</a>

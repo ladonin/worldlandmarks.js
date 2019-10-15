@@ -50,7 +50,7 @@ class CatalogState extends Action {
                             state: this.props.match.params[Consts.URL_VAR_3_NAME]
                         }}
                         photoWidth="290"
-                        photoHeight="217"
+                        photoHeight="225"
                         bottomComponent={Bottom}
                     />
                 </CssTransition>

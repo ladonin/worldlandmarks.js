@@ -38,6 +38,7 @@ class Settings extends Block {
                 [Consts.LANGUAGE_CODE_VAR_NAME]: event.target.value,
             }
         );
+        if (isMobile) this.props.toolsPanelRef.close()
     }
 
 

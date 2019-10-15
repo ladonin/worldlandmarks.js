@@ -150,7 +150,7 @@ class CatalogCountry extends Action {
                     <PlacemarksList
                         data={{isSearch: 1, country: this.props.match.params[Consts.URL_VAR_2_NAME]}}
                         photoWidth="290"
-                        photoHeight="217"
+                        photoHeight="225"
                         bottomComponent={Bottom}
                     />
                 </CssTransition>

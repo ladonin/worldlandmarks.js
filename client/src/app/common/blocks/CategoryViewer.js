@@ -38,6 +38,12 @@ class CategoryViewer extends Block {
         Events.remove(Consts.EVENT_TOGGLE_CATEGORY_VIEWER, this.toggle);
     }
 
+
+    componentDidUpdate(){
+        BaseFunctions.scrollTop('#category_info_block',0);
+    }
+
+
     render() {
 
         let _selectedItem = this.state.id;
@@ -83,6 +89,9 @@ class CategoryViewer extends Block {
                     </React.Fragment>
                 );
         }
+
+
+
 
         return (
                 <div id="category_info_block" className={_selectedItem === null ? '' : 'showed'} onClick={this.hideCategoryViewer} style={{height: BaseFunctions.getHeight(window) + 'px'}}>

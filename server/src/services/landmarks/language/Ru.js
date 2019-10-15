@@ -49,7 +49,7 @@ module.exports = {
     'page_bottom/column_1/header/text': 'Сервисы',
     'page_bottom/catalog/text': 'Каталог',
     'page_bottom/map/text': 'Карта',
-    'page_bottom/search/text': 'Расширенный поиск',
+    'page_bottom/search/text': 'Поиск',
     'page_bottom/rights/text': '© World-Landmarks.ru - достопримечательности мира. Все права защищены. По всем вопросам обращаться по адресу <a class="nowrap" href="mailto:info@world-landmarks.ru" target="_blank" rel="noopener">info@world-landmarks.ru</a>.',
     'main/description': `Данный сайт посвящен обзору достопримечательностей со всего мира - как созданных руками человека, так и самой природой.
         Ежедневно сайт пополняется новыми записями. Ознакомиться с ними вы можете с помощью сервисов - карты и каталога.

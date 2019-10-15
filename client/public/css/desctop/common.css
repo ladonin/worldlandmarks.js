@@ -18,9 +18,10 @@ body {
 
 .category_info_content{
     background-color: #474c57;
-    width: 880px;
+    border:1px solid #fff;
+    width: 878px;
     margin: 0 auto;
-    margin-top: 90px;
+    margin-top: 0px;
     padding: 10px;
     color: #eee;
     opacity: 0.9;
@@ -114,7 +115,7 @@ body {
     float:left;
 }
 .sublist_placemarks_content{
-    margin:10px 0;
+    margin:10px 0 0 0;
     float:left;
 }
 .sublist_placemarks_photo{

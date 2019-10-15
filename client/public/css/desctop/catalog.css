@@ -221,7 +221,7 @@ img.category{
 }
 .catalog_scroll_placemark_row_content_map_lnk,.catalog_placemark_map_lnk{
     font-size:12px;
-    margin-top:5px;
+    margin-top:10px;
 }
 
 
@@ -355,8 +355,4 @@ min-height: 90px;
     font-size: 17px;
     background-color: rgb(89, 121, 210);
     color: rgb(255, 255, 255);
-}
-
-.sublist_placemarks{
-    padding-bottom:10px !important;
 }

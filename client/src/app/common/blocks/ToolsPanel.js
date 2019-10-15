@@ -80,15 +80,14 @@ class ToolsPanel extends Block {
 
         let ContentComponent = ()=>null;
         if (this.state.status === 0) {
-             ContentComponent = ()=> <Menu width = {this.localVarsStyles.panelToolsContentLinksWidth}/>;
+             ContentComponent = ()=> <Menu width = {this.localVarsStyles.panelToolsContentLinksWidth} toolsPanelRef={this}/>;
         } else if (this.state.status === 1) {
-             ContentComponent = ()=> <Settings/>;
+             ContentComponent = ()=> <Settings toolsPanelRef={this}/>;
         } else if (this.state.status === 2) {
-             ContentComponent = ()=> <MapFilter/>;
+             ContentComponent = ()=> <MapFilter toolsPanelRef={this}/>;
         } else if (this.state.status === 3) {
             // ContentComponent = ()=> <Part3/>;
         }
-
 
         return (
                 <React.Fragment>

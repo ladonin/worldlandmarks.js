@@ -32,19 +32,31 @@ class PhotosList extends Component {
                     _photo['height'],
                     _blockWidth,
                     (BaseFunctions.getHeight(window) - 100));
-
+                    /*<div className="placemark_photo_navigator" id={'placemark_photo_'+_number+'_navigator'}>
+                        <PhotosNavigator scrollBlockSelector={this.props.scrollBlockSelector ? this.props.scrollBlockSelector : 'body, html'} photosCount={this.props.photos.length} contentBlockIdName='placemark_comment' number={_number}/>
+                    </div>*/
             _photosList.push(
                 <React.Fragment>
-                    <div className="placemark_photo_navigator" id={'placemark_photo_'+_number+'_navigator'}>
-                        <PhotosNavigator scrollBlockSelector={this.props.scrollBlockSelector ? this.props.scrollBlockSelector : 'body, html'} photosCount={this.props.photos.length} contentBlockIdName='placemark_comment' number={_number}/>
-                    </div>
-                    <a href={_photo['dir'] + '1_' + _photo['name']} target="_blank"><img
-                        style={{
-                            width: _dimentions.width + 'px',
-                            height: _dimentions.height + 'px'
-                        }}
-                        id={'catalog_placemark_photo_'+_number}
-                        src={_photo['dir'] + _prefix + _photo['name']}/></a>
+                    <BrowserView>
+                        <a href={_photo['dir'] + '1_' + _photo['name']} target="_blank"><img
+                            style={{
+                                width: _dimentions.width + 'px',
+                                height: _dimentions.height + 'px',
+                                marginTop:'10px'
+                            }}
+                            id={'catalog_placemark_photo_'+_number}
+                            src={_photo['dir'] + _prefix + _photo['name']}/></a>
+                    </BrowserView>
+                    <MobileView>
+                        <img
+                            style={{
+                                width: _dimentions.width + 'px',
+                                height: _dimentions.height + 'px',
+                                marginTop:'10px'
+                            }}
+                            id={'catalog_placemark_photo_'+_number}
+                            src={_photo['dir'] + _prefix + _photo['name']}/>
+                    </MobileView>
                 </React.Fragment>);
         }
         return _photosList;

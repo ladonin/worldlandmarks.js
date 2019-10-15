@@ -408,7 +408,7 @@ function preparePlacemarkViewerDimensions(id, atCluster) {
     BaseFunctions.setCss(_placemarkContentBlockSelector + ' div.header_1', 'padding-top', _placemarkContentMargin * 2 + 'px');
     BaseFunctions.setCss(_placemarkContentBlockSelector + ' div.header_1', 'padding-bottom', '0px');
 
-    BaseFunctions.setCss(_placemarkContentBlockSelector, 'padding-bottom', _placemarkContentMargin + 'px');
+
     BaseFunctions.setCss(_placemarkListElementSelector, 'padding', _placemarkContentMargin + 'px');
 
     BaseFunctions.setCss(_placemarkListElementDivSelector, 'margin-bottom', _placemarkContentMargin + 'px');
@@ -418,14 +418,6 @@ function preparePlacemarkViewerDimensions(id, atCluster) {
         BaseFunctions.setWidth(_placemarkBlockSelector, _windowWidth);
         BaseFunctions.setWidth(_placemarkButtonsBlockSelector, _windowWidth);
 
-        if (_isAvailableToChange) {
-            BaseFunctions.setWidth(_placemarkCloseSelector, Math.floor(_windowWidth / 3) - parseInt(BaseFunctions.getCss(_placemarkCloseSelector, 'margin-right')));
-            BaseFunctions.setWidth(_placemarkToggleSelector, Math.floor(_windowWidth / 3) - parseInt(BaseFunctions.getCss(_placemarkToggleSelector, 'margin-right')));
-            BaseFunctions.setWidth(_placemarkUpdateOpenFromViewerSelector, _windowWidth - BaseFunctions.getWidth(_placemarkCloseSelector) - BaseFunctions.getWidth(_placemarkToggleSelector) - parseInt(BaseFunctions.getCss(_placemarkCloseSelector, 'margin-right')) - parseInt(BaseFunctions.getCss(_placemarkToggleSelector, 'margin-right')) - (parseInt(BaseFunctions.getCss(_placemarkUpdateOpenFromViewerSelector, 'margin-right')) * 2));
-        } else {
-            BaseFunctions.setWidth(_placemarkCloseSelector, Math.floor(_windowWidth / 2) - parseInt(BaseFunctions.getCss(_placemarkCloseSelector, 'margin-right')) - Math.ceil(parseInt(BaseFunctions.getCss(_placemarkCloseSelector, 'margin-right'))/2));
-            BaseFunctions.setWidth(_placemarkToggleSelector, Math.floor(_windowWidth / 2) - parseInt(BaseFunctions.getCss(_placemarkToggleSelector, 'margin-right')) - Math.floor(parseInt(BaseFunctions.getCss(_placemarkToggleSelector, 'margin-right'))/2));
-        }
         BaseFunctions.setWidth(_placemarkAddSetPointSelector, _windowWidth - (parseInt(BaseFunctions.getCss(_placemarkAddSetPointSelector, 'margin-right')) * 2));
         BaseFunctions.setWidth(_placemarkAddCancelSelector, Math.floor(_windowWidth / 2) - parseInt(BaseFunctions.getCss(_placemarkAddCancelSelector, 'margin-right')) - Math.ceil(parseInt(BaseFunctions.getCss(_placemarkAddCancelSelector, 'margin-right'))/2));
         BaseFunctions.setWidth(_placemarkAddCommitSelector, Math.floor(_windowWidth / 2) - parseInt(BaseFunctions.getCss(_placemarkAddCommitSelector, 'margin-right')) - Math.floor(parseInt(BaseFunctions.getCss(_placemarkAddCommitSelector, 'margin-right'))/2));
@@ -892,7 +884,7 @@ function getFilterCategory(){
     }
 
     //максимально точное определение (применимо лучше в мобильниках)
-    if ((window.navigator.geolocation) && isMobile) {
+    if ((window.navigator.geolocation) && isMobile && !1) {
         window.navigator.geolocation.getCurrentPosition(function (position) {
             let _latitude = position.coords.latitude;
             let _longitude = position.coords.longitude;

@@ -7,7 +7,6 @@
 
 import React, { Component } from 'react';
 import {BrowserView, MobileView, isBrowser, isMobile} from "react-device-detect";
-import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 
 import Router from 'src/modules/Router';
@@ -24,8 +23,10 @@ class ToolsPanelButton extends Block {
             top: this.props.top ? this.props.top : 0
         }
 
-        return (<div id="open_panel" style={{top: _style.top + 'px'}}><HtmllerButtons device={Consts.DEVICE_NAME_DESCTOP}/></div>);
+        return (<div id="open_panel" style={{top: _style.top + 'px'}}><HtmllerButtons device={(!Router.isMapPage(this.props.match.params) && isMobile) ? Consts.DEVICE_NAME_DESCTOP : undefined}/></div>);
     }
 }
 
-export default ToolsPanelButton
+export default withRouter(ToolsPanelButton)
+
+

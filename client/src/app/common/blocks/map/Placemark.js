@@ -151,20 +151,22 @@ class MapPlacemark extends Block {
                             {this.props.redux.data['relevant_placemarks'] &&
                             <PlacemarksSublist
                                 placemarks = {this.props.redux.data['relevant_placemarks'].placemarks}
-                                isMap = {false}
+                                isMap = {true}
                                 imageWidth = {this.props.redux.data['relevant_placemarks'].data.image_width}
                                 imageHeight = {this.props.redux.data['relevant_placemarks'].data.image_height}
                                 ident = {this.props.redux.data['relevant_placemarks'].data.ident}
                                 title = {this.props.redux.data['relevant_placemarks'].data.title}
+                                atCluster={this.props.redux.atCluster}
                                 />}
                             {this.props.redux.data['another_placemarks'] &&
                             <PlacemarksSublist
                                 placemarks = {this.props.redux.data['another_placemarks'].placemarks}
-                                isMap = {false}
+                                isMap = {true}
                                 imageWidth = {this.props.redux.data['another_placemarks'].data.image_width}
                                 imageHeight = {this.props.redux.data['another_placemarks'].data.image_height}
                                 ident = {this.props.redux.data['another_placemarks'].data.ident}
                                 title = {this.props.redux.data['another_placemarks'].data.title}
+                                atCluster={this.props.redux.atCluster}
                                 />}
                             </CssTransition>);
             }
@@ -175,22 +177,17 @@ class MapPlacemark extends Block {
 
         return (
                 <React.Fragment>
-                    <BrowserView>
-                        <div id="placemark" className={_hidden}>
-                            <div id="placemark_close_side_1" onClick={this.close}></div>
-                            <div id="placemark_block">
-                                <div id="placemark_content">
-                                    <div id="placemark_content_block"><ContentComponent/></div>
-                                </div>
-                                <div id="placemark_list"><div id="placemark_list_block"><PlacemarksRightListComponent/></div></div>
+                    <div id="placemark" className={_hidden}>
+                        <div id="placemark_close_side_1" onClick={this.close}></div>
+                        <div id="placemark_block">
+                            <div id="placemark_content">
+                                <div id="placemark_content_block"><ContentComponent/></div>
                             </div>
-                            <div id="placemark_close_side_2" onClick={this.close}></div>
+                            <div id="placemark_list"><div id="placemark_list_block"><PlacemarksRightListComponent/></div></div>
                         </div>
-                        {this.placemarkButtonsComponent}
-                    </BrowserView>
-                    <MobileView>
-                        TODO MOBILE ArticlesList
-                    </MobileView>
+                        <div id="placemark_close_side_2" onClick={this.close}></div>
+                    </div>
+                    {this.placemarkButtonsComponent}
                 </React.Fragment>
         );
     }

@@ -67,37 +67,32 @@ class SitemapCountry extends Common {
         return (
                 <React.Fragment>
                     <CssTransition>
-                        <BrowserView>
-                            <div className="sitemap_block">
-                                <div className="sitemap_header">
-                                    {this.props.redux.staticData.catalog_sitemap_countries_header}
-                                </div>
-
-                                <div className="sitemap_country_block">
-                                    {_countriesList}
-                                    <div className="clear"></div>
-                                </div>
-                                <div className="sitemap_header">
-                                    <h3>
-                                        <img className="adress_country_flag" src={BaseFunctions.getFlagUrl(this.props.redux.actionData.countryCode)}/> {this.props.redux.actionData.countryName}
-                                    </h3>
-                                </div>
-                                <div className="sitemap_pages_block">
-                                    {_pagesList}
-                                </div>
-                                {_placemarksList}
-                                <div className="clear"></div>
-                                <div className="h_15px"></div>
-                                <div className="padding_left_10">
-                                    <a onClick={this.goTo} data-url={'/' + Consts.CONTROLLER_NAME_CATALOG + '/' + Consts.ACTION_NAME_SITEMAP_CATEGORIES}>
-                                        <i>{this.props.redux.staticData.catalog_sitemap_categories_header}</i>
-                                    </a>
-                                </div>
+                        <div className="sitemap_block">
+                            <div className="sitemap_header">
+                                {this.props.redux.staticData.catalog_sitemap_countries_header}
                             </div>
-                        </BrowserView>
-                        <MobileView>
-                            TODO MOBILE
-                        </MobileView>
+
+                            <div className="sitemap_country_block">
+                                {_countriesList}
+                                <div className="clear"></div>
+                            </div>
+                            <div className="sitemap_header">
+                                <h3>
+                                    <img className="adress_country_flag" src={BaseFunctions.getFlagUrl(this.props.redux.actionData.countryCode)}/> {this.props.redux.actionData.countryName}
+                                </h3>
+                            </div>
+                            <div className="sitemap_pages_block">
+                                {_pagesList}
+                            </div>
+                            {_placemarksList}
+                            <div className="clear"></div>
+                            <div className="h_15px"></div>
+                            <div className="padding_left_10">
+                                <a onClick={this.goTo} data-url={'/' + Consts.CONTROLLER_NAME_CATALOG + '/' + Consts.ACTION_NAME_SITEMAP_CATEGORIES}>
+                                    <i>{this.props.redux.staticData.catalog_sitemap_categories_header}</i>
+                                </a>
+                            </div>
+                        </div>
                     </CssTransition>
                     <Bottom key={this.shouldBottomUpdate}/>
                 </React.Fragment>

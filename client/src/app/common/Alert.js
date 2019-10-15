@@ -58,12 +58,7 @@ class Alert extends Component {
 
         return (
                 <React.Fragment>
-                    <BrowserView>
-                        <div onClick={this.hideAlert} id="alert" className={this.state.className}><div>{this.state.text}</div></div>
-                    </BrowserView>
-                    <MobileView>
-                        TODO MOBILE ArticlesList
-                    </MobileView>
+                    <div onClick={this.hideAlert} id="alert" className={this.state.className}><div>{this.state.text}</div></div>
                 </React.Fragment>
         );
     }

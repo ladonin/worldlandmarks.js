@@ -49,7 +49,7 @@ module.exports = {
     'page_bottom/column_1/header/text': 'Services',
     'page_bottom/catalog/text': 'Catalog',
     'page_bottom/map/text': 'Map',
-    'page_bottom/search/text': 'Advanced search',
+    'page_bottom/search/text': 'Search',
     'page_bottom/rights/text': '© World-Landmarks.ru - browse landmarks around  the world. All rights reserved. For all questions contact on email <a class="nowrap" href="mailto:info@world-landmarks.ru" target="_blank" rel="noopener">info@world-landmarks.ru</a>.',
     'main/description': `This site is dedicated to the review sites from around the world - as created by human hands or by nature. Daily website updated with new entries. To view them you can use the services map and directory.
 During playback you can easily jump from the catalog to the map and back without losing the desired page.

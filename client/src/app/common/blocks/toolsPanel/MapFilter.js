@@ -45,6 +45,7 @@ class MapFilter extends Block {
         MapModule.filterByCategory(id);
         MapModule.restartBunchFillingTimer();
         this.setState({id:MapModule.getFilterCategory()});
+        if (isMobile) this.props.toolsPanelRef.close()
     }
 
     resetFilter(){
@@ -52,6 +53,7 @@ class MapFilter extends Block {
             MapModule.resetFilterByCategory();
             MapModule.restartBunchFillingTimer();
             this.setState({id:MapModule.getFilterCategory()});
+            if (isMobile) this.props.toolsPanelRef.close()
         }
     }
 
@@ -87,9 +89,12 @@ class MapFilter extends Block {
                 <div id="panel_tools_content_filter_back" onClick={()=>Events.dispatch(Consts.EVENT_TOOLS_PANEL_SET_STATUS, {value: 0})}>
                     <HtmllerButtons device={Consts.DEVICE_NAME_DESCTOP} text={this.props.redux.staticData.panel_tools_filter_back_title}/>
                 </div>
+
+                {this.state.id&&
                 <div id="panel_tools_content_filter_reset" onClick={this.resetFilter}>
                     <HtmllerButtons device={Consts.DEVICE_NAME_DESCTOP} text={this.props.redux.staticData.panel_tools_filter_reset_title}/>
-                </div>
+                </div>}
+
                 <div className="clear"></div>
                 <div className="panel_tools_content_filter_category_title">
                     {this.props.redux.staticData.panel_tools_filter_category_title}

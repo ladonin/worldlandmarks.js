@@ -27,6 +27,9 @@ export default function (props) {
     if (props.text) {
         _text = <div className="button_text" dangerouslySetInnerHTML={{__html:props.text}}></div>
     }
-
-        return <React.Fragment><div className="icon"><img src={_icon}/></div>{_text}</React.Fragment>;
+    let _style = {};
+    if (props.style) {
+        _style = props.style;
+    }
+    return <React.Fragment><div className="icon"><img src={_icon} style={_style}/></div>{_text}</React.Fragment>;
 }

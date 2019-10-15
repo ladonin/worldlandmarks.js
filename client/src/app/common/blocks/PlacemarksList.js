@@ -48,7 +48,7 @@ class PlacemarksList extends Block {
         this.correction = 200;
         this.searchData = {};
         this.photoWidth = 293;
-        this.photoHeight = 217;
+        this.photoHeight = 225;
         this.currentState = {};
         this.shouldBottomUpdate = 1;
         this.languageChanged = false;
@@ -184,7 +184,7 @@ class PlacemarksList extends Block {
                                 <PlacemarkCaregories subcategories={data['subcategories']} category={data['category']}/>
                             </div>
                             <div className="clear"></div>
-                            <div className="catalog_scroll_placemark_row_content_map_lnk"><a onClick={this.goTo} data-url={'/' + Consts.CONTROLLER_NAME_MAP + '/' + data['id']}><img src="/img/map_240.png" style={{'marginLeft':'1px', display: 'inline-block', width: '24px', 'verticalAlign': 'bottom', 'marginRight': '5px'}}/>{this.props.redux.linkToMapText}</a></div>
+                            <div className="catalog_scroll_placemark_row_content_map_lnk"><a onClick={this.goTo} data-url={'/' + Consts.CONTROLLER_NAME_MAP + '/' + data['id']}><img src="/img/map_240.png" style={{display: 'inline-block', width: '27px', 'verticalAlign': 'bottom', 'marginRight': '5px'}}/>{this.props.redux.linkToMapText}</a></div>
                         </div>
                     </div>
                     <div className="clear"></div>

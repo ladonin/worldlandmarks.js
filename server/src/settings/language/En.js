@@ -83,7 +83,7 @@ module.exports = {
     'catalog/state/photoalbum_title/text': 'Uploaded latest photos',
     'catalog/state/back_link_states': 'Select another region',
     'catalog/state/back_link_countries': 'Other countries',
-    'relevant_placemarks/title/text': 'It will be interesting for you:',
+    'relevant_placemarks/title/text': 'It would be interesting for you:',
     'another_placemarks/title/text': 'Another placemarks:',
     'another_articles/title/text': 'Another articles:',
     'placemarks_count/1/text': 'The number of placemarks: ',

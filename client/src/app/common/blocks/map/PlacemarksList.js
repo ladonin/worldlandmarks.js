@@ -47,12 +47,7 @@ class PlacemarksList extends Component {
 
         return (
                 <React.Fragment>
-                    <BrowserView>
-                        <List/>
-                    </BrowserView>
-                    <MobileView>
-                        TODO MOBILE ArticlesList
-                    </MobileView>
+                    <List/>
                 </React.Fragment>
         );
     }

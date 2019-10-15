@@ -36,6 +36,10 @@ class Menu extends Block {
         });
     }
 
+    goTo(e){
+        this.props.toolsPanelRef.close();
+        super.goTo(e);
+    }
 
     render() {
 

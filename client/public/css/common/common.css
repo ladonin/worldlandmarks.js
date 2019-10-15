@@ -341,6 +341,7 @@ border-color: #faebcc;
 .panel_tools_content_filter_select_block_category_block{
     cursor:pointer;
     height:60px;
+    clear: both;
 }
 .panel_tools_content_filter_select_block_category_block:hover,.panel_tools_content_filter_select_block_category_block_selected{
     background-color: #5B6783;
@@ -623,11 +624,18 @@ border-color: #faebcc;
     margin-bottom:0px;
 }
 
+.catalog_placemark_photo img,
+.placemark_content_image_block img{
+    margin-top:10px;
+}
+
 .placemark_photo_navigator{
     margin-top:10px;
     padding:10px 0;
     text-align:center !important;
+    background-color: #F2F2F2;
 }
+
 .pointer{
     cursor:pointer;
 }
@@ -686,4 +694,8 @@ border-color: #faebcc;
 
 .action_index.controller_map.view_index .container{
     padding-bottom:0px;
+}
+
+.sublist_placemarks_content{
+    padding-bottom:10px;
 }

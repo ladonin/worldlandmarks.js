@@ -42,32 +42,27 @@ class SitemapCountries extends Common {
         return (
                 <React.Fragment>
                     <CssTransition>
-                        <BrowserView>
-                            <div className="sitemap_block">
-                                <div className="sitemap_header">
-                                    {this.props.redux.staticData.articles_countries_header}
-                                </div>
-
-                                <div className="sitemap_country_block">
-                                    {_countriesList}
-                                    <div className="clear"></div>
-                                </div>
-                                <div className="sitemap_header">
-                                    <h3>
-                                        {this.props.redux.staticData.select_a_country_text}
-                                        <div className="h_10px"></div>
-                                    </h3>
-                                </div>
-                                <div className="padding_left_10">
-                                    <a onClick={this.goTo} data-url={'/' + Consts.CONTROLLER_NAME_CATALOG + '/' + Consts.ACTION_NAME_SITEMAP_CATEGORIES}>
-                                        <i>{this.props.redux.staticData.catalog_sitemap_categories_header}</i>
-                                    </a>
-                                </div>
+                        <div className="sitemap_block">
+                            <div className="sitemap_header">
+                                {this.props.redux.staticData.articles_countries_header}
                             </div>
-                        </BrowserView>
-                        <MobileView>
-                            TODO MOBILE ArticleCountries
-                        </MobileView>
+
+                            <div className="sitemap_country_block">
+                                {_countriesList}
+                                <div className="clear"></div>
+                            </div>
+                            <div className="sitemap_header">
+                                <h3>
+                                    {this.props.redux.staticData.select_a_country_text}
+                                    <div className="h_10px"></div>
+                                </h3>
+                            </div>
+                            <div className="padding_left_10">
+                                <a onClick={this.goTo} data-url={'/' + Consts.CONTROLLER_NAME_CATALOG + '/' + Consts.ACTION_NAME_SITEMAP_CATEGORIES}>
+                                    <i>{this.props.redux.staticData.catalog_sitemap_categories_header}</i>
+                                </a>
+                            </div>
+                        </div>
                     </CssTransition>
                     <Bottom key={this.shouldBottomUpdate}/>
                 </React.Fragment>
