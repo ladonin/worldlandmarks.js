@@ -5,13 +5,13 @@
  */
 
 module.exports = {
-    'site/title/catalog/sitemap_countries/country': 'Site map. %country%.',
-    'site/title/catalog/sitemap_countries/index': 'Site map. Countries.',
-    'site/title/catalog/sitemap_categories/category': 'Site map. %category%.',
-    'site/title/catalog/sitemap_categories/index': 'Site map. Categories.',
-    'site/title/articles/country': 'Articles abount world landmarks. %country%.',
-    'site/title/articles/category': 'Articles abount world landmarks. %category%.',
-    'site/title/articles/index': 'Articles abount world landmarks',
+    'site/title/catalog/sitemap_countries/country': 'Site map. %country%',
+    'site/title/catalog/sitemap_countries/index': 'Site map. Countries',
+    'site/title/catalog/sitemap_categories/category': 'Site map. %category%',
+    'site/title/catalog/sitemap_categories/index': 'Site map. Categories',
+    'site/title/articles/country': 'World landmarks articles. %country%',
+    'site/title/articles/category': 'World landmarks articles. %category%',
+    'site/title/articles/index': 'World landmarks articles',
 
     'site/keywords/catalog/sitemap_countries/index': 'countries',
     'site/keywords/catalog/sitemap_categories/index': 'categories',

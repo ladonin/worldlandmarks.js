@@ -30,10 +30,11 @@ class Catalog extends CommonController {
      * Action index
      */
     action_index() {
+        let _seoPath = 'catalog/index';
         this.addActionData({
-            'title':Seo.getInstance(this.requestId).getTitle('catalog/index'),
-            'keywords':Seo.getInstance(this.requestId).getKeywords('catalog/index'),
-            'description':Seo.getInstance(this.requestId).getDescription('catalog/index'),
+            'title':Seo.getInstance(this.requestId).getTitle(_seoPath),
+            'keywords':Seo.getInstance(this.requestId).getKeywords(_seoPath),
+            'description':Seo.getInstance(this.requestId).getDescription(_seoPath),
             'data':Countries.getInstance(this.requestId).prepareCountriesNames(GeocodeCollectionModel.getInstance(this.requestId).getCountriesData(this.getLanguage())),
             'scroll_url':'/' + this.getControllerName() + '/scroll',
             'current_url':'/' + this.getControllerName() + '/',
@@ -156,16 +157,17 @@ class Catalog extends CommonController {
         this.sendMe();
     }
 
-
     /*
-     * Action placemark
+     * Action search
      */
     action_search()
     {
-
+        let _seoPath = 'catalog/search';
         let _formData = this.getFromRequest(Consts.REQUEST_FORM_DATA);
         this.addActionData({
-
+            'title': Seo.getInstance(this.requestId).getTitle(_seoPath),
+            'keywords': Seo.getInstance(this.requestId).getKeywords(_seoPath),
+            'description': Seo.getInstance(this.requestId).getDescription(_seoPath),
             'breadcrumbs': CatalogComponent.getInstance(this.requestId).getBreadcrumbsData(),
             'whetherToUseTitles': Service.getInstance(this.requestId).whetherToUseTitles(),
             'formData': _formData,
@@ -178,7 +180,9 @@ class Catalog extends CommonController {
      * Action sitemap categories
      */
     action_sitemap_categories() {
+        let _seoPath = 'catalog/sitemap_categories/index';
         this.addActionData({
+            'title': Seo.getInstance(this.requestId).getTitle(_seoPath),
             'categoriesData':Categories.getInstance(this.requestId).getCategories()
         });
 
@@ -191,7 +195,9 @@ class Catalog extends CommonController {
      * Action sitemap countries
      */
     action_sitemap_countries() {
+        let _seoPath = 'catalog/sitemap_countries/index';
         this.addActionData({
+            'title': Seo.getInstance(this.requestId).getTitle(_seoPath),
             'countriesData':Countries.getInstance(this.requestId).getCountriesData(true)
         });
 
@@ -214,9 +220,10 @@ class Catalog extends CommonController {
 
         let _pagesCount =  Math.ceil(_placemarksCount/_limit);
         let _offset = (_currentPage - 1) * _limit;
-
+        let _seoPath = 'catalog/sitemap_countries/country';
 
         this.addActionData({
+            'title': Seo.getInstance(this.requestId).getTitle(_seoPath, {'country':_countryName}),
             'countryName':_countryName,
             'countryCode':_countryCode,
             'countriesData':_countriesData,
@@ -246,7 +253,9 @@ class Catalog extends CommonController {
         let _pagesCount =  Math.ceil(_placemarksCount/_limit);
         let _offset = (_currentPage - 1) * _limit;
 
+        let _seoPath = 'catalog/sitemap_categories/category';
         this.addActionData({
+            'title': Seo.getInstance(this.requestId).getTitle(_seoPath, {'category':_categoryData.title}),
             'categoryTitle':_categoryData.title,
             'categoryId':_categoryData.id,
             'categoryCode':_categoryCode,

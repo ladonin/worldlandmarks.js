@@ -5,18 +5,20 @@
  * Common action component
  */
 
-import { Component } from 'react';
+import React from 'react';
 import Router from 'src/modules/Router';
 import Consts from 'src/settings/Constants';
 import Socket from 'src/app/socket/Socket';
 import Common, {UpdateStyleData, ClearActionData, ClearStyleData, ClearBackgroundData} from 'src/app/parents/Common';
 import Events from 'src/modules/Events';
+import ReactHelmet from 'react-helmet';
 
 export default class Action extends Common {
 
     constructor(){
         super();
         this.currentUrl = null;
+        this.refreshAction = this.refreshAction.bind(this);
     }
 
 
@@ -24,14 +26,20 @@ export default class Action extends Common {
         this.props.clearActionData();
         this.props.clearStyleData();
         this.props.clearBackgroundData();
+        Events.remove(Consts.EVENT_REFRESH_ACTION, this.refreshAction);
     }
 
     componentDidMount() {
         Socket.actionQuery(this.props.match.params);
         this.currentUrl = this.props.match.url;
         Events.dispatch(Consts.EVENT_RESET_PAGE_SCROLLING);
+        Events.add(Consts.EVENT_REFRESH_ACTION, this.refreshAction);
     }
 
+
+    refreshAction(){
+        Socket.actionQuery(this.props.match.params);
+    }
 
     componentDidUpdate() {
         if (this.currentUrl !== this.props.match.url) {
@@ -40,6 +48,48 @@ export default class Action extends Common {
         }
         this.currentUrl = this.props.match.url;
     }
+
+    getHeader(data) {
+
+        if (!data && !(this.props.redux && this.props.redux.actionData)) {
+            return null;
+        }
+
+        let _meta = [];
+        let _data = {};
+
+        if (data) {
+            _data = data;
+        } else {
+            _data = this.props.redux.actionData;
+        }
+
+        if (_data.description) {
+            _meta.push(
+                {"name": "description", "content": _data.description}
+            );
+        }
+        if (_data.keywords) {
+            _meta.push(
+                {"name": "keywords", "content": _data.keywords}
+            );
+        }
+
+        return (
+                <React.Fragment>
+                    <ReactHelmet
+                        title={_data.title}
+                        meta={_meta}
+                    />
+                </React.Fragment>);
+    }
+
+
+
+
+
+
+
 }
 
 export const MapDispatchToProps = {

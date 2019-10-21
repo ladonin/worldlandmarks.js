@@ -11,10 +11,10 @@ import { withRouter } from 'react-router-dom';
 import {BrowserView, MobileView,isMobile} from "react-device-detect";
 
 import MapModule from 'src/modules/Map';
-import Consts from 'src/settings/Constants';
-import BaseFunctions from 'src/functions/BaseFunctions';
 import Events from 'src/modules/Events';
 
+import Consts from 'src/settings/Constants';
+import BaseFunctions from 'src/functions/BaseFunctions';
 import Block from 'src/app/parents/Block';
 
 import PlacemarksList from 'src/app/common/blocks/map/PlacemarksList';
@@ -38,15 +38,12 @@ class MapPlacemark extends Block {
         MapModule.setPlacemarkComponentRef(this);
     }
 
-
     shouldComponentUpdate(nextProps, nextState){
         if (this.state.hidden !== nextState.hidden) {
             return true;
         }
         return super.shouldComponentUpdate(nextProps, nextState);
     }
-
-
 
     componentDidUpdate() {
         if (typeof this.props.redux.atCluster !== 'undefined') {
@@ -65,11 +62,12 @@ class MapPlacemark extends Block {
         // Return to view state and then close
         this.show();
         MapModule.resumeBunchFillingTimer();
-
     }
+
     hide(){;
         this.setState({hidden:true});
     }
+
     show(){
         if (this.state.hidden === true) {
             this.setState({hidden:false});
@@ -77,7 +75,6 @@ class MapPlacemark extends Block {
     }
 
     render() {
-
         let _id = null;
         let ContentComponent = () => null;
         let _hidden = 'hidden';
@@ -95,20 +92,16 @@ class MapPlacemark extends Block {
             if (this.state.hidden === false) {
                 _hidden = '';
 
-
                 MapModule.saveInPlacemarksData(this.props.redux.data);
                 MapModule.addAndClustering();
                 MapModule.suspendBunchFillingTimer();
-
-                //подсвечиваем новую метку
 
                 if (!1) {
                     MapModule.setCenter(_id);
                     MapModule.setZoom('whereAmI');
                 }
 
-                MapModule.actionsAfterShowPointData(_id, this.props.redux.atCluster)
-                //MapModule.setAvailableToChange(this.props.redux.staticData['is_available_to_change']);
+                MapModule.actionsAfterShowPointData(_id, this.props.redux.atCluster);
 
                 let _photoWidth;
                 let _photoPrefix;
@@ -134,7 +127,6 @@ class MapPlacemark extends Block {
                                 </a>
                             </div>
                             <div className="address_1" dangerouslySetInnerHTML={{__html: '<span>' + this.props.redux.data['formatted_address_with_route'] + '</span>'}}></div>
-
                             <PhotosList prefix={_photoPrefix} width={_photoWidth} scrollBlockSelector='#placemark_content' photos={this.props.redux.data['photos']}/>
                             <div
                                 className="text_1 placemark_comment"
@@ -159,7 +151,7 @@ class MapPlacemark extends Block {
                                 atCluster={this.props.redux.atCluster}
                                 />}
                             {this.props.redux.data['another_placemarks'] &&
-                            <PlacemarksSublist
+                            <div class="another_placemarks"><PlacemarksSublist
                                 placemarks = {this.props.redux.data['another_placemarks'].placemarks}
                                 isMap = {true}
                                 imageWidth = {this.props.redux.data['another_placemarks'].data.image_width}
@@ -167,7 +159,7 @@ class MapPlacemark extends Block {
                                 ident = {this.props.redux.data['another_placemarks'].data.ident}
                                 title = {this.props.redux.data['another_placemarks'].data.title}
                                 atCluster={this.props.redux.atCluster}
-                                />}
+                                /></div>}
                             </CssTransition>);
             }
         } else {

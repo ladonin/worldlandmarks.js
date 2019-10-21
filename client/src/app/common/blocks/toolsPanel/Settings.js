@@ -31,13 +31,7 @@ class Settings extends Block {
     changeLanguage(event){
         this.setState({languageValue: event.target.value});
         Language.setName(event.target.value);
-        Socket.backgroundQuery(
-            Consts.CONTROLLER_NAME_MAP,
-            'change_language',
-            {
-                [Consts.LANGUAGE_CODE_VAR_NAME]: event.target.value,
-            }
-        );
+        Events.dispatch(Consts.EVENT_REFRESH_ACTION);
         if (isMobile) this.props.toolsPanelRef.close()
     }
 

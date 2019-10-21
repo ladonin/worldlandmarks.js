@@ -59,13 +59,14 @@ class SitemapCountry extends Common {
             let _urlPart =  _placemark.state_code === 'undefined' ? '/' : ('/' + _placemark.state_code + '/');
 
             _placemarksList.push(
-            <div className="sitemap_placemark_row">
+            <div className="sitemap_placemark_row" style={isMobile?{width:(BaseFunctions.getWidth(window)/3)-10 + 'px'} : {}}>
                 <a onClick={this.goTo} data-url={'/' + Consts.CONTROLLER_NAME_CATALOG + '/' + _placemark.country_code + _urlPart + _placemark.id}>{_placemark.title}</a>
             </div>);
         }
 
         return (
-                <React.Fragment>
+<React.Fragment>
+                    {this.getHeader()}
                     <CssTransition>
                         <div className="sitemap_block">
                             <div className="sitemap_header">
@@ -87,7 +88,7 @@ class SitemapCountry extends Common {
                             {_placemarksList}
                             <div className="clear"></div>
                             <div className="h_15px"></div>
-                            <div className="padding_left_10">
+                            <div className="padding_left_10 sitemapChangeType">
                                 <a onClick={this.goTo} data-url={'/' + Consts.CONTROLLER_NAME_CATALOG + '/' + Consts.ACTION_NAME_SITEMAP_CATEGORIES}>
                                     <i>{this.props.redux.staticData.catalog_sitemap_categories_header}</i>
                                 </a>

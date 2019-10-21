@@ -8,6 +8,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
+import ReactHelmet from 'react-helmet';
 
 import { Link } from 'react-router-dom';
 import Action, {GetState, MapDispatchToProps} from 'src/app/parents/Action';
@@ -31,10 +32,13 @@ class MainIndex extends Action {
             return null;
         }
         return (
-                <CssTransition>
-                    <MainLinks/>
-                    <PlacemarksList bottomComponent={Bottom}/>
-                </CssTransition>
+                <React.Fragment>
+                    {this.getHeader()}
+                    <CssTransition>
+                        <MainLinks/>
+                        <PlacemarksList bottomComponent={Bottom}/>
+                    </CssTransition>
+                </React.Fragment>
                 );
     }
 }

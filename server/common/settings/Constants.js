@@ -127,6 +127,7 @@ ACTION_VAR_NAME:'action',
     EVENT_TOOLS_PANEL_SET_STATUS:'app:tools_panel_set_status',
     EVENT_TOGGLE_CATEGORY_VIEWER:'app:toggle_category_viewer',
     EVENT_RESET_PAGE_SCROLLING:'app:reset_page_scrolling',
+    EVENT_REFRESH_ACTION:'app:refresh_action',
     EVENT_GOTO:'app:goto',
 
 

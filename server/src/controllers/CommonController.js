@@ -95,6 +95,10 @@ class CommonController extends Controller {
                 'panel_tools_settings_title':this.getText('panel_tools/settings/title'),
                 'panel_tools_filter_category_selected_title':this.getText('map/panel_tools/filter/category/selected/title'),
 
+                'map_buttons_placemark_viewer_onmap':this.getText('map/buttons/placemark/viewer/onmap'),
+                'map_buttons_placemark_viewer_return':this.getText('map/buttons/placemark/viewer/return'),
+                'map_buttons_placemark_viewer_close':this.getText('map/buttons/placemark/viewer/close'),
+
 
                 'whether_to_show_main_pages':Service.getInstance(this.requestId).whetherToShowMainPages(),
                 'whether_to_show_catalog_pages':Service.getInstance(this.requestId).whetherToShowCatalogPages(),

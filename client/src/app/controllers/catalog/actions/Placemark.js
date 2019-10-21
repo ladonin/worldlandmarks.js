@@ -43,6 +43,8 @@ class CatalogPlacemark extends Action {
         }
 
         return (
+<React.Fragment>
+                    {this.getHeader()}
             <CssTransition>
                 <div className="catalog_placemark">
                     {this.props.redux.actionData.data['title']&&
@@ -96,17 +98,18 @@ class CatalogPlacemark extends Action {
                         ident = {this.props.redux.actionData.data['relevant_placemarks'].data.ident}
                         title = {this.props.redux.actionData.data['relevant_placemarks'].data.title}
                     />}
-                    <PlacemarksSublist
+                    {this.props.redux.actionData.data['another_placemarks'] &&<div class="another_placemarks"><PlacemarksSublist
                         placemarks = {this.props.redux.actionData.data['another_placemarks'].placemarks}
                         isMap = {false}
                         imageWidth = {this.props.redux.actionData.data['another_placemarks'].data.image_width}
                         imageHeight = {this.props.redux.actionData.data['another_placemarks'].data.image_height}
                         ident = {this.props.redux.actionData.data['another_placemarks'].data.ident}
                         title = {this.props.redux.actionData.data['another_placemarks'].data.title}
-                    />
+                    /></div>}
                 </div>
                 <Bottom/>
             </CssTransition>
+            </React.Fragment>
         );
     }
 }

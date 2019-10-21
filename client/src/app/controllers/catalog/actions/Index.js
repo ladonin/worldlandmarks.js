@@ -31,6 +31,8 @@ class CatalogIndex extends Action {
             return null;
         }
         return (
+<React.Fragment>
+                    {this.getHeader()}
             <CssTransition>
                 <div className="catalog_index_block">
                     <CountriesList/>
@@ -46,6 +48,7 @@ class CatalogIndex extends Action {
                 <div className="clear"></div>
                 <Bottom/>
             </CssTransition>
+            </React.Fragment>
         );
     }
 }

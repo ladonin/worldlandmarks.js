@@ -47,7 +47,7 @@ class SitemapCategory extends Common {
         for (let _index in this.props.redux.actionData.categoriesData) {
             let _category = this.props.redux.actionData.categoriesData[_index];
             _categoriesList.push(
-                <div key={_category['id']} className="sitemap_category_row">
+                <div key={_category['id']} className="sitemap_category_row" style={isMobile?{width:(BaseFunctions.getWidth(window)/3)-10 + 'px'} : {}}>
                     <a onClick={this.goTo} data-url={'/' + Consts.CONTROLLER_NAME_CATALOG + '/' + Consts.ACTION_NAME_SITEMAP_CATEGORY + '/' + _category['code'] + '/1'}>{_category['title']}</a>
                 </div>);
         }
@@ -76,7 +76,8 @@ class SitemapCategory extends Common {
         }
 
         return (
-                <React.Fragment>
+<React.Fragment>
+                    {this.getHeader()}
                     <CssTransition>
                         <div className="sitemap_block">
                             <div className="sitemap_header">
@@ -102,7 +103,7 @@ class SitemapCategory extends Common {
                             {_placemarksList}
                             <div className="clear"></div>
                             <div className="h_15px"></div>
-                            <div className="padding_left_10">
+                            <div className="padding_left_10 sitemapChangeType">
                                 <a onClick={this.goTo} data-url={'/' + Consts.CONTROLLER_NAME_CATALOG + '/' + Consts.ACTION_NAME_SITEMAP_COUNTRIES}>
                                     <i>{this.props.redux.staticData.catalog_sitemap_countries_header}</i>
                                 </a>

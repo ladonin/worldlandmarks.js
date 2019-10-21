@@ -15,11 +15,8 @@ class PhotosNavigator extends Block {
 
     constructor() {
         super();
-
         this.photosKeys = [];
-
         this.paste = <span style={{marginLeft:'30px'}}></span>;
-
         this.scrollTop = this.scrollTop.bind(this);
         this.scrollTo = this.scrollTo.bind(this);
         this.toStart = this.toStart.bind(this);
@@ -29,7 +26,7 @@ class PhotosNavigator extends Block {
     }
 
     scrollTop() {
-        window.$(this.props.scrollBlockSelector).animate({scrollTop: 0}, 0);
+        BaseFunctions.scrollTop(this.props.scrollBlockSelector,0);
     }
 
     emptyButton(width) {
@@ -39,7 +36,7 @@ class PhotosNavigator extends Block {
     scrollTo(to){
         let _from = this.props.scrollBlockSelector;
         return function(){
-            window.$(_from).scrollTo(to);
+            BaseFunctions.scrollTo(_from, to)
         }
     }
 

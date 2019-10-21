@@ -5,13 +5,13 @@
  */
 
 module.exports = {
-    'site/title/catalog/sitemap_countries/country': 'Карта сайта. %country%.',
-    'site/title/catalog/sitemap_countries/index': 'Карта сайта. Страны.',
-    'site/title/catalog/sitemap_categories/category': 'Карта сайта. %category%.',
-    'site/title/catalog/sitemap_categories/index': 'Карта сайта. Категории.',
-    'site/title/articles/country': 'Статьи о мировых достопримечательностях. %country%.',
-    'site/title/articles/category': 'Статьи о мировых достопримечательностях. %category%.',
-    'site/title/articles/index': 'Статьи о мировых достопримечательностях.',
+    'site/title/catalog/sitemap_countries/country': 'Карта сайта. %country%',
+    'site/title/catalog/sitemap_countries/index': 'Карта сайта. Страны',
+    'site/title/catalog/sitemap_categories/category': 'Карта сайта. %category%',
+    'site/title/catalog/sitemap_categories/index': 'Карта сайта. Категории',
+    'site/title/articles/country': 'Статьи о мировых достопримечательностях. %country%',
+    'site/title/articles/category': 'Статьи о мировых достопримечательностях. %category%',
+    'site/title/articles/index': 'Статьи о мировых достопримечательностях',
 
     'site/keywords/catalog/sitemap_countries/index': 'страны',
     'site/keywords/catalog/sitemap_categories/index': 'категории',

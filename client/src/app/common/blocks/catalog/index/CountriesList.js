@@ -10,11 +10,11 @@ import { withRouter } from 'react-router-dom';
 import {BrowserView, MobileView, isBrowser, isMobile} from "react-device-detect";
 import { connect } from 'react-redux';
 
-
-import ArticlesList from 'src/app/common/blocks/ArticlesList';
 import Block from 'src/app/parents/Block';
 import BaseFunctions from 'src/functions/BaseFunctions';
 import Consts from 'src/settings/Constants';
+
+import ArticlesList from 'src/app/common/blocks/ArticlesList';
 
 class CountriesList extends Block {
 
@@ -25,7 +25,6 @@ class CountriesList extends Block {
     render() {
 
         let _countriesList =[];
-
 
         let _style = {};
         if (isMobile) {
@@ -57,13 +56,12 @@ class CountriesList extends Block {
     }
 }
 
-
 function mapStateToProps(state) {
 
     return {
         redux: {
             data:state.actionData['data'],
-            placemarks_count:state.staticData['placemarks_count'],
+            placemarks_count:state.staticData['placemarks_count']
         }
     }
 }

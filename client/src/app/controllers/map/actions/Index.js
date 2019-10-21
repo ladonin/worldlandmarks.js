@@ -16,12 +16,14 @@ import BaseFunctions from 'src/functions/BaseFunctions';
 import MapPlacemark from 'src/app/common/blocks/map/Placemark';
 import MapBaloon from 'src/app/common/blocks/map/Baloon';
 import ToolsPanel from 'src/app/common/blocks/ToolsPanel';
+import Header from 'src/app/common/blocks/map/Header';
 
 class MapIndex extends Action {
 
     constructor() {
         super();
         this.lastUrl = false;
+        this.getHeader = this.getHeader.bind(this);
     }
 
     componentDidMount() {
@@ -43,9 +45,9 @@ class MapIndex extends Action {
     }
 
     render() {
-
         return (
                 <React.Fragment>
+                    <Header getHeader={this.getHeader}/>
                     <MapPlacemark/>
                     <MapBaloon/>
                     <div className="map" id="YMapsID"></div>

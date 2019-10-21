@@ -28,5 +28,3 @@ class ToolsPanelButton extends Block {
 }
 
 export default withRouter(ToolsPanelButton)
-
-

@@ -24,10 +24,11 @@ class Map extends CommonController {
      * Action index
      */
     action_index() {
+        let _seoPath = 'map/index';
         this.addActionData({
-            'title':Seo.getInstance(this.requestId).getTitle('map/index'),
-            'keywords':Seo.getInstance(this.requestId).getKeywords('map/index'),
-            'description':Seo.getInstance(this.requestId).getDescription('map/index'),
+            'title':Seo.getInstance(this.requestId).getTitle(_seoPath),
+            'keywords':Seo.getInstance(this.requestId).getKeywords(_seoPath),
+            'description':Seo.getInstance(this.requestId).getDescription(_seoPath),
         });
 
         this.sendMe();
@@ -74,19 +75,16 @@ class Map extends CommonController {
     {
         let _category = this.getFromRequest('filterCategory') === false ? false : parseInt(this.getFromRequest('filterCategory'));
 
+        let _seoPath = 'map/index';
+
         this.addBackgroundData({
+            title:Seo.getInstance(this.requestId).getTitle(_seoPath),
+            keywords:Seo.getInstance(this.requestId).getKeywords(_seoPath),
+            description:Seo.getInstance(this.requestId).getDescription(_seoPath),
             map_baloonsAutoFillData:
                 BaseFunctions.clearNullDataInArrayOfObjects(MapComponent.getInstance(this.requestId).getPointsBunch(_category))
         });
         this.sendMe(true);
-    }
-
-    /*
-     * Change language background action
-     */
-    action_change_language()
-    {
-        this.sendMe();
     }
 }
 

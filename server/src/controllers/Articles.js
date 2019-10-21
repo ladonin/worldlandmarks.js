@@ -32,7 +32,9 @@ class Articles extends CommonController {
      * Action countries
      */
     action_countries() {
+        let _seoPath = 'articles/index';
         this.addActionData({
+            'title':Seo.getInstance(this.requestId).getTitle(_seoPath),
             'countriesData':ArticlesModel.getInstance(this.requestId).getCountriesData()
         });
 
@@ -43,7 +45,9 @@ class Articles extends CommonController {
      * Action categories
      */
     action_categories() {
+        let _seoPath = 'articles/index';
         this.addActionData({
+            'title':Seo.getInstance(this.requestId).getTitle(_seoPath),
             'categoriesData':ArticlesModel.getInstance(this.requestId).getCategoriesData()
         });
 
@@ -64,9 +68,10 @@ class Articles extends CommonController {
 
         let _pagesCount =  Math.ceil(_articlesCount/_limit);
         let _offset = (_currentPage - 1) * _limit;
-
+        let _seoPath = 'articles/country';
 
         this.addActionData({
+            'title':Seo.getInstance(this.requestId).getTitle(_seoPath, {'country':_countryName}),
             'countryName':_countryName,
             'countryCode':_countryCode,
             'countriesData':_countriesData,
@@ -93,9 +98,11 @@ class Articles extends CommonController {
 
         let _pagesCount =  Math.ceil(_articlesCount/_limit);
         let _offset = (_currentPage - 1) * _limit;
-
+        let _seoPath = 'articles/category';
+        let _categoryTitle = Categories.getInstance(this.requestId).prepareNameForArticles(_categoryData.code, {'category':_categoryData.title});
         this.addActionData({
-            'categoryTitle':Categories.getInstance(this.requestId).prepareNameForArticles(_categoryData.code, _categoryData.title),
+            'title':Seo.getInstance(this.requestId).getTitle(_seoPath, {'category':_categoryTitle}),
+            'categoryTitle':_categoryTitle,
             'categoryId':_categoryData.id,
             'categoriesData':_categoriesData,
             'articlesData': ArticlesModel.getInstance(this.requestId).getCategoryArticles(_categoryData.id, _offset, _limit),
@@ -123,6 +130,7 @@ class Articles extends CommonController {
 
 
         this.addActionData({
+            'title':_articleData.title,
             'data': _articleData,
             'breadcrumbs': ArticlesComponent.getInstance(this.requestId).getBreadcrumbsData(_articleData),
             'countryCode':_countryCode,

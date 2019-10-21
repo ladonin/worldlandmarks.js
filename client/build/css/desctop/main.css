@@ -1,0 +1,82 @@
+.main_block{
+    width:900px;
+    margin:0 auto;
+    text-align:left;
+    padding-bottom: 10px;
+
+}
+
+
+
+
+
+
+.main_block_description{
+    padding:20px 0;
+}
+
+
+.main_block_last_placemarks_title
+{
+    width:880px;
+    padding:10px;
+    font-size: 21px;
+    text-align: left;
+    margin-top:20px;
+}
+
+
+
+.main_block_map_block_title, .main_block_catalog_block_title,.main_block_search_block_title{
+    margin:20px 0px 20px 0;
+    color:#fff;
+    font-size:23px;
+    text-align: center;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+.main_block_map_block,.main_block_catalog_block,.main_block_search_block{
+border-radius: 0px;
+}
+
+
+
+.main_block_map_block, .main_block_catalog_block,.main_block_search_block{
+    width:293px;
+    cursor:pointer;
+}
+.main_block_map_block, .main_block_catalog_block{
+    margin-right:10px;
+}
+
+
+.main_block_map_block img,
+.main_block_catalog_block img,
+.main_block_search_block img{
+    margin-top: 25px;
+    height:240px;
+    width:240px;
+}
+
+
+
+.main_block_map_block_link, .main_block_catalog_block_link{
+    margin-top:10px;
+}
+
+
+
+
+.main_block_catalog_block_description, .main_block_map_block_description{
+    margin-top:10px;
+    margin-bottom:10px;
+}
+
+.main_block_description,.main_block_catalog_block_description,.main_block_map_block_description{
+    font-size:14px;
+}
+
+.main_block{
+    height:336px
+}

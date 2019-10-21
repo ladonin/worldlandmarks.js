@@ -14,6 +14,7 @@ import { withRouter } from 'react-router-dom';
 import Consts from 'src/settings/Constants';
 import {GetState, MapDispatchToProps} from 'src/app/parents/Action';
 import Common from 'src/app/controllers/articles/actions/_Common';
+import BaseFunctions from 'src/functions/BaseFunctions';
 
 // Components
 import CssTransition from 'src/app/common/CssTransition';
@@ -36,13 +37,14 @@ class ArticleCountries extends Common {
         for (let _index in this.props.redux.actionData.countriesData) {
             let _country = this.props.redux.actionData.countriesData[_index];
             _countriesList.push(
-                    <div className="sitemap_country_row">
+                    <div className="sitemap_country_row" style={isMobile?{width:(BaseFunctions.getWidth(window)/3)-10 + 'px'} : {}}>
                         <a onClick={this.goTo} data-url={'/' + Consts.CONTROLLER_NAME_ARTICLES + '/' + Consts.ACTION_NAME_COUNTRY + '/' + _country['country_code'] + '/1'}>{_country['name']}</a>
                     </div>);
         }
 
         return (
                 <React.Fragment>
+                    {this.getHeader()}
                     <CssTransition>
                         <div className="sitemap_block">
                             <div className="sitemap_header">
@@ -56,10 +58,9 @@ class ArticleCountries extends Common {
                             <div className="sitemap_header">
                                 <h3>
                                     {this.props.redux.staticData.select_a_country_text}
-                                    <div className="h_10px"></div>
                                 </h3>
                             </div>
-                            <div className="padding_left_10">
+                            <div className="padding_left_10 sitemapChangeType">
                                 <a onClick={this.goTo} data-url={'/' + Consts.CONTROLLER_NAME_ARTICLES + '/' + Consts.ACTION_NAME_CATEGORIES}>
                                     <i>{this.props.redux.staticData.articles_categories_header}</i>
                                 </a>

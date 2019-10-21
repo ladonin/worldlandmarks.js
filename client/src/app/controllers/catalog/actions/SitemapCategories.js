@@ -14,6 +14,7 @@ import { withRouter } from 'react-router-dom';
 import Consts from 'src/settings/Constants';
 import {GetState, MapDispatchToProps} from 'src/app/parents/Action';
 import Common from 'src/app/controllers/articles/actions/_Common';
+import BaseFunctions from 'src/functions/BaseFunctions';
 
 // Components
 import CssTransition from 'src/app/common/CssTransition';
@@ -34,13 +35,14 @@ class SitemapCategories extends Common {
         for (let _index in this.props.redux.actionData.categoriesData) {
             let _category = this.props.redux.actionData.categoriesData[_index];
             _categoriesList.push(
-                    <div key={_category['id']} className="sitemap_category_row">
+                    <div key={_category['id']} className="sitemap_category_row" style={isMobile?{width:(BaseFunctions.getWidth(window)/3)-10 + 'px'} : {}}>
                         <a onClick={this.goTo} data-url={'/' + Consts.CONTROLLER_NAME_CATALOG + '/' + Consts.ACTION_NAME_SITEMAP_CATEGORY + '/' + _category['code'] + '/1'}>{_category['title']}</a>
                     </div>);
         }
 
         return (
-                <React.Fragment>
+<React.Fragment>
+                    {this.getHeader()}
                     <CssTransition>
                         <div className="sitemap_block">
                             <div className="sitemap_header">
@@ -57,7 +59,7 @@ class SitemapCategories extends Common {
                                     <div className="h_10px"></div>
                                 </h3>
                             </div>
-                            <div className="padding_left_10">
+                            <div className="padding_left_10 sitemapChangeType">
                                 <a onClick={this.goTo} data-url={'/' + Consts.CONTROLLER_NAME_CATALOG + '/' + Consts.ACTION_NAME_SITEMAP_COUNTRIES}>
                                     <i>{this.props.redux.staticData.catalog_sitemap_countries_header}</i>
                                 </a>

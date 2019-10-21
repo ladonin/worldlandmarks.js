@@ -10,7 +10,6 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import {BrowserView, MobileView, isBrowser, isMobile} from "react-device-detect";
 
-
 import ConfigRestrictions from 'src/../../server/common/settings/Restrictions';
 import Consts from 'src/settings/Constants';
 import BaseFunctions from 'src/functions/BaseFunctions';
@@ -21,7 +20,6 @@ import Block from 'src/app/parents/Block';
 import Router from 'src/modules/Router';
 
 import CroppedPhoto from 'src/app/common/blocks/CroppedPhoto';
-
 
 class PhotoAlbum extends Block {
     constructor() {
@@ -34,14 +32,12 @@ class PhotoAlbum extends Block {
     }
 
     init() {
-
         // Init settings
         if (isMobile) {
             // Mobile device
-
             if ((this.isCountryPage()) && (this.props.hasStates)) {
+                
                 // Country page
-
                 this.viewSettings = {
                     'cols' : 3,
                     'rows' : 4
@@ -66,7 +62,6 @@ class PhotoAlbum extends Block {
 
         } else {
             // Desctop device
-
             if ((this.isCountryPage()) && (this.props.hasStates)) {
 
                 // Country page

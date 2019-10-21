@@ -107,6 +107,8 @@ class CatalogCountry extends Action {
 
 
         return (
+<React.Fragment>
+                    {this.getHeader()}
                 <CssTransition>
                     <div id="catalog_country_state_block">
                         {this.props.redux.staticData['is_admin'] === true &&
@@ -154,6 +156,7 @@ class CatalogCountry extends Action {
                         bottomComponent={Bottom}
                     />
                 </CssTransition>
+                </React.Fragment>
                 );
     }
 }

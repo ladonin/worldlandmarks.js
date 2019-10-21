@@ -72,6 +72,8 @@ class CatalogSearch extends Action {
         }
 
         return (
+<React.Fragment>
+                    {this.getHeader()}
                 <CssTransition>
                     <div className="catalog_search_block">
                         {this.props.redux.actionData.whetherToUseTitles&&
@@ -114,6 +116,7 @@ class CatalogSearch extends Action {
                         bottomComponent={Bottom}
                     />
                 </CssTransition>
+                </React.Fragment>
                 );
     }
 }

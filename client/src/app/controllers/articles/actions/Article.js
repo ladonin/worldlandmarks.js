@@ -55,36 +55,39 @@ class ArticlesArticle extends Action {
                     </div>);
         }
         return (
-                <CssTransition>
-                    <div className="catalog_placemark">
-                        <h3 className="catalog_placemark_title">
-                            {this.props.redux.actionData.data.title}
-                        </h3>
-                        {this.props.redux.staticData.is_admin &&
-                            <div style={{margin: '10px 20px', textAlign: 'left'}}><a target="_blank" style={{color: '#f00'}} href={'/admin/update_article?id=' + this.props.redux.actionData.data.id}>[обновить]</a></div>
-                        }
-                        <div className={(isMobile ? 'padding_left_10' : 'padding_left_20') + ' padding_top_10'}>
-                            <img
-                                className="adress_country_flag"
-                                src={BaseFunctions.getFlagUrl(this.props.redux.actionData.countryCode)}/>
-                            <a
-                                onClick={this.goTo}
-                                data-url={'/' + Consts.CONTROLLER_NAME_ARTICLES + '/' + Consts.ACTION_NAME_COUNTRY + '/' + this.props.redux.actionData.countryCode + '/1'}>{this.props.redux.actionData.countryName}</a>
-                            <div className="h_10px"></div>
-                            {_categoriesList}
-                        </div>
-                        <div className="catalog_placemark_comment" dangerouslySetInnerHTML={{__html: this.props.redux.actionData.data.content}}></div>
-                        <div className="sublist_articles">
-                            <div className="sublist_articles_title">
-                                {this.props.redux.staticData.another_articles_title}
+                <React.Fragment>
+                    {this.getHeader()}
+                    <CssTransition>
+                        <div className="catalog_placemark">
+                            <h3 className="catalog_placemark_title">
+                                {this.props.redux.actionData.data.title}
+                            </h3>
+                            {this.props.redux.staticData.is_admin &&
+                                <div style={{margin: '10px 20px', textAlign: 'left'}}><a target="_blank" style={{color: '#f00'}} href={'/admin/update_article?id=' + this.props.redux.actionData.data.id}>[обновить]</a></div>
+                            }
+                            <div className={(isMobile ? 'padding_left_10' : 'padding_left_20') + ' padding_top_10'}>
+                                <img
+                                    className="adress_country_flag"
+                                    src={BaseFunctions.getFlagUrl(this.props.redux.actionData.countryCode)}/>
+                                <a
+                                    onClick={this.goTo}
+                                    data-url={'/' + Consts.CONTROLLER_NAME_ARTICLES + '/' + Consts.ACTION_NAME_COUNTRY + '/' + this.props.redux.actionData.countryCode + '/1'}>{this.props.redux.actionData.countryName}</a>
+                                <div className="h_10px"></div>
+                                {_categoriesList}
                             </div>
-                            <div className="article_sublist_items">
-                                {_randomArticlesList}
+                            <div className="catalog_placemark_comment" dangerouslySetInnerHTML={{__html: this.props.redux.actionData.data.content}}></div>
+                            <div className="sublist_articles">
+                                <div className="sublist_articles_title">
+                                    {this.props.redux.staticData.another_articles_title}
+                                </div>
+                                <div className="article_sublist_items">
+                                    {_randomArticlesList}
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    <Bottom/>
-                </CssTransition>
+                        <Bottom/>
+                    </CssTransition>
+                </React.Fragment>
                 );
     }
 }

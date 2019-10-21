@@ -13,52 +13,25 @@
       user's mobile device or desktop. See https://developers.google.com/web/fundamentals/web-app-manifest/
     -->
     <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
-    <!--
-      Notice the use of %PUBLIC_URL% in the tags above.
-      It will be replaced with the URL of the `public` folder during the build.
-      Only files inside the `public` folder can be referenced from the HTML.
-
-      Unlike "/favicon.ico" or "favicon.ico", "%PUBLIC_URL%/favicon.ico" will
-      work correctly both with client-side routing and a non-root public URL.
-      Learn how to configure a non-root public URL by running `npm run build`.
-    -->
 
     <!-- Notice: jQuery is used only for libraries and multibrowser determining document properties-->
-    <script src="/js/jquery.min.js"></script>
+    <script type="text/javascript" src="/js/jquery.min.js"></script>
+    <script type="text/javascript" src="/js/functions.js"></script>
+    <script type="text/javascript" src="/js/prettyPhoto/jquery.prettyPhoto.js"></script>
+    <script type="text/javascript" src="/js/prettyPhoto/script.js"></script>
+    <script type="text/javascript" src="/js/jquery-scrollto.js"></script>
+    <script type="text/javascript" src="/js/nicescroll.js"></script>
+    <script type="text/javascript" src="https://api-maps.yandex.ru/2.1/?lang=ru_RU"></script>
 
-    <script src="/js/functions.js"></script>
-    <script src="/js/prettyPhoto/jquery.prettyPhoto.js"></script>
-    <script src="/js/prettyPhoto/script.js"></script>
-    <script src="/js/jquery-scrollto.js"></script>
-    <script src="/js/nicescroll.js"></script>
-
-
-
-    <script src="https://api-maps.yandex.ru/2.1/?lang=ru_RU" type="text/javascript"></script>
-
-
-    <link type="text/css" href="/css/common/pretty_photo/styles.css" rel="stylesheet" media="all" />
-    <link href="/css/common/pretty_photo/prettyPhoto.css" rel="stylesheet" type="text/css" />
-
+    <link rel="stylesheet" type="text/css" href="/css/common/pretty_photo/styles.css" media="all"/>
+    <link rel="stylesheet" type="text/css" href="/css/common/pretty_photo/prettyPhoto.css"/>
     <link rel="stylesheet" type="text/css" href="/css/common/font-awesome.min.css"/>
     <link rel="stylesheet" type="text/css" href="/css/common/common.css"/>
     <link rel="stylesheet" type="text/css" href="/css/common/catalog.css"/>
     <link rel="stylesheet" type="text/css" href="/css/common/main.css"/>
-
-    <title>React App</title>
   </head>
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>
     <div id="container"></div>
-    <!--
-      This HTML file is a template.
-      If you open it directly in the browser, you will see an empty page.
-
-      You can add webfonts, meta tags, or analytics to this file.
-      The build step will place the bundled scripts into the <body> tag.
-
-      To begin the development, run `npm start` or `yarn start`.
-      To create a production bundle, use `npm run build` or `yarn build`.
-    -->
   </body>
 </html>

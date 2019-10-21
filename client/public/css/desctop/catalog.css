@@ -49,25 +49,25 @@ padding-top: 0px;
     padding-bottom: 10px;
 }
 .sitemap_country_row{
-width: 175px;
+width: 172px;
 }
 .sitemap_category_row{
-  width: 440px;
+  width: 420px;
 }
 .sitemap_country_row,.sitemap_category_row{
 padding: 5px 0;
 float: left;
 }
 .sitemap_placemark_row{
-   padding: 5px 10px;
+   padding: 5px 20px;
 }
 .sitemap_country_block,.sitemap_category_block{
 
-padding: 5px 10px;
+padding: 15px 20px;
 margin-bottom:10px;
 }
 .sitemap_pages_block{
-    padding:10px;
+    padding:0 20px 20px 20px;
 }
 .sitemap_pages_block a{
 padding: 5px;
@@ -75,14 +75,19 @@ line-height: 27px;
 }
 
 .sitemap_header{
-padding: 0px 10px 10px;
+padding: 10px 20px 20px;
 font-size: 17px;
 }
 
 .sitemap_header h3{
-font-size: 17px;
+font-size: 15px;
 margin: 0;
 font-weight: lighter;
+}
+
+.sitemapChangeType{
+    padding:0 0 10px 10px;
+    margin-left:10px;
 }
 
 h3.catalog_state_header, h3.catalog_index_header, h3.catalog_placemark_title{

@@ -73,13 +73,13 @@ class PlacemarkButtons extends Component {
                 _button =
                         <div id="placemark_toggle" style={_style1} className="placemark_toggle_2" onClick={this.showPlace}>
                             <HtmllerButtons style={isMobile ? {top: '-75px'} : {top: '-120px'}}/>
-                            <div className="button_text">На карте</div>
+                            <div className="button_text">{this.props.redux.staticData.map_buttons_placemark_viewer_onmap}</div>
                         </div>;
             } else {
                 _button =
                         <div id="placemark_toggle" style={_style1} className="placemark_toggle_2" onClick={this.returnToContent}>
                             <HtmllerButtons style={isMobile ? {top: '-187px'} : {top: '-300px'}}/>
-                            <div className="button_text">Вернуться</div>
+                            <div className="button_text">{this.props.redux.staticData.map_buttons_placemark_viewer_return}</div>
                         </div>
             }
             return (
@@ -88,7 +88,7 @@ class PlacemarkButtons extends Component {
                             <div id="placemark_buttons_block">
                                 <div id="placemark_close" style={_style2} className="placemark_close_2" onClick={this.props.close}>
                                     <HtmllerButtons/>
-                                    <div className="button_text">Закрыть</div>
+                                    <div className="button_text">{this.props.redux.staticData.map_buttons_placemark_viewer_close}</div>
                                 </div>
                                 {_button}
                             </div>
@@ -101,4 +101,14 @@ class PlacemarkButtons extends Component {
     }
 }
 
-export default PlacemarkButtons
+
+function mapStateToProps(state) {
+
+    return {
+        redux: {
+            staticData: state.staticData
+        }
+    };
+}
+
+export default connect(mapStateToProps)(PlacemarkButtons)
