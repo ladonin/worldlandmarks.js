@@ -21,7 +21,6 @@ export default class Action extends Common {
         this.refreshAction = this.refreshAction.bind(this);
     }
 
-
     componentWillUnmount(){
         this.props.clearActionData();
         this.props.clearStyleData();
@@ -35,7 +34,6 @@ export default class Action extends Common {
         Events.dispatch(Consts.EVENT_RESET_PAGE_SCROLLING);
         Events.add(Consts.EVENT_REFRESH_ACTION, this.refreshAction);
     }
-
 
     refreshAction(){
         Socket.actionQuery(this.props.match.params);
@@ -83,13 +81,6 @@ export default class Action extends Common {
                     />
                 </React.Fragment>);
     }
-
-
-
-
-
-
-
 }
 
 export const MapDispatchToProps = {

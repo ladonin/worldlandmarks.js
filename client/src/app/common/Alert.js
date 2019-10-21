@@ -8,10 +8,9 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import {BrowserView, MobileView, isBrowser, isMobile} from "react-device-detect";
+
 import Events from 'src/modules/Events';
-
 import Consts from 'src/settings/Constants';
-
 
 class Alert extends Component {
     constructor() {
@@ -42,7 +41,6 @@ class Alert extends Component {
           className: e.detail.className,
         });
     }
-
 
     hideAlert(){
         this.setState({

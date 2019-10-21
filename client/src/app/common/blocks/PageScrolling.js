@@ -102,6 +102,7 @@ class PageScrolling extends Block {
     show(){
         this.setState({hidden:false});
     }
+
     hide(){
         this.setState({hidden:true});
     }

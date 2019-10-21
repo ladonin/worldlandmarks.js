@@ -15,7 +15,6 @@ import Consts from 'src/settings/Constants';
 import Action, {GetState, MapDispatchToProps} from 'src/app/parents/Action';
 import BaseFunctions from 'src/functions/BaseFunctions';
 
-// Components
 import CssTransition from 'src/app/common/CssTransition';
 import Bottom from 'src/app/common/blocks/Bottom';
 

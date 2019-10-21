@@ -33,13 +33,11 @@ class MapFilter extends Block {
         this.resetFilter = this.resetFilter.bind(this);
     }
 
-
     componentDidMount(){
         if (isBrowser) {
             BaseFunctions.niceScroll("#panel_tools_content_filter_select_block");
         }
     }
-
 
     filterBy(id){
         MapModule.filterByCategory(id);
@@ -58,7 +56,6 @@ class MapFilter extends Block {
     }
 
     render() {
-
         let _categoriesList = [];
         let _categories = CategoryViewer.getCategories();
 
@@ -79,7 +76,6 @@ class MapFilter extends Block {
         }
 
         return (
-
             <div id="panel_tools_content_filter_select_block" style={{height:this.localVarsStyles.selectBlockHeight + 'px', width: this.localVarsStyles.selectBlockWidth + 'px'}}>
                 <div className="panel_tools_content_filter_title">
                     {this.props.redux.staticData.panel_tools_filter_head}
@@ -104,10 +100,7 @@ class MapFilter extends Block {
     }
 }
 
-
-
 function mapStateToProps(state) {
-
     return {
         redux: {
             staticData: state.staticData
@@ -116,10 +109,3 @@ function mapStateToProps(state) {
 }
 
 export default connect(mapStateToProps)(withRouter(MapFilter))
-
-
-
-
-
-
-

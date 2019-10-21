@@ -51,10 +51,7 @@ class Bottom extends Block {
         );
     }
 
-
-
     render() {
-
         if (!this.props.redux.text) {
             return null;
         }
@@ -93,8 +90,7 @@ class Bottom extends Block {
                         <div className="page_bottom_rights" dangerouslySetInnerHTML={{__html:this.props.redux.text['9']}}></div>
                     </div>
                 </CssTransition>
-            </React.Fragment>
-            );
+            </React.Fragment>);
     }
 }
 

@@ -16,7 +16,6 @@ import {GetState, MapDispatchToProps} from 'src/app/parents/Action';
 import Common from 'src/app/controllers/articles/actions/_Common';
 import BaseFunctions from 'src/functions/BaseFunctions';
 
-// Components
 import CssTransition from 'src/app/common/CssTransition';
 import Bottom from 'src/app/common/blocks/Bottom';
 
@@ -41,14 +40,13 @@ class SitemapCategories extends Common {
         }
 
         return (
-<React.Fragment>
+                <React.Fragment>
                     {this.getHeader()}
                     <CssTransition>
                         <div className="sitemap_block">
                             <div className="sitemap_header">
                                 {this.props.redux.staticData.catalog_sitemap_categories_header}
                             </div>
-
                             <div className="sitemap_category_block">
                                 {_categoriesList}
                                 <div className="clear"></div>

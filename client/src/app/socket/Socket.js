@@ -3,12 +3,9 @@
  * import Socket from 'src/app/socket/Socket';
  */
 
-
 import SocketIO from 'socket.io-client';
 
-// Settings
 import Consts from 'src/settings/Constants';
-
 import BaseFunctions from 'src/functions/BaseFunctions';
 import Config from 'src/settings/Config';
 import Router from 'src/modules/Router';
@@ -20,35 +17,19 @@ import AlertsText from 'src/modules/AlertsText';
 
 const Socket = SocketIO(Config.apiServer.socketUrl, {
     query: {
-        token: BaseFunctions.uniqueString()////ATTENTION - обратите внимание
+        token: BaseFunctions.uniqueString()
     }
 });
 
-
 Socket.on('error-catch', function (data) {
-    console.log('on error-catch');
-    console.log(data.message);////ATTENTION - обратите внимание
 
     Events.dispatch('alert', {
         text:AlertsText.get(data.message, 'error'),
         className:'error'
     });
-
-//ATTENTION - обратите внимание
-
-    //ERROR_ID_NOT_FOUND => trace('errors/link_id_not_found')
-    //ERROR_PASSWORD_NOT_PASSED => trace('errors/update_point/empty_password')
-    //ERROR_WRONG_PASSWORD => trace('errors/update_point/wrong_password')
-    //ERROR_FORM_POINT_A_LOT_OF_PHOTOS
-    //ERROR_FORM_POINT_WITH_NO_PHOTOS
-    //ERROR_WRONG_EMAIL => trace('errors/new_point/wrong_email')
-
 });
 
-
-
 export default {
-
 
     /*
      * Send socket query on action level
@@ -78,10 +59,6 @@ export default {
         data.clientAction = data.action;
 
         Socket.emit('api', data);
-        //    for (let i=0; i<1000; i++){
-        //     Socket.emit('api', data);
-        //    }
-        //ATTENTION - обратите внимание
     },
     /*
      * Send socket query on background level
@@ -105,19 +82,9 @@ export default {
         console.log(data);
 
         Socket.emit('api', data);
-        //    for (let i=0; i<1000; i++){
-        //     Socket.emit('api', data);
-        //    }
-        //ATTENTION - обратите внимание
     },
 
     getSocket(){
         return Socket;
     }
-
 }
-
-
-
-
-

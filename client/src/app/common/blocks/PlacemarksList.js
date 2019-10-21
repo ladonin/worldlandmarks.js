@@ -63,7 +63,6 @@ class PlacemarksList extends Block {
         this.languageChanged = false;
     }
 
-
     shouldComponentUpdate(nextProps, nextState){
 
         if (!CommonBaseFunctions.areObjectsEqual(this.props.redux.staticData,nextProps.redux.staticData)) {
@@ -148,7 +147,6 @@ class PlacemarksList extends Block {
         let _catalogScrollPlacemarkRowContentWidth;
         let _catalogScrollPlacemarkRowPhotoWidth;
 
-
         if (isMobile) {
             _photoInsert = <img src={_photo['dir'] + ImageDimensions.getPrefix(BaseFunctions.getWidth(window), 0) + _photo['name']} width={BaseFunctions.getWidth(window) + 'px'}/>;
         } else {
@@ -203,7 +201,6 @@ class PlacemarksList extends Block {
             return null;
         }
 
-
         this.isRetry = false;
 
         let _placemarks = this.props.redux.placemarks;
@@ -211,7 +208,6 @@ class PlacemarksList extends Block {
 
         for (let _index in _placemarks) {
             let _item = _placemarks[_index];
-
             _newPlacemarksList.push(this.getItem(_item));
         }
 

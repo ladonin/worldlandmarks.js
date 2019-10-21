@@ -1,6 +1,5 @@
 import {isMobile} from "react-device-detect";
 
-
 require('public/css/common/common.css');
 require('public/css/common/catalog.css');
 require('public/css/common/main.css');

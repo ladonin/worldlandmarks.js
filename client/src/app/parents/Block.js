@@ -10,7 +10,6 @@ import { withRouter } from 'react-router-dom';
 import Common from 'src/app/parents/Common';
 import CommonBaseFunctions from 'src/../../server/common/functions/BaseFunctions';
 
-
 class Block extends Common {
 
     shouldComponentUpdate(nextProps, nextState) {

@@ -7,6 +7,7 @@
 
 import Constants from 'src/settings/Constants';
 import Cookies from 'src/modules/Cookies';
+
 let _defaultLanguage = Constants.LANGUAGE_EN;
 
 export default {

@@ -32,5 +32,4 @@ class CroppedPhoto extends Block {
     }
 }
 
-
 export default CroppedPhoto;

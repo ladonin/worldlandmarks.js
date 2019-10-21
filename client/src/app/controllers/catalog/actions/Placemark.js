@@ -16,7 +16,6 @@ import Router from 'src/modules/Router';
 import Consts from 'src/settings/Constants';
 import BaseFunctions from 'src/functions/BaseFunctions';
 
-// Components
 import CssTransition from 'src/app/common/CssTransition';
 import PlacemarksList from 'src/app/common/blocks/PlacemarksList';
 import PlacemarkCaregories from 'src/app/common/blocks/PlacemarkCaregories';
@@ -43,73 +42,73 @@ class CatalogPlacemark extends Action {
         }
 
         return (
-<React.Fragment>
+                <React.Fragment>
                     {this.getHeader()}
-            <CssTransition>
-                <div className="catalog_placemark">
-                    {this.props.redux.actionData.data['title']&&
-                        <React.Fragment>
-                            <h3 className="catalog_placemark_title">
-                                {this.props.redux.actionData.data['title']}
-                            </h3>
-                        </React.Fragment>}
+                    <CssTransition>
+                        <div className="catalog_placemark">
+                            {this.props.redux.actionData.data['title']&&
+                                <React.Fragment>
+                                    <h3 className="catalog_placemark_title">
+                                        {this.props.redux.actionData.data['title']}
+                                    </h3>
+                                </React.Fragment>}
 
-                    <PlacemarkAdminLinks
-                        isAdmin={this.props.redux.staticData['is_admin']}
-                        id={this.props.redux.actionData.data['id']}
-                        category={this.props.redux.actionData.data['category']}/>
+                            <PlacemarkAdminLinks
+                                isAdmin={this.props.redux.staticData['is_admin']}
+                                id={this.props.redux.actionData.data['id']}
+                                category={this.props.redux.actionData.data['category']}/>
 
-                    <PlacemarkCaregories subcategories={this.props.redux.actionData.data['subcategories']} category={this.props.redux.actionData.data['category']}/>
-                    <div className="catalog_placemark_map_lnk">
-                        <a onClick={this.goTo} data-url={'/' + Consts.CONTROLLER_NAME_MAP + '/' + this.props.redux.actionData.data['id']}><img
-                            src="/img/map_240.png"
-                            style={{
-                                display:'inline-block',
-                                width:'27px',
-                                verticalAlign:'bottom',
-                                marginRight:'5px'
-                            }}/>{this.props.redux.staticData['catalog_placemark_link_to_map_text']}</a>
-                    </div>
-                    <div className="catalog_placemark_address" dangerouslySetInnerHTML={{__html:'<span>'+this.props.redux.actionData.data['formatted_address_with_route']+'</span>'}}></div>
-                    <div className="catalog_placemark_photo">
-                        <PhotosList photos={this.props.redux.actionData.data['photos']}/>
-                    </div>
-                    <div
-                        className="catalog_placemark_comment"
-                        id="placemark_comment"
-                        dangerouslySetInnerHTML={{__html:this.props.redux.actionData.data['comment']}}>
-                    </div>
-                    <div className="catalog_placemark_map_lnk">
-                        <a onClick={this.goTo} data-url={'/' + Consts.CONTROLLER_NAME_MAP + '/' + this.props.redux.actionData.data['id']}><img
-                            src="/img/map_240.png"
-                            style={{
-                                display:'inline-block',
-                                width:'27px',
-                                verticalAlign:'bottom',
-                                marginRight:'5px'
-                            }}/>{this.props.redux.staticData['catalog_placemark_link_to_map_text']}</a>
-                    </div>
-                    {this.props.redux.actionData.data['relevant_placemarks']&&
-                    <PlacemarksSublist
-                        placemarks = {this.props.redux.actionData.data['relevant_placemarks'].placemarks}
-                        isMap = {false}
-                        imageWidth = {this.props.redux.actionData.data['relevant_placemarks'].data.image_width}
-                        imageHeight = {this.props.redux.actionData.data['relevant_placemarks'].data.image_height}
-                        ident = {this.props.redux.actionData.data['relevant_placemarks'].data.ident}
-                        title = {this.props.redux.actionData.data['relevant_placemarks'].data.title}
-                    />}
-                    {this.props.redux.actionData.data['another_placemarks'] &&<div class="another_placemarks"><PlacemarksSublist
-                        placemarks = {this.props.redux.actionData.data['another_placemarks'].placemarks}
-                        isMap = {false}
-                        imageWidth = {this.props.redux.actionData.data['another_placemarks'].data.image_width}
-                        imageHeight = {this.props.redux.actionData.data['another_placemarks'].data.image_height}
-                        ident = {this.props.redux.actionData.data['another_placemarks'].data.ident}
-                        title = {this.props.redux.actionData.data['another_placemarks'].data.title}
-                    /></div>}
-                </div>
-                <Bottom/>
-            </CssTransition>
-            </React.Fragment>
+                            <PlacemarkCaregories subcategories={this.props.redux.actionData.data['subcategories']} category={this.props.redux.actionData.data['category']}/>
+                            <div className="catalog_placemark_map_lnk">
+                                <a onClick={this.goTo} data-url={'/' + Consts.CONTROLLER_NAME_MAP + '/' + this.props.redux.actionData.data['id']}><img
+                                    src="/img/map_240.png"
+                                    style={{
+                                        display:'inline-block',
+                                        width:'27px',
+                                        verticalAlign:'bottom',
+                                        marginRight:'5px'
+                                    }}/>{this.props.redux.staticData['catalog_placemark_link_to_map_text']}</a>
+                            </div>
+                            <div className="catalog_placemark_address" dangerouslySetInnerHTML={{__html:'<span>'+this.props.redux.actionData.data['formatted_address_with_route']+'</span>'}}></div>
+                            <div className="catalog_placemark_photo">
+                                <PhotosList photos={this.props.redux.actionData.data['photos']}/>
+                            </div>
+                            <div
+                                className="catalog_placemark_comment"
+                                id="placemark_comment"
+                                dangerouslySetInnerHTML={{__html:this.props.redux.actionData.data['comment']}}>
+                            </div>
+                            <div className="catalog_placemark_map_lnk">
+                                <a onClick={this.goTo} data-url={'/' + Consts.CONTROLLER_NAME_MAP + '/' + this.props.redux.actionData.data['id']}><img
+                                    src="/img/map_240.png"
+                                    style={{
+                                        display:'inline-block',
+                                        width:'27px',
+                                        verticalAlign:'bottom',
+                                        marginRight:'5px'
+                                    }}/>{this.props.redux.staticData['catalog_placemark_link_to_map_text']}</a>
+                            </div>
+                            {this.props.redux.actionData.data['relevant_placemarks']&&
+                            <PlacemarksSublist
+                                placemarks = {this.props.redux.actionData.data['relevant_placemarks'].placemarks}
+                                isMap = {false}
+                                imageWidth = {this.props.redux.actionData.data['relevant_placemarks'].data.image_width}
+                                imageHeight = {this.props.redux.actionData.data['relevant_placemarks'].data.image_height}
+                                ident = {this.props.redux.actionData.data['relevant_placemarks'].data.ident}
+                                title = {this.props.redux.actionData.data['relevant_placemarks'].data.title}
+                            />}
+                            {this.props.redux.actionData.data['another_placemarks'] &&<div class="another_placemarks"><PlacemarksSublist
+                                placemarks = {this.props.redux.actionData.data['another_placemarks'].placemarks}
+                                isMap = {false}
+                                imageWidth = {this.props.redux.actionData.data['another_placemarks'].data.image_width}
+                                imageHeight = {this.props.redux.actionData.data['another_placemarks'].data.image_height}
+                                ident = {this.props.redux.actionData.data['another_placemarks'].data.ident}
+                                title = {this.props.redux.actionData.data['another_placemarks'].data.title}
+                            /></div>}
+                        </div>
+                        <Bottom/>
+                    </CssTransition>
+                </React.Fragment>
         );
     }
 }

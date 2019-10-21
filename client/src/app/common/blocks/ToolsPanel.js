@@ -15,7 +15,6 @@ import Consts from 'src/settings/Constants';
 import BaseFunctions from 'src/functions/BaseFunctions';
 import MapModule from 'src/modules/Map';
 import Events from 'src/modules/Events';
-
 import ToolsPanelButton from 'src/app/common/blocks/toolsPanel/Button';
 import Menu from 'src/app/common/blocks/toolsPanel/Menu';
 import Settings from 'src/app/common/blocks/toolsPanel/Settings';
@@ -66,16 +65,20 @@ class ToolsPanel extends Block {
     show() {
         this.setState({status: 0});
     }
+
     close() {
         this.setState({status: null});
     }
+
     hide() {
         // Close panel and hide button
         this.setState({status: false});
     }
+
     showButton() {
         this.setState({status: null});
     }
+
     render() {
 
         let ContentComponent = ()=>null;
@@ -85,8 +88,6 @@ class ToolsPanel extends Block {
              ContentComponent = ()=> <Settings toolsPanelRef={this}/>;
         } else if (this.state.status === 2) {
              ContentComponent = ()=> <MapFilter toolsPanelRef={this}/>;
-        } else if (this.state.status === 3) {
-            // ContentComponent = ()=> <Part3/>;
         }
 
         return (
@@ -108,8 +109,6 @@ class ToolsPanel extends Block {
     }
 }
 
-
-
 function mapStateToProps(state) {
 
     return {
@@ -121,10 +120,3 @@ function mapStateToProps(state) {
 }
 
 export default connect(mapStateToProps)(withRouter(ToolsPanel))
-
-
-
-
-
-
-

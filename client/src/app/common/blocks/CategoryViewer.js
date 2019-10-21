@@ -38,16 +38,13 @@ class CategoryViewer extends Block {
         Events.remove(Consts.EVENT_TOGGLE_CATEGORY_VIEWER, this.toggle);
     }
 
-
     componentDidUpdate(){
         BaseFunctions.scrollTop('#category_info_block',0);
     }
 
-
     render() {
 
         let _selectedItem = this.state.id;
-
         let _categoriesList = [];
 
         let _categoriesItem = (category, selected = false) => {
@@ -58,7 +55,6 @@ class CategoryViewer extends Block {
             let _style = {};
             if (isMobile) {
                 _style = {width:BaseFunctions.getWidth(window) - 50 + 'px'};
-
             }
 
             return [
@@ -90,9 +86,6 @@ class CategoryViewer extends Block {
                 );
         }
 
-
-
-
         return (
                 <div id="category_info_block" className={_selectedItem === null ? '' : 'showed'} onClick={this.hideCategoryViewer} style={{height: BaseFunctions.getHeight(window) + 'px'}}>
                     <div className="category_info_content">
@@ -103,11 +96,9 @@ class CategoryViewer extends Block {
                             X
                         </div>
                         <div className="clear"></div>
-
                         <div className="category_info_content_row_block"
                              id="category_info_content_row_block_selected"
                              >{_selectedItem !== null ? _categoriesItem(this.categories[_selectedItem]) : ''}<div className="clear"></div></div>
-
                         <div className="clear"></div>
                         {_categoriesList}
                         <div className="clear"></div>

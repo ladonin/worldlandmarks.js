@@ -7,7 +7,6 @@ import { combineReducers } from 'redux';
 import Constants from 'src/settings/Constants';
 import CommonBaseFunctions from 'src/../../server/common/functions/BaseFunctions';
 
-
 function staticData(state = {}, action) {
     switch (action.type) {
         case Constants.UPDATE_PAGE:
@@ -35,8 +34,6 @@ function backgroundData(state = {}, action) {
             return state;
     }
 }
-
-
 
 function actionData(state = {}, action) {
     switch (action.type) {
@@ -174,8 +171,6 @@ function styleData(state = {}, action) {
                     _newState[_selectorName] = {};
                 }
 
-                //console.log('selector: ' + _selectorName);
-
                 // For each tag attributes of current selector
                 for (let _attributeName in _selectorData) {
                     let _attributeData = _selectorData[_attributeName];
@@ -193,8 +188,6 @@ function styleData(state = {}, action) {
                         }
                     }
 
-                    //console.log('    attribute: ' + _attributeName);
-
                     if (_attributeName === 'ending') {
                         _newState[_selectorName][_attributeName] = _attributeData;
                     } else if (_attributeName === 'class') {
@@ -209,9 +202,6 @@ function styleData(state = {}, action) {
                             let _classValueExistsInState = _stateAttributeData
                                 ? (CommonBaseFunctions.findWord(_value, _stateAttributeData))
                                 : false;
-
-                            //console.log('        ' + _value);
-                            //console.log('        ' + _action);
 
                             if (_action === '+') {
                                 // Add a new class value if not exists

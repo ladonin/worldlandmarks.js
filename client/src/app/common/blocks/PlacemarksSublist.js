@@ -27,7 +27,6 @@ class PlacemarksSublist extends Block {
             let itemsList = [];
             let _i = 0;
 
-
             let _style1 = {};
             let _style2 = {};
 
@@ -56,15 +55,11 @@ class PlacemarksSublist extends Block {
                 _style1.width = _style1.width + 'px';
             }
 
-
             for (let _index in this.props.placemarks) {
                 _i++;
                 let _placemark = this.props.placemarks[_index];
                 let _photoData = _placemark['photos'][0];
                 let dataUrl = this.props.isMap ? ('/' + Consts.CONTROLLER_NAME_MAP + '/' + _placemark['id']) : (_placemark['url']);
-
-
-
 
                 itemsList.push(
                         <div className="sublist_placemarks_block" style={_style1}>

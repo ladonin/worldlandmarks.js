@@ -10,7 +10,6 @@ import Service from 'src/modules/Service';
 import Language from 'src/modules/Language';
 import CommonBaseFunctions from 'src/../../server/common/functions/BaseFunctions';
 
-
 let _config = Config.getServiceConfig();
 let _categories = false;
 let _isSetToMapApi = false;
@@ -126,7 +125,6 @@ function isCategoryPhoto(photoUrl) {
     }
     return false;
 }
-
 
 export default {
     isCategoryPhoto,

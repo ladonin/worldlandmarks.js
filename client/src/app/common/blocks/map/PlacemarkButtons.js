@@ -10,11 +10,10 @@ import { connect } from 'react-redux';
 import {BrowserView, MobileView, isBrowser, isMobile} from "react-device-detect";
 
 import MapModule from 'src/modules/Map';
-import BaseFunctions from 'src/functions/BaseFunctions';
 import HtmllerButtons from 'src/modules/HtmllerButtons';
 
+import BaseFunctions from 'src/functions/BaseFunctions';
 import Consts from 'src/settings/Constants';
-
 
 class PlacemarkButtons extends Component {
 
@@ -46,10 +45,6 @@ class PlacemarkButtons extends Component {
         this.setState({type: 1});
     }
 
-    componentDidMount() {
-
-    }
-
     render()
     {
         let _style1 = {};
@@ -63,7 +58,6 @@ class PlacemarkButtons extends Component {
                 width: this._mobileButtonWidth2 + 'px'
             }
         }
-
 
         if ((this.state.type === 1) || (this.state.type === 2)) {
 
@@ -96,14 +90,12 @@ class PlacemarkButtons extends Component {
                     </React.Fragment>
                     );
         }
-
         return null;
     }
 }
 
 
 function mapStateToProps(state) {
-
     return {
         redux: {
             staticData: state.staticData

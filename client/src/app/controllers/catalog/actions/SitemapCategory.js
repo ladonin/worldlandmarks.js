@@ -17,7 +17,6 @@ import BaseFunctions from 'src/functions/BaseFunctions';
 import CategoryViewerModule from 'src/modules/CategoryViewer';
 import Common from 'src/app/controllers/articles/actions/_Common';
 
-// Components
 import CssTransition from 'src/app/common/CssTransition';
 import Bottom from 'src/app/common/blocks/Bottom';
 
@@ -62,7 +61,6 @@ class SitemapCategory extends Common {
             }
         }
 
-
         let _placemarksList = [];
         for (let _index in this.props.redux.actionData.placemarksData) {
             let _placemark = this.props.redux.actionData.placemarksData[_index];
@@ -76,7 +74,7 @@ class SitemapCategory extends Common {
         }
 
         return (
-<React.Fragment>
+                <React.Fragment>
                     {this.getHeader()}
                     <CssTransition>
                         <div className="sitemap_block">

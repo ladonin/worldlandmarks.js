@@ -8,16 +8,14 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import {BrowserView, MobileView, isBrowser, isMobile} from "react-device-detect";
+
 import MapModule from 'src/modules/Map';
 import CroppedPhoto from 'src/app/common/blocks/CroppedPhoto';
-
 import Consts from 'src/settings/Constants';
-
 
 class PlacemarksList extends Component {
 
     render() {
-
         let _placemarksRightList = MapModule.getPlacemarksRightList();
         let _placemarks = MapModule.getPlacemarks();
 
@@ -42,8 +40,7 @@ class PlacemarksList extends Component {
                     </React.Fragment>);
         }
 
-
-        const List = ()=> _list;
+        const List = () => _list;
 
         return (
                 <React.Fragment>

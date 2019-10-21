@@ -24,8 +24,6 @@ import SitemapCategory from 'src/app/controllers/catalog/actions/SitemapCategory
 import SitemapCountries from 'src/app/controllers/catalog/actions/SitemapCountries';
 import SitemapCountry from 'src/app/controllers/catalog/actions/SitemapCountry';
 
-
-
 import { withRouter } from 'react-router-dom';
 
 class Catalog extends Controller {

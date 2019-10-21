@@ -35,7 +35,6 @@ class Settings extends Block {
         if (isMobile) this.props.toolsPanelRef.close()
     }
 
-
     render() {
 
         let _languagesList = [];
@@ -46,33 +45,26 @@ class Settings extends Block {
         }
 
         return (
-
-
-<div id="panel_tools_content_settings_block">
-    <div className="panel_tools_content_settings_title">
-        {this.props.redux.staticData.panel_tools_settings_head}
-    </div>
-
-    <div id="panel_tools_content_settings_back" onClick={()=>Events.dispatch(Consts.EVENT_TOOLS_PANEL_SET_STATUS, {value: 0})}>
-        <HtmllerButtons device={Consts.DEVICE_NAME_DESCTOP} text={this.props.redux.staticData.panel_tools_settings_back_title}/>
-    </div>
-    <div className="panel_tools_content_settings_language_title">
-        {this.props.redux.staticData.panel_tools_settings_language_title}
-    </div>
-    <div className="panel_tools_content_settings_language_block">
-        <select id="settings_language" onChange={this.changeLanguage} value={this.state.languageValue}>
-            {_languagesList}
-        </select>
-    </div>
-</div>)
-        ;
+            <div id="panel_tools_content_settings_block">
+                <div className="panel_tools_content_settings_title">
+                    {this.props.redux.staticData.panel_tools_settings_head}
+                </div>
+                <div id="panel_tools_content_settings_back" onClick={()=>Events.dispatch(Consts.EVENT_TOOLS_PANEL_SET_STATUS, {value: 0})}>
+                    <HtmllerButtons device={Consts.DEVICE_NAME_DESCTOP} text={this.props.redux.staticData.panel_tools_settings_back_title}/>
+                </div>
+                <div className="panel_tools_content_settings_language_title">
+                    {this.props.redux.staticData.panel_tools_settings_language_title}
+                </div>
+                <div className="panel_tools_content_settings_language_block">
+                    <select id="settings_language" onChange={this.changeLanguage} value={this.state.languageValue}>
+                        {_languagesList}
+                    </select>
+                </div>
+            </div>);
     }
 }
 
-
-
 function mapStateToProps(state) {
-
     return {
         redux: {
             staticData:state.staticData
@@ -81,10 +73,3 @@ function mapStateToProps(state) {
 }
 
 export default connect(mapStateToProps)(withRouter(Settings))
-
-
-
-
-
-
-

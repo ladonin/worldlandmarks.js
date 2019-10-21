@@ -17,18 +17,15 @@ import Consts from 'src/settings/Constants';
 import CategoryViewerModule from 'src/modules/CategoryViewer';
 import Events from 'src/modules/Events';
 
-// Components
 import CssTransition from 'src/app/common/CssTransition';
 import PlacemarksList from 'src/app/common/blocks/PlacemarksList';
 import Bottom from 'src/app/common/blocks/Bottom';
-
 
 class CatalogSearch extends Action {
 
     constructor() {
         super();
         this.search = this.search.bind(this);
-
     }
 
     search(){
@@ -72,50 +69,48 @@ class CatalogSearch extends Action {
         }
 
         return (
-<React.Fragment>
+                <React.Fragment>
                     {this.getHeader()}
-                <CssTransition>
-                    <div className="catalog_search_block">
-                        {this.props.redux.actionData.whetherToUseTitles&&
-                            <React.Fragment>
-                                <div className="catalog_search_form_title_label">
-                                    {this.props.redux.staticData.catalog_search_form_title_label}
-                                </div>
-                                <div className="catalog_search_form_title">
-                                    <input type="text" name="catalog_search_form_title"/>
-                                </div>
-                            </React.Fragment>
-                        }
-                        <div className="catalog_search_form_category_label">
-                            {this.props.redux.staticData.catalog_search_form_category_label}
+                    <CssTransition>
+                        <div className="catalog_search_block">
+                            {this.props.redux.actionData.whetherToUseTitles&&
+                                <React.Fragment>
+                                    <div className="catalog_search_form_title_label">
+                                        {this.props.redux.staticData.catalog_search_form_title_label}
+                                    </div>
+                                    <div className="catalog_search_form_title">
+                                        <input type="text" name="catalog_search_form_title"/>
+                                    </div>
+                                </React.Fragment>
+                            }
+                            <div className="catalog_search_form_category_label">
+                                {this.props.redux.staticData.catalog_search_form_category_label}
+                            </div>
+                            <div className="catalog_search_form_category">
+                                <select name="catalog_search_form_category">
+                                    <option value="">{this.props.redux.staticData.catalog_search_form_all_categories}</option>
+                                    {_formCategoriesList}
+                                </select>
+                            </div>
+                            <div className="catalog_search_form_country_label">
+                                {this.props.redux.staticData.catalog_search_form_country_label}
+                            </div>
+                            <div className="catalog_search_form_country">
+                                <select name="catalog_search_form_country">
+                                    <option value="">{this.props.redux.staticData.catalog_search_form_all_countries}</option>
+                                    {_formCountriesList}
+                                </select>
+                            </div>
+                            <div id="catalog_search_form_submit" onClick={this.search}>
+                                {this.props.redux.staticData.catalog_search_form_submit_text}
+                            </div>
                         </div>
-                        <div className="catalog_search_form_category">
-                            <select name="catalog_search_form_category">
-                                <option value="">{this.props.redux.staticData.catalog_search_form_all_categories}</option>
-                                {_formCategoriesList}
-                            </select>
-                        </div>
-
-                        <div className="catalog_search_form_country_label">
-                            {this.props.redux.staticData.catalog_search_form_country_label}
-                        </div>
-                        <div className="catalog_search_form_country">
-                            <select name="catalog_search_form_country">
-                                <option value="">{this.props.redux.staticData.catalog_search_form_all_countries}</option>
-                                {_formCountriesList}
-                            </select>
-                        </div>
-
-                        <div id="catalog_search_form_submit" onClick={this.search}>
-                            {this.props.redux.staticData.catalog_search_form_submit_text}
-                        </div>
-                    </div>
-                    <PlacemarksList
-                        photoWidth="290"
-                        photoHeight="225"
-                        bottomComponent={Bottom}
-                    />
-                </CssTransition>
+                        <PlacemarksList
+                            photoWidth="290"
+                            photoHeight="225"
+                            bottomComponent={Bottom}
+                        />
+                    </CssTransition>
                 </React.Fragment>
                 );
     }

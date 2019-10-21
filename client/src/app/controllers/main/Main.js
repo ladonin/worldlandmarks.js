@@ -16,7 +16,6 @@ import Router from 'src/modules/Router';
 // Action components
 import MainIndex from 'src/app/controllers/main/actions/Index';
 
-
 class Main extends Controller {
 
     constructor() {

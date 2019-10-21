@@ -14,7 +14,6 @@ import { withRouter } from 'react-router-dom';
 import Consts from 'src/settings/Constants';
 import Action, {GetState, MapDispatchToProps} from 'src/app/parents/Action';
 
-// Components
 import CountriesList from 'src/app/common/blocks/catalog/index/CountriesList';
 import ArticlesList from 'src/app/common/blocks/ArticlesList';
 import CssTransition from 'src/app/common/CssTransition';
@@ -31,23 +30,23 @@ class CatalogIndex extends Action {
             return null;
         }
         return (
-<React.Fragment>
-                    {this.getHeader()}
-            <CssTransition>
-                <div className="catalog_index_block">
-                    <CountriesList/>
+            <React.Fragment>
+                {this.getHeader()}
+                <CssTransition>
+                    <div className="catalog_index_block">
+                        <CountriesList/>
+                        <div className="clear"></div>
+                        <div className="catalog_block_last_articles_title" style={{position:'relative'}}>
+                            <img src="/img/article_icon.png"/>
+                            <span style={{display: 'block', position: 'absolute',top: isMobile ? 18 : 17 + 'px',left: '60px', color:'#333'}}>{this.props.redux.staticData.last_articles_text}</span>
+                        </div>
+                        <div style={{'backgroundColor':'#fff', margin:'0 10px'}}>
+                            <ArticlesList/>
+                        </div>
+                    </div>
                     <div className="clear"></div>
-                    <div className="catalog_block_last_articles_title" style={{position:'relative'}}>
-                        <img src="/img/article_icon.png"/>
-                        <span style={{display: 'block', position: 'absolute',top: isMobile ? 18 : 17 + 'px',left: '60px', color:'#333'}}>{this.props.redux.staticData.last_articles_text}</span>
-                    </div>
-                    <div style={{'backgroundColor':'#fff', margin:'0 10px'}}>
-                        <ArticlesList/>
-                    </div>
-                </div>
-                <div className="clear"></div>
-                <Bottom/>
-            </CssTransition>
+                    <Bottom/>
+                </CssTransition>
             </React.Fragment>
         );
     }

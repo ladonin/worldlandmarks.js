@@ -13,6 +13,7 @@ import Action, {GetState, MapDispatchToProps} from 'src/app/parents/Action';
 import Consts from 'src/settings/Constants';
 import MapModule from 'src/modules/Map';
 import BaseFunctions from 'src/functions/BaseFunctions';
+
 import MapPlacemark from 'src/app/common/blocks/map/Placemark';
 import MapBaloon from 'src/app/common/blocks/map/Baloon';
 import ToolsPanel from 'src/app/common/blocks/ToolsPanel';

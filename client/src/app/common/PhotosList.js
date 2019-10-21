@@ -11,7 +11,6 @@ import {BrowserView, MobileView, isBrowser, isMobile} from "react-device-detect"
 import Events from 'src/modules/Events';
 
 import Consts from 'src/settings/Constants';
-
 import PhotosNavigator from 'src/app/common/blocks/catalog/placemark/PhotosNavigator';
 import ImageDimensions from 'src/modules/ImageDimensions';
 import ConfigRestrictions from 'src/../../server/common/settings/Restrictions';
@@ -32,9 +31,6 @@ class PhotosList extends Component {
                     _photo['height'],
                     _blockWidth,
                     (BaseFunctions.getHeight(window) - 100));
-                    /*<div className="placemark_photo_navigator" id={'placemark_photo_'+_number+'_navigator'}>
-                        <PhotosNavigator scrollBlockSelector={this.props.scrollBlockSelector ? this.props.scrollBlockSelector : 'body, html'} photosCount={this.props.photos.length} contentBlockIdName='placemark_comment' number={_number}/>
-                    </div>*/
             _photosList.push(
                 <React.Fragment>
                     <BrowserView>

@@ -10,9 +10,7 @@ import { connect } from 'react-redux';
 
 import MapModule from 'src/modules/Map';
 import Consts from 'src/settings/Constants';
-
 import Block from 'src/app/parents/Block';
-
 import {RemoveBackgroundData} from 'src/app/parents/Common';
 
 class MapBaloon extends Block {

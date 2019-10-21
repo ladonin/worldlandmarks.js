@@ -15,7 +15,6 @@ import Action, {GetState, MapDispatchToProps} from 'src/app/parents/Action';
 import Router from 'src/modules/Router';
 import Consts from 'src/settings/Constants';
 
-// Components
 import PhotoAlbum from 'src/app/common/blocks/catalog/PhotoAlbum';
 import CssTransition from 'src/app/common/CssTransition';
 import PlacemarksList from 'src/app/common/blocks/PlacemarksList';
@@ -33,29 +32,29 @@ class CatalogState extends Action {
         }
 
         return (
-<React.Fragment>
+                <React.Fragment>
                     {this.getHeader()}
-                <CssTransition>
-                    <div id="catalog_country_state_block">
-                        {this.props.redux.staticData['is_admin'] === true &&
-                            <div style={{'margin-bottom':'10px', 'text-align':'right'}}><a style={{color:'#f00', 'font-size':'14px'}} href={'/admin/_e5b7rnijjrnrnnb_export_photos?code_type=country&country_code='+this.props.redux.actionData['country_code']}>[скачать архив фотографий данной страны]</a></div>
-                        }
-                        <PhotoAlbum/>
-                        <MobileView>
-                            <div className="h_10px"></div>
-                        </MobileView>
-                    </div>
-                    <PlacemarksList
-                        data={{
-                            isSearch: 1,
-                            country: this.props.match.params[Consts.URL_VAR_2_NAME],
-                            state: this.props.match.params[Consts.URL_VAR_3_NAME]
-                        }}
-                        photoWidth="290"
-                        photoHeight="225"
-                        bottomComponent={Bottom}
-                    />
-                </CssTransition>
+                    <CssTransition>
+                        <div id="catalog_country_state_block">
+                            {this.props.redux.staticData['is_admin'] === true &&
+                                <div style={{'margin-bottom':'10px', 'text-align':'right'}}><a style={{color:'#f00', 'font-size':'14px'}} href={'/admin/_e5b7rnijjrnrnnb_export_photos?code_type=country&country_code='+this.props.redux.actionData['country_code']}>[скачать архив фотографий данной страны]</a></div>
+                            }
+                            <PhotoAlbum/>
+                            <MobileView>
+                                <div className="h_10px"></div>
+                            </MobileView>
+                        </div>
+                        <PlacemarksList
+                            data={{
+                                isSearch: 1,
+                                country: this.props.match.params[Consts.URL_VAR_2_NAME],
+                                state: this.props.match.params[Consts.URL_VAR_3_NAME]
+                            }}
+                            photoWidth="290"
+                            photoHeight="225"
+                            bottomComponent={Bottom}
+                        />
+                    </CssTransition>
                 </React.Fragment>
                 );
     }

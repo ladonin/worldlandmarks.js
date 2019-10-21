@@ -16,10 +16,8 @@ import {GetState, MapDispatchToProps} from 'src/app/parents/Action';
 import BaseFunctions from 'src/functions/BaseFunctions';
 import Common from 'src/app/controllers/articles/actions/_Common';
 
-// Components
 import CssTransition from 'src/app/common/CssTransition';
 import Bottom from 'src/app/common/blocks/Bottom';
-
 
 class SitemapCountry extends Common {
 
@@ -51,7 +49,6 @@ class SitemapCountry extends Common {
             }
         }
 
-
         let _placemarksList = [];
         for (let _index in this.props.redux.actionData.placemarksData) {
             let _placemark = this.props.redux.actionData.placemarksData[_index];
@@ -65,7 +62,7 @@ class SitemapCountry extends Common {
         }
 
         return (
-<React.Fragment>
+                <React.Fragment>
                     {this.getHeader()}
                     <CssTransition>
                         <div className="sitemap_block">

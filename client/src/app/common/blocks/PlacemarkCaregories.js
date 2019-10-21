@@ -24,7 +24,7 @@ class PlacemarkCaregories extends Block {
     /*
      * Open category window with explanation of interested category
      *
-     * @param {integer} id - category id to be showed
+     * @param {integer} id - category id to show
      */
     seeCategory(id){
         return function(){

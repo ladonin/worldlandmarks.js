@@ -27,8 +27,6 @@ class Menu extends Block {
         this.alert = this.alert.bind(this);
     }
 
-
-
     alert(){
         Events.dispatch('alert', {
             text: AlertsText.get('geolocate_error_no_https', 'error'),
@@ -68,8 +66,6 @@ class Menu extends Block {
                     </React.Fragment>);
         }
 
-
-
         if (Router.isMapPage(this.props.match.params) === false) {
             _toolsList.push(
                     <React.Fragment>
@@ -80,7 +76,6 @@ class Menu extends Block {
                         <div className="clear"></div>
                     </React.Fragment>);
         }
-
 
         if (this.props.redux.staticData.whether_to_show_catalog_pages === true) {
             _toolsList.push(
@@ -130,7 +125,6 @@ class Menu extends Block {
 }
 
 
-
 function mapStateToProps(state) {
 
     return {
@@ -141,10 +135,3 @@ function mapStateToProps(state) {
 }
 
 export default connect(mapStateToProps)(withRouter(Menu))
-
-
-
-
-
-
-

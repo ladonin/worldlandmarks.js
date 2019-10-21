@@ -17,7 +17,6 @@ import Common from 'src/app/controllers/articles/actions/_Common';
 import BaseFunctions from 'src/functions/BaseFunctions';
 import CategoryViewerModule from 'src/modules/CategoryViewer';
 
-// Components
 import CssTransition from 'src/app/common/CssTransition';
 import Bottom from 'src/app/common/blocks/Bottom';
 
@@ -62,7 +61,6 @@ class ArticleCategory extends Common {
             }
         }
 
-
         let _articlesList = [];
 
         for (let _index in this.props.redux.actionData.articlesData) {
@@ -81,7 +79,6 @@ class ArticleCategory extends Common {
                             <div className="sitemap_header">
                                 {this.props.redux.staticData.articles_categories_header}
                             </div>
-
                             <div className="sitemap_category_block">
                                 {_categoriesList}
                                 <div className="clear"></div>

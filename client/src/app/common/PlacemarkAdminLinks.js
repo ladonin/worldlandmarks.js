@@ -29,10 +29,3 @@ class PlacemarkAdminLinks extends Component {
 }
 
 export default PlacemarkAdminLinks
-
-
-
-
-
-
-

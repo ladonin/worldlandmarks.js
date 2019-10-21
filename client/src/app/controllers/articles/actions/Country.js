@@ -17,7 +17,6 @@ import BaseFunctions from 'src/functions/BaseFunctions';
 import CommonBaseFunctions from 'src/../../server/common/functions/BaseFunctions';
 import Common from 'src/app/controllers/articles/actions/_Common';
 
-// Components
 import CssTransition from 'src/app/common/CssTransition';
 import Bottom from 'src/app/common/blocks/Bottom';
 
@@ -31,7 +30,6 @@ class ArticleCountry extends Common {
         if (!this.props.redux) {
             return null;
         }
-
         let _countriesList = [];
         for (let _index in this.props.redux.actionData.countriesData) {
             let _country = this.props.redux.actionData.countriesData[_index];
@@ -51,7 +49,6 @@ class ArticleCountry extends Common {
             }
         }
 
-
         let _articlesList = [];
         for (let _index in this.props.redux.actionData.articlesData) {
             let _article = this.props.redux.actionData.articlesData[_index];
@@ -69,7 +66,6 @@ class ArticleCountry extends Common {
                             <div className="sitemap_header">
                                 {this.props.redux.staticData.articles_countries_header}
                             </div>
-
                             <div className="sitemap_country_block">
                                 {_countriesList}
                                 <div className="clear"></div>

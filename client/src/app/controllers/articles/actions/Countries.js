@@ -16,7 +16,6 @@ import {GetState, MapDispatchToProps} from 'src/app/parents/Action';
 import Common from 'src/app/controllers/articles/actions/_Common';
 import BaseFunctions from 'src/functions/BaseFunctions';
 
-// Components
 import CssTransition from 'src/app/common/CssTransition';
 import Bottom from 'src/app/common/blocks/Bottom';
 
@@ -25,8 +24,6 @@ class ArticleCountries extends Common {
     constructor() {
         super();
     }
-
-
 
     render() {
         if (!this.props.redux) {
@@ -50,7 +47,6 @@ class ArticleCountries extends Common {
                             <div className="sitemap_header">
                                 {this.props.redux.staticData.articles_countries_header}
                             </div>
-
                             <div className="sitemap_country_block">
                                 {_countriesList}
                                 <div className="clear"></div>

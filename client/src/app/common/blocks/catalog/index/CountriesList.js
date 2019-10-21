@@ -13,7 +13,6 @@ import { connect } from 'react-redux';
 import Block from 'src/app/parents/Block';
 import BaseFunctions from 'src/functions/BaseFunctions';
 import Consts from 'src/settings/Constants';
-
 import ArticlesList from 'src/app/common/blocks/ArticlesList';
 
 class CountriesList extends Block {

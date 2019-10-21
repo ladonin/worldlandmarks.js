@@ -16,7 +16,6 @@ import {GetState, MapDispatchToProps} from 'src/app/parents/Action';
 import Common from 'src/app/controllers/articles/actions/_Common';
 import BaseFunctions from 'src/functions/BaseFunctions';
 
-// Components
 import CssTransition from 'src/app/common/CssTransition';
 import Bottom from 'src/app/common/blocks/Bottom';
 
@@ -48,7 +47,6 @@ class ArticleCategories extends Common {
                             <div className="sitemap_header">
                                 {this.props.redux.staticData.articles_categories_header}
                             </div>
-
                             <div className="sitemap_category_block">
                                 {_categoriesList}
                                 <div className="clear"></div>

@@ -14,7 +14,6 @@ import { Link } from 'react-router-dom';
 import Action, {GetState, MapDispatchToProps} from 'src/app/parents/Action';
 import Consts from 'src/settings/Constants';
 
-// Components
 import MainLinks from 'src/app/common/blocks/main/index/MainLinks';
 import PlacemarksList from 'src/app/common/blocks/PlacemarksList';
 import CssTransition from 'src/app/common/CssTransition';
