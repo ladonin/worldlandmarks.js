@@ -13,12 +13,17 @@ import {BrowserView, MobileView, isBrowser, isMobile} from "react-device-detect"
 import Consts from 'src/settings/Constants';
 import Block from 'src/app/parents/Block';
 
-class ArticlesList extends Block {
-    constructor() {
+class ArticlesList extends Block
+{
+
+    constructor()
+    {
         super();
     }
 
-    render() {
+
+    render()
+    {
         let _articlesList = [];
 
         for (let _index in this.props.redux.articles) {
@@ -47,7 +52,8 @@ class ArticlesList extends Block {
     }
 }
 
-function mapStateToProps(state) {
+function mapStateToProps(state)
+{
     return {
         redux:{
             articles:state.actionData['articles'],

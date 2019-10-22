@@ -13,33 +13,43 @@ import Common, {UpdateStyleData, ClearActionData, ClearStyleData, ClearBackgroun
 import Events from 'src/modules/Events';
 import ReactHelmet from 'react-helmet';
 
-export default class Action extends Common {
+export default class Action extends Common
+{
 
-    constructor(){
+    constructor()
+    {
         super();
         this.currentUrl = null;
         this.refreshAction = this.refreshAction.bind(this);
     }
 
-    componentWillUnmount(){
+
+    componentWillUnmount()
+    {
         this.props.clearActionData();
         this.props.clearStyleData();
         this.props.clearBackgroundData();
         Events.remove(Consts.EVENT_REFRESH_ACTION, this.refreshAction);
     }
 
-    componentDidMount() {
+
+    componentDidMount()
+    {
         Socket.actionQuery(this.props.match.params);
         this.currentUrl = this.props.match.url;
         Events.dispatch(Consts.EVENT_RESET_PAGE_SCROLLING);
         Events.add(Consts.EVENT_REFRESH_ACTION, this.refreshAction);
     }
 
-    refreshAction(){
+
+    refreshAction()
+    {
         Socket.actionQuery(this.props.match.params);
     }
 
-    componentDidUpdate() {
+
+    componentDidUpdate()
+    {
         if (this.currentUrl !== this.props.match.url) {
             Socket.actionQuery(this.props.match.params);
             Events.dispatch(Consts.EVENT_RESET_PAGE_SCROLLING);
@@ -47,8 +57,9 @@ export default class Action extends Common {
         this.currentUrl = this.props.match.url;
     }
 
-    getHeader(data) {
 
+    getHeader(data)
+    {
         if (!data && !(this.props.redux && this.props.redux.actionData)) {
             return null;
         }
@@ -104,7 +115,8 @@ export const MapDispatchToProps = {
  *
  * @param {object/null} - state result for actions
  */
-export function GetState(state, controller, action) {
+export function GetState(state, controller, action)
+{
 
     // NOTE: case when state.staticData['controller'] === 'undefined' means that data has came for the first time (first request at all)
     // In the future, the names of controller and action in staic data will be updated only

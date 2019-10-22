@@ -11,7 +11,8 @@ const BaseFunctions = require('server/src/functions/BaseFunctions');
 class Users extends DBaseMysql
 {
 
-    constructor() {
+    constructor()
+    {
         super();
 
         this.tableNameInit = this.tableInitNames.USERS;
@@ -35,8 +36,8 @@ class Users extends DBaseMysql
      *
      * @return {object}
      */
-    getByEmail(email){
-
+    getByEmail(email)
+    {
         return this.getByCondition(
             /*condition*/'email=?',
             /*order*/'',
@@ -44,33 +45,10 @@ class Users extends DBaseMysql
             /*select*/'*',
             /*where_values*/[email],
             /*limit*/1,
-            /*need_result*/false
+            /*needresult*/false
         )[0];
     }
-
-
-
-
-
-
-
-
-
-
-
-
 }
 
 Users.instanceId = BaseFunctions.uniqueId();
-
 module.exports = Users;
-
-
-
-//ATTENTION - обратите внимание
-//    public function add_new_user($data)
-//    {
-//        $this->set_values_to_fields($data);
-//
-//        return $this->insert();
-//    }

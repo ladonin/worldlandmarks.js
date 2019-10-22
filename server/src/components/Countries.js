@@ -18,9 +18,11 @@ const CountryStatesNamesModel = require('server/src/models/dbase/mysql/CountrySt
 const CountriesNamesReplaces = require('server/src/settings/CountriesNamesReplaces');
 const GeocodeCollectionModel = require('server/src/models/dbase/mysql/GeocodeCollection');
 
-class Countries extends Component {
+class Countries extends Component
+{
 
-    constructor() {
+    constructor()
+    {
         super();
 
         /*
@@ -37,7 +39,8 @@ class Countries extends Component {
      *
      * @return {array of objects}
      */
-    getCountriesData(withPlacemarks = false){
+    getCountriesData(withPlacemarks = false)
+    {
         let _result = [];
 
         let _countriesCodes = withPlacemarks === false
@@ -89,13 +92,15 @@ class Countries extends Component {
      *
      * @return {array of objects} - prepared countries data
      */
-    prepareCountriesNames(countries) {
+    prepareCountriesNames(countries)
+    {
 
         for (let _index in countries) {
             countries[_index]['country'] = this.prepareCountryName(countries[_index]['country']);
         }
         return countries;
     }
+
 
     /*
      * Get country name from request
@@ -107,6 +112,7 @@ class Countries extends Component {
         let _country = this.getFromRequest(Consts.COUNTRY_VAR_NAME)
         return this.getCountryNameByCode(_country);
     }
+
 
     /*
      * Get country name by country code
@@ -144,6 +150,7 @@ class Countries extends Component {
         return _countryName;
     }
 
+
     /*
      * Get country data by country code
      *
@@ -153,7 +160,6 @@ class Countries extends Component {
      */
     getCountryDataByCode(code)
     {
-
         if (!code) {
             this.error(ErrorCodes.ERROR_FUNCTION_ARGUMENTS, 'country code [' + code + ']');
         }
@@ -175,76 +181,6 @@ class Countries extends Component {
 
         return _countryData;
     }
-
-//get_all_countries_list getAllCountriesList => this.getCountries
-////ATTENTION - обратите внимание
-//сначала назывался get_all_countries_list,
-// запрашивал MY_MODEL_NAME_DB_GEOCODE_COLLECTION.get_countries, там делал запрос в таблицу countries
-// в итоге все запросы (MY_MODEL_NAME_DB_GEOCODE_COLLECTION.get_countries и this.getAllCountriesList) идут в новый метод this.getCountries
-//getAllCountriesList() => this.getCountries
-//getCountryNameByGetVar => getCountryNameFromRequest
-
-
-
-
-// //ATTENTION - обратите внимание get_all_countries_codes => CountriesModel.getAllCountriesCodes
-
-
-// //ATTENTION - обратите внимание translateStateNames => CountryStatesCitiesTranslationsModel.getTranslationOfStateName
-// //ATTENTION - обратите внимание translateCityNames => CountryStatesCitiesTranslationsModel.getTranslationOfCityName
-// getStateNameByGetVar => getStateNameFromRequest
-// getCountryCodeFromUrl => getCountryCodeFromRequest
-// getTranslationOfStateName => CountryStatesCitiesTranslationsModel.getTranslationOfStateName
-
-
-
-//ATTENTION - обратите внимание
-    /*
-     * Get state name by state code
-     *
-     * @param {string} language - language
-     * @param {string} countryCode - country code
-     * @param {string} stateName - state name
-     * @param {string} stateCode - state code
-     *
-     * @return {string}
-     */
-//    translateStateName(language, countryCode, stateName, stateCode)
-//    {
-//        let _result;
-//        let _language = this.getLanguage();
-//        let _serviceName = this.getServiceName();
-//
-//        if (_result = this.cache.get('translateStateName', _serviceName, _language)[language][countryCode][stateCode][stateName]) {
-//            return _result;
-//        }
-//
-//        let _datas = CountryStatesCitiesTranslationsModel.getInstance(this.requestId).translateStateName(language, countryCode, stateName)
-//
-//        if (_datas.length === 1) {
-//            if ((!_datas[0]['url_code']) || (_datas[0]['url_code'] === stateCode)) {
-//                _result = _datas[0]['translate'];
-//            }
-//        } else {
-//            for (let _index in _datas) {
-//                if (_datas[_index]['url_code'] === stateCode) {
-//                    _result = _datas[_index]['translate'];
-//                }
-//            }
-//        }
-//
-//        if (!_result) {
-//            // Default
-//            _result = stateName;
-//        }
-//
-//        this.cache.get('translateStateName', _serviceName, _language)[language][countryCode][stateCode][stateName] = _result;
-//        return _result;
-//    }
-
-
-
-
 
 
     /*
@@ -291,6 +227,7 @@ class Countries extends Component {
         return _result;
     }
 
+
     /*
      * Check - is the state administrative center. For example - Moscow, Saint Perersburg, Wien, Bern, London.
      * It is not state but stands on one level
@@ -320,6 +257,7 @@ class Countries extends Component {
         return _result;
     }
 
+
     /*
      * Check if country has states
      *
@@ -348,6 +286,7 @@ class Countries extends Component {
         return _result;
     }
 
+
     /*
      * Get country code from request url
      *
@@ -355,7 +294,6 @@ class Countries extends Component {
      */
     getCountryCodeFromRequest()
     {
-
         let _countryCode = this.getFromRequest(Consts.ACTION_NAME_COUNTRY);
         let _result;
         let _language = this.getLanguage();
@@ -377,6 +315,7 @@ class Countries extends Component {
         }
         this.error(ErrorCodes.ERROR_WRONG_GET_VALUE, 'country [' + _countryCode + ']', undefined, false);
     }
+
 
     /*
      * Get country parameters by country code
@@ -409,6 +348,7 @@ class Countries extends Component {
         this.error(ErrorCodes.ERROR_FUNCTION_ARGUMENTS, 'country code [' + countryCode + ']', undefined, false);
     }
 
+
     /*
      * Get state name from request url
      *
@@ -425,6 +365,7 @@ class Countries extends Component {
         }
         return this.getStateNameByCode(_stateCode, needResult);
     }
+
 
     /*
      * Get state name by state code
@@ -486,6 +427,7 @@ class Countries extends Component {
         };
     }
 
+
     /*
      * Get state and country names by their codes
      *
@@ -532,18 +474,7 @@ class Countries extends Component {
     {
         return this.getСountryDataById(id)['local_code'];
     }
-
-
-
-
-
-
-
-
-
 }
 
 Countries.instanceId = BaseFunctions.uniqueId();
 module.exports = Countries;
-
-

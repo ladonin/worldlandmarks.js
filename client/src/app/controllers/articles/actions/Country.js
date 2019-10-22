@@ -20,13 +20,17 @@ import Common from 'src/app/controllers/articles/actions/_Common';
 import CssTransition from 'src/app/common/CssTransition';
 import Bottom from 'src/app/common/blocks/Bottom';
 
-class ArticleCountry extends Common {
+class ArticleCountry extends Common
+{
 
-    constructor() {
+    constructor()
+    {
         super();
     }
 
-    render() {
+
+    render()
+    {
         if (!this.props.redux) {
             return null;
         }
@@ -94,7 +98,8 @@ class ArticleCountry extends Common {
     }
 }
 
-function MapStateToProps(state) {
+function MapStateToProps(state)
+{
     return GetState(state, Consts.CONTROLLER_NAME_ARTICLES, Consts.ACTION_NAME_COUNTRY)
 }
 

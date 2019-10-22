@@ -8,10 +8,10 @@
 const DBaseMysql = require('server/src/core/dbases/Mysql');
 const BaseFunctions = require('server/src/functions/BaseFunctions');
 
-
 class MapPhotosModel extends DBaseMysql
 {
-    constructor() {
+    constructor()
+    {
         super();
 
         this.tableNameInit = this.tableInitNames.MAP_PHOTOS;
@@ -35,13 +35,6 @@ class MapPhotosModel extends DBaseMysql
     }
 
 
-// //ATTENTION - обратите внимание
-//get_by_data_id => MY_MODULE_NAME_MAP.getPhotosByDataId()
-
-
-
-
-
     /*
      * Delete placemark's photo
      *
@@ -51,8 +44,8 @@ class MapPhotosModel extends DBaseMysql
      *
      * @return {integer} - number of deleted rows
      */
-    delete(placemarkId, photoName, mustBeDeleted = true) {
-
+    delete(placemarkId, photoName, mustBeDeleted = true)
+    {
         let _result = this.getByCondition(
                 /*condition*/'map_data_id=' + parseInt(placemarkId) + ' AND path=?',
                 /*order*/'',
@@ -62,7 +55,6 @@ class MapPhotosModel extends DBaseMysql
                 /*limit*/false,
                 mustBeDeleted
             );
-
         return this.delete(_result[0]['id']);
     }
 
@@ -90,8 +82,6 @@ class MapPhotosModel extends DBaseMysql
     }
 
 
-
-
     /*
      * Get all photos of placemarks by placemark ids starting with last photo
      *
@@ -112,17 +102,7 @@ class MapPhotosModel extends DBaseMysql
             needResult
         );
     }
-
-
-
-
-
-
-
-
-
 }
 
 MapPhotosModel.instanceId = BaseFunctions.uniqueId();
-
 module.exports = MapPhotosModel;

@@ -15,14 +15,16 @@ import BaseFunctions from 'src/functions/BaseFunctions';
 import Consts from 'src/settings/Constants';
 import ArticlesList from 'src/app/common/blocks/ArticlesList';
 
-class CountriesList extends Block {
+class CountriesList extends Block
+{
 
-    constructor() {
+    constructor()
+    {
         super();
     }
 
-    render() {
-
+    render()
+    {
         let _countriesList =[];
 
         let _style = {};
@@ -55,8 +57,8 @@ class CountriesList extends Block {
     }
 }
 
-function mapStateToProps(state) {
-
+function mapStateToProps(state)
+{
     return {
         redux: {
             data:state.actionData['data'],

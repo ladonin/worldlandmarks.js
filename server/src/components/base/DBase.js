@@ -15,9 +15,11 @@ const Config = require('server/src/settings/Config.js');
 const MySqlConfig = require('server/src/settings/gitignore/MySql');
 
 
-class DBase extends Core {
+class DBase extends Core
+{
 
-    constructor() {
+    constructor()
+    {
         super();
 
         /*
@@ -29,6 +31,7 @@ class DBase extends Core {
 
         // ... another dbases
     }
+
 
     /*
      * Get db connection - mysql, redis etc.
@@ -51,29 +54,33 @@ class DBase extends Core {
     }
 
 
-
     /*
      * Begin sync transaction
      */
-    begin_transaction(type = 'mysql') {
+    begin_transaction(type = 'mysql')
+    {
         if (type === 'mysql') {
             this.getDbConnection().query('START TRANSACTION;');
         }
     }
 
+
     /*
      * Commit sync transaction
      */
-    commit(type = 'mysql') {
+    commit(type = 'mysql')
+    {
         if (type === 'mysql') {
             this.getDbConnection().query('COMMIT;');
         }
     }
 
+
     /*
      * Rollback sync transaction
      */
-    rollback(type = 'mysql') {
+    rollback(type = 'mysql')
+    {
         if (type === 'mysql') {
             this.getDbConnection().query('ROLLBACK;');
         }
@@ -87,8 +94,8 @@ class DBase extends Core {
      *
      * @returns {object}
      */
-    createConnection(type = 'mysql') {
-
+    createConnection(type = 'mysql')
+    {
         if (type === 'mysql') {
 
             /*
@@ -112,8 +119,8 @@ class DBase extends Core {
      *
      * @returns {object}
      */
-    closeConnection(type = 'mysql') {
-
+    closeConnection(type = 'mysql')
+    {
         if (type === 'mysql') {
             // Only if was created
             if (this.mysqlDbConnection !== false) {
@@ -121,7 +128,6 @@ class DBase extends Core {
             }
         }
     }
-
 }
 
 DBase.instanceId = BaseFunctions.uniqueId();

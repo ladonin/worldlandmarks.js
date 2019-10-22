@@ -8,13 +8,21 @@
 let _refs = {};
 
 export default {
-    setRef(name, ref) {
+
+    setRef(name, ref)
+    {
         _refs[name] = ref;
     },
-    get(name) {
+
+
+    get(name)
+    {
         return _refs[name];
     },
-    remove(name) {
+
+
+    remove(name)
+    {
         delete _refs[name];
     }
 }

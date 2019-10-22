@@ -15,10 +15,12 @@ const ErrorCodes = require('server/src/settings/ErrorCodes');
 const Consts = require('server/src/settings/Constants');
 const DBase = require('server/src/components/base/DBase');
 const Validator = require('server/src/components/base/Validator');
-class Application extends Component {
-    constructor(){
-        super();
 
+class Application extends Component
+{
+    constructor()
+    {
+        super();
 
         /*
          * Controller name
@@ -33,21 +35,15 @@ class Application extends Component {
          * @type string
          */
         this.action;
-
     }
 
-
-    init(){
-
-
-    }
 
     /*
      * Get controller name
      *
      * @return {string}
      */
-    get_controller()
+    getController()
     {
         return this.controller;
     }
@@ -58,188 +54,16 @@ class Application extends Component {
      *
      * @return {string}
      */
-    get_action()
+    getAction()
     {
         return this.action;
     }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    /*
-     * #???????????????????????????? - то, что возможно не нужно
-     * Path to laoyut file
-     *
-     * @type string
-     */
-    /*this.layout_file=undefined;*/
-
-
-
-    /*
-     * #????????????????????????????
-     * Path to view file
-     *
-     * @type string
-     */
-    /*this.view_file=undefined;*/
-
-    /*
-     * #????????????????????????????
-     * Layout file's name
-     *
-     * @type string
-     */
-    /*this.layout_name=undefined;*/
-
-
-
-    /*
-     * #????????????????????????????
-     * View's file name
-     *
-     * @type string
-     */
-    /*this.view_name=undefined;
-
-
-    }*/
-
-    /*
-     * #???????????????????????????? - то, что возможно не нужно
-     * Change view file
-     *
-     * @param {string} controller - controller name
-     * @param {string} action - action name
-     */
-
-
-    /*#???????????????????????????? - то, что возможно не нужно
-     * Change view data
-     *
-     * @param {string} controller - controller name
-     * @param {string} action - action name
-     */
-    /*change_view_file(controller, action)
-    {
-        this.view_file = controller + '/' + action + '.js';
-        this.view_name = action;
-    }*/
-
-
-
-
-
-
-    /*
-     * #???????????????????????????? - то, что возможно не нужно
-     * Change layout data
-     *
-     * @param {string} controller - controller name
-     * @param {string} action - action name
-     */
-    /*change_layout_file(controller, action)
-    {
-        $config = self::get_config();
-        $this->layout_file = my_pass_through(@$config['layouts'][$controller][$action]) . '.php';
-        $this->layout_name = my_pass_through(@$config['layouts'][$controller][$action]);
-    }*/
-
-
-
-    /*
-     * #???????????????????????????? - то, что возможно не нужно
-     * Получить путь до view файла
-     *
-     * @return {string}
-
-    protected function get_view_file()
-    {
-
-        return $this->view_file ? $this->view_file : \strtolower($this->get_controller()) . MY_DS . $this->get_view_name() . '.php';
-    }
-
-     * Получить название view файла, без расширения и пути
-     *
-     * @return {string}
-
-    protected function get_view_name()
-    {
-        if (is_null($this->view_name)) {
-            $this->view_name = $this->get_action();
-        }
-
-        return $this->view_name;
-    }
-
-
-     * Получить путь до layout файла
-     *
-     * @return {string}
-
-    protected function get_layout_file()
-    {
-
-        return $this->get_layout_name() . '.php';
-    }
-
-
-     * Получить название layout файла, без расширения и пути
-     *
-     * @return {string}
-
-    protected function get_layout_name()
-    {
-        $config = self::get_config();
-        if (is_null($this->layout_name)) {
-            $this->layout_name = my_pass_through(@$config['layouts'][strtolower($this->get_controller())][$this->get_action()]);
-        }
-
-        return $this->layout_name;
-    }
-         *
-         **/
-
-
-
-
-
-
-
-
-
-
-
-
-
     /*
      * Detect and set controller and action
      */
-    set_controller_and_action()
+    setControllerAndAction()
     {
         let _controllerName = this.getControllerName().toLowerCase();
 
@@ -275,17 +99,13 @@ class Application extends Component {
      *
      * @return {object} - controller execution result
      */
-    run_controller()
+    runController()
     {
-        let _controllerObject = this.get_controller();
-        let _actionName = this.get_action();
+        let _controllerObject = this.getController();
+        let _actionName = this.getAction();
 
         return _controllerObject[_actionName]();
     }
-
-
-
-
 
 
     /*
@@ -293,19 +113,19 @@ class Application extends Component {
      *
      * @param {string} ('before'/'after') param - determine which operations will be performed
      */
-    app_operations(param)
+    appOperations(param)
     {
         if (BaseFunctions.is_not_empty(Config.operations[param])) {
             let _operations = Config.operations[param];
             for (let _index in _operations) {
                 let _operation = _operations[_index];
-                let _operation_component = require(_operation.class);
+                let _operationComponent = require(_operation.class);
                 // If traditional class
-                if (BaseFunctions.isClass(_operation_component)) {
-                    _operation_component.getInstance(this.requestId)[_operation.method]();
+                if (BaseFunctions.isClass(_operationComponent)) {
+                    _operationComponent.getInstance(this.requestId)[_operation.method]();
                 } else {
                     // Otherwise it is a simple common object with methods
-                    _operation_component[_operation.method]();
+                    _operationComponent[_operation.method]();
                 }
             }
         } else {
@@ -318,20 +138,20 @@ class Application extends Component {
      * Validate all GET variables
      * Url variables don't specified in config is not used in project
      */
-    validate_get_vars()
+    validateGetVars()
     {
-        let _get_variables = this.getRequestData();
+        let _getVariables = this.getRequestData();
 
-        for (let _config_get_name in Config.get_vars) {
+        for (let _configGetName in Config.get_vars) {
 
-            let _config_get_rules = Config.get_vars[_config_get_name].rules;
-            let get_value = _get_variables[_config_get_name];
+            let _configGetRules = Config.get_vars[_configGetName].rules;
+            let _getValue = _getVariables[_configGetName];
 
-            for (let _index in _config_get_rules) {
-                let _rule = _config_get_rules[_index];
-                if (!Validator.validate(_rule, get_value)) {
+            for (let _index in _configGetRules) {
+                let _rule = _configGetRules[_index];
+                if (!Validator.validate(_rule, _getValue)) {
                     this.error(ErrorCodes.ERROR_GET_VAR_IS_INVALID,
-                    'name[' + _config_get_name + '], value[' + get_value + '], rule[' + BaseFunctions.toString(_rule) + '], data[' + this.getRequestData(true) + ']',
+                    'name[' + _configGetName + '], value[' + _getValue + '], rule[' + BaseFunctions.toString(_rule) + '], data[' + this.getRequestData(true) + ']',
                             undefined, false);
                 }
             }
@@ -339,40 +159,18 @@ class Application extends Component {
     }
 
 
-
-
-
-
-
-
-
-
-
-
     /*
      * Run primary methods
      */
     execute()
-    {console.log('\n\n\n------------->>>>>>>>>>>>>>>>>>>execute :request id = '+this.requestId+'');
-        this.init();
-
-        this.validate_get_vars();
-
-        this.app_operations('before');
-
-        this.set_controller_and_action();
-
-        let _result = this.run_controller();
-
-        this.app_operations('after');
-
-        console.log('<<<<<<<<<<<<<<<<<<<<<<<<<<<----------execute :request id = '+this.requestId+'\n\n\n');
+    {
+        this.validateGetVars();
+        this.appOperations('before');
+        this.setControllerAndAction();
+        let _result = this.runController();
+        this.appOperations('after');
         return _result;
     }
-
-
-
-
 
 
     /*
@@ -383,18 +181,15 @@ class Application extends Component {
         let _applicationObject;
 
         return new Promise((resolve, reject) => {
-            console.log('# Promise started');
             _applicationObject = Application.getInstance(
                 RequestsPool.init(data, token)
             );
             resolve(true);
         })
         .then(res => {
-            console.log('# then 1');
             DBase.getInstance(_applicationObject.requestId).begin_transaction();
             _applicationObject.execute();
             DBase.getInstance(_applicationObject.requestId).commit();
-            console.log('> applicationObject executed');
         })
         .catch(e => {
             console.log('# catch 1');
@@ -419,16 +214,12 @@ class Application extends Component {
             console.log('<<<<<<<<<<<<<<<<---------------              CATCHED\n\n\n');
         })
         .then(res => {
-            console.log('# then 2');
-
             // Close possible mysql connection (required to be closed, unlike another dbases)
             DBase.getInstance(_applicationObject.requestId).closeConnection('mysql')
-            console.log('> DB mysql connection closed');
 
             // Only if object managed to preserve in requests pool
             if (_applicationObject) {
                 RequestsPool.remove(_applicationObject.requestId);
-                console.log('> RequestsPool removed');
             }
         })
         .catch(e => {

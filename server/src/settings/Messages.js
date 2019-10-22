@@ -4,9 +4,7 @@
  *
  */
 
-
 module.exports = {
-        ERROR_SYNTHETIC_STATUS:'SYNTHETIC ERROR'
-
-        }
+    ERROR_SYNTHETIC_STATUS:'SYNTHETIC ERROR'
+}
 

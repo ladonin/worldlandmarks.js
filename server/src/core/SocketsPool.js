@@ -5,12 +5,10 @@
  * Sockets pool component - keeps all sockets
  */
 
-
 const ErrorCodes = require('server/src/settings/ErrorCodes');
 const Component = require('server/src/core/parents/Component');
 const BaseFunctions = require('server/src/functions/BaseFunctions');
 const Constants = require('server/src/settings/Constants');
-
 
 /*
  * Sockets pool:
@@ -23,12 +21,9 @@ const Constants = require('server/src/settings/Constants');
  * }
  */
 let _sockets = {};
-
 let _socketIo = false;
 
 const TOKEN_LENGTH = 10;
-
-
 
 /*
  * Check token
@@ -36,16 +31,12 @@ const TOKEN_LENGTH = 10;
  * @param {string} token
  * @returns {boolean}
  */
-function checkToken(token) {
+function checkToken(token)
+{
     if (BaseFunctions.isUndefined(_sockets[token])) {
         BaseFunctions.processError(ErrorCodes.ERROR_WRONG_SOCKET_TOKEN, 'token[' + token + ']', undefined, undefined, false);
     }
 }
-
-
-
-
-
 
 module.exports = {
 
@@ -54,7 +45,8 @@ module.exports = {
      *
      * @param {object} - io
      */
-    setIO(io) {
+    setIO(io)
+    {
         if (_socketIo === false) {
             _socketIo = io;
         } else {
@@ -62,16 +54,15 @@ module.exports = {
         }
     },
 
+
     /*
      * Set socket to pool (at client connection)
      *
      * @param {object} socket
      */
-    setSocket(socket) {
-
+    setSocket(socket)
+    {
         let _token = socket.handshake.query.token;
-
-
         _token = BaseFunctions.toString(_token);
 
         if (!_token || _token.length !== TOKEN_LENGTH) {
@@ -91,28 +82,33 @@ module.exports = {
         return _token;
     },
 
+
     /*
      * Remove socket data parameter
      *
      * @param {string} token - socket token
      * @param {string} name - data parameter name
      */
-    removeSocketDataParam(token, name) {
+    removeSocketDataParam(token, name)
+    {
 
         checkToken(token);
         delete _sockets[token].data[name];
     },
+
 
     /*
      * Remove socket from pool
      *
      * @param {string} token - socket token
      */
-    removeSocket(socket) {
+    removeSocket(socket)
+    {
         let _token = socket.handshake.query.token;
         delete _sockets[_token];
         console.log('Socket removed');
     },
+
 
     /*
      * Send message to specific socket
@@ -122,12 +118,12 @@ module.exports = {
      * @param {string} eventName - event name
      *
      */
-    sendPrivate(token, data, eventName) {
-
+    sendPrivate(token, data, eventName)
+    {
         checkToken(token);
-
         _sockets[token].socket.emit(eventName, data);
     },
+
 
     /*
      * Get socket data from pool
@@ -136,10 +132,12 @@ module.exports = {
      *
      * @return mix - data parameter value
      */
-    getSocketData(token) {
+    getSocketData(token)
+    {
         checkToken(token);
         return _sockets[token].data;
     },
+
 
     /*
      * Get socket header property
@@ -149,17 +147,9 @@ module.exports = {
      *
      * @return mix - header property value
      */
-    getSocketHeaderProp(token, name) {
-
+    getSocketHeaderProp(token, name)
+    {
         checkToken(token);
         return _sockets[token].socket.handshake.headers[name];
-    },
-
+    }
 }
-
-
-
-
-
-
-

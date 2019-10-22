@@ -16,10 +16,12 @@ module.exports = {
 
     //Debug mode
     debug: 1,
+
     //Logging errors
     log: {
         on: 1
     },
+
     // Where upload files will be stored
     files_upload_storage: {
         server: 'ftp'
@@ -35,13 +37,14 @@ module.exports = {
             [Consts.CONTROLLER_NAME_ADMIN_ACCESS]: 'AdminAccess',
             [Consts.CONTROLLER_NAME_ERRORS]: 'Errors',
         }
-
     },
+
     // Common localizations
     text: {
         en: require('server/src/settings/language/En'),
         ru: require('server/src/settings/language/Ru')
     },
+
     // Services
     services: {
         landmarks: {
@@ -78,56 +81,10 @@ module.exports = {
              */
         ]
     },
+
     // Which database will be used (MySQL)
     db: require('server/src/settings/gitignore/MySql'),
-    //#???????????????????????????? - то, что возможно не нужно
-    /*
-     //Настройка шаблонов страниц -  contoler/action => layout file
-     // Layout
-     'layouts' => array(
-     //Контроллеры
-     'map' => array(
-     //Action - layout файл
-     'index' => 'map',
-     ),
-     'catalog' => array(
-     'placemark' => 'catalog',
-     'index' => 'catalog',
-     'country' => 'catalog',
-     'state' => 'catalog',
-     'search' => 'catalog',
-     'sitemap_countries' => 'catalog',
-     'sitemap_categories' => 'catalog',
-     ),
-     'main' => array(
-     'index' => 'main',
-     ),
-     'article' => array(
-     'view' => 'article',
-     'countries' => 'article',
-     'categories' => 'article',
-     ),
-     ),
-     */
 
-    //Класс языка сайта
-    //#???????????????????????????? - то, что возможно не нужно
-    /*
-     'language:{
-     'class:'\components\app\language'
-     },*/
-
-    //Настройки куков
-    //#???????????????????????????? - то, что возможно не нужно
-    /*
-     'cookies' => array(
-     //Дефолтное время жизни
-     'lifetime' => 3600 * 24 * 21,
-     ),
-     */
-
-
-    //Настройка GET переменных
     // GET vars settings
     get_vars: {
         // 'not_empty means - if found, then should not be empty
@@ -161,6 +118,7 @@ module.exports = {
         [Consts.ADMIN_PASSWORD_VAR_NAME]: {rules: ['get_query_string_var_value', 'not_empty']}
 
     },
+
     //########################
     //#
     //# Custom settings
@@ -214,8 +172,7 @@ module.exports = {
          },
          */
     },
-    // ATTENTION - обратите внимание
-    // allows
+
     // Application restrinctions
     restrictions: require('./../../common/settings/Restrictions'),
     // Screen size settings

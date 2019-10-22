@@ -12,14 +12,17 @@ const Component = require('server/src/core/parents/Component');
 
 class TableNames extends Component
 {
-    constructor() {
+    constructor()
+    {
         super();
 
         this.tableNames = false;
     }
 
+
     // Impossible to set table names in constuctor, because requestId is needed, which is missed at that step
-    initTableNames(){
+    initTableNames()
+    {
         this.tableNames = {
             [TableNamesConstants['COUNTRY']]: 'country',
             [TableNamesConstants['COUNTRY_NAME']]: 'country_name',
@@ -37,6 +40,7 @@ class TableNames extends Component
         };
     }
 
+
     /*
      * Get db table name
      *
@@ -44,8 +48,8 @@ class TableNames extends Component
      *
      * @return {string} - prepared table name
      */
-    getTableName(name) {
-
+    getTableName(name)
+    {
         if (this.tableNames === false) {
             this.initTableNames();
         }
@@ -58,9 +62,7 @@ class TableNames extends Component
         }
         return this.tableNames[name];
     }
-
 }
 
 TableNames.instanceId = BaseFunctions.uniqueId();
-
 module.exports = TableNames;

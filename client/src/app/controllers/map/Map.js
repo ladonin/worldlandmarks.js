@@ -16,13 +16,17 @@ import Router from 'src/modules/Router';
 // Action components
 import MapIndex from 'src/app/controllers/map/actions/Index';
 
-class Map extends Controller {
+class Map extends Controller
+{
 
-    constructor() {
+    constructor()
+    {
         super();
     }
 
-    render() {
+
+    render()
+    {
         return <MapIndex/>;
     }
 }

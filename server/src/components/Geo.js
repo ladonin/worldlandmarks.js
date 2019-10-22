@@ -14,15 +14,18 @@ const AccessConfig = require('server/src/settings/gitignore/Access');
 const Fetch = require('node-fetch');
 const Deasync = require('deasync');
 
-class Geo extends Component {
+class Geo extends Component
+{
 
-    constructor(){
+    constructor()
+    {
         super();
         /*
          * Example: https://geocode-maps.yandex.ru/1.x/?format=json&apikey=APIKEY&geocode=19.611347,0.760241&lang=en
          */
         this.GEOCODE_SERVICE_URL = 'https://geocode-maps.yandex.ru/1.x/?';
     }
+
 
     /*
      * Prepare geodata
@@ -113,8 +116,6 @@ class Geo extends Component {
     }
 
 
-
-
     /*
      * Get adress by coordinates from API
      *
@@ -166,15 +167,7 @@ class Geo extends Component {
 
         return _adress;
     }
-
-
-
-
-
-
 }
 
-
 Geo.instanceId = BaseFunctions.uniqueId();
-
 module.exports = Geo;

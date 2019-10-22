@@ -11,10 +11,11 @@ const SocketsPool = require('server/src/core/SocketsPool');
 const Constants = require('server/src/settings/Constants');
 
 
+class Controller extends Component
+{
 
-class Controller extends Component {
-
-    constructor() {
+    constructor()
+    {
         super();
         /*
          * Data for response
@@ -22,7 +23,6 @@ class Controller extends Component {
          * @type object
          */
         this.data = {};
-
     }
 
     /*
@@ -30,10 +30,12 @@ class Controller extends Component {
      *
      * @param {string} - socket event name
      */
-    sendbySocket(eventName = 'api') {
+    sendbySocket(eventName = 'api')
+    {
         let _token = RequestsPool.getSocketToken(this.requestId);
         SocketsPool.sendPrivate(_token, this.data, eventName)
     }
+
 
     /*
      * Send result to client who send this request
@@ -41,10 +43,12 @@ class Controller extends Component {
      * @param {boolean} isBackground - whether request is background (like ajax)
      * @param {string} eventName - socket event name
      */
-    sendMe(isBackground = false, eventName = 'api') {
+    sendMe(isBackground = false, eventName = 'api')
+    {
         this.addStaticData(isBackground);
         this.sendbySocket(eventName);
     }
+
 
     /*
      * Add action data to controller's responce (data from dbase, etc)
@@ -52,9 +56,11 @@ class Controller extends Component {
      *
      * @param {object} data - added data
      */
-    addActionData(data) {
+    addActionData(data)
+    {
         this.data[Constants.ACTION_DATA] = {...this.data[Constants.ACTION_DATA], ...data};
     }
+
 
     /*
      * Add background data
@@ -62,7 +68,8 @@ class Controller extends Component {
      *
      * @param {object} data - added data
      */
-    addBackgroundData(data) {
+    addBackgroundData(data)
+    {
         this.data[Constants.BACKGROUND_DATA] = {...this.data[Constants.BACKGROUND_DATA], ...data};
     }
 }

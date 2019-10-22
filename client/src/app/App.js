@@ -21,8 +21,11 @@ import Articles from './controllers/articles/Articles';
 // Css
 import "./Css";
 
-class App extends Component {
-    render() {
+class App extends Component
+{
+
+    render()
+    {
         return (
                 <Switch>
                     <Route path={'/:controller(' + Consts.CONTROLLER_NAME_MAP + ')/:var2?'} component={Map}/>

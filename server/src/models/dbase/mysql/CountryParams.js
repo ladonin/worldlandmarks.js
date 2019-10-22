@@ -8,10 +8,10 @@
 const DBaseMysql = require('server/src/core/dbases/Mysql');
 const BaseFunctions = require('server/src/functions/BaseFunctions');
 
-
 class CountryParamsModel extends DBaseMysql
 {
-    constructor() {
+    constructor()
+    {
         super();
 
         this.tableNameInit = this.tableInitNames.COUNTRY_PARAMS;
@@ -36,8 +36,8 @@ class CountryParamsModel extends DBaseMysql
      *
      *@return {boolean}
      */
-    hasStates(countryCode) {
-
+    hasStates(countryCode)
+    {
         let _sql = `SELECT cp.has_states
                     FROM ${this.getTableName(this.tableInitNames.COUNTRY)} c
                     LEFT JOIN ${this.getTableName()} cp on c.id = cp.country_id
@@ -48,10 +48,6 @@ class CountryParamsModel extends DBaseMysql
     }
 
 
-
-
-
-
     /*
      * Get country parameters by country id
      *
@@ -60,8 +56,8 @@ class CountryParamsModel extends DBaseMysql
      *
      *@return {boolean}
      */
-    getParams(countryId, needResult = true) {
-
+    getParams(countryId, needResult = true)
+    {
         let _result = this.getByCondition(
                 /*condition*/"country_id = ?",
                 /*order*/'',
@@ -72,9 +68,7 @@ class CountryParamsModel extends DBaseMysql
                 needResult);
         return _result[0];
     }
-
 }
 
 CountryParamsModel.instanceId = BaseFunctions.uniqueId();
-
 module.exports = CountryParamsModel;

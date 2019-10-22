@@ -13,9 +13,11 @@ import MapModule from 'src/modules/Map';
 import CroppedPhoto from 'src/app/common/blocks/CroppedPhoto';
 import Consts from 'src/settings/Constants';
 
-class PlacemarksList extends Component {
+class PlacemarksList extends Component
+{
 
-    render() {
+    render()
+    {
         let _placemarksRightList = MapModule.getPlacemarksRightList();
         let _placemarks = MapModule.getPlacemarks();
 

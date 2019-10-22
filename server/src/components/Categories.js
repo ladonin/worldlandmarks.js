@@ -11,9 +11,11 @@ const Service = require('server/src/core/Service');
 const ErrorCodes = require('server/src/settings/ErrorCodes');
 const Consts = require('server/src/settings/Constants');
 
-class Categories extends Component {
+class Categories extends Component
+{
 
-    constructor() {
+    constructor()
+    {
         super();
 
         this.categories_colors = {
@@ -46,8 +48,8 @@ class Categories extends Component {
             26: '#5E8488',
             27: '#FFFFFF'
         };
-
     }
+
 
     /*
      * Prepare categories names for articles
@@ -103,6 +105,7 @@ class Categories extends Component {
         return this.getCategory(id)['title'];
     }
 
+
     /*
      * Return category data by id
      *
@@ -125,6 +128,7 @@ class Categories extends Component {
         this.error(ErrorCodes.ERROR_FUNCTION_ARGUMENTS, 'id[' + id + ']', undefined, false);
     }
 
+
     /*
      * Return category data by code
      *
@@ -145,16 +149,6 @@ class Categories extends Component {
         }
         this.error(ErrorCodes.ERROR_FUNCTION_ARGUMENTS, 'code[' + code + ']', undefined, false);
     }
-
-
-
-
-
-
-
-
-
-
 
 
     /*
@@ -181,6 +175,7 @@ class Categories extends Component {
         return _categories;
     }
 
+
     /*
      * Return category id by code
      *
@@ -201,10 +196,8 @@ class Categories extends Component {
         }
         this.error(ErrorCodes.ERROR_FUNCTION_ARGUMENTS, 'code[' + code + ']', undefined, false);
     }
-
 }
 
 Categories.instanceId = BaseFunctions.uniqueId();
 
 module.exports = Categories;
-

@@ -12,16 +12,23 @@ import Socket from 'src/app/socket/Socket';
 import Common from 'src/app/parents/Common';
 import Events from 'src/modules/Events';
 
-export default class Controller extends Common {
+export default class Controller extends Common
+{
 
-    getActionName() {
+    getActionName()
+    {
         return Router.getActionName(this.props.match.params);
     }
 
-    componentDidMount(){
+
+    componentDidMount()
+    {
         Events.add(Consts.EVENT_GOTO, (e)=>{this.props.history.push(e.detail.url)});
     }
-    componentWillUnmount(){
+
+
+    componentWillUnmount()
+    {
         Events.remove(Consts.EVENT_GOTO);
     }
 }

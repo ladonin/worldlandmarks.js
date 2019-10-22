@@ -10,8 +10,8 @@ import Consts from 'src/settings/Constants';
 
 let _events = {};
 
-export default function (props) {
-
+export default function (props)
+{
     let _icon = "/img/icons_desctop.png";
     let _text = '';
     if (props.device !== undefined) {

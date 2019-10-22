@@ -9,36 +9,44 @@ import { Component } from 'react';
 import Consts from 'src/settings/Constants';
 import Events from 'src/modules/Events';
 
-class Common extends Component {
-    constructor() {
+class Common extends Component
+{
+    constructor()
+    {
         super();
         this.goTo = this.goTo.bind(this);
         this.showCategoryViewer = this.showCategoryViewer.bind(this);
         this.hideCategoryViewer = this.hideCategoryViewer.bind(this);
     }
 
+
     /*
      * NOTE: if you want to use goTo you must wrap your component with a withRouter() HOC
      */
-    goTo(event) {
+    goTo(event)
+    {
         this.props.history.push(event.target.closest("[data-url]").dataset.url);
     }
+
 
     /*
      * Show all categories viewer with backlighting viewed category
      *
      * @param {integer} id - viewed category id
      */
-    showCategoryViewer(id){
+    showCategoryViewer(id)
+    {
         Events.dispatch(Consts.EVENT_TOGGLE_CATEGORY_VIEWER, {
             id
         });
     }
 
+
     /*
      * Hide categories viewer
      */
-    hideCategoryViewer(){
+    hideCategoryViewer()
+    {
         Events.dispatch(Consts.EVENT_TOGGLE_CATEGORY_VIEWER, {
             id:null
         });
@@ -47,22 +55,27 @@ class Common extends Component {
 
 export default Common;
 
-export function UpdateStyleData(data) {
+export function UpdateStyleData(data)
+{
     return {type:Consts.UPDATE_STYLE_DATA, data}
 }
 
-export function ClearActionData() {
+export function ClearActionData()
+{
     return {type:Consts.CLEAR_ACTION_DATA}
 }
 
-export function ClearStyleData() {
+export function ClearStyleData()
+{
     return {type:Consts.CLEAR_STYLE_DATA}
 }
 
-export function RemoveBackgroundData(prop) {
+export function RemoveBackgroundData(prop)
+{
     return {type:Consts.REMOVE_BACKGROUND_DATA, prop}
 }
 
-export function ClearBackgroundData() {
+export function ClearBackgroundData()
+{
     return {type:Consts.CLEAR_BACKGROUND_DATA}
 }

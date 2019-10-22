@@ -44,8 +44,6 @@ if (Config.debug === 1 && DebugSettings.ftp === 0) {
 }
 
 
-
-
 module.exports = {
 
     /*
@@ -54,7 +52,8 @@ module.exports = {
      * @param {string} source - file path to be uploaded
      * @param {string} destination - destination path
      */
-    putFileSync(source, destination) {
+    putFileSync(source, destination)
+    {
         let _finished = false;
         Ftp.put(source, destination, err => {
             _finished = true;
@@ -67,12 +66,15 @@ module.exports = {
             return !_finished;
         });
     },
+
+
     /*
      * Create a directory in ftp server synchronously
      *
      * @param {string} dirName - directory name
      */
-    createDirSync(dirName) {
+    createDirSync(dirName)
+    {
         let _finished = false;
         Ftp.raw("mkd", dirName, (err, data) => {
             _finished = true;
@@ -85,12 +87,15 @@ module.exports = {
             return !_finished;
         });
     },
+
+
     /*
      * Remove a directory from ftp server synchronously
      *
      * @param {string} dirName - directory name
      */
-    removeDirSync(dirName) {
+    removeDirSync(dirName)
+    {
         let _finished = false;
         Ftp.raw("rmd", dirName, (err, data) => {
             _finished = true;
@@ -103,12 +108,15 @@ module.exports = {
             return !_finished;
         });
     },
+
+
     /*
      * Remove a file from ftp server synchronously
      *
      * @param {string} fileName - file name
      */
-    removeFileSync(fileName) {
+    removeFileSync(fileName)
+    {
         let _finished = false;
         Ftp.raw("dele", fileName, (err, data) => {
             _finished = true;

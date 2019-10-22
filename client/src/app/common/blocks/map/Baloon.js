@@ -13,21 +13,26 @@ import Consts from 'src/settings/Constants';
 import Block from 'src/app/parents/Block';
 import {RemoveBackgroundData} from 'src/app/parents/Common';
 
-class MapBaloon extends Block {
-    constructor() {
+class MapBaloon extends Block
+{
+    constructor()
+    {
         super();
     }
 
-    shouldComponentUpdate(nextProps, nextState) {
+    shouldComponentUpdate(nextProps, nextState)
+    {
         return true;
     }
 
-    componentWillUnmount(){
+    componentWillUnmount()
+    {
         this.props.removeBackgroundData('map_baloonsData');
         MapModule.suspendBunchFillingTimer();
     }
 
-    render() {
+    render()
+    {
         if (this.props.redux.data) {
             MapModule.prepareLoadedPlacemarks(this.props.redux.data);
         }
@@ -44,8 +49,8 @@ class MapBaloon extends Block {
     }
 }
 
-function mapStateToProps(state) {
-
+function mapStateToProps(state)
+{
     return {
         redux: {
             data: state.backgroundData['map_baloonsData'],

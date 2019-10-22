@@ -18,18 +18,23 @@ import BaseFunctions from 'src/functions/BaseFunctions';
 import CssTransition from 'src/app/common/CssTransition';
 import Bottom from 'src/app/common/blocks/Bottom';
 
-class ArticlesArticle extends Action {
+class ArticlesArticle extends Action
+{
 
-    constructor() {
+    constructor()
+    {
         super();
     }
 
-    componentDidUpdate(){
+    componentDidUpdate()
+    {
         super.componentDidUpdate();
         BaseFunctions.scrollTop(window);
     }
 
-    render() {
+
+    render()
+    {
         if (!this.props.redux) {
             return null;
         }
@@ -91,7 +96,8 @@ class ArticlesArticle extends Action {
     }
 }
 
-function MapStateToProps(state) {
+function MapStateToProps(state)
+{
     return GetState(state, Consts.CONTROLLER_NAME_ARTICLES, Consts.ACTION_NAME_ARTICLE)
 }
 

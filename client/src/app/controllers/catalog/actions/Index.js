@@ -19,13 +19,16 @@ import ArticlesList from 'src/app/common/blocks/ArticlesList';
 import CssTransition from 'src/app/common/CssTransition';
 import Bottom from 'src/app/common/blocks/Bottom';
 
-class CatalogIndex extends Action {
+class CatalogIndex extends Action
+{
 
-    constructor() {
+    constructor()
+    {
         super();
     }
 
-    render() {
+    render()
+    {
         if (!this.props.redux) {
             return null;
         }
@@ -52,7 +55,8 @@ class CatalogIndex extends Action {
     }
 }
 
-function MapStateToProps(state) {
+function MapStateToProps(state)
+{
     return GetState(state, Consts.CONTROLLER_NAME_CATALOG, Consts.ACTION_NAME_INDEX)
 }
 

@@ -9,9 +9,11 @@ const Model = require('server/src/core/parents/Model');
 const BaseFunctions = require('server/src/functions/BaseFunctions');
 const ErrorCodes = require('server/src/settings/ErrorCodes');
 
-class Form extends Model {
+class Form extends Model
+{
 
-    constructor() {
+    constructor()
+    {
         super();
         /*
          * Form fields
@@ -19,8 +21,8 @@ class Form extends Model {
          * @type object
          */
         this.fields = {};
-
     }
+
 
     /*
      * Processing data according with fields settings
@@ -29,8 +31,8 @@ class Form extends Model {
      *
      * @return {object} - processed data {fieldName : fieldValue}
      */
-    processData(datas) {
-
+    processData(datas)
+    {
         // Set values to fields
         for (let _name in datas) {
 
@@ -59,6 +61,5 @@ class Form extends Model {
         }
         return _result;
     }
-
 }
 module.exports = Form;

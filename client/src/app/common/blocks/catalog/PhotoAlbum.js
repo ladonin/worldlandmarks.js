@@ -21,8 +21,10 @@ import Router from 'src/modules/Router';
 
 import CroppedPhoto from 'src/app/common/blocks/CroppedPhoto';
 
-class PhotoAlbum extends Block {
-    constructor() {
+class PhotoAlbum extends Block
+{
+    constructor()
+    {
         super();
         this.isCountryPageVal = undefined;
 
@@ -31,12 +33,13 @@ class PhotoAlbum extends Block {
         this.linksSettings = {};
     }
 
-    init() {
+    init()
+    {
         // Init settings
         if (isMobile) {
             // Mobile device
             if ((this.isCountryPage()) && (this.props.hasStates)) {
-                
+
                 // Country page
                 this.viewSettings = {
                     'cols' : 3,
@@ -92,14 +95,18 @@ class PhotoAlbum extends Block {
         }
     }
 
-    componentWillUnmount(){
+
+    componentWillUnmount()
+    {
         // Close photoalbum if opened
         if (window.$('.pp_pic_holder').length) {
             window.$.prettyPhoto.close();
         }
     }
 
-    componentDidMount(){
+
+    componentDidMount()
+    {
         // Run photoalbum library
         // Note: we do it in componentDidUpdate because the data is passed on component updating, but not mounting
         window.$("a[rel^='prettyPhoto']").prettyPhoto({
@@ -235,7 +242,8 @@ class PhotoAlbum extends Block {
      *
      * $return [boolean}
      */
-    isCountryPage() {
+    isCountryPage()
+    {
         if (typeof this.isCountryPageVal === 'undefined') {
             this.isCountryPageVal = (Router.getActionName(this.props.match.params) === Consts.ACTION_NAME_COUNTRY);
         }
@@ -243,7 +251,8 @@ class PhotoAlbum extends Block {
     }
 
 
-    render() {
+    render()
+    {
         this.init();
         let _content;
 
@@ -351,8 +360,8 @@ class PhotoAlbum extends Block {
     }
 }
 
-function mapStateToProps(state) {
-
+function mapStateToProps(state)
+{
     return {
         redux:{
             photos: state.actionData['data'] ? state.actionData['data']['photos'] : undefined,

@@ -85,45 +85,6 @@ module.exports = {
         article: true,
     },
     categories: {
-
-        //#???????????????????????????? - то, что возможно не нужно
-        /*
-         // For create/update placemark
-         categories_add_new_point_form_options: [
-         ['none', 'form/map_new_point/category/' + Consts.NONE_CATEGORY_CODE, 'selected'],
-
-         [0, 'form/map_new_point/category/0'],
-         [1, 'form/map_new_point/category/1'],
-         [2, 'form/map_new_point/category/2'],
-         [24, 'form/map_new_point/category/24'],
-         [26, 'form/map_new_point/category/26'],
-         [4, 'form/map_new_point/category/4'],
-         [5, 'form/map_new_point/category/5'],
-         [6, 'form/map_new_point/category/6'],
-         [7, 'form/map_new_point/category/7'],
-         [8, 'form/map_new_point/category/8'],
-         [28, 'form/map_new_point/category/28'],
-         [9, 'form/map_new_point/category/9'],
-         [29, 'form/map_new_point/category/29'],
-         [30, 'form/map_new_point/category/30'],
-         [11, 'form/map_new_point/category/11'],
-         [25, 'form/map_new_point/category/25'],
-         [10, 'form/map_new_point/category/10'],
-         [12, 'form/map_new_point/category/12'],
-         [13, 'form/map_new_point/category/13'],
-         [14, 'form/map_new_point/category/14'],
-         [15, 'form/map_new_point/category/15'],
-         [16, 'form/map_new_point/category/16'],
-         [17, 'form/map_new_point/category/17'],
-         [18, 'form/map_new_point/category/18'],
-         [19, 'form/map_new_point/category/19'],
-         [20, 'form/map_new_point/category/20'],
-         [21, 'form/map_new_point/category/21'],
-         [23, 'form/map_new_point/category/23'],
-         [22, 'form/map_new_point/category/22'],
-         [27, 'form/map_new_point/category/27'],
-         [3, 'form/map_new_point/category/3'],
-         ],*/
         category_codes: [
             {
                 code: 'other',
@@ -217,7 +178,7 @@ module.exports = {
                 id: 27},
             {
                 code: 'abandoned_building',
-                id: 3},
+                id: 3}
         ],
         generic: {
             add_category_photo_as_first_in_placemark_view: false

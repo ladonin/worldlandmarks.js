@@ -26,13 +26,17 @@ import SitemapCountry from 'src/app/controllers/catalog/actions/SitemapCountry';
 
 import { withRouter } from 'react-router-dom';
 
-class Catalog extends Controller {
+class Catalog extends Controller
+{
 
-    constructor() {
+    constructor()
+    {
         super();
     }
 
-    render() {
+
+    render()
+    {
         let _actionName = this.getActionName();
         let _actionComponent;
         switch (_actionName) {

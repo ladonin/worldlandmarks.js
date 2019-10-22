@@ -18,9 +18,11 @@ let _categoryTitles = Config.getText(Language.getName());
 /*
  * Set categories to map API
  */
-function setToMapApi(){
+function setToMapApi()
+{
     // Only once
-    if (_isSetToMapApi === false) {
+    if (_isSetToMapApi === false)
+    {
         _isSetToMapApi = true;
         let _categories = getCategories();
         for (let _index in _categories) {
@@ -42,12 +44,14 @@ function setToMapApi(){
     }
 }
 
+
 /*
  * Return categories
  *
  * @return {array of objects}
  */
-function getCategories(){
+function getCategories()
+{
     if (_categories === false) {
         _categories = {};
         let _categoryCodes = Config.getServiceConfig().categories.category_codes;
@@ -63,6 +67,7 @@ function getCategories(){
     return _categories;
 }
 
+
 /*
  * Return url to category image
  *
@@ -71,13 +76,15 @@ function getCategories(){
  *
  * @return {string}
  */
-function getCategoryImageUrl(categoryId, selected = false) {
+function getCategoryImageUrl(categoryId, selected = false)
+{
     if (typeof (getCategories()[categoryId]) !== 'undefined') {
         return Consts.SERVICE_IMGS_URL + Service.getName() + '/categories/' + getCategories()[categoryId].code + (selected ? '_selected' : '')+'.png';
     } else {
         return Consts.IMG_URL + 'other.png';
     }
 }
+
 
 /*
  * Return category title
@@ -86,9 +93,11 @@ function getCategoryImageUrl(categoryId, selected = false) {
  *
  * @return {string}
  */
-function getCategoryTitle(categoryId) {
+function getCategoryTitle(categoryId)
+{
     return getCategories()[categoryId].title;
 }
+
 
 /*
  * Return baloon preset for map API
@@ -98,7 +107,8 @@ function getCategoryTitle(categoryId) {
  *
  * @return {object}
  */
-function getBaloonImage(categoryId, isSelected = false) {
+function getBaloonImage(categoryId, isSelected = false)
+{
     setToMapApi();
     if (typeof (categoryId) === 'undefined') {
         return {};
@@ -109,6 +119,7 @@ function getBaloonImage(categoryId, isSelected = false) {
     };
 }
 
+
 /*
  * Check - whether photo url is category image url or not
  *
@@ -116,7 +127,8 @@ function getBaloonImage(categoryId, isSelected = false) {
  *
  * @return {boolean}
  */
-function isCategoryPhoto(photoUrl) {
+function isCategoryPhoto(photoUrl)
+{
     let _categories = getCategories();
     for (let _index in _categories) {
         if (photoUrl === (_categories[_index].code + '.jpg')) {
@@ -125,6 +137,7 @@ function isCategoryPhoto(photoUrl) {
     }
     return false;
 }
+
 
 export default {
     isCategoryPhoto,

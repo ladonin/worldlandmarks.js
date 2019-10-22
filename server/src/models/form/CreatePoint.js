@@ -12,7 +12,8 @@ const Consts = require('server/src/settings/Constants');
 
 class CreatePointForm extends Form
 {
-    constructor() {
+    constructor()
+    {
         super();
 
         this.fields = {
@@ -26,7 +27,7 @@ class CreatePointForm extends Form
                 processing:['to_float'],
             },
             photos:{
-                rules:[Service.getInstance(this.requestId).whetherPhotosNeedForPlacemarks() ? 'required' : ''],
+                rules:[Service.getInstance(this.requestId).arePhotosNeedForPlacemarks() ? 'required' : ''],
             },
             comment:{
                 rules:[],
@@ -47,6 +48,7 @@ class CreatePointForm extends Form
         }
     }
 
+
     /*
      * Processing data according with fields settings.
      * Updated parent method.
@@ -55,8 +57,8 @@ class CreatePointForm extends Form
      *
      * @return {object} - processed data {fieldName : fieldValue}
      */
-    processData(datas) {
-
+    processData(datas)
+    {
         // Attention - this checking is used also in update point form, so we have to follow this condition
         if (BaseFunctions.isSet(datas['x']) || BaseFunctions.isSet(datas['y'])){
             BaseFunctions.check_coords(datas['x'], datas['y'], undefined, this);
@@ -64,14 +66,7 @@ class CreatePointForm extends Form
 
         return super.processData(datas);
     }
-
-
-
-
-
-
 }
 
 CreatePointForm.instanceId = BaseFunctions.uniqueId();
-
 module.exports = CreatePointForm;

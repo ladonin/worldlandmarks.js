@@ -9,8 +9,10 @@ import Constants from 'src/settings/Constants';
 
 let _store;
 
-export default {
-    init(store){
+export default
+{
+    init(store)
+    {
         _store = store;
         Socket.getSocket().on('api', function (data) {
             _store.dispatch(updatePage(data));

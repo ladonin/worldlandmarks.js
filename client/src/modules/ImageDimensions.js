@@ -47,8 +47,8 @@ import ConfigRestrictions from 'src/../../server/common/settings/Restrictions';
 
 let _prefixWidths = ConfigRestrictions['sizes']['images']['widths'];
 
-function getPrefix(width, amendment) {
-
+function getPrefix(width, amendment)
+{
     let _imageWidthCurrent = 0;
     let _maxSizePrefix = 0;
     let _maxSizeWidth = 0;
@@ -77,8 +77,9 @@ function getPrefix(width, amendment) {
     return _contentImagePrefix;
 }
 
-function prepareContentImageDimentions(width, height, blockWidth, blockHeight) {
 
+function prepareContentImageDimentions(width, height, blockWidth, blockHeight)
+{
     let _dimention = {};
 
     //width и height реальные значения - надо преобразовать их в content совместимые значения
@@ -94,6 +95,7 @@ function prepareContentImageDimentions(width, height, blockWidth, blockHeight) {
     }
     return _dimention;
 }
+
 
 export default {
     getPrefix,

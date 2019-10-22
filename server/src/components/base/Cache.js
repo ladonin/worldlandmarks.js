@@ -20,8 +20,8 @@ module.exports = {
      *
      * @returns {object}
      */
-    get(name, service, language) {
-
+    get(name, service, language)
+    {
         if (BaseFunctions.isUndefined(_cache[service])) {
             _cache[service] = {};
         }
@@ -57,8 +57,4 @@ countriesParams[countryCode] = {object}
 stateNameByCode[stateCode] = {string}
 translationsOfStateNames[language][countryCode][stateCode][stateName] = {string}
 countriesDataById[id] = {object}
-
-
-
-
  */

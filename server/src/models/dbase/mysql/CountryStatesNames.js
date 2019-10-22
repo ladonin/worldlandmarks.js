@@ -8,10 +8,10 @@
 const DBaseMysql = require('server/src/core/dbases/Mysql');
 const BaseFunctions = require('server/src/functions/BaseFunctions');
 
-
 class CountryStatesNamesModel extends DBaseMysql
 {
-    constructor() {
+    constructor()
+    {
         super();
 
         this.tableNameInit = this.tableInitNames.COUNTRY_STATES_NAMES;
@@ -58,7 +58,6 @@ class CountryStatesNamesModel extends DBaseMysql
     }
 
 
-
     /*
      * Get state name by state code
      *
@@ -68,8 +67,8 @@ class CountryStatesNamesModel extends DBaseMysql
      *
      * @return {string} - state name
      */
-    getStateNameByCode(code, language, needResult = true){
-
+    getStateNameByCode(code, language, needResult = true)
+    {
         let _sql = `SELECT csn.name
                     FROM ${this.getTableName(this.tableInitNames.COUNTRY_STATES)} cs
                     LEFT JOIN ${this.getTableName()} csn on cs.id = csn.state_id
@@ -79,19 +78,7 @@ class CountryStatesNamesModel extends DBaseMysql
 
         return _data[0].name ? _data[0].name : null;
     }
-
-
-
-
-
-
-
-
-
-
-
 }
 
 CountryStatesNamesModel.instanceId = BaseFunctions.uniqueId();
-
 module.exports = CountryStatesNamesModel;

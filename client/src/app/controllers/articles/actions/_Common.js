@@ -7,14 +7,18 @@
 
 import Action from 'src/app/parents/Action';
 
-class Common extends Action {
+class Common extends Action
+{
 
-    constructor() {
+    constructor()
+    {
         super();
         this.shouldBottomUpdate = 1;
     }
 
-    shouldComponentUpdate(nextProps, nextState){
+
+    shouldComponentUpdate(nextProps, nextState)
+    {
         if (this.props.match.url !== nextProps.match.url) {
             return true;
         }

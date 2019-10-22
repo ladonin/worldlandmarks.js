@@ -4,9 +4,10 @@
  */
 import Constants from 'src/settings/Constants';
 
-export function updatePage(data) {
-  return {
-    type: Constants.UPDATE_PAGE,
-    data
-  }
+export function updatePage(data)
+{
+    return {
+        type: Constants.UPDATE_PAGE,
+        data
+    }
 }

@@ -10,20 +10,14 @@ const BaseFunctions = require('server/src/functions/BaseFunctions');
 const UsersRegisteredModel = require('server/src/models/dbase/mysql/UsersRegistered');
 const Consts = require('server/src/settings/Constants');
 const ErrorCodes = require('server/src/settings/ErrorCodes');
-
-
 const Users = require('server/src/core/Users');
 
 
+class Accounts extends Component
+{
 
-
-
-
-class Accounts extends Component {
-
-
-
-    constructor(){
+    constructor()
+    {
         super();
     }
 
@@ -33,10 +27,10 @@ class Accounts extends Component {
         let _usersInstance = Users.getInstance(this.requestId);
 
         _usersInstance.id = 1;
-        _usersInstance.role = 1;//Consts.ACCOUNT_ROLE_ADMIN_CODE;
+        _usersInstance.role = 1;
         _usersInstance.name = 'admin';
         return true;
-        /*//ATTENTION - обратите внимание
+        /*
         let hash = BaseFunctions.toString(Cookies.get('HASH'));
         let id = parseInt(Cookies.get('ID'));
 
@@ -52,31 +46,10 @@ class Accounts extends Component {
             } else {
                 this.error(ErrorCodes.ERROR_USER_NOT_VERIFICATED);
             }
-        }*/
+        }
+         */
 
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 }
 
 Accounts.instanceId = BaseFunctions.uniqueId();

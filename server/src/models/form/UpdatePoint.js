@@ -12,7 +12,8 @@ const CreatePointForm = require('server/src/models/form/CreatePoint');
 class UpdatePointForm extends CreatePointForm
 {
 
-    constructor() {
+    constructor()
+    {
         super();
 
         this.fields['x'].rules = ['numeric'];
@@ -30,6 +31,7 @@ class UpdatePointForm extends CreatePointForm
         };
     }
 
+
     /*
      * Processing data according with fields settings.
      * Updated parent method.
@@ -38,7 +40,8 @@ class UpdatePointForm extends CreatePointForm
      *
      * @return {object} - processed data {fieldName : fieldValue}
      */
-    processData(datas) {
+    processData(datas)
+    {
         if (!datas['password']) {
             this.error(ErrorCodes.ERROR_PASSWORD_NOT_PASSED, undefined, undefined, false);
         }
@@ -48,5 +51,4 @@ class UpdatePointForm extends CreatePointForm
 }
 
 UpdatePointForm.instanceId = BaseFunctions.uniqueId();
-
 module.exports = UpdatePointForm;

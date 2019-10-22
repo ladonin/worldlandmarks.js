@@ -16,11 +16,11 @@ const fs = require("fs");
 let _instances_pool = {};
 
 
-
 /*
  * Local error processor
  */
-function errorProcess(errorCode, errorMessage = '', reqId = false) {
+function errorProcess(errorCode, errorMessage = '', reqId = false)
+{
     let _requestData = undefined;
     if (reqId) {
         _requestData = _instances_pool[reqId].request;
@@ -30,20 +30,20 @@ function errorProcess(errorCode, errorMessage = '', reqId = false) {
 }
 
 
-
-
 /*
  * Check request id
  *
  * @param {integer} reqId - request id
  * @param {string} errorMessage - message for adding to error message
  */
-function checkReqId(reqId, errorMessage = '') {//console.log(instances_pool);
-    if (!_instances_pool.hasOwnProperty(reqId)) {//console.log('-----------------');console.log(instances_pool);console.log(reqId);
+function checkReqId(reqId, errorMessage = '')
+{
+    if (!_instances_pool.hasOwnProperty(reqId)) {
         errorProcess(ErrorCodes.ERROR_REQUEST_ABSENT_IN_POOL,
                 '!!dont use methods that use requestId in constructors!! ' + errorMessage + ': reqId[' + BaseFunctions.toString(reqId) + '], type of reqId[' + typeof (reqId) + ']');
+    }
 }
-}
+
 
 /*
  * Check object in request
@@ -52,8 +52,8 @@ function checkReqId(reqId, errorMessage = '') {//console.log(instances_pool);
  * @param {integer} objectId - object id
  * @param {string} errorMessage - message for adding to error message
  */
-function checkObject(reqId, objectId, errorMessage = '') {
-
+function checkObject(reqId, objectId, errorMessage = '')
+{
     checkReqId(reqId, errorMessage);
 
     if (!_instances_pool[reqId].hasOwnProperty(objectId)) {
@@ -72,12 +72,15 @@ module.exports = {
      *
      * @return integer - key of object pool in which all objects (controller, models, other components) are keeped
      */
-    init(data, token) {
+    init(data, token)
+    {
 
         let _reqId = BaseFunctions.uniqueId();
         _instances_pool[_reqId] = {request: data, socketToken: token};
         return _reqId;
     },
+
+
     /*
      * Get copy of request data
      *
@@ -85,7 +88,8 @@ module.exports = {
      *
      * @return {object}
      */
-    getRequestData(reqId) {
+    getRequestData(reqId)
+    {
         checkReqId(reqId, 'for getRequestData');
         return BaseFunctions.clone(_instances_pool[reqId].request);
     },
@@ -98,11 +102,13 @@ module.exports = {
      * @param {string} controllerName - controller name
      * @param {string} actionName - actoin name
      */
-    setControllerAndActionNames(reqId, controllerName, actionName) {
+    setControllerAndActionNames(reqId, controllerName, actionName)
+    {
         checkReqId(reqId, 'for setControllerAndAction');
         _instances_pool[reqId].controller = controllerName;
         _instances_pool[reqId].action = actionName;
     },
+
 
     /*
      * Get prepared controller name for current request
@@ -111,7 +117,8 @@ module.exports = {
      *
      * @return {object} - controller and acion names
      */
-    getControllerAndActionNames(reqId) {
+    getControllerAndActionNames(reqId)
+    {
         checkReqId(reqId, 'for getControllerAndActionNames');
         return {
             _controller:_instances_pool[reqId].controller,
@@ -127,7 +134,8 @@ module.exports = {
      *
      * @return {string} - token
      */
-    getSocketToken(reqId) {
+    getSocketToken(reqId)
+    {
         checkReqId(reqId, 'for getSocketToken');
         if (BaseFunctions.isUndefined(_instances_pool[reqId].socketToken)) {
             errorProcess(ErrorCodes.ERROR_SOCKET_TOKEN_ABSENT_IN_REQUEST_POOL, 'socket token[' + BaseFunctions.toString(_instances_pool[reqId].socketToken) + ']', reqId);
@@ -135,15 +143,19 @@ module.exports = {
         return _instances_pool[reqId].socketToken;
     },
 
+
     /*
      * Remove current request with all objects in it (usually in the end of request)
      *
      * @param {integer} reqId - request id
      */
-    remove(reqId) {
+    remove(reqId)
+    {
         checkReqId(reqId, 'for clean');
         delete _instances_pool[reqId];
     },
+
+
     /*
      * Register one new object for current request
      *
@@ -151,17 +163,16 @@ module.exports = {
      * @param {object} object - object for register
      * @param {integer} objectId - object id
      */
-    register(reqId, object, objectId) {
+    register(reqId, object, objectId)
+    {
         let _message = 'for register object';
 
         checkReqId(reqId, _message);
-
 
         if (_instances_pool[reqId].hasOwnProperty(objectId)) {
             errorProcess(ErrorCodes.ERROR_POOL_INSTANCE_ALREADY_EXISTS,
                     _message + ': objectName[' + object.constructor.name + '], instanceId[' + BaseFunctions.toString(objectId) + ']', reqId);
         }
-
         if (!BaseFunctions.isObject(object)) {
             errorProcess(ErrorCodes.ERROR_POOL_INSTANCE_IS_NOT_OBJECT,
                     _message + ': object[' + BaseFunctions.toString(object) + '], type of object[' + typeof (object) + ']', reqId);
@@ -170,16 +181,16 @@ module.exports = {
             errorProcess(ErrorCodes.ERROR_POOL_INSTANCE_ID_IS_WRONG,
                     _message + ': objectName[' + object.constructor.name + '], instanceId[' + BaseFunctions.toString(objectId) + '], type of instanceId[' + typeof (objectId) + ']', reqId);
         }
-
         //Set request id (only one time)
         if (BaseFunctions.is_not_empty(object.requestId)) {
             errorProcess(ErrorCodes.ERROR_DOUBLE_REQUEST_ID_ASSIGNMENT,
                     'first[' + BaseFunctions.toString(object.requestId) + '], second[' + BaseFunctions.toString(reqId) + ']', reqId);
         }
         object.requestId = reqId;
-
         _instances_pool[reqId][objectId] = object;
     },
+
+
     /*
      * Check is instance already exists or not
      *
@@ -188,13 +199,16 @@ module.exports = {
      *
      * @return {boolean}
      */
-    checkInstance(reqId, objectId) {
+    checkInstance(reqId, objectId)
+    {
         checkReqId(reqId, 'check instance');
         if (!_instances_pool[reqId].hasOwnProperty(objectId)) {
             return false;
         }
         return true;
     },
+
+
     /*
      * Get current object of current request
      *
@@ -203,7 +217,8 @@ module.exports = {
      *
      * @return {object}
      */
-    getObject(reqId, objectId) {
+    getObject(reqId, objectId)
+    {
         checkObject(reqId, objectId, 'for get object');
         return _instances_pool[reqId][objectId];
     }

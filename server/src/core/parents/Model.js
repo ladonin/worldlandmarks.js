@@ -13,9 +13,11 @@ const Validator = require('server/src/components/base/Validator');
 const Component = require('server/src/core/parents/Component');
 
 
-class Model extends Component {
+class Model extends Component
+{
 
-    constructor() {
+    constructor()
+    {
         super();
 
         /*
@@ -68,6 +70,7 @@ class Model extends Component {
         this.fields;
     }
 
+
     /*
      * Checking value according with field rules
      *
@@ -80,7 +83,6 @@ class Model extends Component {
      */
     filter(name, value, filter_type = Consts.FILTER_TYPE_ALL, with_rollback = true)
     {
-
         if (!BaseFunctions.isSet(this.fields[name])) {
             this.error(ErrorCodes.ERROR_DB_UNDEFINED_FIELD, 'unknown field_name: [' + name + '], value: [' + value + ']');
         }
@@ -131,9 +133,6 @@ class Model extends Component {
     }
 
 
-
-
-
     /*
      * Preparing field value according its 'preparing' settings
      *
@@ -142,7 +141,8 @@ class Model extends Component {
      *
      * @return {mix} - prepared value
      */
-    preparingValue(fieldName, value) {
+    preparingValue(fieldName, value)
+    {
         let _field = this.fields[fieldName];
 
         if (!BaseFunctions.isObject(_field)) {
@@ -169,6 +169,7 @@ class Model extends Component {
         }
         return value;
     }
+
 
     /*
      * Processing field value according its 'processing' settings after validation
@@ -241,8 +242,8 @@ class Model extends Component {
             // Convert text urls into links
             if (BaseFunctions.inArray("urls", field['processing'])) {
 
-                if (((Users.getInstance(this.requestId).isAdmin() || Users.getInstance(this.requestId).checkAdminAccess()) && Service.getInstance(this.requestId).is_available_to_process_links_in_text_for_admin())
-                        || Service.getInstance(this.requestId).is_available_to_process_links_in_text_for_free_users()) {
+                if (((Users.getInstance(this.requestId).isAdmin() || Users.getInstance(this.requestId).checkAdminAccess()) && Service.getInstance(this.requestId).isAvailableToProcessLinksInTextForAdmin())
+                        || Service.getInstance(this.requestId).isAvailableToProcessLinksInTextForFreeUsers()) {
 
                     // Mask already existed links
                     field['value'] = field['value'].replace(/<a href=\"(https|http)/g, '<a href="$1_mask');
@@ -281,7 +282,6 @@ class Model extends Component {
             }
         }
     }
-
 }
 
 module.exports = Model;

@@ -70,7 +70,6 @@ function findWord(word, str)
 }
 
 
-
 /*
  * Remove word in string globally
  *  For example:
@@ -97,6 +96,7 @@ function removeWord(word, str, separator = ' ')
     return _resultArray.join(separator);
 }
 
+
 /*
  * Deep comparing objects on properties equality
  *
@@ -105,10 +105,10 @@ function removeWord(word, str, separator = ' ')
  *
  * @return {boolean}
  */
-function areObjectsEqual (obj1, obj2){
+function areObjectsEqual (obj1, obj2)
+{
    return JSON.stringify(obj1)===JSON.stringify(obj2);
 }
-
 
 
 /*
@@ -123,21 +123,23 @@ function areObjectsEqual (obj1, obj2){
  *
  * @return {string/object}
  */
-function viewCroppedPhoto(path, widthOriginal, heightOriginal, widthNew, heightNew, html = true) {
-
+function viewCroppedPhoto(path, widthOriginal, heightOriginal, widthNew, heightNew, html = true)
+{
     let _left = 0, _top = 0, _width = 0, _height = 0;
 
     let _diffOriginal = widthOriginal / heightOriginal;
     let _diffNew = widthNew / heightNew;
 
-    if (_diffOriginal > _diffNew) {//если картинка шире чем блок
-        //значит кропаем по горизонтали
+    if (_diffOriginal > _diffNew) {
+        // If picture wider than block
+        // Horisontal cropping
         _height = heightNew;
         _width = _height * _diffOriginal;
         _left = (widthNew - _width) / 2;
 
-    } else if (_diffOriginal < _diffNew) {//если картинка уже чем блок
-        //значит кропаем по вертикали
+    } else if (_diffOriginal < _diffNew) {
+        // If picture narrower than block
+        // Vertical cropping
         _width = widthNew;
         _height = _width / _diffOriginal;
         _top = (heightNew - _height) / 2;
@@ -162,17 +164,18 @@ function viewCroppedPhoto(path, widthOriginal, heightOriginal, widthNew, heightN
     return _result;
 }
 
-function clone(obj) {
+
+function clone(obj)
+{
     return LodashLang.cloneDeep(obj);
 }
 
 
-function isObjectEmpty(obj) {
-
+function isObjectEmpty(obj)
+{
     for (let _key in obj) {
         return false
     }
-
     return true;
 }
 

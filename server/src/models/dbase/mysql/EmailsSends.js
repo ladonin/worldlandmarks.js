@@ -10,7 +10,8 @@ const BaseFunctions = require('server/src/functions/BaseFunctions');
 
 class EmailsSendsModel extends DBaseMysql
 {
-    constructor() {
+    constructor()
+    {
         super();
 
         this.tableNameInit = this.tableInitNames.EMAILS_SENDS;

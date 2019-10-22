@@ -21,14 +21,18 @@ import CssTransition from 'src/app/common/CssTransition';
 import PlacemarksList from 'src/app/common/blocks/PlacemarksList';
 import Bottom from 'src/app/common/blocks/Bottom';
 
-class CatalogSearch extends Action {
+class CatalogSearch extends Action
+{
 
-    constructor() {
+    constructor()
+    {
         super();
         this.search = this.search.bind(this);
     }
 
-    search(){
+
+    search()
+    {
         Events.dispatch('search', {
             isSearch: 1,
             country: document.getElementsByName('catalog_search_form_country')[0].value,
@@ -37,7 +41,9 @@ class CatalogSearch extends Action {
         });
     }
 
-    render() {
+
+    render()
+    {
         if (!this.props.redux) {
             return null;
         }
@@ -116,7 +122,8 @@ class CatalogSearch extends Action {
     }
 }
 
-function MapStateToProps(state) {
+function MapStateToProps(state)
+{
     return GetState(state, Consts.CONTROLLER_NAME_CATALOG, Consts.ACTION_NAME_SEARCH)
 }
 

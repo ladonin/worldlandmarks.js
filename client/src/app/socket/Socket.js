@@ -21,7 +21,8 @@ const Socket = SocketIO(Config.apiServer.socketUrl, {
     }
 });
 
-Socket.on('error-catch', function (data) {
+Socket.on('error-catch', function (data)
+{
 
     Events.dispatch('alert', {
         text:AlertsText.get(data.message, 'error'),
@@ -38,7 +39,8 @@ export default {
      * @param {object} matchParams - react rooter match parameters
      * @param {object} data - additional data
      */
-    actionQuery(matchParams, data = {}) {
+    actionQuery(matchParams, data = {})
+    {
         data = {
             [Consts.REQUEST_FORM_DATA]:{},
             controller: Router.getControllerName(matchParams),
@@ -60,6 +62,8 @@ export default {
 
         Socket.emit('api', data);
     },
+
+
     /*
      * Send socket query on background level
      * Controller and action parameters are set independently of url
@@ -68,7 +72,8 @@ export default {
      * @param {object} action
      * @param {object} data - additional data
      */
-    backgroundQuery(controller, action, data = {}) {
+    backgroundQuery(controller, action, data = {})
+    {
         data = {
             controller: controller,
             action: action,
@@ -84,7 +89,9 @@ export default {
         Socket.emit('api', data);
     },
 
-    getSocket(){
+
+    getSocket()
+    {
         return Socket;
     }
 }

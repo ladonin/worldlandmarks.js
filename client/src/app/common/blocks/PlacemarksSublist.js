@@ -18,10 +18,11 @@ import PlacemarkCaregories from 'src/app/common/blocks/PlacemarkCaregories';
 import BaseFunctions from 'src/functions/BaseFunctions';
 import MapModule from 'src/modules/Map';
 
-class PlacemarksSublist extends Block {
+class PlacemarksSublist extends Block
+{
 
-    render() {
-
+    render()
+    {
         if (this.props.placemarks.length) {
 
             let itemsList = [];

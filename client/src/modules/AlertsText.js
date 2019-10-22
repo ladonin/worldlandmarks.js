@@ -13,7 +13,8 @@ import Constants from 'src/settings/Constants';
 Language.getName()
 
 export default {
-        get(name, type){
+        get(name, type)
+        {
             if (Language.getName() === Constants.LANGUAGE_RU) {
                 return Ru[type][name];
             } else {

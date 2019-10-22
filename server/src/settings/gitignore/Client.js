@@ -4,8 +4,6 @@
  * Clients settings
  */
 
-
-
 module.exports = {
     cookies_key: 'jstrdslh4d2'
 }

@@ -14,11 +14,16 @@ import {GetState} from 'src/app/parents/Action';
 
 import Block from 'src/app/parents/Block';
 
-class Header extends Block {
-    constructor() {
+class Header extends Block
+{
+    constructor()
+    {
         super();
     }
-    render() {
+
+
+    render()
+    {
         if (!this.props.redux) {
             return null;
         }
@@ -34,7 +39,8 @@ class Header extends Block {
     }
 }
 
-function MapStateToProps(state) {
+function MapStateToProps(state)
+{
     return {
         redux:{
             actionData:state.actionData,

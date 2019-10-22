@@ -15,9 +15,11 @@ import HtmllerButtons from 'src/modules/HtmllerButtons';
 import BaseFunctions from 'src/functions/BaseFunctions';
 import Consts from 'src/settings/Constants';
 
-class PlacemarkButtons extends Component {
+class PlacemarkButtons extends Component
+{
 
-    constructor() {
+    constructor()
+    {
         super();
         this.showPlace = this.showPlace.bind(this);
         this.returnToContent = this.returnToContent.bind(this);
@@ -33,17 +35,22 @@ class PlacemarkButtons extends Component {
         }
     }
 
-    showPlace() {
+
+    showPlace()
+    {
         this.props.hide();
         MapModule.showPlace();
         this.setState({type: 2});
     }
 
-    returnToContent() {
+
+    returnToContent()
+    {
         this.props.show();
         MapModule.hidePlace();
         this.setState({type: 1});
     }
+
 
     render()
     {
@@ -95,7 +102,8 @@ class PlacemarkButtons extends Component {
 }
 
 
-function mapStateToProps(state) {
+function mapStateToProps(state)
+{
     return {
         redux: {
             staticData: state.staticData

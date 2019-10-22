@@ -21,9 +21,11 @@ import CategoryViewer from 'src/modules/CategoryViewer';
 import Router from 'src/modules/Router';
 import Events from 'src/modules/Events';
 
-class MapFilter extends Block {
+class MapFilter extends Block
+{
 
-    constructor() {
+    constructor()
+    {
         super();
         this.localVarsStyles = {};
         this.localVarsStyles.selectBlockHeight = BaseFunctions.getHeight(window);
@@ -33,20 +35,26 @@ class MapFilter extends Block {
         this.resetFilter = this.resetFilter.bind(this);
     }
 
-    componentDidMount(){
+
+    componentDidMount()
+    {
         if (isBrowser) {
             BaseFunctions.niceScroll("#panel_tools_content_filter_select_block");
         }
     }
 
-    filterBy(id){
+
+    filterBy(id)
+    {
         MapModule.filterByCategory(id);
         MapModule.restartBunchFillingTimer();
         this.setState({id:MapModule.getFilterCategory()});
         if (isMobile) this.props.toolsPanelRef.close()
     }
 
-    resetFilter(){
+
+    resetFilter()
+    {
         if (MapModule.getFilterCategory() !== false) {
             MapModule.resetFilterByCategory();
             MapModule.restartBunchFillingTimer();
@@ -55,7 +63,9 @@ class MapFilter extends Block {
         }
     }
 
-    render() {
+
+    render()
+    {
         let _categoriesList = [];
         let _categories = CategoryViewer.getCategories();
 
@@ -100,7 +110,8 @@ class MapFilter extends Block {
     }
 }
 
-function mapStateToProps(state) {
+function mapStateToProps(state)
+{
     return {
         redux: {
             staticData: state.staticData

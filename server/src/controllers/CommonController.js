@@ -4,6 +4,7 @@
  *
  * Common class for all controllers
  */
+
 const Controller = require('server/src/core/parents/Controller');
 const Constants = require('server/src/settings/Constants');
 const Users = require('server/src/core/Users');
@@ -12,23 +13,27 @@ const Articles = require('server/src/components/Articles');
 const Map = require('server/src/components/Map');
 const Service = require('server/src/core/Service');
 
-class CommonController extends Controller {
 
-    constructor() {
+class CommonController extends Controller
+{
+
+    constructor()
+    {
         super();
     }
+
 
     /*
      * Add additional static data to controller's responce according with controller and action name
      *
      * @param {boolean} isBackground - whether request is background (like ajax)
      */
-    addStaticData(isBackground = false) {
+    addStaticData(isBackground = false)
+    {
 
         if (isBackground) {
             return null;
         }
-
 
         this.data = {
             ...this.data,

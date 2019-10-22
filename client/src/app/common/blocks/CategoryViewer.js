@@ -18,32 +18,44 @@ import CommonBaseFunctions from 'src/../../server/common/functions/BaseFunctions
 import BaseFunctions from 'src/functions/BaseFunctions';
 import Events from 'src/modules/Events';
 
-class CategoryViewer extends Block {
-    constructor() {
+class CategoryViewer extends Block
+{
+
+    constructor()
+    {
         super();
         this.toggle = this.toggle.bind(this)
         this.categories = CategoryViewerModule.getCategories();
         this.state = {id:null}
     }
 
-    toggle(e) {
+
+    toggle(e)
+    {
         this.setState({id: e.detail.id})
     }
 
-    componentDidMount() {
+
+    componentDidMount()
+    {
         Events.add(Consts.EVENT_TOGGLE_CATEGORY_VIEWER, this.toggle);
     }
 
-    componentWillUnmount() {
+
+    componentWillUnmount()
+    {
         Events.remove(Consts.EVENT_TOGGLE_CATEGORY_VIEWER, this.toggle);
     }
 
-    componentDidUpdate(){
+
+    componentDidUpdate()
+    {
         BaseFunctions.scrollTop('#category_info_block',0);
     }
 
-    render() {
 
+    render()
+    {
         let _selectedItem = this.state.id;
         let _categoriesList = [];
 
@@ -108,7 +120,9 @@ class CategoryViewer extends Block {
     }
 
 }
-function mapStateToProps(state) {
+
+function mapStateToProps(state)
+{
 
     let _selectedItem = null;
     if (state.styleData['#category_info_block']

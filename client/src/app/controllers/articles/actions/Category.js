@@ -20,24 +20,31 @@ import CategoryViewerModule from 'src/modules/CategoryViewer';
 import CssTransition from 'src/app/common/CssTransition';
 import Bottom from 'src/app/common/blocks/Bottom';
 
-class ArticleCategory extends Common {
+class ArticleCategory extends Common
+{
 
-    constructor() {
+    constructor()
+    {
         super();
     }
+
 
     /*
      * Open category window with explanation of interested category
      *
      * @param {integer} id - category id to be showed
      */
-    seeCategory(id){
-        return function(){
+    seeCategory(id)
+    {
+        return function()
+        {
             this.showCategoryViewer(id)
         }.bind(this)
     }
 
-    render() {
+
+    render()
+    {
         if (!this.props.redux) {
             return null;
         }
@@ -111,7 +118,8 @@ class ArticleCategory extends Common {
     }
 }
 
-function MapStateToProps(state) {
+function MapStateToProps(state)
+{
     return GetState(state, Consts.CONTROLLER_NAME_ARTICLES, Consts.ACTION_NAME_CATEGORY)
 }
 

@@ -11,9 +11,11 @@ import { withRouter } from 'react-router-dom';
 
 import Block from 'src/app/parents/Block';
 
-class Breadcrumbs extends Block {
+class Breadcrumbs extends Block
+{
 
-    render() {
+    render()
+    {
         let _breadcrumbs = this.props.redux.breadcrumbs;
 
         if (_breadcrumbs && _breadcrumbs.length) {
@@ -48,7 +50,8 @@ class Breadcrumbs extends Block {
     }
 }
 
-function mapStateToProps(state) {
+function mapStateToProps(state)
+{
 
     return {
         redux:{

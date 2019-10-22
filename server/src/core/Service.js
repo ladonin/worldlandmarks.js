@@ -16,7 +16,8 @@ const Consts = require('server/src/settings/Constants');
 
 class Service extends Core
 {
-    constructor() {
+    constructor()
+    {
         super();
 
         /*
@@ -45,6 +46,7 @@ class Service extends Core
         this.languagesCodes = false;
     }
 
+
     /*
      * Get all service data from config
      *
@@ -62,7 +64,6 @@ class Service extends Core
     }
 
 
-
     /*
      * Get service config
      *
@@ -72,7 +73,6 @@ class Service extends Core
     {
         return this.get_data().config;
     }
-
 
 
     /*
@@ -90,10 +90,6 @@ class Service extends Core
 
         return this.path;
     }
-
-
-
-
 
 
     /*
@@ -118,7 +114,6 @@ class Service extends Core
     }
 
 
-
     /*
      * Get email's 'from' for sending messages
      *
@@ -133,6 +128,7 @@ class Service extends Core
         }
         this.error(ErrorCodes.ERROR_SERVICE_CONFIG_ABSENT, 'service=[' + this.getServiceName() + '] email-' + number + '-from');
     }
+
 
     /*
      * Get email's 'name' for sending messages
@@ -149,6 +145,7 @@ class Service extends Core
         this.error(ErrorCodes.ERROR_SERVICE_CONFIG_ABSENT, 'service=[' + this.getServiceName + '] email-' + number + '-name');
     }
 
+
     /*
      * Get site name of service
      *
@@ -161,6 +158,7 @@ class Service extends Core
         }
         this.error(ErrorCodes.ERROR_SERVICE_CONFIG_ABSENT, 'service=[' + this.getServiceName + '] generic-site_name');
     }
+
 
     /*
      * Get all service words according with language
@@ -177,6 +175,7 @@ class Service extends Core
         this.error(ErrorCodes.ERROR_SERVICE_CONFIG_ABSENT, 'service=[' + this.getServiceName() + '] language [' + language + ']');
     }
 
+
     /*
      * Get ftp data (login, directory etc.)
      *
@@ -190,6 +189,7 @@ class Service extends Core
         this.error(ErrorCodes.ERROR_SERVICE_CONFIG_ABSENT, 'service=[' + this.getServiceName() + '] ftp');
     }
 
+
     /*
      * Get all languages available in service with data
      *
@@ -202,7 +202,6 @@ class Service extends Core
         }
         this.error(ErrorCodes.ERROR_SERVICE_CONFIG_ABSENT, 'service=[' + this.getServiceName() + '] languages');
     }
-
 
 
     /*
@@ -224,8 +223,6 @@ class Service extends Core
         }
         return this.languagesCodes;
     }
-
-
 
 
     /*
@@ -255,12 +252,13 @@ class Service extends Core
         this.error(ErrorCodes.ERROR_SERVICE_CONFIG_ABSENT, 'text_form-site_name');
     }
 
+
     /*
      * Determines is text links entered by form will be turned into real links for admin
      *
      * @return {boolean}
      */
-    is_available_to_process_links_in_text_for_admin()
+    isAvailableToProcessLinksInTextForAdmin()
     {
         if (Functions.isSet(this.get_data().config.text_form.auto_process_links.admin)) {
             return this.data.config.text_form.auto_process_links.admin;
@@ -268,19 +266,12 @@ class Service extends Core
         this.error(ErrorCodes.ERROR_SERVICE_CONFIG_ABSENT, 'text_form-auto_process_links-admin');
     }
 
-
-
-//ATTENTION - обратите внимание
-// is_need_photos_for_placemarks => whetherPhotosNeedForPlacemarks
-
-
-
     /*
      * Determines - are placemarks require photos
      *
      * @return {boolean}
      */
-    whetherPhotosNeedForPlacemarks()
+    arePhotosNeedForPlacemarks()
     {
         if (Functions.isSet(this.get_data().config.generic.need_photos_for_placemarks)) {
             return this.data.config.generic.need_photos_for_placemarks;
@@ -288,12 +279,13 @@ class Service extends Core
         this.error(ErrorCodes.ERROR_SERVICE_CONFIG_ABSENT, 'generic-need_photos_for_placemarks');
     }
 
+
     /*
      * Determines is text links entered by form will be turned into real links for another users
      *
      * @return {boolean}
      */
-    is_available_to_process_links_in_text_for_free_users()
+    isAvailableToProcessLinksInTextForFreeUsers()
     {
         if (Functions.isSet(this.get_data().config.text_form.auto_process_links.free)) {
             return this.data.config.text_form.auto_process_links.free;
@@ -302,8 +294,6 @@ class Service extends Core
     }
 
 
-//ATTENTION - обратите внимание
-///get_category_codes => getCategories
     /*
      * Get all categories data - code and id
      *
@@ -318,7 +308,6 @@ class Service extends Core
     }
 
 
-
     /*
      * Get all categories ids
      *
@@ -331,8 +320,6 @@ class Service extends Core
         }
         this.error(ErrorCodes.ERROR_SERVICE_CONFIG_ABSENT, 'categories-category_codes');
     }
-
-
 
 
     /*
@@ -355,18 +342,12 @@ class Service extends Core
     }
 
 
-
-
-
-
-
-
     /*
      * Get categories with locals for create selection form to create/update placemark (point)
      *
      * @return {array of objects}
      */
-    get_categories_add_new_point_form_options()
+    getCategoriesAddNewPointFormOptions()
     {
         let _categories = this.getCategories();
         let _result = [];
@@ -378,6 +359,7 @@ class Service extends Core
         return _result;
     }
 
+
     /*
      * Determines how many placemarks will be in one batch while filling the map
      *
@@ -385,19 +367,19 @@ class Service extends Core
      */
     getMapAutofillLimit()
     {
-
         if (Functions.isSet(this.get_data().config.map.autofill.individual_limit)) {
             return this.data.config.map.autofill.individual_limit;
         }
         this.error(ErrorCodes.ERROR_SERVICE_CONFIG_ABSENT, 'map-autofill-individual_limit');
     }
 
+
     /*
      * Determines how frequently batches of placemarks will be get
      *
      * @return number - period in milliseconds
      */
-    get_map_autofill_period()
+    getMapAutofillPeriod()
     {
         if (Functions.isSet(this.get_data().config.map.autofill.period)) {
             return this.data.config.map.autofill.period * 1000;
@@ -405,12 +387,13 @@ class Service extends Core
         this.error(ErrorCodes.ERROR_SERVICE_CONFIG_ABSENT, 'map-autofill-period');
     }
 
+
     /*
      * Determines should placemarks be loaded on map automatically or not
      *
      * @return {boolean}
      */
-    is_map_autofill_enabled()
+    isMapAutofillEnabled()
     {
         if (Functions.isSet(this.get_data().config.map.autofill.on)) {
             return this.data.config.map.autofill.on;
@@ -418,18 +401,20 @@ class Service extends Core
         this.error(ErrorCodes.ERROR_SERVICE_CONFIG_ABSENT, 'map-autofill-on');
     }
 
+
     /*
      * Get map ballon dimentions (size, position)
      *
      * @return {object}
      */
-    get_baloon_dimentions()
+    getBaloonDimentions()
     {
         if (Functions.isSet(this.get_data().config.dimentions.ballon)) {
             return BaseFunctions.clone(this.data.config.dimentions.ballon);
         }
         this.error(ErrorCodes.ERROR_SERVICE_CONFIG_ABSENT, 'dimentions-ballon');
     }
+
 
     /*
      * Determines whether everyone can add placemarks
@@ -443,6 +428,7 @@ class Service extends Core
         }
         this.error(ErrorCodes.ERROR_SERVICE_CONFIG_ABSENT, 'security-all_can_add_placemarks');
     }
+
 
     /*
      * Get initial width of category photo (not placemark photo)
@@ -458,6 +444,7 @@ class Service extends Core
         this.error(ErrorCodes.ERROR_SERVICE_CONFIG_ABSENT, 'dimentions-categories_photo_initial_width');
     }
 
+
     /*
      * Get initial height of category photo (not placemark photo)
      * Will be shown if there are no photos loaded for placemark
@@ -471,6 +458,7 @@ class Service extends Core
         }
         this.error(ErrorCodes.ERROR_SERVICE_CONFIG_ABSENT, 'dimentions-categories_photo_initial_height');
     }
+
 
     /*
      * Get maximum area with which plamerarks will be loaded (less or equal)
@@ -486,6 +474,7 @@ class Service extends Core
         this.error(ErrorCodes.ERROR_SERVICE_CONFIG_ABSENT, 'generic-max_map_load_size');
     }
 
+
     /*
      * Get maximum number of random articles on article (under viewed article)
      *
@@ -498,6 +487,7 @@ class Service extends Core
         }
         this.error(ErrorCodes.ERROR_SERVICE_CONFIG_ABSENT, 'generic-max_random_articles');
     }
+
 
     /*
      * Get maximum number of articles suitable for viewed article country (under viewed article)
@@ -512,6 +502,7 @@ class Service extends Core
         this.error(ErrorCodes.ERROR_SERVICE_CONFIG_ABSENT, 'generic-max_last_country_articles');
     }
 
+
     /*
      * Get the maximum number of new articles in the list
      *
@@ -524,6 +515,7 @@ class Service extends Core
         }
         this.error(ErrorCodes.ERROR_SERVICE_CONFIG_ABSENT, 'generic-max_last_main_page_articles');
     }
+
 
     /*
      * Determines should we add category photo as main while create placemark
@@ -539,6 +531,7 @@ class Service extends Core
         this.error(ErrorCodes.ERROR_SERVICE_CONFIG_ABSENT, 'categories-generic-add_category_photo_as_first_in_placemark_view');
     }
 
+
     /*
      * Determines should we show 'main' (index) page
      *
@@ -551,6 +544,7 @@ class Service extends Core
         }
         this.error(ErrorCodes.ERROR_SERVICE_CONFIG_ABSENT, 'pages-main');
     }
+
 
     /*
      * Determines should we show 'catalog' page
@@ -565,6 +559,7 @@ class Service extends Core
         this.error(ErrorCodes.ERROR_SERVICE_CONFIG_ABSENT, 'pages-catalog');
     }
 
+
     /*
      * Determines should we show 'search' page
      *
@@ -578,6 +573,7 @@ class Service extends Core
         this.error(ErrorCodes.ERROR_SERVICE_CONFIG_ABSENT, 'pages-search');
     }
 
+
     /*
      * Determines should we show 'articles' page
      *
@@ -590,6 +586,7 @@ class Service extends Core
         }
         this.error(ErrorCodes.ERROR_SERVICE_CONFIG_ABSENT, 'pages-article');
     }
+
 
     /*
      * Determines whether should we show placemark's title everywhere
@@ -605,6 +602,7 @@ class Service extends Core
         this.error(ErrorCodes.ERROR_SERVICE_CONFIG_ABSENT, 'generic-use_titles');
     }
 
+
     /*
      * Get path to sevice css/js files
      *
@@ -615,6 +613,7 @@ class Service extends Core
         return this.get_path() + 'frontend/';
     }
 
+
     /*
      * Get path to sevice view blocks
      *
@@ -624,6 +623,7 @@ class Service extends Core
     {
         return this.get_path() + 'blocks/';
     }
+
 
     /*
      * Determines whether pased photo is category photo
@@ -645,6 +645,7 @@ class Service extends Core
         return false;
     }
 
+
     /*
      * Determines should we show placemarks relevant to viewed placemark
      * Placed in the bottom
@@ -658,6 +659,7 @@ class Service extends Core
         }
         this.error(ErrorCodes.ERROR_SERVICE_CONFIG_ABSENT, 'generic-show_relevant_placemarks');
     }
+
 
     /*
      * Determines should we show another placemarks appropriate for main category of viewed placemark
@@ -675,5 +677,4 @@ class Service extends Core
 }
 
 Service.instanceId = BaseFunctions.uniqueId();
-
 module.exports = Service;

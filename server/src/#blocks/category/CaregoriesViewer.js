@@ -10,13 +10,17 @@ const BaseFunctions = require('server/src/functions/BaseFunctions');
 const Consts = require('server/src/settings/Constants');
 const Categories = require('server/src/components/Categories');
 
-class CaregoriesViewerBlock extends Component {
+class CaregoriesViewerBlock extends Component
+{
 
-    constructor() {
+    constructor()
+    {
         super();
     }
 
-    render(data) {
+
+    render(data)
+    {
         let _html = `
             <div class="placemarks_category_html_content">
                 <img src="${Consts.SERVICE_IMGS_URL_CATEGORIES + Categories.getInstance(this.requestId).getCategoryCode(data['category']) + '.png'}"

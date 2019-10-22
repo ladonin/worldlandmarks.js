@@ -21,6 +21,7 @@ export default {
         Cookies.setCookie(Constants.LANGUAGE_NAME, value);
     },
 
+
     /*
      * Set language value
      *

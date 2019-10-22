@@ -20,9 +20,11 @@ import Menu from 'src/app/common/blocks/toolsPanel/Menu';
 import Settings from 'src/app/common/blocks/toolsPanel/Settings';
 import MapFilter from 'src/app/common/blocks/toolsPanel/MapFilter';
 
-class ToolsPanel extends Block {
+class ToolsPanel extends Block
+{
 
-    constructor() {
+    constructor()
+    {
         super();
         this.show = this.show.bind(this);
         this.close = this.close.bind(this);
@@ -48,39 +50,54 @@ class ToolsPanel extends Block {
         this.localVarsStyles.panelToolsContentLinksWidth = this.localVarsStyles.panelToolsContentWidth - 10;
     }
 
-    componentDidMount() {
+
+    componentDidMount()
+    {
         Events.add(Consts.EVENT_SHOW_TOOLS_PANEL_BUTTON, this.showButton);
         Events.add(Consts.EVENT_TOOLS_PANEL_SET_STATUS, this.setStatus);
     }
 
-    componentWillUnmount() {
+
+    componentWillUnmount()
+    {
         Events.remove(Consts.EVENT_SHOW_TOOLS_PANEL_BUTTON, this.showButton);
         Events.add(Consts.EVENT_TOOLS_PANEL_SET_STATUS, this.setStatus);
     }
 
-    setStatus(e) {
+
+    setStatus(e)
+    {
         this.setState({status: e.detail.value});
     }
 
-    show() {
+
+    show()
+    {
         this.setState({status: 0});
     }
 
-    close() {
+
+    close()
+    {
         this.setState({status: null});
     }
 
-    hide() {
+
+    hide()
+    {
         // Close panel and hide button
         this.setState({status: false});
     }
 
-    showButton() {
+
+    showButton()
+    {
         this.setState({status: null});
     }
 
-    render() {
 
+    render()
+    {
         let ContentComponent = ()=>null;
         if (this.state.status === 0) {
              ContentComponent = ()=> <Menu width = {this.localVarsStyles.panelToolsContentLinksWidth} toolsPanelRef={this}/>;
@@ -109,8 +126,8 @@ class ToolsPanel extends Block {
     }
 }
 
-function mapStateToProps(state) {
-
+function mapStateToProps(state)
+{
     return {
         redux: {
             domainName: state.staticData['domain_name'],

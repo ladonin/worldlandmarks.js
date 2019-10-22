@@ -13,9 +13,11 @@ import BaseFunctions from 'src/functions/BaseFunctions';
 import Events from 'src/modules/Events';
 import CssTransition from 'src/app/common/CssTransition';
 
-class PageScrolling extends Block {
+class PageScrolling extends Block
+{
 
-    constructor() {
+    constructor()
+    {
         super();
 
         this._scrollStarted = false;
@@ -29,11 +31,15 @@ class PageScrolling extends Block {
         this.reset = this.reset.bind(this);
     }
 
-    componentWillUnmount() {
+
+    componentWillUnmount()
+    {
         Events.remove(Consts.EVENT_RESET_PAGE_SCROLLING, this.reset);
     }
 
-    reset(){
+
+    reset()
+    {
         this._scrollStarted = false;
         this._scrollDownCoords = 0;
         this._scrollDownStatus = 0;
@@ -41,8 +47,9 @@ class PageScrolling extends Block {
         this.setState({status:'up', hidden:true});
     }
 
-    componentDidMount(){
 
+    componentDidMount()
+    {
         let _callback = function () {
             let _scroll = BaseFunctions.getScrollTop(window);
 
@@ -63,59 +70,71 @@ class PageScrolling extends Block {
         Events.add(Consts.EVENT_RESET_PAGE_SCROLLING, this.reset);
     }
 
-    scroll(){
-            this._buttonPressed = true;
-            if (this._scrollStarted === true) {
 
-                if (this._scrollDownStatus === 0) {
+    scroll()
+    {
+        this._buttonPressed = true;
+        if (this._scrollStarted === true) {
 
-                    let _callback = function () {
-                        // Animation complete.
-                        this._buttonPressed = false;
-                        this.arrowUp();
-                    }
-                    BaseFunctions.scrollTop('body,html', this._scrollDownCoords, true, 200, _callback.bind(this));
-                    this._scrollDownStatus = 1;
-                } else if (this._scrollDownStatus === 1) {
+            if (this._scrollDownStatus === 0) {
 
-                    let _callback = function () {
-                        // Animation complete.
-                        this._buttonPressed = false;
-                        this.arrowDown();
-                    }
-                    BaseFunctions.scrollTop('body,html', 0, true, 200, _callback.bind(this));
-                    this._scrollDownCoords = BaseFunctions.getScrollTop(window);
-                    this._scrollDownStatus = 0;
+                let _callback = function () {
+                    // Animation complete.
+                    this._buttonPressed = false;
+                    this.arrowUp();
                 }
-            } else {
+                BaseFunctions.scrollTop('body,html', this._scrollDownCoords, true, 200, _callback.bind(this));
+                this._scrollDownStatus = 1;
+            } else if (this._scrollDownStatus === 1) {
+
                 let _callback = function () {
                     // Animation complete.
                     this._buttonPressed = false;
                     this.arrowDown();
                 }
                 BaseFunctions.scrollTop('body,html', 0, true, 200, _callback.bind(this));
-                this._scrollStarted = true;
                 this._scrollDownCoords = BaseFunctions.getScrollTop(window);
+                this._scrollDownStatus = 0;
             }
+        } else {
+            let _callback = function () {
+                // Animation complete.
+                this._buttonPressed = false;
+                this.arrowDown();
+            }
+            BaseFunctions.scrollTop('body,html', 0, true, 200, _callback.bind(this));
+            this._scrollStarted = true;
+            this._scrollDownCoords = BaseFunctions.getScrollTop(window);
+        }
     }
 
-    show(){
+
+    show()
+    {
         this.setState({hidden:false});
     }
 
-    hide(){
+
+    hide()
+    {
         this.setState({hidden:true});
     }
 
-    arrowUp(){
+
+    arrowUp()
+    {
         this.setState({status:'up'});
     }
 
-    arrowDown(){
+
+    arrowDown()
+    {
         this.setState({status:'down'});
     }
 
-    render() {
+
+    render()
+    {
         let _content = '';
         if (this.state.hidden === true) {
             return null;

@@ -26,8 +26,10 @@ import Events from 'src/modules/Events';
 
 import CroppedPhoto from 'src/app/common/blocks/CroppedPhoto';
 
-class PlacemarksList extends Block {
-    constructor() {
+class PlacemarksList extends Block
+{
+    constructor()
+    {
         super();
 
         this.onScroll = this.onScroll.bind(this);
@@ -54,7 +56,9 @@ class PlacemarksList extends Block {
         this.languageChanged = false;
     }
 
-    reset(){
+
+    reset()
+    {
         this.list = [];
         this.block = false;
         this.isRetry = false;
@@ -63,8 +67,9 @@ class PlacemarksList extends Block {
         this.languageChanged = false;
     }
 
-    shouldComponentUpdate(nextProps, nextState){
 
+    shouldComponentUpdate(nextProps, nextState)
+    {
         if (!CommonBaseFunctions.areObjectsEqual(this.props.redux.staticData,nextProps.redux.staticData)) {
             this.languageChanged = true;
             return true;
@@ -78,20 +83,26 @@ class PlacemarksList extends Block {
         return true;
     }
 
-    componentWillUnmount(){
+
+    componentWillUnmount()
+    {
         Events.remove('scroll', this.onScroll);
         Events.remove('search', this.onSearch);
         this.props.removeBackgroundData('catalog_placemarksData');
     }
 
-    componentDidMount(){
+
+    componentDidMount()
+    {
         Events.add('scroll', this.onScroll);
         Events.add('search', this.onSearch);
         this.init();
         this.getList();
     }
 
-    getList(){
+
+    getList()
+    {
         this.block = true;
         Socket.backgroundQuery(
             Consts.CONTROLLER_NAME_CATALOG,
@@ -102,7 +113,9 @@ class PlacemarksList extends Block {
             })
     }
 
-    onSearch(e){
+
+    onSearch(e)
+    {
         this.reset();
         this.shouldBottomUpdate++;
         this.searchData = {...e.detail, isSearch:1};
@@ -110,14 +123,17 @@ class PlacemarksList extends Block {
         this.getList();
     }
 
-    onScroll(){
+
+    onScroll()
+    {
         if ((BaseFunctions.getHeight(window) + BaseFunctions.getScrollTop(window) + this.correction >= BaseFunctions.getHeight(document)) && !this.block) {
             this.getList();
         }
     }
 
-    init() {
 
+    init()
+    {
         if (this.props.photoWidth) {
             this.photoWidth = this.props.photoWidth;
         }
@@ -127,8 +143,9 @@ class PlacemarksList extends Block {
         }
     }
 
-    getItem(data){
 
+    getItem(data)
+    {
         this.idCurrent = data['id'];
 
         let _photo = data['photos'][0];
@@ -190,7 +207,9 @@ class PlacemarksList extends Block {
                 </div>);
     }
 
-    render() {
+
+    render()
+    {
         if (!this.props.redux.placemarks && this.languageChanged === false) {
             return null;
         }
@@ -245,7 +264,8 @@ class PlacemarksList extends Block {
     }
 }
 
-function mapStateToProps(state) {
+function mapStateToProps(state)
+{
     return {
         redux:{
             placemarks:state.backgroundData['catalog_placemarksData'],

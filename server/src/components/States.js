@@ -12,11 +12,14 @@ const ErrorCodes = require('server/src/settings/ErrorCodes');
 const CountryStatesModel = require('server/src/models/dbase/mysql/CountryStates');
 
 
-class States extends Component {
+class States extends Component
+{
 
-    constructor() {
+    constructor()
+    {
         super();
     }
+
 
     /*
      * Get state id by state code
@@ -53,11 +56,7 @@ class States extends Component {
 
         return _result;
     }
-
 }
 
-
-
 States.instanceId = BaseFunctions.uniqueId();
-
 module.exports = States;

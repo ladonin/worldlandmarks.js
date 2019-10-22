@@ -20,27 +20,34 @@ import Router from 'src/modules/Router';
 import Events from 'src/modules/Events';
 import AlertsText from 'src/modules/AlertsText';
 
-class Menu extends Block {
+class Menu extends Block
+{
 
-    constructor() {
+    constructor()
+    {
         super();
         this.alert = this.alert.bind(this);
     }
 
-    alert(){
+
+    alert()
+    {
         Events.dispatch('alert', {
             text: AlertsText.get('geolocate_error_no_https', 'error'),
             className: 'error'
         });
     }
 
-    goTo(e){
+
+    goTo(e)
+    {
         this.props.toolsPanelRef.close();
         super.goTo(e);
     }
 
-    render() {
 
+    render()
+    {
         let _toolsList = [];
         let _imageStyles = {width:'33px', height:'33px'};
         if (Router.isMapPage(this.props.match.params) === true) {
@@ -125,8 +132,8 @@ class Menu extends Block {
 }
 
 
-function mapStateToProps(state) {
-
+function mapStateToProps(state)
+{
     return {
         redux: {
             staticData: state.staticData

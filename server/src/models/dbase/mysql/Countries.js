@@ -12,7 +12,8 @@ const Consts = require('server/src/settings/Constants');
 
 class CountriesModel extends DBaseMysql
 {
-    constructor() {
+    constructor()
+    {
         super();
 
         this.tableNameInit = this.tableInitNames.COUNTRY;
@@ -25,7 +26,6 @@ class CountriesModel extends DBaseMysql
                 'rules': ['required'],
             }
         };
-
         this.snapshotFieldsData();
     }
 
@@ -38,7 +38,8 @@ class CountriesModel extends DBaseMysql
      *
      * @return {object} - country data
      */
-    getCountryDataByCode(code, needResult = true) {
+    getCountryDataByCode(code, needResult = true)
+    {
         let _data = this.getByCondition(
             /*condition*/ 'local_code = ?',
             /*order*/ '',
@@ -46,7 +47,7 @@ class CountriesModel extends DBaseMysql
             /*select*/ '*',
             /*where_values*/ [code],
             /*limit*/ false,
-            /*need_result*/ needResult
+            /*needresult*/ needResult
         );
         return _data[0].id ? _data[0] : null;
     }
@@ -66,9 +67,10 @@ class CountriesModel extends DBaseMysql
             /*select*/ 'local_code',
             /*where_values*/ [],
             /*limit*/ false,
-            /*need_result*/ false
+            /*needresult*/ false
         );
     }
+
 
     /*
      * Check country code
@@ -86,11 +88,9 @@ class CountriesModel extends DBaseMysql
             /*select*/ '1 as exist',
             /*where_values*/ [code],
             /*limit*/ false,
-            /*need_result*/ false
+            /*needresult*/ false
         ).length ? true : false;
     }
-
-
 
 
     /*
@@ -111,15 +111,7 @@ class CountriesModel extends DBaseMysql
                 undefined,
                 false);
     }
-
-
-
-
-
-
-
 }
 
 CountriesModel.instanceId = BaseFunctions.uniqueId();
-
 module.exports = CountriesModel;

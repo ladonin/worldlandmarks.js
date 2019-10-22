@@ -25,22 +25,15 @@ const Mailer = require('server/src/components/base/Mailer');
 const Countries = require('server/src/components/Countries');
 const Placemarks = require('server/src/components/Placemarks');
 
-class Map extends Component {
+class Map extends Component
+{
 
-    constructor(){
+    constructor()
+    {
         super();
 
     }
 
-
-
-
-//ATTENTION - обратите внимание
-// get_name => this.getServiceName()
-//get_db_model => сразу берем из require
-// module() => и модуль и компонент один файл
-//getPointContentById => getPointBigDataById
-//getAdressByCoords => Geo.getInstance(this.requestId).getAdressByCoords
 
     /*
      * Get placemark full data by id
@@ -64,28 +57,6 @@ class Map extends Component {
     }
 
 
-
-
-
-
-
-
-
-
-//ATTENTION - обратите внимание
-
-//getPointContentByIds => Placemarks.getPlacemarksDataByIds
-// getPointsByIds => Placemarks.getPlacemarksDataByIds
-
-
-
-
-
-
-
-
-
-
     /*
      * Check whether placemarks can be changed by user
      *
@@ -102,13 +73,6 @@ class Map extends Component {
         }
         return false;
     }
-
-
-
-
-
-//ATTENTION - обратите внимание
-// getPointsByCoords => getPointsShortDataByCoords
 
 
     /*
@@ -161,7 +125,6 @@ class Map extends Component {
 
             data['zoom'] = parseInt(data['zoom']);
 
-
             // If old coordinates are not passed in means that in first request
             if (!BaseFunctions.isSet(data['old_X1']) || !this.getSocketData()['old_zoom']) {
                 this.getSocketData()['old_zoom'] = data['zoom'];
@@ -189,6 +152,7 @@ class Map extends Component {
             this.error(ErrorCodes.ERROR_FUNCTION_ARGUMENTS, 'data [' + BaseFunctions.toString(data) + ']', undefined, false);
         }
     }
+
 
     /*
      * Get already sent placemarks from socket session
@@ -230,6 +194,7 @@ class Map extends Component {
         }
     }
 
+
     /*
      * Get limited collection of any prepared placemarks in random order
      *
@@ -246,7 +211,6 @@ class Map extends Component {
 
         return _result;
     }
-
 
 
     /*
@@ -288,9 +252,6 @@ class Map extends Component {
     }
 
 
-// addPhotosForPoint => addPhotosToPoint
-
-
     /*
      * Add photos to point (writes to base & uploads files)
      *
@@ -299,7 +260,7 @@ class Map extends Component {
      */
     addPhotosToPoint(photos, pointId)
     {
-        if (Service.getInstance(this.requestId).whetherPhotosNeedForPlacemarks() === false && !photos.length) {
+        if (Service.getInstance(this.requestId).arePhotosNeedForPlacemarks() === false && !photos.length) {
             return true;
         }
 
@@ -375,6 +336,7 @@ class Map extends Component {
         }
     }
 
+
     /*
      * Delete all size photos of current photo of placemark
      *     For example: one photo has several variants - small, middle, big, original - all of them must be deleted
@@ -417,6 +379,7 @@ class Map extends Component {
         }
     }
 
+
     /*
      * Delete placemark photo from database
      *
@@ -436,19 +399,10 @@ class Map extends Component {
             this.error(ErrorCodes.ERROR_FUNCTION_ARGUMENTS, 'photo name [' + photoName + ']', undefined, false);
         }
 
-        let _needResult = Service.getInstance(this.requestId).whetherPhotosNeedForPlacemarks() === true ? true : false;
+        let _needResult = Service.getInstance(this.requestId).arePhotosNeedForPlacemarks() === true ? true : false;
 
         return MapPhotosModel.getInstance(this.requestId).delete(placemarkId, photoName);
     }
-
-
-
-
-
-
-//ATTENTION - обратите внимание
-// preparePhotosForInsert => createPhotosDataForInsert
-
 
 
     /*
@@ -492,12 +446,10 @@ class Map extends Component {
      */
     getPhotosByDataId(id)
     {
-        let _needResult = Service.getInstance(this.requestId).whetherPhotosNeedForPlacemarks() === true ? true : false;
+        let _needResult = Service.getInstance(this.requestId).arePhotosNeedForPlacemarks() === true ? true : false;
         return MapPhotosModel.getInstance(this.requestId).getPhotosByDataId(id, _needResult)
     }
 
-//ATTENTION - обратите внимание
-//clearLoadedIdsFromSession
 
     /*
      * Clear all already sent placemarks from socket session
@@ -506,17 +458,6 @@ class Map extends Component {
     {
         this.getSocketData()['map_placemarks_loaded_ids'] = [];
     }
-
-
-
-
-
-
-
-
-
-
-
 
 
     /*
@@ -552,22 +493,6 @@ class Map extends Component {
     }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-//ATTENTION - обратите внимание
-//let _requestData = this.getFromRequest('data');
     /*
      * Delete placemark
      *
@@ -637,11 +562,6 @@ class Map extends Component {
     }
 
 
-
-//ATTENTION - обратите внимание
-//(data) = this.getFromRequest('data');
-//updateCurrentPoint => updatePoint
-
     /*
      * Update placemark
      *
@@ -704,7 +624,7 @@ class Map extends Component {
             this.error(ErrorCodes.ERROR_FORM_POINT_A_LOT_OF_PHOTOS, undefined, undefined, false);
         }
 
-        if ((_photosCount === 0) && (Service.getInstance(this.requestId).whetherPhotosNeedForPlacemarks() === true)) {
+        if ((_photosCount === 0) && (Service.getInstance(this.requestId).arePhotosNeedForPlacemarks() === true)) {
             this.error(ErrorCodes.ERROR_FORM_POINT_WITH_NO_PHOTOS, undefined, undefined, false);
         }
 
@@ -742,10 +662,6 @@ class Map extends Component {
             }
         };
     }
-
-
-//ATTENTION - обратите внимание
-//prepareUserEmail => processUserEmail
 
 
     /*
@@ -786,14 +702,6 @@ class Map extends Component {
             'password': _password
         };
     }
-
-
-
-
-
-
-//ATTENTION - обратите внимание
-//(data) = this.getFromRequest('data');
 
 
     /*
@@ -848,7 +756,7 @@ class Map extends Component {
 
         // Prepare photos data
         let _photos = this.createPhotosDataForInsert(_photosArray);
-        if (!_photos && Service.getInstance(this.requestId).whetherPhotosNeedForPlacemarks() === true) {
+        if (!_photos && Service.getInstance(this.requestId).arePhotosNeedForPlacemarks() === true) {
             this.error(ErrorCodes.ERROR_FORM_POINT_WITH_NO_PHOTOS, undefined, undefined, false);
         }
 
@@ -876,16 +784,6 @@ class Map extends Component {
             }
         };
     }
-
-//    prepareAddress(adress) - удалил
-//ATTENTION - обратите внимание
-//prepareResult => Placemarks.getInstance(this.requestId).prepareResult
-
-
-
-//ATTENTION - обратите внимание
-// getPhotoDir => Placemarks.getPhotoDir
-
 }
 
 Map.instanceId = BaseFunctions.uniqueId();

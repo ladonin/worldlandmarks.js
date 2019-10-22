@@ -17,19 +17,22 @@ const Service = require('server/src/core/Service');
 const Placemarks = require('server/src/components/Placemarks');
 const Categories = require('server/src/components/Categories');
 const ConfigRestrictions = require('server/common/settings/Restrictions');
-
 const CommonController = require('server/src/controllers/CommonController');
 
-class Catalog extends CommonController {
+class Catalog extends CommonController
+{
 
-    constructor() {
+    constructor()
+    {
         super();
     }
+
 
     /*
      * Action index
      */
-    action_index() {
+    action_index()
+    {
         let _seoPath = 'catalog/index';
         this.addActionData({
             'title':Seo.getInstance(this.requestId).getTitle(_seoPath),
@@ -44,12 +47,12 @@ class Catalog extends CommonController {
         this.sendMe();
     }
 
+
     /*
      * Action country
      */
     action_country()
     {
-
         let _countryName = Countries.getInstance(this.requestId).getCountryNameFromRequest();
         let _countryCode = Countries.getInstance(this.requestId).getCountryCodeFromRequest();
 
@@ -71,6 +74,7 @@ class Catalog extends CommonController {
 
         this.sendMe();
     }
+
 
     /*
      * Action state
@@ -100,6 +104,7 @@ class Catalog extends CommonController {
         this.sendMe();
     }
 
+
     /*
      * Background action that returns a list of placemarks according to the passed parameters
      */
@@ -113,6 +118,7 @@ class Catalog extends CommonController {
 
         this.sendMe(true);
     }
+
 
     /*
      * Action placemark
@@ -157,6 +163,7 @@ class Catalog extends CommonController {
         this.sendMe();
     }
 
+
     /*
      * Action search
      */
@@ -176,10 +183,12 @@ class Catalog extends CommonController {
         this.sendMe();
     }
 
+
     /*
      * Action sitemap categories
      */
-    action_sitemap_categories() {
+    action_sitemap_categories()
+    {
         let _seoPath = 'catalog/sitemap_categories/index';
         this.addActionData({
             'title': Seo.getInstance(this.requestId).getTitle(_seoPath),
@@ -190,11 +199,11 @@ class Catalog extends CommonController {
     }
 
 
-
     /*
      * Action sitemap countries
      */
-    action_sitemap_countries() {
+    action_sitemap_countries()
+    {
         let _seoPath = 'catalog/sitemap_countries/index';
         this.addActionData({
             'title': Seo.getInstance(this.requestId).getTitle(_seoPath),
@@ -205,12 +214,11 @@ class Catalog extends CommonController {
     }
 
 
-
-
     /*
      * Action sitemap country
      */
-    action_sitemap_country() {
+    action_sitemap_country()
+    {
         let _countriesData = Countries.getInstance(this.requestId).getCountriesData(true);
         let _countryCode = Countries.getInstance(this.requestId).getCountryCodeFromRequest();
         let _countryName = Countries.getInstance(this.requestId).getCountryNameFromRequest();
@@ -236,11 +244,11 @@ class Catalog extends CommonController {
     }
 
 
-
     /*
      * Action sitemap category
      */
-    action_sitemap_category() {
+    action_sitemap_category()
+    {
         let _categoriesData = Categories.getInstance(this.requestId).getCategories();
 
         let _categoryCode = this.getFromRequest(Consts.CATEGORY_VAR_NAME);
@@ -267,10 +275,7 @@ class Catalog extends CommonController {
 
         this.sendMe();
     }
-
-
 }
-
 
 Catalog.instanceId = BaseFunctions.uniqueId();
 module.exports = Catalog;

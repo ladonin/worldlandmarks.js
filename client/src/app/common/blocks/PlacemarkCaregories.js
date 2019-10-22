@@ -13,26 +13,33 @@ import Consts from 'src/settings/Constants';
 import CategoryViewerModule from 'src/modules/CategoryViewer';
 import Block from 'src/app/parents/Block';
 
-class PlacemarkCaregories extends Block {
+class PlacemarkCaregories extends Block
+{
 
-    constructor() {
+    constructor()
+    {
         super();
         this.seeCategory = this.seeCategory.bind(this);
         this.categories = CategoryViewerModule.getCategories();
     }
+
 
     /*
      * Open category window with explanation of interested category
      *
      * @param {integer} id - category id to show
      */
-    seeCategory(id){
-        return function(){
+    seeCategory(id)
+    {
+        return function()
+        {
             this.showCategoryViewer(id)
         }.bind(this)
     }
 
-    render() {
+
+    render()
+    {
 
         let _subcategoriesList = [];
         let _subcategories = this.props.subcategories ? this.props.subcategories.split(',') : [];
@@ -61,6 +68,5 @@ class PlacemarkCaregories extends Block {
         );
     }
 }
-
 
 export default connect(undefined,{updateStyleData:UpdateStyleData})(PlacemarkCaregories)

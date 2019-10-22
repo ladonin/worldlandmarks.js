@@ -25,18 +25,24 @@ import PlacemarkAdminLinks from 'src/app/common/PlacemarkAdminLinks';
 import PhotosList from 'src/app/common/PhotosList';
 
 
-class CatalogPlacemark extends Action {
+class CatalogPlacemark extends Action
+{
 
-    constructor() {
+    constructor()
+    {
         super();
     }
 
-    componentDidUpdate(){
+
+    componentDidUpdate()
+    {
         super.componentDidUpdate();
         BaseFunctions.scrollTop(window);
     }
 
-    render() {
+
+    render()
+    {
         if (!this.props.redux) {
             return null;
         }
@@ -113,7 +119,8 @@ class CatalogPlacemark extends Action {
     }
 }
 
-function MapStateToProps(state) {
+function MapStateToProps(state)
+{
     return GetState(state, Consts.CONTROLLER_NAME_CATALOG, Consts.ACTION_NAME_PLACEMARK)
 }
 

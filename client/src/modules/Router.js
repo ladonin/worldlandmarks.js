@@ -5,9 +5,8 @@
  * Works with server requests and react rooter match parameters
  */
 
-
 import Consts from 'src/settings/Constants';
-import ErrorCodes from 'src/settings/ErrorCodes';
+
 
 /*
  * Chech if name for controller is correct
@@ -15,7 +14,8 @@ import ErrorCodes from 'src/settings/ErrorCodes';
  * @param string name - controller name
  * @return boolean or throw error (in dev mode)
  */
-function checkConrtollerName(name) {
+function checkConrtollerName(name)
+{
     if ((Consts.CONTROLLER_NAME_MAP === name)
             || (Consts.CONTROLLER_NAME_MAIN === name)
             || (Consts.CONTROLLER_NAME_CATALOG === name)
@@ -24,7 +24,6 @@ function checkConrtollerName(name) {
     {
         return true;
     }
-    ///////////////this.error(ErrorCodes.ERROR_WRONG_CONTROLLER_NAME, '[' + name + ']'); //ATTENTION - обратите внимание
     return false;
 }
 
@@ -40,8 +39,8 @@ function checkConrtollerName(name) {
  *
  * @return {object} - prepared request data
  */
-function getActionData(data = {}, matchParams) {
-
+function getActionData(data = {}, matchParams)
+{
     if (!matchParams[Consts.CONTROLLER_VAR_NAME]) {
         // Main page
         data[Consts.ACTION_VAR_NAME] = Consts.ACTION_NAME_INDEX;
@@ -147,8 +146,8 @@ function getActionData(data = {}, matchParams) {
  *
  * @return string
  */
-function getControllerName(matchParams) {
-
+function getControllerName(matchParams)
+{
     let _controllerName = matchParams[Consts.CONTROLLER_VAR_NAME];
 
     if (!_controllerName) {
@@ -163,14 +162,17 @@ function getControllerName(matchParams) {
 }
 
 
+
 /*
  * Get controller's action name
  *
  * @return string
  */
-function getActionName(matchParams) {
+function getActionName(matchParams)
+{
     return getActionData(undefined, matchParams)[Consts.ACTION_VAR_NAME];
 }
+
 
 
 /*
@@ -180,10 +182,10 @@ function getActionName(matchParams) {
  *
  * @return boolean
  */
-function isMapPage(matchParams) {
+function isMapPage(matchParams)
+{
     return (getControllerName(matchParams) === Consts.CONTROLLER_NAME_MAP);
 }
-
 
 
 export default {
@@ -192,6 +194,3 @@ export default {
     getControllerName,
     getActionData
 }
-
-
-

@@ -12,23 +12,30 @@ import {BrowserView, MobileView, isBrowser, isMobile} from "react-device-detect"
 import Events from 'src/modules/Events';
 import Consts from 'src/settings/Constants';
 
-class Alert extends Component {
-    constructor() {
+class Alert extends Component
+{
+    constructor()
+    {
         super();
         this.onAlert = this.onAlert.bind(this);
         this.hideAlert = this.hideAlert.bind(this);
         this.state = {};
     }
 
-    componentWillUnmount(){
+    componentWillUnmount()
+    {
         Events.remove('alert', this.onAlert);
     }
 
-    componentDidMount(){
+
+    componentDidMount()
+    {
         Events.add('alert', this.onAlert);
     }
 
-    onAlert(e){
+
+    onAlert(e)
+    {
         this.timerID = setTimeout(
             () => {
                 this.hideAlert();
@@ -42,14 +49,16 @@ class Alert extends Component {
         });
     }
 
-    hideAlert(){
+    hideAlert()
+    {
         this.setState({
             text:undefined,
             className:undefined
         })
     }
 
-    render() {
+    render()
+    {
         if (!this.state.text) {
             return null;
         }

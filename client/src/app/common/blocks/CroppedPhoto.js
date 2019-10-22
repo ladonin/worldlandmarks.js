@@ -10,13 +10,17 @@ import React from 'react';
 import Block from 'src/app/parents/Block';
 import CommonBaseFunctions from 'src/../../server/common/functions/BaseFunctions';
 
-class CroppedPhoto extends Block {
+class CroppedPhoto extends Block
+{
 
-    constructor() {
+    constructor()
+    {
         super();
     }
 
-    render() {
+
+    render()
+    {
 
         let _cropData = CommonBaseFunctions.viewCroppedPhoto(
                 null,

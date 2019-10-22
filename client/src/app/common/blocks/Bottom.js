@@ -18,21 +18,27 @@ import Block from 'src/app/parents/Block';
 import Consts from 'src/settings/Constants';
 import CssTransition from 'src/app/common/CssTransition';
 
-class Bottom extends Block {
+class Bottom extends Block
+{
 
-    constructor() {
+    constructor()
+    {
         super();
         this.firstRender = true;
     }
 
-    shouldComponentUpdate(nextProps, nextState){
+
+    shouldComponentUpdate(nextProps, nextState)
+    {
         if (typeof nextProps.redux === 'undefined') {
             return false;
         }
         return true;
     }
 
-    componentDidMount(){
+
+    componentDidMount()
+    {
         this.firstRender = false;
         let _marginTop = 20;
 
@@ -51,7 +57,9 @@ class Bottom extends Block {
         );
     }
 
-    render() {
+
+    render()
+    {
         if (!this.props.redux.text) {
             return null;
         }
@@ -94,7 +102,8 @@ class Bottom extends Block {
     }
 }
 
-function mapStateToProps(state) {
+function mapStateToProps(state)
+{
     return {
         redux: {
             'text': state.staticData['bottom'] ? state.staticData['bottom'] : {},

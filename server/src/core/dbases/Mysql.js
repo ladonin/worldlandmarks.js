@@ -18,7 +18,8 @@ const Deasync = require('deasync');
 class DBaseMysql extends Model
 {
 
-    constructor() {
+    constructor()
+    {
         super();
 
         /*
@@ -51,15 +52,17 @@ class DBaseMysql extends Model
     }
 
 
-
-////ATTENTION - обратите внимание
-    snapshotFieldsData() {
+    snapshotFieldsData()
+    {
         this.fieldsInitialData = BaseFunctions.clone(this.fields);
     }
 
-    reset_fields() {
+
+    reset_fields()
+    {
         this.fields = BaseFunctions.clone(this.fieldsInitialData);
     }
+
 
     /*
      * Get connection
@@ -73,6 +76,7 @@ class DBaseMysql extends Model
         return DBase.getInstance(this.requestId).getDbConnection();//async === true ? this.asyncConnection : this.syncConnection;
     }
 
+
     /*
      * Execute query and return result
      *
@@ -82,10 +86,12 @@ class DBaseMysql extends Model
      *
      * @return {array of objects or empty array / promise}
      */
-    query(sql, values = []) {//, async = false
+    query(sql, values = []) //, async = false
+    {
 
-        return this.query_async(sql, values);//async === true ? this.query_async(sql, values) :
+        return this.queryAsync(sql, values);//async === true ? this.queryAsync(sql, values) :
     }
+
 
     /*
      * Async query
@@ -95,7 +101,8 @@ class DBaseMysql extends Model
      *
      * @return promise
      */
-    query_async(sql, values = []) {
+    queryAsync(sql, values = [])
+    {
 
         let _finished = false;
         let _result;
@@ -126,6 +133,7 @@ class DBaseMysql extends Model
         return _result;
     }
 
+
     /*
      * Sync query
      *
@@ -134,21 +142,19 @@ class DBaseMysql extends Model
      *
      * @return {array of objects or empty array}
      */
-//    query_sync(sql, values = []) {
-//        try {
-//            let _result = this.getConnection().query(sql, values);
-//            this.getConnection().release();
-//            return _result;
-//        } catch (e) {
-//            this.error(
-//                    ErrorCodes.ERROR_MYSQL,
-//                    e.code + ': request[' + sql + '], values[' + BaseFunctions.toString(values) + ']',
-//                    Consts.LOG_MYSQL_TYPE);
-//    }
-//    }
-
-
-
+    querySync(sql, values = [])
+    {
+        try {
+            let _result = this.getConnection().query(sql, values);
+            this.getConnection().release();
+            return _result;
+        } catch (e) {
+            this.error(
+                    ErrorCodes.ERROR_MYSQL,
+                    e.code + ': request[' + sql + '], values[' + BaseFunctions.toString(values) + ']',
+                    Consts.LOG_MYSQL_TYPE);
+        }
+    }
 
 
     /*
@@ -174,6 +180,7 @@ class DBaseMysql extends Model
         return this.query("SELECT " + select + " FROM " + this.getTableName() + " WHERE id = " + _id, [])[0];//, async
     }
 
+
     /*
      * Validate all fields
      *
@@ -181,14 +188,15 @@ class DBaseMysql extends Model
      *
      * @return {boolean}
      */
-    filter_all_fields(filter_type = Consts.FILTER_TYPE_ALL)
+    filterAllFields(filterType = Consts.FILTER_TYPE_ALL)
     {
         // Check all model fields
         for (let _key in this.fields) {
-            this.filter(_key, this.fields[_key]['value'], filter_type);
+            this.filter(_key, this.fields[_key]['value'], filterType);
         }
         return true;
     }
+
 
     /*
      * Sync update field by id
@@ -197,16 +205,15 @@ class DBaseMysql extends Model
      */
     update(idValue)
     {
-
         let _id = parseInt(idValue);
 
         if (!_id) {
             this.error(ErrorCodes.ERROR_FUNCTION_ARGUMENTS, 'id [ ' + BaseFunctions.toString(idValue) + ']');
         }
 
-        this.filter_all_fields(Consts.FILTER_TYPE_WITHOUT_REQUIRED);
+        this.filterAllFields(Consts.FILTER_TYPE_WITHOUT_REQUIRED);
 
-        array_values = [];
+        let _arrayValues = [];
 
         let _sql = 'update ' + this.getTableName() + " set modified='" + BaseFunctions.get_current_time() + "'";
 
@@ -228,16 +235,17 @@ class DBaseMysql extends Model
                 _sql += ',' + _field_name + '=?';
 
                 this.processing_value(_field);
-                array_values.push(_field['value']);
+                _arrayValues.push(_field['value']);
             }
         }
         _sql += ' where id = ' + parseInt(_id);
 
-        this.query(_sql, array_values);
+        this.query(_sql, _arrayValues);
 
         // Reset field to initial values
         this.reset_fields();
     }
+
 
     /*
      * Sync insert new record
@@ -246,16 +254,16 @@ class DBaseMysql extends Model
      */
     insert()
     {
-        this.filter_all_fields(Consts.FILTER_TYPE_ONLY_REQUIRED);
+        this.filterAllFields(Consts.FILTER_TYPE_ONLY_REQUIRED);
 
-        array_values = [];
+        let _arrayValues = [];
 
         let _sql = 'insert into ' + this.getTableName();
-        let _sql_fields = 'created,modified';
-        let _sql_values = BaseFunctions.get_current_time() + ',' + BaseFunctions.get_current_time();
+        let _sqlFields = 'created,modified';
+        let _sqlValues = BaseFunctions.get_current_time() + ',' + BaseFunctions.get_current_time();
 
-        for (let _field_name in this.fields) {
-            let _field = this.fields[_field_name];
+        for (let _fieldName in this.fields) {
+            let _field = this.fields[_fieldName];
 
             /*
              * Rule 'none' tells that we should not set this field by hand
@@ -265,22 +273,23 @@ class DBaseMysql extends Model
                 continue;
             }
 
-            _sql_fields += ',' + _field_name;
-            _sql_values += ',?';
+            _sqlFields += ',' + _fieldName;
+            _sqlValues += ',?';
 
             this.processing_value(_field);
-            array_values.push(BaseFunctions.isSet(_field['value']) ? _field['value'] : null);
+            _arrayValues.push(BaseFunctions.isSet(_field['value']) ? _field['value'] : null);
         }
 
-        _sql += '(' + _sql_fields + ') values (' + _sql_values + ')';
+        _sql += '(' + _sqlFields + ') values (' + _sqlValues + ')';
 
-        let _result = this.query(_sql, array_values);
+        let _result = this.query(_sql, _arrayValues);
 
         // Reset field to initial values
         this.reset_fields();
 
         return _result.insertId;
     }
+
 
     /*
      * Sync delete record by id
@@ -301,8 +310,8 @@ class DBaseMysql extends Model
         let _result = this.query(sql);
 
         return _result.affectedRows;
-
     }
+
 
     /*
      * Set values to fields checking each value according with field rules
@@ -313,17 +322,18 @@ class DBaseMysql extends Model
      */
     setValuesToFields(data)
     {
-        for (let _field_name in data) {
+        for (let _fieldName in data) {
 
-            let _field_value = this.preparingValue(_field_name, data[_field_name]);
-            this.filter(_field_name, _field_value, Consts.FILTER_TYPE_WITHOUT_REQUIRED);
-            if (!_field_value && BaseFunctions.is_not_empty(this.fields[_field_name]['default_value'])) {
-                _field_value = this.fields[_field_name]['default_value'];
+            let _fieldValue = this.preparingValue(_fieldName, data[_fieldName]);
+            this.filter(_fieldName, _fieldValue, Consts.FILTER_TYPE_WITHOUT_REQUIRED);
+            if (!_fieldValue && BaseFunctions.is_not_empty(this.fields[_fieldName]['default_value'])) {
+                _fieldValue = this.fields[_fieldName]['default_value'];
             }
-            this.fields[_field_name]['value'] = _field_value;
+            this.fields[_fieldName]['value'] = _fieldValue;
         }
         return true;
     }
+
 
     /*
      * Prepare type order for select query
@@ -332,15 +342,15 @@ class DBaseMysql extends Model
      *
      * @return {string}
      */
-    return_order(order)
+    returnOrder(order)
     {
-
         if (order === 'asc') {
             return order;
         }
 
         return 'desc';
     }
+
 
     /*
      * Prepare limit to query
@@ -349,7 +359,7 @@ class DBaseMysql extends Model
      *
      * @return {string}
      */
-    return_limit(limit = [1])
+    returnLimit(limit = [1])
     {
         if (parseInt(limit[1]) > 0) {
             return  parseInt(limit[0]) + ',' + parseInt(limit[1]);
@@ -357,8 +367,9 @@ class DBaseMysql extends Model
             return parseInt(limit[0]);
         } else {
             return '1';
+        }
     }
-    }
+
 
     /*
      * Get data by condition
@@ -369,12 +380,12 @@ class DBaseMysql extends Model
      * @param {string} select - presentation of 'SELECT'
      * @param {array} where_values - values to be escaped for 'WHERE' condition
      * @param {string} limit -  presentation of 'LIMIT'
-     * @param {boolean} need_result - is result required
+     * @param {boolean} needresult - is result required
      * //@param {boolean} async - whether we use async query or sync
      *
      * @return {array of objects / promise} - fetched data
      */
-    getByCondition(condition = 1, order = '', group = '', select = '*', where_values = [], limit = false, need_result = true)//, async = false
+    getByCondition(condition = 1, order = '', group = '', select = '*', whereValues = [], limit = false, needresult = true)//, async = false
     {
         let _sql = 'SELECT ' + select + ' FROM ' + this.getTableName() + ' WHERE ' + condition;
 
@@ -389,8 +400,9 @@ class DBaseMysql extends Model
             _sql += ' limit ' + limit;
         }
 
-        return this.fetchQuery(_sql, where_values, need_result);//, async
+        return this.fetchQuery(_sql, whereValues, needresult);//, async
     }
+
 
     /*
      * Fetch data using straight sql query
@@ -402,18 +414,18 @@ class DBaseMysql extends Model
      *
      * @return {array of objects / promise} - fetched data
      */
-    fetchQuery(sql, whereValues = [], needResult = true) {//, async = false
-
+    fetchQuery(sql, whereValues = [], needResult = true) //, async = false
+    {
         let _result = this.query(sql, whereValues);//, async
 
-        function process_error() {
+        function processError() {
             this.error(
                     ErrorCodes.ERROR_MYSQL,
                     '|REQUIRED RESULT| request[' + sql + '], where_values[' + BaseFunctions.toString(whereValues) + ']',
                     Consts.LOG_MYSQL_TYPE
                     );
         }
-        process_error = process_error.bind(this);
+        processError = processError.bind(this);
 
         if (needResult === true) {
 //            if (async === true) {
@@ -429,12 +441,13 @@ class DBaseMysql extends Model
 //            } else {
             // Sync query
             if (!_result.length) {
-                process_error();
+                processError();
             }
             //}
         }
         return _result;
     }
+
 
     /*
      * Fetch data by straight query string
@@ -452,11 +465,6 @@ class DBaseMysql extends Model
     }
 
 
-
-
-
-
-
     /*
      * Add new record
      *
@@ -469,6 +477,7 @@ class DBaseMysql extends Model
         this.setValuesToFields(data);
         return this.insert();
     }
+
 
     /*
      * Update existed record
@@ -491,8 +500,8 @@ class DBaseMysql extends Model
      *
      * @return {string} - prepared table name
      */
-    getTableName(name) {
-
+    getTableName(name)
+    {
         let _tableNamesInstance = TableNames.getInstance(this.requestId);
 
         if (!name) {
@@ -509,7 +518,6 @@ class DBaseMysql extends Model
         return _tableNamesInstance.getTableName(name);
 
     }
-
 }
 
 module.exports = DBaseMysql;

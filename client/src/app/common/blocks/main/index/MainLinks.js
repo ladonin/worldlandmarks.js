@@ -14,13 +14,16 @@ import Consts from 'src/settings/Constants';
 import Block from 'src/app/parents/Block';
 import BaseFunctions from 'src/functions/BaseFunctions';
 
-class MainLinks extends Block {
-    constructor() {
+class MainLinks extends Block
+{
+    constructor()
+    {
         super();
     }
 
-    render() {
 
+    render()
+    {
         let _imgBlockStyle = {};
         let _imgStyle = {}
         let _titleBlockStyle = {}
@@ -66,8 +69,8 @@ class MainLinks extends Block {
 }
 
 
-function mapStateToProps(state) {
-
+function mapStateToProps(state)
+{
     return {
         redux:{
             staticData: state.staticData

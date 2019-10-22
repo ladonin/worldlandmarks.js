@@ -7,13 +7,17 @@
 
 import React, { Component } from 'react';
 
-class PlacemarkAdminLinks extends Component {
+class PlacemarkAdminLinks extends Component
+{
 
-    constructor() {
+    constructor()
+    {
         super();
     }
 
-    render() {
+
+    render()
+    {
         if (!this.props.isAdmin || !this.props.id) {
             return null;
         }

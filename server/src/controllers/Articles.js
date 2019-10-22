@@ -9,7 +9,6 @@ const ErrorCodes = require('server/src/settings/ErrorCodes');
 const Consts = require('server/src/settings/Constants');
 const Seo = require('server/src/components/Seo');
 
-
 const Categories = require('server/src/components/Categories');
 const Countries = require('server/src/components/Countries');
 
@@ -19,19 +18,22 @@ const Config = require('server/src/settings/Config');
 const ConfigRestrictions = require('server/common/settings/Restrictions');
 const Service = require('server/src/core/Service');
 
-
 const CommonController = require('server/src/controllers/CommonController');
 
-class Articles extends CommonController {
+class Articles extends CommonController
+{
 
-    constructor() {
+    constructor()
+    {
         super();
     }
+
 
     /*
      * Action countries
      */
-    action_countries() {
+    action_countries()
+    {
         let _seoPath = 'articles/index';
         this.addActionData({
             'title':Seo.getInstance(this.requestId).getTitle(_seoPath),
@@ -41,10 +43,12 @@ class Articles extends CommonController {
         this.sendMe();
     }
 
+
     /*
      * Action categories
      */
-    action_categories() {
+    action_categories()
+    {
         let _seoPath = 'articles/index';
         this.addActionData({
             'title':Seo.getInstance(this.requestId).getTitle(_seoPath),
@@ -58,7 +62,8 @@ class Articles extends CommonController {
     /*
      * Action country
      */
-    action_country() {
+    action_country()
+    {
         let _countriesData = ArticlesModel.getInstance(this.requestId).getCountriesData();
         let _countryCode = Countries.getInstance(this.requestId).getCountryCodeFromRequest();
         let _countryName = Countries.getInstance(this.requestId).getCountryNameFromRequest();
@@ -83,12 +88,14 @@ class Articles extends CommonController {
         this.sendMe();
     }
 
+
     /*
      * Action category
      */
-    action_category() {
-        let _categoriesData = ArticlesModel.getInstance(this.requestId).getCategoriesData();
+    action_category()
+    {
 
+        let _categoriesData = ArticlesModel.getInstance(this.requestId).getCategoriesData();
         let _categoryCode = this.getFromRequest(Consts.CATEGORY_VAR_NAME);
         let _categoryData = Categories.getInstance(this.requestId).getCategoryByCode(_categoryCode);
 
@@ -100,6 +107,7 @@ class Articles extends CommonController {
         let _offset = (_currentPage - 1) * _limit;
         let _seoPath = 'articles/category';
         let _categoryTitle = Categories.getInstance(this.requestId).prepareNameForArticles(_categoryData.code, {'category':_categoryData.title});
+
         this.addActionData({
             'title':Seo.getInstance(this.requestId).getTitle(_seoPath, {'category':_categoryTitle}),
             'categoryTitle':_categoryTitle,
@@ -113,21 +121,22 @@ class Articles extends CommonController {
         this.sendMe();
     }
 
+
     /*
      * Action article page
      */
-    action_article() {
-
+    action_article()
+    {
         let _articleId = this.getFromRequest(Consts.ID_VAR_NAME);
         let _articleData = ArticlesModel.getInstance(this.requestId).getArticle(_articleId);
         let _countryCode = Countries.getInstance(this.requestId).getСountryCodeById(_articleData['country_id']);
         let _categoriesData = [];
         let _categoriesArray = _articleData.categories.split(',');
+
         for (let _index in _categoriesArray) {
             let _categoryData = Categories.getInstance(this.requestId).getCategory(parseInt(_categoriesArray[_index]));
             _categoriesData.push(_categoryData);
         }
-
 
         this.addActionData({
             'title':_articleData.title,
@@ -142,7 +151,6 @@ class Articles extends CommonController {
         this.sendMe();
     }
 }
-
 
 Articles.instanceId = BaseFunctions.uniqueId();
 module.exports = Articles;

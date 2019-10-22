@@ -3,6 +3,7 @@
  *
  * Service words in english translation
  */
+
 const Consts = require('server/src/settings/Constants');
 const En = require('server/common/services/landmarks/language/En');
 

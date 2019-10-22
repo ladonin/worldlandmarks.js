@@ -7,7 +7,8 @@ import { combineReducers } from 'redux';
 import Constants from 'src/settings/Constants';
 import CommonBaseFunctions from 'src/../../server/common/functions/BaseFunctions';
 
-function staticData(state = {}, action) {
+function staticData(state = {}, action)
+{
     switch (action.type) {
         case Constants.UPDATE_PAGE:
             return Object.assign({}, state, action.data[Constants.STATIC_DATA]);
@@ -17,7 +18,9 @@ function staticData(state = {}, action) {
     }
 }
 
-function backgroundData(state = {}, action) {
+
+function backgroundData(state = {}, action)
+{
     switch (action.type) {
         case Constants.UPDATE_PAGE:
             return Object.assign({}, state, action.data[Constants.BACKGROUND_DATA]);
@@ -35,7 +38,9 @@ function backgroundData(state = {}, action) {
     }
 }
 
-function actionData(state = {}, action) {
+
+function actionData(state = {}, action)
+{
     switch (action.type) {
         case Constants.UPDATE_PAGE:
             return Object.assign({}, state, action.data[Constants.ACTION_DATA]);
@@ -48,7 +53,9 @@ function actionData(state = {}, action) {
     }
 }
 
-function styleData(state = {}, action) {
+
+function styleData(state = {}, action)
+{
     switch (action.type) {
         case Constants.UPDATE_STYLE_DATA:
 

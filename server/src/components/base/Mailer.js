@@ -38,7 +38,8 @@ _transporter.verify(function (error, success) {
  * @param {string} plainText - brief content of message without html
  * @param {string} html - body message
  */
-function sendEmail(to, subject, plainText, html) {
+function sendEmail(to, subject, plainText, html)
+{
     _transporter.sendMail({
         from: '"' + _config.fromName + '" <' + _config.smtp.auth.user + '>',
         to: to,
@@ -52,6 +53,8 @@ function sendEmail(to, subject, plainText, html) {
         }
     });
 }
+
+
 // Example:
 //        _transporter.sendMail({
 //            from: 'info@world-landmarks.ru', // sender address
@@ -61,10 +64,13 @@ function sendEmail(to, subject, plainText, html) {
 //            html: "<b>Hello world?</b>" // html body
 //        });
 
-class Mailer extends Component {
-    constructor() {
+class Mailer extends Component
+{
+    constructor()
+    {
         super();
     }
+
 
     /*
      * Prepare message data
@@ -74,8 +80,8 @@ class Mailer extends Component {
      *
      * @return {object} - prepared subject, body and plainText
      */
-    prepareMessage(data, type) {
-
+    prepareMessage(data, type)
+    {
         if (type === 'afterCreationPlacemark') {
             let _data = data['data'];
             return {
@@ -90,6 +96,7 @@ class Mailer extends Component {
         this.error(ErrorCodes.ERROR_WRONG_EMAIL_TYPE, 'type [' + type + ']');
     }
 
+
     /*
      * Send specific email with logging sending in db - after placemark will be created
      *
@@ -97,7 +104,8 @@ class Mailer extends Component {
      * @param {string} type - message type
      * @param {integer} dataId - placemark id
      */
-    sendAfterCreationPlacemark(data, type, dataId) {
+    sendAfterCreationPlacemark(data, type, dataId)
+    {
         let _mailData = this.prepareMessage(data, type);
         sendEmail(data.to, _mailData.subject, _mailData.plainText, _mailData.body);
 
@@ -116,7 +124,6 @@ class Mailer extends Component {
 
         EmailsSendsModel.getInstance(this.requestId).add(_dataLog);
     }
-
 }
 
 Mailer.instanceId = BaseFunctions.uniqueId();

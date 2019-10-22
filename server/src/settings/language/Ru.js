@@ -5,10 +5,7 @@
  */
 
 const Constants = require('server/src/settings/Constants');
-
 const Seo = require('server/src/settings/language/seo/Ru');
-
-
 
 module.exports = {
     'domain_name': 'WORLD-LANDMARKS.RU',

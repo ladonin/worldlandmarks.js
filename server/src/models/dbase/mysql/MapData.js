@@ -9,10 +9,10 @@ const DBaseMysql = require('server/src/core/dbases/Mysql');
 const BaseFunctions = require('server/src/functions/BaseFunctions');
 const Config = require('server/src/settings/Config');
 
-
 class MapDataModel extends DBaseMysql
 {
-    constructor() {
+    constructor()
+    {
         super();
 
         this.tableNameInit = this.tableInitNames.MAP_DATA;
@@ -63,15 +63,13 @@ class MapDataModel extends DBaseMysql
             seo_description:{
                 rules:[],
                 processing:['strip_tags'],
-                },
-            };
+            }
+        };
 
-            this.snapshotFieldsData();
-        }
+        this.snapshotFieldsData();
+    }
 
-//ATTENTION - обратите внимание
-//update_point => change
-//getPointsBigDataByIds => getPointsDataByIds
+
     /*
      * Update placemark
      *
@@ -91,10 +89,6 @@ class MapDataModel extends DBaseMysql
         this.setValuesToFields(data);
         this.update(_id);
     }
-
-
-
-
 
 
     /*
@@ -163,59 +157,6 @@ class MapDataModel extends DBaseMysql
 
         return _result;
     }
-
-
-
-
-
-
-
-
-//ATTENTION - обратите внимание
-//getPointsShortDataByIds => getPointsDataByIds
-    /*
-     * Get placemarks short data by ids
-     *
-     * @param {array} ids - placemarks ids
-     * @param {boolean} needComment - whether placemark description required
-     * @param {boolean} needResult - whether result required
-     *
-     * @return {array of objects} - placemarks data
-     */
-//    getPointsShortDataByIds(ids, needComment = false, needResult = true)
-//    {
-//        ids = BaseFunctions.prepareToIntArray(ids);
-//        let _idsList = ids.join(',');
-//
-//        let _comment = needComment ? 'c.comment as c_comment,' : '';
-//
-//        // Get only first photo
-//        let _sql = `SELECT
-//                    c.id as c_id,
-//                    ${_comment}
-//                    c.x as c_x,
-//                    c.y as c_y,
-//                    c.title as c_title,
-//                    c.category as c_category,
-//                    c.subcategories as c_subcategories,
-//                    c.relevant_placemarks as c_relevant_placemarks,
-//
-//                    ph.id as ph_id,
-//                    ph.path as ph_path,
-//                    ph.width as ph_width,
-//                    ph.height as ph_height
-//
-//                    FROM ${this.getTableName()} c
-//                    LEFT JOIN (
-//                        SELECT * FROM (SELECT MAX(id) phh2_id FROM ${this.getTableName(this.tableInitNames.MAP_PHOTOS)} GROUP BY map_data_id) phh2
-//                        JOIN ${this.getTableName(this.tableInitNames.MAP_PHOTOS)} phh3 on phh2.phh2_id=phh3.id
-//                    ) ph ON ph.map_data_id=c.id
-//                    WHERE c.id IN (${_idsList})
-//                    GROUP by c_id
-//                    ORDER by c_title ASC`;
-//
-//        return this.getBySql(_sql, undefined, needResult);
-//    }
 
 
     /*
@@ -291,10 +232,9 @@ class MapDataModel extends DBaseMysql
             /*select*/'id, x, y, title, category, subcategories, relevant_placemarks',
             /*where_values*/[],
             /*limit*/limit,
-            /*need_result*/false
+            /*needresult*/false
         );
     }
-
 
 
     /*
@@ -316,9 +256,10 @@ class MapDataModel extends DBaseMysql
                 select,
                 /*where_values*/[pointId, categoryId],
                 /*limit*/Config['restrictions']['max_items_at_sublist'],
-                /*need_result*/false
+                /*needresult*/false
                 );
     }
+
 
     /*
      * Return placemarks count by category id
@@ -337,7 +278,7 @@ class MapDataModel extends DBaseMysql
                 /*select*/'COUNT(*) as placemarks_count',
                 /*where_values*/[id],
                 /*limit*/1,
-                /*need_result*/false
+                /*needresult*/false
                 )[0]['placemarks_count'];
     }
 
@@ -356,7 +297,7 @@ class MapDataModel extends DBaseMysql
             /*select*/'COUNT(*) as placemarks_count',
             /*where_values*/[],
             /*limit*/1,
-            /*need_result*/false
+            /*needresult*/false
         )[0]['placemarks_count'];
     }
 
@@ -370,7 +311,6 @@ class MapDataModel extends DBaseMysql
      */
     getPlacemarksPhotos(placemarksIds)
     {
-
         let _sql = `SELECT
                     c.id as id,
                     c.title as title,
@@ -387,18 +327,6 @@ class MapDataModel extends DBaseMysql
 
         return this.getBySql(_sql, undefined, false);
     }
-
-
-
-
-
-
-
-
-
-
-
-
 
 
     /*
@@ -431,10 +359,6 @@ class MapDataModel extends DBaseMysql
     }
 
 
-
-
-
-
     /*
      * Get placemarks of specified category
      *
@@ -446,8 +370,8 @@ class MapDataModel extends DBaseMysql
      *
      * @return {array of objects}
      */
-    getCategoryPlacemarks(categoryId, offset, limit, language, needResult = true) {
-
+    getCategoryPlacemarks(categoryId, offset, limit, language, needResult = true)
+    {
         categoryId = parseInt(categoryId);
 
         let _sql = `SELECT
@@ -468,7 +392,6 @@ class MapDataModel extends DBaseMysql
 
         return this.getBySql(_sql, [language, categoryId], needResult);
     }
-
 
 
     /*
@@ -532,99 +455,25 @@ class MapDataModel extends DBaseMysql
      *
      * @return  {array of objects}
      */
-    getLastPLacemarks (idStart, limit){
-            let _condition = '1';
+    getLastPLacemarks (idStart, limit)
+    {
+        let _condition = '1';
 
-            if (idStart) {
-                _condition += ' AND id < ?';
-            }
+        if (idStart) {
+            _condition += ' AND id < ?';
+        }
 
-            return this.getByCondition(
-                _condition,
-                /*order*/'id DESC',
-                /*group*/'',
-                /*select*/'id',
-                /*where_values*/[idStart],
-                limit,
-                /*need_result*/false
-            );
+        return this.getByCondition(
+            _condition,
+            /*order*/'id DESC',
+            /*group*/'',
+            /*select*/'id',
+            /*where_values*/[idStart],
+            limit,
+            /*needresult*/false
+        );
     }
-
-
-
-//ATTENTION - обратите внимание
-//get_points_by_coords => MY_MODULE_NAME_MAP.getPointsShortDataByCoords
-
-
-
-
-//ATTENTION - обратите внимание
-// getPointsByIds => MY_MODULE_NAME_MAP.getPointsByIds
-//getPointContentById(id) => Map.getPointBigDataById
-
-// get_points_bunch => MY_MODULE_NAME_MAP.get_points_bunch
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-//    addArticle(data)
-//    {
-//        this.setValuesToFields(data);
-//        return this.insert();
-//    }
-//
-//    updateArticle(data)
-//    {
-//        let _id = data.id;
-//        delete data.id;
-//        this.setValuesToFields(data);
-//        return this.update(_id);
-//    }
-
-
-    /*
-     * Get country name by country code
-     *
-     * @param {string} code - country code
-     * @param {string} language - in what language country name will be get
-     * @param {boolean} needResult - whether result is required
-     *
-     * @return {string} - country name
-     */
-//    getCountryNameByCode(code, language, needResult = true){
-//
-//        let _sql = "SELECT cn.name as name FROM country c \n\
-//                    LEFT JOIN country_name cn on c.id = cn.country_id  \n\
-//                    WHERE c.local_code = '" + code + "' AND cn.language='" + language + "'";
-//
-//        let _data = this.getBySql(_sql, undefined, needResult);
-//
-//        if (!_data.length || !_data[0].name) {
-//            this.error(ErrorCodes.ERROR_COUNTRY_NAME_WAS_NOT_FOUND, 'country code [' + code + ']', undefined, false);
-//        }
-//
-//        return _data[0].name;
-//    }
-
-
 }
 
 MapDataModel.instanceId = BaseFunctions.uniqueId();
-
 module.exports = MapDataModel;

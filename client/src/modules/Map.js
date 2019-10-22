@@ -19,7 +19,9 @@ import CategoryViewerModule from 'src/modules/CategoryViewer';
 import Events from 'src/modules/Events';
 import AlertsText from 'src/modules/AlertsText';
 
+
 const DEFAULT_ZOOM = 5;
+
 let _isAvailableToChange = false;
 let _filterCategory = false;
 let _objectName = 'my_map_vendor';
@@ -44,7 +46,6 @@ if (isMobile) {
     _buttonsNewPointReturnToEditorPosition = '-150px';
     _zoomWhereAmI = 17;
     _placemarkViewZoom = 16;
-    //_zoom; // = 14; //ATTENTION - обратите внимание
 } else {
     _buttonsPlacemarkViewerHidePosition = '-120px';
     _buttonsNewPointPlaceAtMapPosition = '-120px';
@@ -52,7 +53,6 @@ if (isMobile) {
     _buttonsNewPointReturnToEditorPosition = '-240px';
     _zoomWhereAmI = 14;
     _placemarkViewZoom = 17;
-    //_zoom; // = 12; //ATTENTION - обратите внимание
 }
 let _isTooBigRequestedArea = false;
 let _presetPlacemarkNew = 'custom#new_placemark';
@@ -130,47 +130,62 @@ let _prefix;
 let _bunchFillingTimer;
 let _bunchFillingEnd = 0;
 
-
-
-
-function getClusterListImagePrefix(){
+function getClusterListImagePrefix()
+{
     return _clusterListImagePrefix;
 }
-function getClusterListImageWidth(){
+
+
+function getClusterListImageWidth()
+{
     return _clusterListImageWidth;
 }
-function getClusterListImageHeight(){
+
+
+function getClusterListImageHeight()
+{
     return _clusterListImageHeight;
 }
-function getContentImageWithClusterWidth(){
+
+
+function getContentImageWithClusterWidth()
+{
     return _contentImageWithClusterWidth;
 }
-function getContentImageWithoutClusterWidth(){
+
+
+function getContentImageWithoutClusterWidth()
+{
     return _contentImageWithoutClusterWidth;
 }
-function getContentImageWithClusterPrefix(){
+
+
+function getContentImageWithClusterPrefix()
+{
     return _contentImageWithClusterPrefix;
 }
-function getContentImageWithoutClusterPrefix(){
+
+
+function getContentImageWithoutClusterPrefix()
+{
     return _contentImageWithoutClusterPrefix;
 }
 
-function prepareGenericDimensions() {
 
+function prepareGenericDimensions()
+{
     if (isMobile) {
         _clusterListImageWidth = Math.floor(_windowWidth * 0.25);
         _clusterListImageHeight = Math.floor(_clusterListImageWidth * 0.75);
         _placemarkContentMargin = 8;
         _contentImageWithClusterWidth = _windowWidth - (_clusterListImageWidth + (_placemarkContentMargin * 2));
-        _contentImageWithoutClusterWidth = _windowWidth; // без отступов
-        //my_fileuploader_object.update({statusBarWidth: 184}); //ATTENTION - обратите внимание
+        _contentImageWithoutClusterWidth = _windowWidth;
     } else {
         _clusterListImageWidth = 210;
         _clusterListImageHeight = 170;
         _placemarkContentMargin = 10;
         _contentImageWithClusterWidth = BaseFunctions.getWidth(_placemarkBlockSelector) - (_clusterListImageWidth + (_placemarkContentMargin * 2));
         _contentImageWithoutClusterWidth = BaseFunctions.getWidth(_placemarkBlockSelector);
-        //my_fileuploader_object.update({statusBarWidth: 450});//ATTENTION - обратите внимание
     }
 
     let _clusterImageWidthDimension = Math.floor(_clusterListImageWidth * 0.2);
@@ -181,13 +196,8 @@ function prepareGenericDimensions() {
     BaseFunctions.setHeight(_placemarkSelector, _windowHeight - (isMobile ? 55 : 80));
     BaseFunctions.setHeight(_placemarkAddSelector, _windowHeight - (parseInt(BaseFunctions.getCss(_placemarkAddSelector, 'margin-top')) * 2));
     BaseFunctions.setHeight(_placemarkAddBlockSelector, BaseFunctions.getHeight(_placemarkAddSelector) - BaseFunctions.getHeight(_placemarkAddSetPointSelector) - BaseFunctions.getHeight(_placemarkAddCancelSelector) - 15);
-    //_buttonsHeight = BaseFunctions.getHeight(_openPanelSelector);
-    //BaseFunctions.setCss(_placemarkButtonsSelector, 'top', _windowHeight - BaseFunctions.getHeight(_placemarkButtonsBlockSelector) - parseInt(BaseFunctions.getCss(_placemarkButtonsBlockSelector, 'padding-bottom')) - parseInt(BaseFunctions.getCss(_placemarkButtonsBlockSelector, 'padding-top')) + 'px');
-    //BaseFunctions.setCss(_placemarkButtonsSelector, 'top', _windowHeight - BaseFunctions.getHeight(_placemarkButtonsBlockSelector) - parseInt(BaseFunctions.getCss(_placemarkButtonsBlockSelector, 'padding-bottom')) - parseInt(BaseFunctions.getCss(_placemarkButtonsBlockSelector, 'padding-top')) + 'px');
     BaseFunctions.setCss(_placemarkAddButtonsSelector, 'top', _windowHeight - BaseFunctions.getHeight(_placemarkAddButtonsSelector) - parseInt(BaseFunctions.getCss(_placemarkAddButtonsSelector, 'margin-bottom')) + 'px');
-    //BaseFunctions.setCss(_openPanelSelector, 'top', (_windowHeight - _buttonsHeight) / 2);
     BaseFunctions.show(_placemarkAddOpenSelector);
-    //BaseFunctions.show(_openPanelSelector);
     BaseFunctions.setHeight(_placemarkListSelector, BaseFunctions.getHeight(_placemarkSelector));
     BaseFunctions.setHeight(_placemarkContentSelector, BaseFunctions.getHeight(_placemarkSelector));
     _placemarkHeight = BaseFunctions.getHeight(_placemarkSelector);
@@ -196,66 +206,66 @@ function prepareGenericDimensions() {
 }
 
 
-
-function setCenter(id) {
+function setCenter(id)
+{
     _map.setCenter([_placemarks['id_'+id]['data']['y'], _placemarks['id_'+id]['data']['x']]);
 }
 
-function setZoom(type) {
+
+function setZoom(type)
+{
     if (type === 'whereAmI') {
         _map.setZoom(_zoomWhereAmI);
     }
 }
 
 
-
-
-function saveInPlacemarksData(data) {
+function saveInPlacemarksData(data)
+{
     let _id = data['id'];
-// Если такая метка уже есть в массие, с условием, что мы не обновляем её, то не задаем её снова
     if ((_isRedactedStatus === false) && (typeof (_placemarks['id_'+_id]) !== 'undefined')) {
         return false;
     }
-// при обновлении не будем уничтожать объект - там ведь только его сущность и координаты, данные все в массиве, вот их и будем обновлять
     if (_isRedactedStatus === false) {
         _placemarks['id_'+_id] = {};
     }
     _placemarks['id_'+_id]['data'] = data;
     _placemarks['id_'+_id]['data']['categories'] = [data['category'],...(data['categories_html']['subcategories'] !== null ? data['categories_html']['subcategories'].split(',').map((val)=>parseInt(val)) : [])];
-
     return true;
 }
 
 
-
-function filterByCategory(id) {
+function filterByCategory(id)
+{
     hideAllPlacemarksFromMap();
     _filterCategory = id;
     addAndClustering(true);
 }
 
-function resetFilterByCategory() {
+
+function resetFilterByCategory()
+{
     hideAllPlacemarksFromMap();
     _filterCategory = false;
     addAndClustering(true);
 }
 
-    // убираем все метки из карты, в массиве сохраняем
-function hideAllPlacemarksFromMap() {
+
+function hideAllPlacemarksFromMap()
+{
     _placemarkOpenedId = undefined;
     _clusterer.removeAll();
     _map.geoObjects.removeAll();
 }
 
 
-
-// добавление и кластеризация элементов карты
-function addAndClustering(init = false) {
+function addAndClustering(init = false)
+{
     let _clusterIsUpdated = false;
     let _newPlacemarkData;
     let _placemarksToAdd = [];
 
-    // проходим по каждой метке и добавляем её в виде балуна на карту
+    // Going through each landmark and add it as baloon on map
     for (let _key in _placemarks) {
 
         let _placemark = _placemarks[_key];
@@ -277,33 +287,26 @@ function addAndClustering(init = false) {
     }
 }
 
-// задаем цвета кластерам при действиях на карте
-function colorizeCluster(target) {
 
-}
-
-// добавление балуна на карту
-function addPlacemark(id, data) {
+function colorizeCluster(target) {}
 
 
+// Add baloon on map
+function addPlacemark(id, data)
+{
     let _coords = [data['y'], data['x']];
     let _myPlacemark = new window.ymaps.Placemark(
-            _coords,
-            {
-                // собственные данные иденфикации балуна
-                own_id: id
-            },
-            // Изображение иконки метки
-            CategoryViewerModule.getBaloonImage(data['category'])
-            );
+        _coords,
+        {
+            own_id: id
+        },
+        // Baloon icon image
+        CategoryViewerModule.getBaloonImage(data['category'])
+    );
 
-
-
-
-// сохраняем в массив объект балуна, чтобы можно было работать с ним в будущем,
-// если объект тут задан, значит он уже отображен на карте, а не только в массиве
+    // Save the baloon in array
     _placemarks['id_'+id]['object'] = _myPlacemark;
-// что делаем при клике на балун
+
     _myPlacemark.events.add('click', function (e) {
         _placemarkComponentRef.close();
         _panelToolsComponentRef.hide();
@@ -321,36 +324,49 @@ function addPlacemark(id, data) {
     return _myPlacemark;
 }
 
-// отоюбражение данных балуна
-function placemarkPreview(id, atCluster) {
+
+function placemarkPreview(id, atCluster)
+{
     _showPlacemarkAddOpenSelector = false;
     _showOpenPanelSelector = false;
     getPointData(id, atCluster);
 }
 
-function setPlacemarkComponentRef(ref) {
+
+function setPlacemarkComponentRef(ref)
+{
     _placemarkComponentRef = ref;
 }
-function setPanelToolsComponentRef(ref) {
+
+
+function setPanelToolsComponentRef(ref)
+{
     _panelToolsComponentRef = ref;
 }
-// получение данных балуна
-function getPointData(id, atCluster) {
+
+
+function getPointData(id, atCluster)
+{
     showPointData(id, atCluster);
     colorizePlacemark(id);
 }
 
-function getPlacemarksRightList() {
+
+function getPlacemarksRightList()
+{
     return _placemarksRightList;
 }
 
-function getPlacemarks() {
+
+function getPlacemarks()
+{
     return _placemarks;
 }
 
 
-// подготавливаем габариты окна просмотра балуна - NOTE:  нельзя прописать это в css, потому что теги еще не существуют
-function preparePlacemarkContentDimensions(atCluster, id) {
+// Prepare placemark block dimentions according with actual state
+function preparePlacemarkContentDimensions(atCluster, id)
+{
     BaseFunctions.setWidth(_placemarkListSelector, _clusterListImageWidth + (_placemarkContentMargin * 2));
     if (isMobile) {
         if (atCluster) {
@@ -365,7 +381,6 @@ function preparePlacemarkContentDimensions(atCluster, id) {
             BaseFunctions.setWidth(_placemarkContentSelector, BaseFunctions.getWidth(_placemarkBlockSelector));
         }
     }
-    // переводим скролл вверх, если вдруг он не там
     BaseFunctions.scrollTop(_placemarkContentSelector, 0);
     BaseFunctions.kickNicescroll(_placemarkContentSelector);
     BaseFunctions.kickNicescroll(_placemarkAddBlockSelector);
@@ -377,10 +392,8 @@ function preparePlacemarkContentDimensions(atCluster, id) {
 }
 
 
-
-
-
-function checkLinkOnId(matchParams) {
+function checkLinkOnId(matchParams)
+{
     _linkId = Router.getActionData(undefined, matchParams)[Consts.ID_VAR_NAME];
     if (_linkId) {
         _panelToolsComponentRef.hide();
@@ -388,7 +401,9 @@ function checkLinkOnId(matchParams) {
     }
 }
 
-function getPlacemark(id, atCluster = false) {
+
+function getPlacemark(id, atCluster = false)
+{
     Socket.backgroundQuery(
             Consts.CONTROLLER_NAME_MAP,
             'get_placemark',
@@ -400,24 +415,19 @@ function getPlacemark(id, atCluster = false) {
 }
 
 
-
-// подготавливаем габариты окна просмотра балуна - NOTE:  нельзя прописать это в css, потому что теги еще не существуют
-function preparePlacemarkViewerDimensions(id, atCluster) {
-
+// Prepare placemark viewer dimentions according with actual state
+function preparePlacemarkViewerDimensions(id, atCluster)
+{
     BaseFunctions.setCss(_placemarkContentBlockSelector + ' div.text_1', 'margin-top', _placemarkContentMargin + 'px');
     BaseFunctions.setCss(_placemarkContentBlockSelector + ' div.header_1', 'padding-top', _placemarkContentMargin * 2 + 'px');
     BaseFunctions.setCss(_placemarkContentBlockSelector + ' div.header_1', 'padding-bottom', '0px');
-
-
     BaseFunctions.setCss(_placemarkListElementSelector, 'padding', _placemarkContentMargin + 'px');
-
     BaseFunctions.setCss(_placemarkListElementDivSelector, 'margin-bottom', _placemarkContentMargin + 'px');
 
     if (isMobile) {
 
         BaseFunctions.setWidth(_placemarkBlockSelector, _windowWidth);
         BaseFunctions.setWidth(_placemarkButtonsBlockSelector, _windowWidth);
-
         BaseFunctions.setWidth(_placemarkAddSetPointSelector, _windowWidth - (parseInt(BaseFunctions.getCss(_placemarkAddSetPointSelector, 'margin-right')) * 2));
         BaseFunctions.setWidth(_placemarkAddCancelSelector, Math.floor(_windowWidth / 2) - parseInt(BaseFunctions.getCss(_placemarkAddCancelSelector, 'margin-right')) - Math.ceil(parseInt(BaseFunctions.getCss(_placemarkAddCancelSelector, 'margin-right'))/2));
         BaseFunctions.setWidth(_placemarkAddCommitSelector, Math.floor(_windowWidth / 2) - parseInt(BaseFunctions.getCss(_placemarkAddCommitSelector, 'margin-right')) - Math.floor(parseInt(BaseFunctions.getCss(_placemarkAddCommitSelector, 'margin-right'))/2));
@@ -434,7 +444,6 @@ function preparePlacemarkViewerDimensions(id, atCluster) {
             }
             BaseFunctions.setWidth('.sublist_placemarks_content', BaseFunctions.getWidth('.sublist_placemarks_block') - BaseFunctions.getWidth('.cropped_image_div') - 30);
         }
-
     } else {
         if (atCluster) {
             BaseFunctions.setWidth('.sublist_placemarks_block', BaseFunctions.getWidth(_placemarkContentBlockSelector) - 30);
@@ -448,7 +457,9 @@ function preparePlacemarkViewerDimensions(id, atCluster) {
     BaseFunctions.setWidth(_placemarkCloseSide2Selector, BaseFunctions.getWidth(_placemarkCloseSide1Selector));
 }
 
-function actionsAfterShowPointData(id, atCluster){
+
+function actionsAfterShowPointData(id, atCluster)
+{
     BaseFunctions.trigger(_yaShield1Selector, 'show', ['on']);
     BaseFunctions.setCss(_placemarkToggleSelector + ' ' + _buttonImageSelector, 'top', _buttonsPlacemarkViewerHidePosition);
     BaseFunctions.setCss(_yMapsIdSelector, 'opacity', 0.62);
@@ -462,7 +473,8 @@ function actionsAfterShowPointData(id, atCluster){
 }
 
 
-function actionsAfterClosePointData(){
+function actionsAfterClosePointData()
+{
     colorizePlacemark(0);
     BaseFunctions.trigger(_yaShield1Selector, 'show', ['off']);
     BaseFunctions.setCss(_yMapsIdSelector, 'opacity', 1);
@@ -474,8 +486,10 @@ function actionsAfterClosePointData(){
     BaseFunctions.kickNicescroll(_placemarkListSelector);
 }
 
-// возвращаем метку в кластер
-function moveToCluster(id) {
+
+// Return baloon to cluster
+function moveToCluster(id)
+{
     if ((typeof (_placemarks['id_'+id]) !== 'undefined') && (typeof (_placemarks['id_'+id]['object']) !== 'undefined')) {
         _clusterer.add(_placemarks['id_'+id]['object']);
         _map.geoObjects.remove(_placemarks['id_'+id]['object']);
@@ -484,56 +498,51 @@ function moveToCluster(id) {
 }
 
 
-
-// ПРИ КЛИКЕ НА БАЛУН ВЫЗЫВАЕТСЯ ЭТА ФУНКЦИЯ
-// выводим на экран данные метки - из кластера или из балуна
-function showPointData(id, atCluster) {
+// Show data from baloon or cluster
+function showPointData(id, atCluster)
+{
     preparePlacemarkContentDimensions(atCluster, id);
     getPlacemark(id, atCluster);
 
 }
 
 
-
-// задаем цвета метке при действиях на карте
-function colorizePlacemark(id) {
-    // только если сейчас открывается метка а не кластер, это нужно чтобы закрывая прошлые кластера, подсвечивать их как просмотренные
+function colorizePlacemark(id)
+{
     if (id) {
         let _target = _placemarks['id_'+id]['object'];
         _target.options.set('preset', CategoryViewerModule.getBaloonImage(_placemarks['id_'+id]['data']['category'], true));
     }
-    // делаем прошлую метку как просмотренную, если прошлая метка не эта же, на которую мы сейчас снова перешли
     if ((typeof (_placemarkOpenedId) !== 'undefined') && (_placemarkOpenedId !== id)) {
         _placemarks['id_'+_placemarkOpenedId]['object'].options.set('preset', CategoryViewerModule.getBaloonImage(_placemarks['id_'+_placemarkOpenedId]['data']['category']));
     }
     if (id) {
-        // теперь открытая метка это она
         _placemarkOpenedId = id;
     }
 }
 
 
-
-
-
-
-function addTargetPlacemark(coords) {
-        if (typeof (_targetPlacemark) === 'object') {
-    //перемещаем
+function addTargetPlacemark(coords)
+{
+    if (typeof (_targetPlacemark) === 'object') {
         _targetPlacemark.geometry.setCoordinates(coords);
-        } else if (typeof (_targetPlacemark) === 'undefined') {
+    } else if (typeof (_targetPlacemark) === 'undefined') {
         _targetPlacemark = new window.ymaps.Placemark(coords, {}, {
         preset: _presetPlacemarkNew
         });
-                _map.geoObjects.add(_targetPlacemark);
-        }
+        _map.geoObjects.add(_targetPlacemark);
     }
+}
 
-function setAvailableToChange(value){
+
+function setAvailableToChange(value)
+{
     _isAvailableToChange = value;
 }
 
-function init(coords, matchParams) {
+
+function init(coords, matchParams)
+{
     let _center = [];
     let _zoom = Cookies.getCookie(Consts.YMAP_ZOOM) ? Cookies.getCookie(Consts.YMAP_ZOOM) : DEFAULT_ZOOM;
     _center[0] = typeof Cookies.getCookie('centerx') === 'undefined' ? coords[0] : Cookies.getCookie('centerx');
@@ -556,7 +565,7 @@ function init(coords, matchParams) {
     });
 
     _map.controls.add('zoomControl', {position: {left: '10px', top: '130px'}});
-    // initialize cluster
+    // Initialize cluster
     let _clusterIcons = [{
             href: '/img/cluster.png',
             size: [40, 40],
@@ -575,22 +584,15 @@ function init(coords, matchParams) {
 
     checkLinkOnId(matchParams);
 
-    /**
-     * Кластеризатор расширяет коллекцию, что позволяет использовать один обработчик
-     * для обработки событий всех геообъектов.
-     * Будем менять цвет иконок и кластеров при наведении.
-     */
     _clusterer.events
-        //при клике на кластер, подгружаем данные первого в списке элемента
+        // On click on clustrer show first baloon in cluster
         .add(['click'], function (e) {
             _placemarkComponentRef.close();
             _panelToolsComponentRef.hide();
             if (BaseFunctions.is(_placemarkAddButtonsSelector, ":visible") !== true) {
                 let _target = e.get('target');
-                // только для кластера с элементами
                 if (typeof _target.getGeoObjects === "function") {
                     showClusterList(_target);
-                    // переводим скролл вверх, если вдруг он не там
                     BaseFunctions.scrollTop(_placemarkListSelector, 0);
                 }
             } else {
@@ -601,9 +603,6 @@ function init(coords, matchParams) {
             }
         });
 
-
-// события:
-// при клике по полю, в случае добавления новой точки или смены координат существующей, определяем координаты клика и записываем их форму
     _map.events.add('click', function (e) {
         if (_isAvailableToChange
             && BaseFunctions.is(_panelToolsSelector, ":visible")!== true
@@ -614,9 +613,7 @@ function init(coords, matchParams) {
             BaseFunctions.setVal(_yAddNewPointSelector, _coords[0].toPrecision(6));
             BaseFunctions.setVal(_xAddNewPointSelector, _coords[1].toPrecision(6));
 
-//если редактируем
             if (_isRedactedStatus === true) {
-// меняем местоположение метки
                 _placemarks['id_'+_currentPlacemarkId]['object'].geometry.setCoordinates(_coords);
             } else {
                 addTargetPlacemark(_coords);
@@ -629,11 +626,6 @@ function init(coords, matchParams) {
             clearTimeout(_placemarkAddSetPointTimer);
 
             _placemarkAddSetPointTimer = setTimeout(function () {
-
-                if (BaseFunctions.is(_placemarkAddSelector, ":visible") !== true) {
-
-                    //$(placemark_add_set_point_selector).trigger('click'); //ATTENTION - обратите внимание
-                }
                 BaseFunctions.kickNicescroll(_placemarkAddBlockSelector);
                 BaseFunctions.kickNicescroll(_placemarkListSelector);
             }, 2000);
@@ -652,44 +644,53 @@ function init(coords, matchParams) {
 }
 
 
-function restartBunchFillingTimer(){
+function restartBunchFillingTimer()
+{
     clearInterval(_bunchFillingTimer);
     _bunchFillingEnd=false;
     runBunchFillingTimer();
 }
 
-function suspendBunchFillingTimer() {
+
+function suspendBunchFillingTimer()
+{
    clearInterval(_bunchFillingTimer);
 }
 
-function resumeBunchFillingTimer() {
+
+function resumeBunchFillingTimer()
+{
    runBunchFillingTimer();
 }
 
 
-function runBunchFillingTimer() {
-    bunchFilling();//сразу и потом
+function runBunchFillingTimer()
+{
+    bunchFilling();
     if (Config.getServiceConfig().map.autofill.on) {
         clearInterval(_bunchFillingTimer);
         _bunchFillingTimer = setInterval(bunchFilling, Config.getServiceConfig().map.autofill.period * 1000);
     }
 }
 
-function stopBunchFillingTimer() {
+
+function stopBunchFillingTimer()
+{
    clearInterval(_bunchFillingTimer);
    _bunchFillingEnd=true;
 }
 
-function bunchFilling() {
+
+function bunchFilling()
+{
 
     if (!_isTooBigRequestedArea){
-        //если запрашиваемая область не велика и может подгружаться с помощью координат, то не "заливаем" карту
-        //эта функция может выполняться только, когда масштаб карты очень маленький
+        // If requester area is not too big then don't filling
         return;
     }
 
     if (_bunchFillingEnd){
-        //если вдруг еще раз запустили, чтобы не дергать по пустякам сервер
+        // To avoid request duplications
         return;
     }
 
@@ -703,53 +704,38 @@ function bunchFilling() {
 }
 
 
+function showClusterList(target)
+{
 
-
-
-
-
-
-function showClusterList(target) {
-
-        if (typeof (target) === 'undefined') {
-            return;
-        }
-        //задаем размеры блоков - content и cluster list
-        preparePlacemarkContentDimensions(true, null);
-
-        _placemarksRightList = {};
-        let _firstId = null;
-        // выбираем все данные кластера и отображаем их в попапе
-
-        let _geoObjects = target.getGeoObjects();
-
-        for (let _index in _geoObjects) {
-            let _placemark = _geoObjects[_index];
-            let _id = _placemark.properties.get('own_id');
-
-            if (_firstId === null) {
-                _firstId = _id;
-            }
-            _placemarksRightList['id_'+_id]=_id;
-        }
-
-        BaseFunctions.setCss(_yMapsIdSelector,'opacity', 0.62);
-        BaseFunctions.trigger(_yaShield1Selector,'show', ['on']);
-
-        colorizeCluster(target);
-        colorizePlacemark(0); // делаем потенциально открытые ранее метки как просмотренные, не знаем какая, но она должна быть закрыта
-        placemarkPreview(_firstId, true);
+    if (typeof (target) === 'undefined') {
+        return;
     }
 
+    preparePlacemarkContentDimensions(true, null);
+    _placemarksRightList = {};
+    let _firstId = null;
+    let _geoObjects = target.getGeoObjects();
+
+    for (let _index in _geoObjects) {
+        let _placemark = _geoObjects[_index];
+        let _id = _placemark.properties.get('own_id');
+
+        if (_firstId === null) {
+            _firstId = _id;
+        }
+        _placemarksRightList['id_'+_id]=_id;
+    }
+
+    BaseFunctions.setCss(_yMapsIdSelector,'opacity', 0.62);
+    BaseFunctions.trigger(_yaShield1Selector,'show', ['on']);
+    colorizeCluster(target);
+    colorizePlacemark(0);
+    placemarkPreview(_firstId, true);
+}
 
 
-
-
-
-
-
-function prepareLoadedPlacemarks(data, isBunch) {
-
+function prepareLoadedPlacemarks(data, isBunch)
+{
     if (data === Consts.TOO_BIG_MAP_REQUEST_AREA_CODE) {
         if ((typeof(isBunch)==='undefined') || (!isBunch)){
             _isTooBigRequestedArea = true;
@@ -764,7 +750,7 @@ function prepareLoadedPlacemarks(data, isBunch) {
             }
         }
 
-        // Если хоть одна новая метка добавилась
+        // If at least one placemark is added
         if (_placemarksDataIsSet === true) {
             addAndClustering();
         }
@@ -774,43 +760,45 @@ function prepareLoadedPlacemarks(data, isBunch) {
     }
 }
 
-function loadByCoords(coords) {
+
+function loadByCoords(coords)
+{
     let _params;
-        if (typeof (coords) === 'undefined') {
-            let _coordsArray = _map.getBounds();
-            _params = {
-                'Y1': _coordsArray[1][0],
-                'Y2': _coordsArray[0][0],
-                'X1': _coordsArray[0][1],
-                'X2': _coordsArray[1][1]
-            };
-        } else {
-            _params = coords;
-        }
-        _params.zoom = _map.getZoom();
-        _params.center = _map.getCenter();
-
-        Cookies.setCookie('centerx', _params.center[0]);
-        Cookies.setCookie('centery', _params.center[1]);
-        Cookies.setCookie(Consts.YMAP_ZOOM, _params.zoom);
-
-        Socket.backgroundQuery(
-                Consts.CONTROLLER_NAME_MAP,
-                'get_placemarks_by_coords',
-                {
-                    'Y1': _params.Y1,
-                    'Y2': _params.Y2,
-                    'X1': _params.X1,
-                    'X2': _params.X2,
-                    'zoom': _params.zoom,
-                    'filterCategory': false
-                }
-        );
+    if (typeof (coords) === 'undefined') {
+        let _coordsArray = _map.getBounds();
+        _params = {
+            'Y1': _coordsArray[1][0],
+            'Y2': _coordsArray[0][0],
+            'X1': _coordsArray[0][1],
+            'X2': _coordsArray[1][1]
+        };
+    } else {
+        _params = coords;
     }
+    _params.zoom = _map.getZoom();
+    _params.center = _map.getCenter();
+
+    Cookies.setCookie('centerx', _params.center[0]);
+    Cookies.setCookie('centery', _params.center[1]);
+    Cookies.setCookie(Consts.YMAP_ZOOM, _params.zoom);
+
+    Socket.backgroundQuery(
+            Consts.CONTROLLER_NAME_MAP,
+            'get_placemarks_by_coords',
+            {
+                'Y1': _params.Y1,
+                'Y2': _params.Y2,
+                'X1': _params.X1,
+                'X2': _params.X2,
+                'zoom': _params.zoom,
+                'filterCategory': false
+            }
+    );
+}
 
 
-
-function prepareNewPlacemarkBalloonPresets() {
+function prepareNewPlacemarkBalloonPresets()
+{
     window.ymaps.option.presetStorage.add(_presetPlacemarkNew, {
         iconLayout: 'default#image',
         iconImageHref: '/img/new_placemark.png',
@@ -820,9 +808,9 @@ function prepareNewPlacemarkBalloonPresets() {
 }
 
 
-
-// отделяем от кластера метку
-function removeFromCluster(id) {
+// Separate baloon from cluster
+function removeFromCluster(id)
+{
     if ((typeof (_placemarks['id_'+id]) !== 'undefined') && (typeof (_placemarks['id_'+id]['object']) !== 'undefined')) {
         _clusterer.remove(_placemarks['id_'+id]['object']);
         _map.geoObjects.add(_placemarks['id_'+id]['object']);
@@ -830,86 +818,79 @@ function removeFromCluster(id) {
 }
 
 
-
-
-function showPlace() {
+function showPlace()
+{
     BaseFunctions.setCss(_yMapsIdSelector,'opacity', 1);
     _map.setCenter([_placemarks['id_'+_currentPlacemarkId]['data']['y'], _placemarks['id_'+_currentPlacemarkId]['data']['x']]);
     _map.setZoom(_placemarkViewZoom);
-    //отделяем её от кластера
     removeFromCluster(_currentPlacemarkId);
 }
 
-function hidePlace() {
+
+function hidePlace()
+{
     BaseFunctions.setCss(_yMapsIdSelector,'opacity', 0.62);
-    //возвращаем в кластер
     moveToCluster(_currentPlacemarkId);
 }
 
 
-function getFilterCategory(){
+function getFilterCategory()
+{
     return _filterCategory;
 }
 
 
-
-
-
-
-
-
-
-
-
-
- function run(matchParams, action) {
+function run(matchParams, action)
+{
     window.ymaps.ready(function () {
-    function ymapsGeolocation() {
-        window.ymaps.geolocation.get({
-            provider: 'yandex',
-            mapStateAutoApply: true
-        }).then(function (result) {
-            let _bounds = result.geoObjects.get(0).properties.get('boundedBy');
-            let _coords = window.ymaps.util.bounds.getCenter(_bounds);
-            if (action === 'init') {
-                init(_coords, matchParams);
-            } else if (action === 'replace') {
-                locate(_coords);
-            }
-        }).catch(function(r) {
-            if (action === 'init') {
-                init([50,10], matchParams);
-            }
-        });
-    }
+        function ymapsGeolocation() {
+            window.ymaps.geolocation.get({
+                provider: 'yandex',
+                mapStateAutoApply: true
+            }).then(function (result) {
+                let _bounds = result.geoObjects.get(0).properties.get('boundedBy');
+                let _coords = window.ymaps.util.bounds.getCenter(_bounds);
+                if (action === 'init') {
+                    init(_coords, matchParams);
+                } else if (action === 'replace') {
+                    locate(_coords);
+                }
+            }).catch(function(r) {
+                if (action === 'init') {
+                    init([50,10], matchParams);
+                }
+            });
+        }
 
-    //максимально точное определение (применимо лучше в мобильниках)
-    if ((window.navigator.geolocation) && isMobile && !1) {
-        window.navigator.geolocation.getCurrentPosition(function (position) {
-            let _latitude = position.coords.latitude;
-            let _longitude = position.coords.longitude;
-            let _coords = [_latitude, _longitude];
-            if (action === 'init') {
-                init(_coords, matchParams);
-            } else if (action === 'replace') {
-                locate(_coords);
-            }
-        }, function () {
-            // иначе - обычный способ
+        // Maximum precision of location determination (is used in mobile devices)
+        if ((window.navigator.geolocation) && isMobile && !1) {
+            window.navigator.geolocation.getCurrentPosition(function (position) {
+                let _latitude = position.coords.latitude;
+                let _longitude = position.coords.longitude;
+                let _coords = [_latitude, _longitude];
+                if (action === 'init') {
+                    init(_coords, matchParams);
+                } else if (action === 'replace') {
+                    locate(_coords);
+                }
+            }, function () {
+                // Else - origin way
+                ymapsGeolocation();
+            }).catch(function(r) {
+                if (action === 'init') {
+                    init([50,10], matchParams);
+                }
+            });;
+        } else {
+            // Else - origin way
             ymapsGeolocation();
-        }).catch(function(r) {
-            if (action === 'init') {
-                init([50,10], matchParams);
-            }
-        });;
-    } else {
-        // иначе - обычный способ
-        ymapsGeolocation();
-    }
-});
+        }
+    });
 }
 
-function locate(coords) {
+
+function locate(coords)
+{
     _map.setCenter(coords);
     _map.setZoom(_zoomWhereAmI);
 }

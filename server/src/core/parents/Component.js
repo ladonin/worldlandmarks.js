@@ -16,6 +16,7 @@ const Language = require('server/src/core/Language');
 const Service = require('server/src/core/Service');
 const Cache = require('server/src/components/base/Cache');
 
+
 class Component extends Core {
 
     constructor() {
@@ -39,18 +40,19 @@ class Component extends Core {
     }
 
 
-
     /*
      * Get language name of current request
      *
      * @returns {string}
      */
-    getLanguage(){
+    getLanguage()
+    {
         if (!this.language) {
             this.language = Language.getInstance(this.requestId).getLanguage();
         }
         return this.language;
     }
+
 
     /*
      * Get the text from the glossary translated into the specified language
@@ -60,16 +62,19 @@ class Component extends Core {
      *
      * @returns {string}
      */
-    getText(adress, vars){
+    getText(adress, vars)
+    {
         return Language.getInstance(this.requestId).getText(adress, vars);
     }
+
 
     /*
      * Get service name of current request
      *
      * @returns {string}
      */
-    getServiceName(){
+    getServiceName()
+    {
         if (!this.service) {
             this.service = Service.getInstance(this.requestId).getServiceName();
         }

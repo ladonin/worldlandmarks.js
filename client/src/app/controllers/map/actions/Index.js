@@ -19,33 +19,43 @@ import MapBaloon from 'src/app/common/blocks/map/Baloon';
 import ToolsPanel from 'src/app/common/blocks/ToolsPanel';
 import Header from 'src/app/common/blocks/map/Header';
 
-class MapIndex extends Action {
+class MapIndex extends Action
+{
 
-    constructor() {
+    constructor()
+    {
         super();
         this.lastUrl = false;
         this.getHeader = this.getHeader.bind(this);
     }
 
-    componentDidMount() {
+
+    componentDidMount()
+    {
         super.componentDidMount();
         this.lastUrl = this.props.match.url;
         MapModule.run(this.props.match.params, 'init');
     }
 
-    shouldComponentUpdate(nextProps, nextState){
+
+    shouldComponentUpdate(nextProps, nextState)
+    {
         if (this.lastUrl !== nextProps.match.url) {
             return true;
         }
         return false;
     }
 
-    componentDidUpdate(){
+
+    componentDidUpdate()
+    {
         this.lastUrl = this.props.match.url
         MapModule.checkLinkOnId(this.props.match.params);
     }
 
-    render() {
+
+    render()
+    {
         return (
                 <React.Fragment>
                     <Header getHeader={this.getHeader}/>
@@ -58,7 +68,8 @@ class MapIndex extends Action {
     }
 }
 
-function MapStateToProps(state) {
+function MapStateToProps(state)
+{
     return GetState(state, Consts.CONTROLLER_NAME_MAP, Consts.ACTION_NAME_INDEX)
 }
 

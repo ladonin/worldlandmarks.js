@@ -16,9 +16,11 @@ import BaseFunctions from 'src/functions/BaseFunctions';
 
 import HtmllerButtons from 'src/modules/HtmllerButtons';
 
-class ToolsPanelButton extends Block {
+class ToolsPanelButton extends Block
+{
 
-    render() {
+    render()
+    {
         let _style = {
             top: this.props.top ? this.props.top : 0
         }

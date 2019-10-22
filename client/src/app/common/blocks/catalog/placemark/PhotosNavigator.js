@@ -11,9 +11,11 @@ import Block from 'src/app/parents/Block';
 import BaseFunctions from 'src/functions/BaseFunctions';
 import Consts from 'src/settings/Constants';
 
-class PhotosNavigator extends Block {
+class PhotosNavigator extends Block
+{
 
-    constructor() {
+    constructor()
+    {
         super();
         this.photosKeys = [];
         this.paste = <span style={{marginLeft:'30px'}}></span>;
@@ -25,42 +27,61 @@ class PhotosNavigator extends Block {
         this.toCurrent = this.toCurrent.bind(this);
     }
 
-    scrollTop() {
+
+    scrollTop()
+    {
         BaseFunctions.scrollTop(this.props.scrollBlockSelector,0);
     }
 
-    emptyButton(width) {
+
+    emptyButton(width)
+    {
         return <span style={{marginLeft:width+'px'}}></span>;
     }
 
-    scrollTo(to){
+
+    scrollTo(to)
+    {
         let _from = this.props.scrollBlockSelector;
-        return function(){
+        return function()
+        {
             BaseFunctions.scrollTo(_from, to)
         }
     }
 
-    toStart() {
+
+    toStart()
+    {
         return <i className="fa fa-fast-backward pointer hover_blue" aria-hidden="true" onClick={this.scrollTop}></i>;
     }
 
-    next(key) {
+
+    next(key)
+    {
         return <i className="fa fa-step-forward pointer hover_blue" aria-hidden="true" onClick={this.scrollTo('#placemark_photo_'+(key+1)+'_navigator')}></i>;
     }
 
-    previous(key) {
+
+    previous(key)
+    {
         return <i className="fa fa-step-backward pointer hover_blue" aria-hidden="true" onClick={this.scrollTo('#placemark_photo_'+(key-1)+'_navigator')}></i>;
     }
 
-    toDescription() {
+
+    toDescription()
+    {
         return <i className="fa fa-fast-forward pointer hover_blue" aria-hidden="true" onClick={this.scrollTo('#'+this.props.contentBlockIdName)}></i>;
     }
 
-    toCurrent(key) {
+
+    toCurrent(key)
+    {
         return <i className="fa fa-circle pointer hover_blue" aria-hidden="true" onClick={this.scrollTo('#placemark_photo_'+(key)+'_navigator')}></i>;
     }
 
-    render() {
+
+    render()
+    {
         if (this.props.photosCount > 1) {
             if (this.props.number === 0) {
                 return <React.Fragment>

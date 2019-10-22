@@ -12,9 +12,11 @@ const BaseFunctions = require('server/src/functions/BaseFunctions');
 const ErrorCodes = require('server/src/settings/ErrorCodes');
 const SocketsPool = require('server/src/core/SocketsPool');
 
-class Core {
+class Core
+{
 
-    constructor() {
+    constructor()
+    {
         /*
          * Request id for instances pool
          *
@@ -22,6 +24,7 @@ class Core {
          */
         this.requestId;
     }
+
 
     /*
      * Get object from pool
@@ -32,13 +35,15 @@ class Core {
      *
      * @returns {object} - instance of requested class
      */
-    static getInstance(reqId) {
+    static getInstance(reqId)
+    {
         let _instanceId = this.instanceId;
         if (RequestsPool.checkInstance(reqId, _instanceId) === false) {
             RequestsPool.register(reqId, new this(), _instanceId);
         }
         return RequestsPool.getObject(reqId, _instanceId);
     }
+
 
     /*
      * Get request data in object or string type
@@ -47,28 +52,34 @@ class Core {
      *
      * @return {object} - copy of request query data {name1:value1, name2:value2}
      */
-    getRequestData(string = false) {
+    getRequestData(string = false)
+    {
         let _data = BaseFunctions.clone(RequestsPool.getRequestData(this.requestId));
         return string === true ? BaseFunctions.toString(_data) : _data
     }
+
 
     /*
      * Get socket data from pool
      *
      * @return {object}
      */
-    getSocketData() {
+    getSocketData()
+    {
         return SocketsPool.getSocketData(RequestsPool.getSocketToken(this.requestId));
     }
+
 
     /*
      * Remove socket data parameter
      *
      * @param {string} name - data parameter name
      */
-    removeSocketDataParameter(name) {
-       SocketsPool.removeSocketDataParam(RequestsPool.getSocketToken(this.requestId), name);
+    removeSocketDataParameter(name)
+    {
+        SocketsPool.removeSocketDataParam(RequestsPool.getSocketToken(this.requestId), name);
     }
+
 
     /*
      * Call error with request url in message
@@ -79,7 +90,8 @@ class Core {
      * @param {boolean} writeToLog - some errors must not be written to log to avoid error spaming
      *
      */
-    error(errorCode, message = '', log_type = Consts.LOG_APPLICATION_TYPE, writeToLog = true) {
+    error(errorCode, message = '', log_type = Consts.LOG_APPLICATION_TYPE, writeToLog = true)
+    {
         BaseFunctions.processError(errorCode, message, RequestsPool.getRequestData(this.requestId), log_type, writeToLog);
     }
 
@@ -92,7 +104,8 @@ class Core {
      *
      * @return {mix} - value of specific query variable
      */
-    getFromRequest(name, required = true) {
+    getFromRequest(name, required = true)
+    {
         let _data = RequestsPool.getRequestData(this.requestId);
         if (_data.hasOwnProperty(name)) {
             return _data[name];
@@ -103,6 +116,7 @@ class Core {
         }
     }
 
+
     /*
      * Get form data from request
      *
@@ -110,7 +124,8 @@ class Core {
      *
      * @return {object}
      */
-    getRequestFormData(required = false) {
+    getRequestFormData(required = false)
+    {
         let _result = this.getFromRequest(Consts.REQUEST_FORM_DATA, required);
         return _result ? _result : {};
     }
@@ -121,43 +136,52 @@ class Core {
      *
      * @return {boolean}
      */
-    isMobile(){
+    isMobile()
+    {
         return this.getFromRequest(Consts.ISMOBILE_CODE_VAR_NAME);
     }
+
 
     /*
      * Determine whether page is 'map'
      *
      * @return {boolean}
      */
-    isMapPage(){
+    isMapPage()
+    {
         return this.getFromRequest(Consts.CONTROLLER_VAR_NAME) === Consts.CONTROLLER_NAME_MAP;
     }
+
 
     /*
      * Return device type - mobile or desctop
      *
      * @return {string}
      */
-    getDeviceType(){
+    getDeviceType()
+    {
         return this.getFromRequest(Consts.ISMOBILE_CODE_VAR_NAME) ? Consts.MOBILE : Consts.DESCTOP;
     }
+
 
     /*
      * Return controller name
      *
      * @return {string}
      */
-    getControllerName(){
+    getControllerName()
+    {
         return this.getFromRequest(Consts.CONTROLLER_VAR_NAME);
     }
+
 
     /*
      * Return action name
      *
      * @return {string}
      */
-    getActionName(){
+    getActionName()
+    {
         return this.getFromRequest(Consts.ACTION_VAR_NAME);
     }
 
@@ -169,11 +193,10 @@ class Core {
      *
      * @return {string}
      */
-    passThrough(value) {
+    passThrough(value)
+    {
         return BaseFunctions.passThrough(value, this);
     }
-
-
 
 }
 

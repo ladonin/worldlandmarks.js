@@ -8,13 +8,21 @@
 import Cookies from 'js-cookie';
 
 export default {
-    getCookie(name) {
+
+    getCookie(name)
+    {
         return Cookies.get(name)
     },
-    setCookie(name, value, options = { expires: 365 }) {
+
+
+    setCookie(name, value, options = { expires: 365 })
+    {
         Cookies.set(name, value, options);
     },
-    deleteCookie(name) {
+
+
+    deleteCookie(name)
+    {
         Cookies.remove(name);
     }
 }

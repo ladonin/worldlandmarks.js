@@ -16,15 +16,20 @@ import Router from 'src/modules/Router';
 // Action components
 import MainIndex from 'src/app/controllers/main/actions/Index';
 
-class Main extends Controller {
+class Main extends Controller
+{
 
-    constructor() {
+    constructor()
+    {
         super();
     }
 
-    render() {
+
+    render()
+    {
         let _actionComponent;
-        switch (this.getActionName()){
+        switch (this.getActionName())
+        {
             case Consts.ACTION_NAME_INDEX: _actionComponent = <MainIndex/>; break;
             default: _actionComponent = <MainIndex/>;
         }

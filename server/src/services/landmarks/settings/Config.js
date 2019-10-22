@@ -5,10 +5,8 @@
  * Specific service config
  */
 
-
 const Consts = require('server/src/settings/Constants');
 const ConfigServ = require('server/common/services/landmarks/settings/Config');
-
 
 module.exports = {
 
@@ -67,5 +65,4 @@ module.exports = {
 
     // Text formatting settings
     text_form: ConfigServ.text_form
-
 };

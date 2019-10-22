@@ -14,9 +14,12 @@ const ErrorCodes = require('server/src/settings/ErrorCodes');
 const SocketsPool = require('server/src/core/SocketsPool');
 const RequestsPool = require('server/src/core/RequestsPool');
 
-class Language extends Core {
 
-    constructor() {
+class Language extends Core
+{
+
+    constructor()
+    {
         super();
         /*
          * Default language
@@ -44,19 +47,24 @@ class Language extends Core {
         this.service_words = false;
     }
 
-    getBaseWord(adress) {
+
+    getBaseWord(adress)
+    {
         if (this.base_words === false) {
             this.base_words = Config.text[this.getLanguage()];
         }
         return this.base_words[adress];
     }
 
-    getServiceWord(adress) {
+
+    getServiceWord(adress)
+    {
         if (this.service_words === false) {
             this.service_words = Service.getInstance(this.requestId).get_words(this.getLanguage());
         }
         return this.service_words[adress];
     }
+
 
     /*
      * Get the text from the glossary translated into the specified language
@@ -89,6 +97,7 @@ class Language extends Core {
         return _text;
     }
 
+
     /*
      *
      * Check language according with available languages
@@ -97,8 +106,8 @@ class Language extends Core {
      *
      * @return bool
      */
-    checkLanguage(language) {
-
+    checkLanguage(language)
+    {
         let _availableLanguages = Service.getInstance(this.requestId).getLanguagesCodes();
         if (BaseFunctions.isUndefined(language) || !BaseFunctions.inArray(language, _availableLanguages)) {
             return false;
@@ -106,12 +115,14 @@ class Language extends Core {
         return true;
     }
 
+
     /*
      * Get language
      *
      * @return {string}
      */
-    getLanguage() {
+    getLanguage()
+    {
         // If set
         if (this.language !== false) {
             return this.language;
@@ -137,7 +148,6 @@ class Language extends Core {
     }
 
 
-
     /*
      * Get client language via browser's header
      *
@@ -145,7 +155,6 @@ class Language extends Core {
      */
     getClientLanguage()
     {
-
         let _token = RequestsPool.getSocketToken(this.requestId);
         let _clientLanguage = SocketsPool.getSocketHeaderProp(_token, 'accept-language');
         if (_clientLanguage) {
@@ -156,75 +165,9 @@ class Language extends Core {
                return _clientLanguage;
             }
         }
-
         return null;
     }
 }
 
-
-
-
-
-
 Language.instanceId = BaseFunctions.uniqueId();
-
 module.exports = Language;
-
-
-
-
-
-
-//is_available_language($language)  => checkLanguage
-
-
-/*
-
-
-
- * Записать язык в сессию
- *
- * @param {string} $language - код языка
-
- public function set_language_in_session($language)
- {
- if (in_array($language, self::$available_languages)) {
- $_SESSION['site']['language'] = $language;
- } else {
- $_SESSION['site']['language'] = self::DEFAULT_LANGUAGE;
- }
- }
-
-
- * Установить язык приложения
-
- public static function set_language()
- {
- if (my_is_not_empty(@$_SESSION['site']['language'])) {
- if (in_array($_SESSION['site']['language'], self::$available_languages)) {
- $language = $_SESSION['site']['language'];
- } else {
- $language = self::DEFAULT_LANGUAGE;
- }
- unset($_SESSION['site']['language']);
- //обновляем куки
- self::set_cookie(MY_COOKIE_NAME_SITE_LANGUAGE, $language, MY_COOKIE_MAX_LIFETIME_VALUE);
- }
-
- $cookie_language = self::get_cookie(MY_COOKIE_NAME_SITE_LANGUAGE);
- //если куки нет или её значение неопознанно
- if (is_null($cookie_language) || (!in_array($cookie_language, self::$available_languages))) {
- //если первый раз зашли и сессия с куками пустые, то определяем язык из данных клинета
- $cookie_language = self::get_client_language();
- self::set_cookie(MY_COOKIE_NAME_SITE_LANGUAGE, $cookie_language, MY_COOKIE_MAX_LIFETIME_VALUE);
- }
-
- self::$language = $cookie_language;
- }
-
-
-
-
-
- }
- */

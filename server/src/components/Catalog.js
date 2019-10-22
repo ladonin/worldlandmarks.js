@@ -22,64 +22,15 @@ const CountryStatesCitiesTranslationsModel = require('server/src/models/dbase/my
 const Placemarks = require('server/src/components/Placemarks');
 const RequestsPool = require('server/src/core/RequestsPool');
 
-class Catalog extends Component {
+class Catalog extends Component
+{
 
-    constructor() {
+    constructor()
+    {
         super();
     }
 
 
-
-
-//ATTENTION - обратите внимание
-//prepareAddress = > Placemarks.getInstance(this.requestId).prepareAddressLink
-//prepareAddressWithRoute => Placemarks.getInstance(this.requestId).prepareAddressLinkWithRoute
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-//ATTENTION - обратите внимание
-//getCategoryCode => Categories.getInstance(this.requestId).getCategoryCode
-//get_category_dimentions => Service.getInstance(this.requestId).getBaloonDimentions()
-//     get_category_dimentions()
-//    {
-//        return self::get_module(MY_MODULE_NAME_SERVICE)->get_baloon_dimentions();
-//    }
-
-
-
-
-//ATTENTION - обратите внимание
-// get_subcategories => BaseFunctions.getArrayFromString
-// getAnotherPlacemarksByCategory => MapDataModel.getInstance(this.requestId).getAnotherPlacemarksByCategory
-// getAnotherPlacemarksIdsByCategory => Placemarks.getInstance(this.requestId).getAnotherPlacemarksIdsByCategory
-//
-//    public function get_subcategories($string)
-//    {
-//
-//        return my_get_array_from_string($string);
-//    }
-
-
-
-
-
-
-
-
-//ATTENTION - обратите внимание
-//getPlacemarksCountByCategory => getPlacemarksCountByCategoryId
-// getCountriesData => GeocodeCollectionModel.getInstance(this.requestId).getCountriesData();
     /*
      * Return placemarks count by category id
      *
@@ -91,6 +42,7 @@ class Catalog extends Component {
     {
         return MapDataModel.getInstance(this.requestId).getPlacemarksCountByCategory(id);
     }
+
 
     /*
      * Get placemarks of specified country
@@ -110,6 +62,7 @@ class Catalog extends Component {
         return MapDataModel.getInstance(this.requestId).getCountryPlacemarks(countryCode, offset, limit, this.getLanguage(), false);
     }
 
+
     /*
      * Get placemarks of specified category
      *
@@ -128,17 +81,6 @@ class Catalog extends Component {
         return MapDataModel.getInstance(this.requestId).getCategoryPlacemarks(categoryId, offset, limit, this.getLanguage(), false);
     }
 
-
-
-
-
-
-//ATTENTION - обратите внимание
-//process_country_data => processCountryPageData
- //getCategoryTitle => Categories.getInstance(this.requestId).getCategoryTitle
- //getCategory => Categories.getInstance(this.requestId).getCategory
- //getCategories => Categories.getInstance(this.requestId).getCategories
- //getCategoryId => Categories.getInstance(this.requestId).getCategoryId
 
     /*
      * Return view data for countries page
@@ -168,7 +110,6 @@ class Catalog extends Component {
     }
 
 
-
     /*
      * Return placemarks count in current country
      *
@@ -187,12 +128,6 @@ class Catalog extends Component {
     }
 
 
-//ATTENTION - обратите внимание
-//get_placemarks_count => MapDataModel.getInstance(this.requestId).getPlacemarksCount()
-//getPhotosData => getPlacemarksPhotosData
-//getStateData => getStatePlacemarksByUrl
-//getStates => GeocodeCollectionModel.getInstance(this.requestId).getStates()
-//getPointsList => getPlacemarksList
     /*
      * Return photos data of current country
      *
@@ -225,8 +160,8 @@ class Catalog extends Component {
      *      data : [values:{}]
      *  }
      */
-    getPlacemarksData(countryCode, stateCode, language, needResult) {
-
+    getPlacemarksData(countryCode, stateCode, language, needResult)
+    {
         let _placemarksData = GeocodeCollectionModel.getInstance(this.requestId).getPlacemarksData(countryCode, stateCode, language, needResult);
 
         let _result = {
@@ -273,9 +208,6 @@ class Catalog extends Component {
     }
 
 
-
-
-
     /*
      * Extract photos data from placemarks data
      *
@@ -317,8 +249,6 @@ class Catalog extends Component {
     }
 
 
-
-
     /*
      * Return placemarks data of current state
      *
@@ -341,6 +271,7 @@ class Catalog extends Component {
             );
         }
     }
+
 
     /*
      * Return placemarks data of current coutry and, if set, state in current language
@@ -385,7 +316,6 @@ class Catalog extends Component {
      */
     getPlacemarksList(idStart = 0)
     {
-
         let _result;
         let _ids = [];
 
@@ -393,7 +323,7 @@ class Catalog extends Component {
         let _limit = Config['restrictions']['max_rows_per_scroll_load'];
         let _requestFormData = this.getRequestFormData();
 
-        // If search page
+        // If is search page
         if (_requestFormData['isSearch']) {
 
             let _category = _requestFormData['category'];
@@ -573,26 +503,6 @@ class Catalog extends Component {
 
         return _return;
     }
-
-
-//ATTENTION - обратите внимание
-/*
-    getPlacemarksTitle()
-    {
-        let _countryCode = this.getFromRequest(Consts.ACTION_NAME_COUNTRY, false);
-        let _stateCode = this.getFromRequest(Consts.ACTION_NAME_STATE, false);
-
-        if (_stateCode) {
-            return Countries.getInstance(this.requestId).getStateNameFromRequest();
-        }
-
-        if (_countryCode) {
-            return Countries.getInstance(this.requestId).getCountryNameFromRequest();
-        }
-    }
-*/
-
-
 }
 
 Catalog.instanceId = BaseFunctions.uniqueId();

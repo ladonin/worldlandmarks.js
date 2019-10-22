@@ -19,14 +19,17 @@ import PlacemarksList from 'src/app/common/blocks/PlacemarksList';
 import CssTransition from 'src/app/common/CssTransition';
 import Bottom from 'src/app/common/blocks/Bottom';
 
-class MainIndex extends Action {
+class MainIndex extends Action
+{
 
-    constructor() {
+    constructor()
+    {
         super();
     }
 
-    render() {
 
+    render()
+    {
         if (!this.props.redux) {
             return null;
         }
@@ -42,7 +45,8 @@ class MainIndex extends Action {
     }
 }
 
-function MapStateToProps(state) {
+function MapStateToProps(state)
+{
     return GetState(state, Consts.CONTROLLER_NAME_MAIN, Consts.ACTION_NAME_INDEX)
 }
 

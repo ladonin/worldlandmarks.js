@@ -11,7 +11,8 @@ const BaseFunctions = require('server/src/functions/BaseFunctions');
 
 class CountryStatesCitiesTranslationsModel extends DBaseMysql
 {
-    constructor() {
+    constructor()
+    {
         super();
 
         this.tableNameInit = this.tableInitNames.COUNTRY_STATES_CITIES_TRANSLATIONS;
@@ -51,8 +52,8 @@ class CountryStatesCitiesTranslationsModel extends DBaseMysql
      *
      * @return {string} - translated state name
      */
-    getStateTranslation(countryCode, stateName, language, needResult = true){
-
+    getStateTranslation(countryCode, stateName, language, needResult = true)
+    {
         let _sql = `SELECT ct.*, cs.url_code FROM ${this.getTableName(this.tableInitNames.COUNTRY)} c
                     LEFT JOIN ${this.getTableName()} ct on c.id = ct.country_id
                     LEFT JOIN ${this.getTableName(this.tableInitNames.COUNTRY_STATES)} cs on cs.id = ct.only_for_state
@@ -60,6 +61,7 @@ class CountryStatesCitiesTranslationsModel extends DBaseMysql
 
         return this.getBySql(_sql, [countryCode, stateName, language], needResult);
     }
+
 
     /*
      * Get translation of state name
@@ -119,7 +121,8 @@ class CountryStatesCitiesTranslationsModel extends DBaseMysql
      *
      * @return {string} - translated state name
      */
-    getCityTranslation(countryCode, stateCode, cityName, language, countryHaveStates = true, needResult = true){
+    getCityTranslation(countryCode, stateCode, cityName, language, countryHaveStates = true, needResult = true)
+    {
         if (countryHaveStates) {
         let _sql = `SELECT ct.translate
             FROM ${this.getTableName(this.tableInitNames.COUNTRY)} c
@@ -140,23 +143,7 @@ class CountryStatesCitiesTranslationsModel extends DBaseMysql
             return this.getBySql(_sql, [countryCode, cityName, language], needResult)[0];
         }
     }
-
 }
 
 CountryStatesCitiesTranslationsModel.instanceId = BaseFunctions.uniqueId();
-
 module.exports = CountryStatesCitiesTranslationsModel;
-
-
-
-
-
-
-
-
-
-
-
-
-
-

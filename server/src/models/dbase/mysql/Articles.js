@@ -14,7 +14,8 @@ const ErrorCodes = require('server/src/settings/ErrorCodes');
 
 class ArticlesModel extends DBaseMysql
 {
-    constructor() {
+    constructor()
+    {
         super();
 
         this.tableNameInit = this.tableInitNames.ARTICLES;
@@ -67,10 +68,11 @@ class ArticlesModel extends DBaseMysql
         let _order = 'id DESC';
         let _select = withContent === true ? '*' : 'id, title';
         let _group = '';
-        let _need_result = false;
+        let _needresult = false;
 
-        return this.getByCondition(_condition, _order, _group, _select, undefined, limit, _need_result);
+        return this.getByCondition(_condition, _order, _group, _select, undefined, limit, _needresult);
     }
+
 
     /*
      * Return last articles for current country
@@ -94,9 +96,10 @@ class ArticlesModel extends DBaseMysql
             /*select*/withContent === true ? '*' : 'id, title',
             /*where_values*/[],
             /*limit*/ Service.getInstance(this.requestId).getMaxLastCountryArticles(),
-            /*need_result*/false
+            /*needresult*/false
         );
     }
+
 
     /*
      * Return articles for current country
@@ -127,7 +130,7 @@ class ArticlesModel extends DBaseMysql
             /*select*/ 'id, title',
             /*where_values*/ [],
             /*limit*/ _limit,
-            /*need_result*/ false
+            /*needresult*/ false
         );
     }
 
@@ -155,7 +158,6 @@ class ArticlesModel extends DBaseMysql
     }
 
 
-
     /*
      * Return all categories data which articles have
      *
@@ -170,7 +172,7 @@ class ArticlesModel extends DBaseMysql
             /*select*/ 'categories',
             /*where_values*/ [],
             /*limit*/ false,
-            /*need_result*/ false
+            /*needresult*/ false
         );
 
         let _categoriesArray = [];
@@ -195,7 +197,6 @@ class ArticlesModel extends DBaseMysql
     }
 
 
-
     /*
      * Return articles count for current country
      *
@@ -212,10 +213,9 @@ class ArticlesModel extends DBaseMysql
             /*select*/ 'COUNT(*) as count',
             /*where_values*/ [Countries.getInstance(this.requestId).getCountryDataByCode(countryCode).id],
             /*limit*/ false,
-            /*need_result*/ true
+            /*needresult*/ true
         )[0]['count'];
     }
-
 
 
     /*
@@ -243,9 +243,10 @@ class ArticlesModel extends DBaseMysql
             /*select*/ 'id, title',
             /*where_values*/ [],
             /*limit*/ _limit,
-            /*need_result*/ false
+            /*needresult*/ false
         );
     }
+
 
     /*
      * Return articles count for current category
@@ -265,7 +266,7 @@ class ArticlesModel extends DBaseMysql
             /*select*/ 'COUNT(*) as count',
             /*where_values*/ [],
             /*limit*/ false,
-            /*need_result*/ true
+            /*needresult*/ true
         )[0]['count'];
 
     }
@@ -287,9 +288,10 @@ class ArticlesModel extends DBaseMysql
             /*select*/ 'id, categories, content, country_id, keywords, seo_description, title',
             /*where_values*/ [],
             /*limit*/ 1,
-            /*need_result*/ false
+            /*needresult*/ false
         )[0]
     }
+
 
     /*
      * Return random articles list
@@ -298,7 +300,8 @@ class ArticlesModel extends DBaseMysql
      *
      * @return {array of objects}
      */
-    getRandomArticles(ignoreId){
+    getRandomArticles(ignoreId)
+    {
 
         let _maxRandomArticles = Service.getInstance(this.requestId).getMaxRandomArticles();
         ignoreId = parseInt(ignoreId);
@@ -320,7 +323,6 @@ class ArticlesModel extends DBaseMysql
      */
     getArticlesData(ids = [], ignore = false, random = false, limit = 10, select = 'id, title')
     {
-
         ids = BaseFunctions.prepareToIntArray(ids);
 
         let _idsString = ids.join(',');
@@ -334,184 +336,11 @@ class ArticlesModel extends DBaseMysql
             /*select*/ select,
             /*where_values*/ [],
             /*limit*/ limit,
-            /*need_result*/ false
+            /*needresult*/ false
         );
     }
-
-
-
-
-
-
-
-
 }
 
 
 ArticlesModel.instanceId = BaseFunctions.uniqueId();
-
 module.exports = ArticlesModel;
-
-
-
-
-
-
-
-
-
-/*
-
-    public function create_new_article()
-    {
-
-        $form_data = $_POST['add_new_article_form'];
-        $form_data['categories'] = str_replace(' ', '', $form_data['categories']);
-        if (isset($form_data['title']) && $form_data['title'] && isset($form_data['content']) && $form_data['content'] && isset($form_data['country_id'])) {
-
-            $form_data['country_id'] = (int) $form_data['country_id'];
-            $data = array(
-                'title' => $form_data['title'],
-                'content' => $form_data['content'],
-                'content_plain' => $form_data['content'],
-                'country_id' => $form_data['country_id'],
-                'categories' => $form_data['categories'],
-                'keywords' => $form_data['keywords'],
-                'seo_description' => $form_data['seo_description']
-            );
-        } else {
-            self::concrete_error(array(MY_ERROR_FORM_WRONG_DATA, 'POST array:' . json_encode($_POST)));
-        }
-
-        $config = self::get_config();
-        $article_model = self::get_model(MY_MODEL_NAME_DB_ARTICLES);
-
-        $id_data = $article_model->add_article($data);
-
-
-        $result = array(
-            'status' => MY_SUCCESS_CODE,
-            'message' => my_pass_through(@self::trace('success/new_article/created')),
-            'data' => array(
-                'id' => $id_data
-            )
-        );
-        return $result;
-    }
-
-
-
-
-
-
-
-
-    public function update_article()
-    {
-
-        $form_data = $_POST['update_article_form'];
-        $form_data['categories'] = str_replace(' ', '', $form_data['categories']);
-        $form_data['id'] = isset($form_data['id']) ? (int) $form_data['id'] : null;
-        if ($form_data['id'] && isset($form_data['title']) && $form_data['title'] && isset($form_data['content']) && $form_data['content'] && isset($form_data['country_id'])) {
-
-            $form_data['country_id'] = (int) $form_data['country_id'];
-            $data = array(
-                'id' => $form_data['id'],
-                'title' => $form_data['title'],
-                'content' => $form_data['content'],
-                'content_plain' => $form_data['content'],
-                'country_id' => $form_data['country_id'],
-                'categories' => $form_data['categories'],
-                'keywords' => $form_data['keywords'],
-                'seo_description' => $form_data['seo_description']
-            );
-        } else {
-            self::concrete_error(array(MY_ERROR_FORM_WRONG_DATA, 'POST array:' . json_encode($_POST)));
-        }
-
-        self::get_model(MY_MODEL_NAME_DB_ARTICLES)->update_article($data);
-
-        $result = array(
-            'status' => MY_SUCCESS_CODE,
-            'message' => my_pass_through(@self::trace('success/article/updated')),
-            'data' => array(
-                'id' => $form_data['id']
-            )
-        );
-        return $result;
-    }
-
-
-    public function delete_article()
-    {
-        $form_data = $_POST['delete_article_form'];
-        $form_data['id'] = isset($form_data['id']) ? (int) $form_data['id'] : null;
-        if ($form_data['id']) {
-            $data = array(
-                'id' => $form_data['id'],
-            );
-        } else {
-            self::concrete_error(array(MY_ERROR_FORM_WRONG_DATA, 'POST array:' . json_encode($_POST)));
-        }
-
-        self::get_model(MY_MODEL_NAME_DB_ARTICLES)->delete($data['id']);
-
-        $result = array(
-            'status' => MY_SUCCESS_CODE,
-            'message' => my_pass_through(@self::trace('success/article/deleted')),
-            'data' => array()
-        );
-        return $result;
-    }
-
-
-
-
-
-
-
-
-
-
-
-
-
-    public function get_last_country_articles($country_code = null)
-    {
-
-        $limit = self::get_module(MY_MODULE_NAME_SERVICE)->get_max_last_country_articles();
-
-
-        $country_component = components\Countries::get_instance();
-
-        if (!$country_code) {
-            $country_code = $country_component->get_country_code_from_url();
-        }
-        $country_id = $country_component->get_country_data_by_code($country_code);
-        $country_id = $country_id['id'];
-
-        $article_model = self::get_model(MY_MODEL_NAME_DB_ARTICLES);
-        $condition = 'country_id=' . $country_id;
-        $order = 'id DESC';
-        $select = '*';
-        $group = '';
-        $need_result = false;
-        $result = $article_model->get_by_condition($condition, $order, '', $select, $limit, $need_result);
-        return $result;
-    }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
- */

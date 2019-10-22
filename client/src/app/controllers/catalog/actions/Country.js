@@ -20,13 +20,17 @@ import CssTransition from 'src/app/common/CssTransition';
 import PlacemarksList from 'src/app/common/blocks/PlacemarksList';
 import Bottom from 'src/app/common/blocks/Bottom';
 
-class CatalogCountry extends Action {
+class CatalogCountry extends Action
+{
 
-    constructor() {
+    constructor()
+    {
         super();
     }
 
-    getLastArticles() {
+
+    getLastArticles()
+    {
         let _articlesList = [];
         if (this.props.redux.actionData.data && this.props.redux.actionData.data.articles) {
             for (let _index in this.props.redux.actionData.data.articles) {
@@ -62,7 +66,9 @@ class CatalogCountry extends Action {
         return _resut;
     }
 
-    render() {
+
+    render()
+    {
         if (!this.props.redux) {
             return null;
         }
@@ -126,7 +132,8 @@ class CatalogCountry extends Action {
     }
 }
 
-function MapStateToProps(state) {
+function MapStateToProps(state)
+{
     return GetState(state, Consts.CONTROLLER_NAME_CATALOG, Consts.ACTION_NAME_COUNTRY)
 }
 

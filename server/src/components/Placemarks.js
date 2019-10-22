@@ -23,9 +23,11 @@ const Config = require('server/src/settings/Config');
 const Categories = require('server/src/components/Categories');
 const MapPhotosModel = require('server/src/models/dbase/mysql/MapPhotos');
 
-class Placemarks extends Component {
+class Placemarks extends Component
+{
 
-    constructor(){
+    constructor()
+    {
         super();
 
     }
@@ -185,40 +187,6 @@ class Placemarks extends Component {
     }
 
 
-//ATTENTION - обратите внимание
-//getPlacemarksShortDataByIds => getPlacemarksDataByIds(settings)
-//getPlacemarksBigDataByIds => getPlacemarksDataByIds(settings)
-    /*
-     * Get a short placemarks information by their ids
-     *
-     * @param {array} ids - placemarks ids
-     * @param {boolean} needComment - whether placemark description required
-     *
-     * @return {array of objects}
-     */
-//    getPlacemarksShortDataByIds(ids, needComment = false)
-//    {
-//        if (!ids.length) {
-//            return [];
-//        }
-//
-//        let _result = MapDataModel.getInstance(this.requestId).getPointsShortDataByIds(ids, needComment);
-//
-//        return this.prepareResult(_result);
-//    }
-
-
-
-
-
-
-
-
-
-
-
-
-
     /*
      * Update result for each found placemark according with their db data
      *
@@ -247,7 +215,6 @@ class Placemarks extends Component {
                     MapPhotosModel.getInstance(this.requestId).getPhotosByDataIds(_ids, false),
                     'map_data_id'
                 );
-
 
         // For each placemark
         for (let _index in data) {
@@ -415,30 +382,6 @@ class Placemarks extends Component {
     }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     /*
      * Return photo directory
      *
@@ -451,7 +394,6 @@ class Placemarks extends Component {
     {
         return BaseFunctions.preparePhotoPath(id, name, '1_', true, true, this.getServiceName());
     }
-
 
 
     /*
@@ -553,6 +495,7 @@ class Placemarks extends Component {
         return _addres;
     }
 
+
     /*
      * Return another placemarks ids related to category
      *
@@ -575,6 +518,7 @@ class Placemarks extends Component {
         return _result;
     }
 
+
     /*
      * Return full placemark data
      *
@@ -596,6 +540,7 @@ class Placemarks extends Component {
                 false
             )[0]
     }
+
 
     /*
      * Return placemarks sublist data by their ids
@@ -635,14 +580,6 @@ class Placemarks extends Component {
         }
         return _placemarks ? _placemarks : [];
     }
-
-
-
-
-
-
-
-
 }
 
 

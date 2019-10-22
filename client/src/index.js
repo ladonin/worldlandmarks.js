@@ -26,6 +26,7 @@ render(
                 <App/>
                 <PageScrolling/>
             </Provider>
-        </BrowserRouter>
-        , document.getElementById('container'));
+        </BrowserRouter>,
+        document.getElementById('container')
+);
 

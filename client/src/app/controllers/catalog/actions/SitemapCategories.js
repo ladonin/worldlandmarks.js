@@ -19,13 +19,17 @@ import BaseFunctions from 'src/functions/BaseFunctions';
 import CssTransition from 'src/app/common/CssTransition';
 import Bottom from 'src/app/common/blocks/Bottom';
 
-class SitemapCategories extends Common {
+class SitemapCategories extends Common
+{
 
-    constructor() {
+    constructor()
+    {
         super();
     }
 
-    render() {
+
+    render()
+    {
         if (!this.props.redux) {
             return null;
         }
@@ -70,7 +74,8 @@ class SitemapCategories extends Common {
     }
 }
 
-function MapStateToProps(state) {
+function MapStateToProps(state)
+{
     console.log(state);
     return GetState(state, Consts.CONTROLLER_NAME_CATALOG, Consts.ACTION_NAME_SITEMAP_CATEGORIES)
 }

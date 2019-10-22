@@ -9,10 +9,10 @@ const DBaseMysql = require('server/src/core/dbases/Mysql');
 const BaseFunctions = require('server/src/functions/BaseFunctions');
 const Consts = require('server/src/settings/Constants');
 
-
 class CountryStatesModel extends DBaseMysql
 {
-    constructor() {
+    constructor()
+    {
         super();
 
         this.tableNameInit = this.tableInitNames.COUNTRY_STATES;
@@ -57,6 +57,7 @@ class CountryStatesModel extends DBaseMysql
         return false;
     }
 
+
     /*
      * Get state id by state code
      *
@@ -69,11 +70,6 @@ class CountryStatesModel extends DBaseMysql
         let _data = this.getBySql("SELECT id FROM " + this.getTableName() + " WHERE url_code = ?", [code], needResult);
         return _data[0].id ? _data[0].id : null;
     }
-
-
-
-
-
 
 
     /*
@@ -95,11 +91,7 @@ class CountryStatesModel extends DBaseMysql
         let _data = this.getBySql(_sql, [countryCode, stateCode]);
         return _data[0].is_administrative_center === 1 ? true : false;
     }
-
-
-
 }
 
 CountryStatesModel.instanceId = BaseFunctions.uniqueId();
-
 module.exports = CountryStatesModel;

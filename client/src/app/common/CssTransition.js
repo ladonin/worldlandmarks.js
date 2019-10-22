@@ -8,9 +8,11 @@
 import React, {Component} from 'react';
 import { CSSTransition  } from 'react-transition-group'
 
-class CssTransition extends Component {
+class CssTransition extends Component
+{
 
-    render() {
+    render()
+    {
         return (
             <CSSTransition
                 appear={true}

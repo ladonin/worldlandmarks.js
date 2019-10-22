@@ -9,21 +9,24 @@ const ErrorCodes = require('server/src/settings/ErrorCodes');
 const Consts = require('server/src/settings/Constants');
 const Placemarks = require('server/src/components/Placemarks');
 const MapComponent = require('server/src/components/Map');
-
 const CommonController = require('server/src/controllers/CommonController');
-
 const Seo = require('server/src/components/Seo');
 
-class Map extends CommonController {
+class Map extends CommonController
+{
 
-    constructor() {
+
+    constructor()
+    {
         super();
     }
+
 
     /*
      * Action index
      */
-    action_index() {
+    action_index()
+    {
         let _seoPath = 'map/index';
         this.addActionData({
             'title':Seo.getInstance(this.requestId).getTitle(_seoPath),
@@ -33,6 +36,7 @@ class Map extends CommonController {
 
         this.sendMe();
     }
+
 
     /*
      * Background action that returns placemark data
@@ -68,6 +72,7 @@ class Map extends CommonController {
         this.sendMe(true);
     }
 
+
     /*
      * Background action that fill placemarks on map in random mode
      */
@@ -88,8 +93,5 @@ class Map extends CommonController {
     }
 }
 
-
-
 Map.instanceId = BaseFunctions.uniqueId();
 module.exports = Map;
-

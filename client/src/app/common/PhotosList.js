@@ -16,9 +16,11 @@ import ImageDimensions from 'src/modules/ImageDimensions';
 import ConfigRestrictions from 'src/../../server/common/settings/Restrictions';
 import BaseFunctions from 'src/functions/BaseFunctions';
 
-class PhotosList extends Component {
+class PhotosList extends Component
+{
 
-    render() {
+    render()
+    {
         let _photosList = [];
         let _blockWidth = this.props.width ? this.props.width : (isMobile ? BaseFunctions.getWidth(window) : ConfigRestrictions.desctop_content_width);
         let _prefix = this.props.prefix ? this.props.prefix : ImageDimensions.getPrefix(_blockWidth, this.props.amendment ? this.props.amendment : 0);

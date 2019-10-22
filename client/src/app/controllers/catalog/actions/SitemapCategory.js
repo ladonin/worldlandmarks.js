@@ -20,24 +20,31 @@ import Common from 'src/app/controllers/articles/actions/_Common';
 import CssTransition from 'src/app/common/CssTransition';
 import Bottom from 'src/app/common/blocks/Bottom';
 
-class SitemapCategory extends Common {
+class SitemapCategory extends Common
+{
 
-    constructor() {
+    constructor()
+    {
         super();
     }
+
 
     /*
      * Open category window with explanation of interested category
      *
      * @param {integer} id - category id to be showed
      */
-    seeCategory(id){
-        return function(){
+    seeCategory(id)
+    {
+        return function()
+        {
             this.showCategoryViewer(id)
         }.bind(this)
     }
 
-    render() {
+
+    render()
+    {
         if (!this.props.redux) {
             return null;
         }
@@ -114,7 +121,8 @@ class SitemapCategory extends Common {
     }
 }
 
-function MapStateToProps(state) {
+function MapStateToProps(state)
+{
     return GetState(state, Consts.CONTROLLER_NAME_CATALOG, Consts.ACTION_NAME_SITEMAP_CATEGORY)
 }
 

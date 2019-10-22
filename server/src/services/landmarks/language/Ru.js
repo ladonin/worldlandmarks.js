@@ -3,6 +3,7 @@
  *
  * Service words in russian translation
  */
+
 const Consts = require('server/src/settings/Constants');
 const Ru = require('server/common/services/landmarks/language/Ru');
 

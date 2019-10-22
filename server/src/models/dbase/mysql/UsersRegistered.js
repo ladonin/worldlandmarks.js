@@ -8,11 +8,11 @@
 const DBaseMysql = require('server/src/core/dbases/Mysql');
 const BaseFunctions = require('server/src/functions/BaseFunctions');
 
-
 class UsersRegistered extends DBaseMysql
 {
 
-    constructor() {
+    constructor()
+    {
         super();
 
         this.tableNameInit = this.tableInitNames.USERS_REGISTERED;
@@ -35,10 +35,5 @@ class UsersRegistered extends DBaseMysql
     }
 }
 
-
-
-
-
 UsersRegistered.instanceId = BaseFunctions.uniqueId();
-
 module.exports = UsersRegistered;

@@ -26,9 +26,11 @@ import {RemoveBackgroundData} from 'src/app/parents/Common';
 import CssTransition from 'src/app/common/CssTransition';
 import PlacemarkButtons from 'src/app/common/blocks/map/PlacemarkButtons';
 
-class MapPlacemark extends Block {
+class MapPlacemark extends Block
+{
 
-    constructor() {
+    constructor()
+    {
         super();
         this.close = this.close.bind(this);
         this.hide = this.hide.bind(this);
@@ -38,24 +40,32 @@ class MapPlacemark extends Block {
         MapModule.setPlacemarkComponentRef(this);
     }
 
-    shouldComponentUpdate(nextProps, nextState){
+
+    shouldComponentUpdate(nextProps, nextState)
+    {
         if (this.state.hidden !== nextState.hidden) {
             return true;
         }
         return super.shouldComponentUpdate(nextProps, nextState);
     }
 
-    componentDidUpdate() {
+
+    componentDidUpdate()
+    {
         if (typeof this.props.redux.atCluster !== 'undefined') {
             MapModule.preparePlacemarkContentDimensions(this.props.redux.atCluster, this.props.redux.data.id);
         }
     }
 
-    componentWillUnmount(){
+
+    componentWillUnmount()
+    {
         this.props.removeBackgroundData('map_placemarkData');
     }
 
-    close(){
+
+    close()
+    {
         this.props.removeBackgroundData('map_placemarkData');
         // Show panel tools button
         Events.dispatch(Consts.EVENT_SHOW_TOOLS_PANEL_BUTTON);
@@ -64,17 +74,23 @@ class MapPlacemark extends Block {
         MapModule.resumeBunchFillingTimer();
     }
 
-    hide(){;
+
+    hide()
+    {
         this.setState({hidden:true});
     }
 
-    show(){
+
+    show()
+    {
         if (this.state.hidden === true) {
             this.setState({hidden:false});
         }
     }
 
-    render() {
+
+    render()
+    {
         let _id = null;
         let ContentComponent = () => null;
         let _hidden = 'hidden';
@@ -185,7 +201,8 @@ class MapPlacemark extends Block {
     }
 }
 
-function mapStateToProps(state) {
+function mapStateToProps(state)
+{
 
     return {
         redux: {

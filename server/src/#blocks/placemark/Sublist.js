@@ -5,23 +5,25 @@
  * Sublist html block - under placemark - list of relevant or relative placemarks
  */
 
-
 const Component = require('server/src/core/parents/Component');
 const BaseFunctions = require('server/src/functions/BaseFunctions');
 const Consts = require('server/src/settings/Constants');
-const ErrorCodes = require('server/src/settings/ErrorCodes');
 const Catalog = require('server/src/components/Catalog');
 const Service = require('server/src/core/Service');
 const CaregoriesViewerBlock = require('server/src/blocks/category/CaregoriesViewer');
 const CommonBaseFunctions = require('server/common/functions/BaseFunctions');
 const Placemarks = require('server/src/components/Placemarks');
-class SublistBlock extends Component {
+class SublistBlock extends Component
+{
 
-    constructor() {
+    constructor()
+    {
         super();
     }
 
-    render(data) {
+
+    render(data)
+    {
         let _html = '';
 
         if (BaseFunctions.isSet(data['ids'])) {
@@ -67,7 +69,6 @@ class SublistBlock extends Component {
                             </div>
                             <div class="sublist_placemarks_content">`;
 
-//ATTENTION - обратите внимание - прямая ссылка
                     if (Service.getInstance(this.requestId).whetherToUseTitles()){
                         _placemarks[_index]['title'] = _placemark['title'] ? _placemark['title'] : (this.getText('map/default_title_part/value') + ' ' + _placemark['id']);
                         _html += `

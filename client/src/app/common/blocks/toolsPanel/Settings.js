@@ -18,9 +18,11 @@ import Socket from 'src/app/socket/Socket';
 
 import HtmllerButtons from 'src/modules/HtmllerButtons';
 
-class Settings extends Block {
+class Settings extends Block
+{
 
-    constructor() {
+    constructor()
+    {
         super();
         this.changeLanguage = this.changeLanguage.bind(this);
         this.state = {
@@ -28,15 +30,18 @@ class Settings extends Block {
         }
     }
 
-    changeLanguage(event){
+
+    changeLanguage(event)
+    {
         this.setState({languageValue: event.target.value});
         Language.setName(event.target.value);
         Events.dispatch(Consts.EVENT_REFRESH_ACTION);
         if (isMobile) this.props.toolsPanelRef.close()
     }
 
-    render() {
 
+    render()
+    {
         let _languagesList = [];
         for (let _index in this.props.redux.staticData.languages) {
             let _language = this.props.redux.staticData.languages[_index];
@@ -64,7 +69,8 @@ class Settings extends Block {
     }
 }
 
-function mapStateToProps(state) {
+function mapStateToProps(state)
+{
     return {
         redux: {
             staticData:state.staticData

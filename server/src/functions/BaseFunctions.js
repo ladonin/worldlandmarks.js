@@ -5,10 +5,6 @@
  * Base functions collection
  */
 
-
-
-
-
 const SizeOf = require('image-size');
 const LodashNum = require('lodash/number');
 const LodashUtil = require('lodash/util');
@@ -21,16 +17,11 @@ const Fs = require('fs');
 const Messages = require('server/src/settings/Messages');
 const Pbkdf2 = require('pbkdf2')
 const FtpServersConfig = require('server/src/settings/gitignore/FtpServers');
-
 const ErrorCodes = require('server/src/settings/ErrorCodes');
-
 const ImageMagick = require('imagemagick');
 const Deasync = require('deasync');
 const _lang = require('lodash/lang');
 const CommonBaseFunctions = require('server/common/functions/BaseFunctions');
-
-
-
 
 /*
  * Check whether array is empty or not
@@ -43,8 +34,6 @@ function quote(string)
 {
     return string.replace(/\'/i, '\'');
 }
-
-
 
 
 /*
@@ -60,7 +49,6 @@ function array_is_empty(arr)
 }
 
 
-
 /*
  * Return a value with guarantee it is not empty
  *
@@ -69,48 +57,14 @@ function array_is_empty(arr)
  *
  * @return {string}
  */
-function passThrough(value, self) {
+function passThrough(value, self)
+{
 
     if (value || value === '0' || value === 0) {
         return value;
     }
     self.error(ErrorCodes.ERROR_VALUE_NOT_PASSED_THROUGH, 'value[' + value + ']');
 }
-
-
-
-/*
- * Return random placemark's photo
- *
- * @param {array} photos - placemark's photos
- * @param {string} prefix - size photo's prefix
- * @param {boolean} return_sizes - return array of url and sizes or just string url
- * @param {object} self - reference on current caller class instance
- * @param {boolean} first - maybe we want to return first photo
- *
- * @return {string}/array
- */
-//function getRandomPlacemarkPhoto(photos, prefix, return_sizes = false, self, first = true)
-//{
-//    checkOnArray(photos, self);
-//
-//    let _photo_id = 0;
-//    if (first === false) {
-//        _photo_id = LodashNum.random(0, photos.length-1);
-//    }
-//
-//    let _url = passThrough(photos[_photo_id]['dir']) + passThrough(prefix) + '_' + passThrough(photos[_photo_id]['name'], self);
-//
-//    if (return_sizes) {
-//        return {
-//            'url': _url,
-//            'width': photos[_photo_id]['width'],
-//            'height': photos[_photo_id]['height']
-//        };
-//    }
-//
-//    return _url;
-//}
 
 
 /*
@@ -134,6 +88,8 @@ function check_coords(x = null, y = null, error_call = true, self)
     }
     return true;
 }
+
+
 /*
  * Get image dimentions
  *
@@ -142,7 +98,8 @@ function check_coords(x = null, y = null, error_call = true, self)
  *
  * @return {object} - image's dimentions
  */
-function getImageDimentions(path, self) {
+function getImageDimentions(path, self)
+{
     try {
         let _dimensions = SizeOf(path);
         return _dimensions;
@@ -151,17 +108,20 @@ function getImageDimentions(path, self) {
     }
 }
 
+
 /*
  * Check if file exists
  *
  * @return {boolean}
  */
-function checkLocalFile(path, self) {
+function checkLocalFile(path, self)
+{
     if (!Fs.existsSync(path)) {
         self.error(ErrorCodes.ERROR_LOCAL_FILE_NOT_FOUND, '[' + path + ']');
     }
     return true;
 }
+
 
 /*
  * Create image with specified parameters
@@ -224,6 +184,7 @@ function image_resize(path_to, source, neww = 0, newh = 0, quality = 100, self)
     deleteFile(source);
 }
 
+
 /*
  * Change image to .jpeg extention if necessary
  *
@@ -268,6 +229,7 @@ function change_image_to_jpeg(source, self)
     return _path_to;
 }
 
+
 /*
  * Check whether array is empty or not (inversion)
  *
@@ -283,6 +245,8 @@ function array_is_not_empty(arr, self)
     }
     return !_lang.isEmpty(arr);
 }
+
+
 /*
  * Split text with commas into an array
  *
@@ -303,12 +267,16 @@ function getArrayFromString(str, separator = ',', self)
 
     return trim(str, ',').split(separator);
 }
+
+
 function checkOnArray(val, self) {
     if (!isArray(val)) {
         self.error(ErrorCodes.ERROR_WRONG_VARIABLE_TYPE, 'array[' + typeof (val) + ']');
     }
     return true;
 }
+
+
 function isString(val, self) {
     if (isUndefined(val)) {
         self.error(ErrorCodes.ERROR_UNDEFINED_VARIABLE);
@@ -316,12 +284,14 @@ function isString(val, self) {
     return _lang.isString(val);
 }
 
+
 function checkOnString(val, self) {
     if (!isString(val, self)) {
         self.error(ErrorCodes.ERROR_WRONG_VARIABLE_TYPE, 'string[' + typeof (val) + ']');
     }
     return true;
 }
+
 
 /*
  * Get image type (extension)
@@ -341,70 +311,8 @@ function get_image_type(path, by_url = false)
 }
 
 
-/*
- * Get service name
- *
- * @param {integer} reqId - request id
- *
- * @return {string}
-
-function getServiceName(reqId){
-    return Service.getInstance(reqId).getServiceName();
-}*/
-
-
-/*
- * Translate state name on user's language
- *
- * @param {string} state_name - state name
- * @param {string} state_code - state url code
- *
- * @return {string} - translated state name
-
-function auto_translate_state(state_name, state_code, requestId)
+function clearNullDataInArrayOfObjects(data)
 {
-
-
-
-    let languageInstance = Language.getInstance(requestId);
-    let countriesInstance = Language.getInstance(requestId);
-
-
-
-    $countries_component = components\Countries::get_instance();
-    $language = $language_component->get_utiluage();
-    $country_code = $countries_component->get_country_code_from_url();
-    return $countries_component->translate_state_names($language, $country_code, $state_name, $state_code);
-}
-
-
- */
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-function clearNullDataInArrayOfObjects(data) {
 
     for (let _index in data) {
         let _obj = data[_index];
@@ -418,99 +326,119 @@ function clearNullDataInArrayOfObjects(data) {
 }
 
 
-
-function deleteFile(path) {
+function deleteFile(path)
+{
     try {
         Fs.unlinkSync(path);
     } catch (e) {
     }
 }
 
-function uniqueId() {
+
+function uniqueId()
+{
     return toInt(LodashUtil.uniqueId());
 }
 
 
-function isSet(val) {
+function isSet(val)
+{
     return !isUndefined(val);
 }
-function isClass(val) {
+
+
+function isClass(val)
+{
     return isFunction(val);
 }
-function isFunction(val) {
+
+
+function isFunction(val)
+{
     return LodashLang.isFunction(val);
 }
-function isNull(val) {
+
+
+function isNull(val)
+{
     return LodashLang.isNull(val);
 }
-function isUndefined(val) {
+
+
+function isUndefined(val)
+{
     return LodashLang.isUndefined(val);
 }
 
-function isObject(val) {
+
+function isObject(val)
+{
     return LodashLang.isObject(val);
 }
-function isMethod(val) {
+
+
+function isMethod(val)
+{
     return LodashLang.isFunction(val);
 }
 
 
-
-
-
-function isInteger(val) {
+function isInteger(val)
+{
     return LodashLang.isInteger(val);
 }
 
-
-
-
-function isFloat(val){
+function isFloat(val)
+{
     return Number(val) === val && val % 1 !== 0;
 }
 
 
-
-
-function isArray(val) {
+function isArray(val)
+{
     return LodashLang.isArray(val);
 }
 
 
-
-function trim(text, val) {
-    //let regexp = new RegExp('^'+val+'+|'+val+'+$','g');
-    //return text.replace(regexp, '');
+function trim(text, val)
+{
     return LodashString.trim(text, val);
 }
 
 
-function rtrim(text, val) {
-    //let regexp = new RegExp('^'+val+'+|'+val+'+$','g');
-    //return text.replace(regexp, '');
+function rtrim(text, val)
+{
     return LodashString.trimEnd(text, val);
 }
 
-function ltrim(text, val) {
-    //let regexp = new RegExp('^'+val+'+|'+val+'+$','g');
-    //return text.replace(regexp, '');
+
+function ltrim(text, val)
+{
     return LodashString.trimStart(text, val);
 }
 
-function toInt(val) {
+
+function toInt(val)
+{
     return parseInt(val);
 }
 
-function toString(val) {
+
+function toString(val)
+{
     if (isObject(val)) {
         return JSON.stringify(val);
     }
     return LodashLang.toString(val);
 }
 
-function isString(val) {
+
+function isString(val)
+{
     return LodashLang.isString(val);
 }
+
+
 /*
  * Repace double quotes on single
  *
@@ -522,8 +450,6 @@ function prepare_double_quotes(text)
 {
     return text.replace(/"/g, "'");
 }
-
-
 
 
 /*
@@ -540,9 +466,6 @@ function is_not_empty(val)
     }
     return false;
 }
-
-
-
 
 
 /*
@@ -573,6 +496,7 @@ function prepareToIntArray(arr)
     return arr;
 }
 
+
 /*
  * Validate date
  *
@@ -593,12 +517,15 @@ function validate_date(day, month, year)
     return ((myDate.getMonth() + 1) === month && day < 32);
 }
 
+
 /*
  * Get current time in sec
  */
-function get_current_time() {
+function get_current_time()
+{
     return Math.floor(Date.now() / 1000);
 }
+
 
 /*
  * Delete HTML tags
@@ -607,9 +534,11 @@ function get_current_time() {
  *
  * @return {string} - stripped text without html tags
  */
-function strip_tags(str) {
+function strip_tags(str)
+{
     return str.replace(/<\/?[^>]+>/gi, '');
 }
+
 
 /*
  * Escape HTML tags from a string
@@ -618,7 +547,8 @@ function strip_tags(str) {
  *
  * @return {string} - text with escaped html tags
  */
-function escapeHtml(text) {
+function escapeHtml(text)
+{
     return text
             .replace(/&/g, "&amp;")
             .replace(/</g, "&lt;")
@@ -626,15 +556,6 @@ function escapeHtml(text) {
             .replace(/"/g, "&quot;")
             .replace(/'/g, "&#039;");
 }
-
-
-
-
-
-
-
-
-
 
 
 /*
@@ -701,6 +622,7 @@ function prepare_image_name_to_jpeg(name)
     return name.replace(/\.[a-z]+$/, '.jpeg');
 }
 
+
 /*
  * Detect either type is image or not
  *
@@ -712,6 +634,7 @@ function is_image_type(type)
 {
     return ['jpeg', 'jpg', 'png', 'gif'].includes(type.toLowerCase())
 }
+
 
 /*
  * Detect if value exists in array
@@ -727,7 +650,6 @@ function inArray(value, arr)
 }
 
 
-
 /*
  * Detect if value exists in object
  *
@@ -740,6 +662,7 @@ function inObject(value, obj)
 {
     return obj.hasOwnProperty(value);
 }
+
 
 /*
  * Return
@@ -755,6 +678,7 @@ function getDate()
     return _date.getFullYear() + '.' + _date.getMonth() + '.' + _date.getDate() + ' ' + _date.getHours() + ':' + _date.getMinutes()
 }
 
+
 /*
  * Return unique word
  *
@@ -765,23 +689,6 @@ function get_unique()
     return Uniqid() + LodashNum.random(1, 999);
 }
 
-
-//#???????????????????????????? - то, что возможно не нужно
-/*function htmlller_buttons(title = null)
- {
- let icons = 'icons_' + (IsMobile ? Consts.DEVICE_NAME_MOOBILE : Consts.DEVICE_NAME_DESCTOP) + '.png';
-
- let html = ''
- + '<div class="icon">'
- + '<img src="/img/' + icons + '">'
- + '</div>';
- if (title) {
- html += '<div class="button_text">'
- + pass_through(title)
- + '</div>';
- }
- return html;
- }*/
 
 /*
  * Return url flag's picture
@@ -811,8 +718,8 @@ function get_flag_url(country_code)
  *  in this case we should show the error message directly by console.log
  *
  */
-function processError(errorCode, message = '', requestData = 'not set', log_type = Consts.LOG_APPLICATION_TYPE, writeToLog = true, traceInConsole = false) {
-
+function processError(errorCode, message = '', requestData = 'not set', log_type = Consts.LOG_APPLICATION_TYPE, writeToLog = true, traceInConsole = false)
+{
     message += ' url[' + toString(requestData) + '] ';
 
     // Add stack trace
@@ -823,7 +730,6 @@ function processError(errorCode, message = '', requestData = 'not set', log_type
     _trace = _trace.replace(/at Module\._compile(?:.*?[\n\r]?)*/i, '');
 
     let _logMessage = '##' + Messages.ERROR_SYNTHETIC_STATUS + '## ' + getDate() + ':  ' + errorCode[1] + ': ' + message + "\r\n" + _trace + "\r\n\r\n\r\n";
-
 
     // If debug is turned off then write error messages into file, otherwise show them in browser
     if ((Config.debug === 0) && writeToLog) {
@@ -839,7 +745,6 @@ function processError(errorCode, message = '', requestData = 'not set', log_type
 
     throw {syntCode: errorCode[0], syntMessage: _logMessage};
 }
-
 
 
 /*
@@ -881,6 +786,7 @@ function prepareToDirName(text)
     return text;
 }
 
+
 /*
  * Convert foreigner letters into english
  *
@@ -904,24 +810,6 @@ function prepareStrangeLetters(text)
 }
 
 
-
-
-///*
-// * Check coordinate on validity
-// *
-// * @param {string/integer/float} coordinate - x or y
-// *
-// * @return {boolaen}
-// */
-//function checkCoordinate(coord)
-//{
-//    coord = toFloat(coord);
-//    if (coord || coord === 0) {
-//        return true;
-//    }
-//    return false;
-//}
-
 /*
  * Lead value to float
  *
@@ -935,9 +823,6 @@ function toFloat(value)
 }
 
 
-
-
-
 /*
  * Crypt a value
  *
@@ -945,13 +830,10 @@ function toFloat(value)
  *
  * @return {string} - value's hash
  */
-function crypt(value){
+function crypt(value)
+{
     return Pbkdf2.pbkdf2Sync(value, Consts.HASH_SALT, 1, 32, 'sha256').toString('hex');
 }
-
-
-
-
 
 
 /*
@@ -965,18 +847,8 @@ function crypt(value){
 function hashEqualsToValue(value, hash)
 {
     let _hashCompared = crypt(value);
-
     return _hashCompared === hash;
 }
-
-
-
-
-
-
-
-
-
 
 
 /*
@@ -1018,9 +890,6 @@ function preparePhotoPath(id, name, prefix, onlyDir = false, isUrl = false, serv
     return _currentPhotoPath;
 }
 
-
-// //ATTENTION - обратите внимание
-//getCuttedText => getCroppedText
 
 /*
  * Crop text with saving words integrity
@@ -1074,6 +943,7 @@ function clearSpecialSymbols(text)
     return text.replace(/[ \,\|«»]\'\"\`\!/g, ' ');
 }
 
+
 /*
  * Reset array keys
  *  For example: [[5]:1,[9]:2] will become [1,2]
@@ -1101,7 +971,6 @@ module.exports = {
     isFloat,
     crypt,
     hashEqualsToValue,
-    //checkCoordinate,
     toFloat,
     deleteFile,
     uniqueId,
@@ -1129,7 +998,6 @@ module.exports = {
     getDate,
     get_unique,
     get_flag_url,
-    //getRandomPlacemarkPhoto,
     isClass,
     isFunction,
     isMethod,

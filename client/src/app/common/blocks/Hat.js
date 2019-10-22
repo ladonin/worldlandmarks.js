@@ -14,13 +14,17 @@ import Block from 'src/app/parents/Block';
 import Consts from 'src/settings/Constants';
 import ToolsPanel from 'src/app/common/blocks/ToolsPanel';
 
-class Hat extends Block {
+class Hat extends Block
+{
 
-    constructor() {
+    constructor()
+    {
         super();
     }
 
-    render() {
+
+    render()
+    {
         if (!this.props.redux.domainName || this.props.redux.controller === Consts.CONTROLLER_NAME_MAP) {
             return null;
         }
@@ -51,7 +55,8 @@ class Hat extends Block {
     }
 }
 
-function mapStateToProps(state) {
+function mapStateToProps(state)
+{
 
     return {
         redux: {

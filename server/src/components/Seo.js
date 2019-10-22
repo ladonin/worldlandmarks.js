@@ -16,11 +16,14 @@ const MapDataModel = require('server/src/models/dbase/mysql/MapData');
 const Articles = require('server/src/components/Articles');
 const Config = require('server/src/settings/Config');
 
-class Seo extends Component {
+class Seo extends Component
+{
 
-    constructor(){
+    constructor()
+    {
         super();
     }
+
 
     /*
      * Get page title
@@ -34,6 +37,7 @@ class Seo extends Component {
     {
         return  this.getText('site/title/' + address, params);
     }
+
 
     /*
      * Get page keywords
@@ -112,5 +116,4 @@ class Seo extends Component {
 
 
 Seo.instanceId = BaseFunctions.uniqueId();
-
 module.exports = Seo;

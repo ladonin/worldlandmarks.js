@@ -13,7 +13,8 @@ const CountryStatesCitiesTranslationsModel = require('server/src/models/dbase/my
 
 class GeocodeCollectionModel extends DBaseMysql
 {
-    constructor() {
+    constructor()
+    {
         super();
 
         this.tableNameInit = this.tableInitNames.GEOCODE_COLLECTION;
@@ -90,16 +91,6 @@ class GeocodeCollectionModel extends DBaseMysql
     }
 
 
-
-
-//ATTENTION - обратите внимание
-// prepareAddress => Geo.getInstance(this.requestId).prepareAddress
-// add => Placemarks.getInstance(this.requestId).add
-// addOnOneLanguage => Placemarks.getInstance(this.requestId).addInOneLanguage
-
-
-// //ATTENTION - обратите внимание get_countries => CountriesModel.getCountries
-
     /*
      * Update placemark's geodata
      *
@@ -138,10 +129,9 @@ class GeocodeCollectionModel extends DBaseMysql
             /*select*/'country, country_code, state_code, COUNT(country_code) as placemarks_count',
             /*where_values*/[language],
             /*limit*/false,
-            /*need_result*/false
+            /*needresult*/false
         );
     }
-
 
 
     /*
@@ -158,7 +148,7 @@ class GeocodeCollectionModel extends DBaseMysql
             /*select*/'DISTINCT country_code',
             /*where_values*/[],
             /*limit*/false,
-            /*need_result*/false
+            /*needresult*/false
         );
     }
 
@@ -191,7 +181,7 @@ class GeocodeCollectionModel extends DBaseMysql
             /*select*/'id',
             /*where_values*/_whereValues,
             /*limit*/1,
-            /*need_result*/false
+            /*needresult*/false
         );
 
         return _result[0]['id'] ? true : false;
@@ -235,8 +225,6 @@ class GeocodeCollectionModel extends DBaseMysql
     }
 
 
-
-
     /*
      * Return placemarks ids of current country and, if set, state in current language
      *
@@ -262,7 +250,7 @@ class GeocodeCollectionModel extends DBaseMysql
             /*select*/'DISTINCT map_data_id as placemark_id',
             _where_values,
             /*limit*/false,
-            /*need_result*/false
+            /*needresult*/false
         );
     }
 
@@ -283,10 +271,9 @@ class GeocodeCollectionModel extends DBaseMysql
             /*select*/'COUNT(country_code) as placemarks_count',
             /*where_values*/[countryCode],
             /*limit*/1,
-            /*need_result*/false
+            /*needresult*/false
         )[0]['placemarks_count'];
     }
-
 
 
     /*
@@ -306,7 +293,7 @@ class GeocodeCollectionModel extends DBaseMysql
             /*select*/'DISTINCT administrative_area_level_1 as state, state_code',
             /*where_values*/[language, countryCode],
             /*limit*/false,
-            /*need_result*/false
+            /*needresult*/false
         );
     }
 
@@ -320,7 +307,8 @@ class GeocodeCollectionModel extends DBaseMysql
      *
      * @return  {array of objects}
      */
-    getBreadcrumbsForPlacemarkPage(idPlacemark, language, needResult = true){
+    getBreadcrumbsForPlacemarkPage(idPlacemark, language, needResult = true)
+    {
         return this.getByCondition(
             /*condition*/"language=? AND map_data_id=?",
             /*order*/'',
@@ -343,8 +331,8 @@ class GeocodeCollectionModel extends DBaseMysql
      *
      * @return  {array of objects}
      */
-    getBreadcrumbsForStatePage(countryCode, stateCode, language, needResult = true){
-
+    getBreadcrumbsForStatePage(countryCode, stateCode, language, needResult = true)
+    {
         return this.getByCondition(
             /*condition*/"country_code=? AND state_code=? AND language=?",
             /*order*/'',
@@ -366,8 +354,8 @@ class GeocodeCollectionModel extends DBaseMysql
      *
      * @return  {array of objects}
      */
-    getBreadcrumbsForCountryPage(countryCode, language, needResult = true){
-
+    getBreadcrumbsForCountryPage(countryCode, language, needResult = true)
+    {
         return this.getByCondition(
             /*condition*/"country_code=? AND language=?",
             /*order*/'',
@@ -378,7 +366,6 @@ class GeocodeCollectionModel extends DBaseMysql
             needResult
         )[0];
     }
-
 }
 
 GeocodeCollectionModel.instanceId = BaseFunctions.uniqueId();

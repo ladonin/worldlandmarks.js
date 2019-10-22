@@ -20,13 +20,17 @@ import ArticlesCategories from 'src/app/controllers/articles/actions/Categories'
 import ArticlesCategory from 'src/app/controllers/articles/actions/Category';
 import ArticlesArticle from 'src/app/controllers/articles/actions/Article';
 
-class Articles extends Controller {
+class Articles extends Controller
+{
 
-    constructor() {
+    constructor()
+    {
         super();
     }
 
-    render() {
+
+    render()
+    {
         let _actionName = this.getActionName();
         let _actionComponent;
         switch (_actionName) {

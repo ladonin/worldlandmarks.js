@@ -5,18 +5,16 @@
  * Users class - store user data
  */
 
-
 const Core = require('server/src/core/parents/Core');
 const AccessConfig = require('server/src/settings/gitignore/Access');
-
 const Consts = require('server/src/settings/Constants');
 const BaseFunctions = require('server/src/functions/BaseFunctions');
-
 
 class Users extends Core
 {
 
-    constructor(){
+    constructor()
+    {
         super();
 
         /*
@@ -39,8 +37,8 @@ class Users extends Core
          * @type string
          */
         this.name;
-
     }
+
 
     isAdmin()
     {
@@ -65,8 +63,5 @@ class Users extends Core
     }
 }
 
-
 Users.instanceId = BaseFunctions.uniqueId();
-
-
 module.exports = Users;
