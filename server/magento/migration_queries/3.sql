@@ -1,2 +1,0 @@
-RENAME TABLE map_city_landmarks_coords TO landmarks_map_coords;
-RENAME TABLE map_city_landmarks_photos TO landmarks_map_photos;

@@ -1,7 +1,0 @@
-/files/*
-/nbproject/*
-/log/*
-/application/services/landmarks/log/*
-/application/services/roads/log/*
-/application/config/ignore/*
-cgi-bin/

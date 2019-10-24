@@ -1,1 +1,0 @@
-<?php $this->trace_block('add_new_point' . MY_DS . 'generic', false, $data); ?>
