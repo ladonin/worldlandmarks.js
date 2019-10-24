@@ -47,7 +47,7 @@ class PlacemarksList extends Block
         this.idCurrent = 0;
         this.idNext = 0;
 
-        this.correction = 200;
+        this.correction = 700;
         this.searchData = {};
         this.photoWidth = 293;
         this.photoHeight = 225;

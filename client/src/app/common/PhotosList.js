@@ -6,12 +6,8 @@
  */
 
 import React, { Component } from 'react';
-import { connect } from 'react-redux';
-import {BrowserView, MobileView, isBrowser, isMobile} from "react-device-detect";
-import Events from 'src/modules/Events';
+import {BrowserView, MobileView, isMobile} from "react-device-detect";
 
-import Consts from 'src/settings/Constants';
-import PhotosNavigator from 'src/app/common/blocks/catalog/placemark/PhotosNavigator';
 import ImageDimensions from 'src/modules/ImageDimensions';
 import ConfigRestrictions from 'src/../../server/common/settings/Restrictions';
 import BaseFunctions from 'src/functions/BaseFunctions';

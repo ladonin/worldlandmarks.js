@@ -6,12 +6,10 @@
  */
 
 import React from 'react';
-import {BrowserView, MobileView, isMobile} from "react-device-detect";
+import {isMobile} from "react-device-detect";
 import { withRouter } from 'react-router-dom';
 
 import Consts from 'src/settings/Constants';
-import CommonBaseFunctions from 'src/../../server/common/functions/BaseFunctions';
-
 import Block from 'src/app/parents/Block';
 import CroppedPhoto from 'src/app/common/blocks/CroppedPhoto';
 import PlacemarkCaregories from 'src/app/common/blocks/PlacemarkCaregories';

@@ -6,7 +6,6 @@
  */
 
 import React from 'react';
-import Router from 'src/modules/Router';
 import Consts from 'src/settings/Constants';
 import Socket from 'src/app/socket/Socket';
 import Common, {UpdateStyleData, ClearActionData, ClearStyleData, ClearBackgroundData} from 'src/app/parents/Common';

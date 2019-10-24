@@ -6,9 +6,6 @@
  */
 import Consts from 'src/settings/Constants';
 import Config from 'src/settings/Config';
-import Service from 'src/modules/Service';
-import Language from 'src/modules/Language';
-import CommonBaseFunctions from 'src/../../server/common/functions/BaseFunctions';
 import {isMobile} from "react-device-detect";
 import BaseFunctions from 'src/functions/BaseFunctions';
 import ImageDimensions from 'src/modules/ImageDimensions';
@@ -24,46 +21,31 @@ const DEFAULT_ZOOM = 5;
 
 let _isAvailableToChange = false;
 let _filterCategory = false;
-let _objectName = 'my_map_vendor';
 let _linkId;
 let _currentPlacemarkId;
 let _isRedactedStatus = false;
 
 let _buttonsPlacemarkViewerHidePosition;
-let _buttonsNewPointPlaceAtMapPosition;
-let _buttonsPlacemarkViewerShowPosition;
-let _buttonsNewPointReturnToEditorPosition;
 let _zoomWhereAmI;
 let _placemarkViewZoom;
-let _zoom;
 let _placemarkComponentRef;
 let _panelToolsComponentRef;
 
 if (isMobile) {
     _buttonsPlacemarkViewerHidePosition = '-75px';
-    _buttonsNewPointPlaceAtMapPosition = '-75px';
-    _buttonsPlacemarkViewerShowPosition = '-187px';
-    _buttonsNewPointReturnToEditorPosition = '-150px';
     _zoomWhereAmI = 17;
     _placemarkViewZoom = 16;
 } else {
     _buttonsPlacemarkViewerHidePosition = '-120px';
-    _buttonsNewPointPlaceAtMapPosition = '-120px';
-    _buttonsPlacemarkViewerShowPosition = '-300px';
-    _buttonsNewPointReturnToEditorPosition = '-240px';
     _zoomWhereAmI = 14;
     _placemarkViewZoom = 17;
 }
 let _isTooBigRequestedArea = false;
 let _presetPlacemarkNew = 'custom#new_placemark';
-let _clusterOpened;
 let _placemarkOpenedId;
-let _balloonContentBody = 'waiting...';
 let _gridSize = 50;
-let _buttonsHeight;
 let _clusterListImageWidth;
 let _clusterListImageHeight;
-let _clusterListImageWidthMax = 220;
 let _placemarkHeight;
 let _placemarks = {};
 let _placemarksRightList = {};
@@ -78,12 +60,9 @@ let _windowWidth;
 let _xAddNewPointSelector = '#addNewPoint_x';
 let _yAddNewPointSelector = '#addNewPoint_y';
 
-let _blockAddNewPointSelector = '#add_new_point';
 let _placemarkSelector = '#placemark';
-let _placemarkButtonsSelector = '#placemark_buttons';
 let _placemarkButtonsBlockSelector = '#placemark_buttons_block';
 let _placemarkToggleSelector = '#placemark_toggle';
-let _placemarkCloseSelector = '#placemark_close';
 let _placemarkAddButtonsSelector = '#placemark_add_buttons';
 let _placemarkAddSetPointSelector = '#placemark_add_set_point';
 let _buttonImageSelector = 'div.icon img';
@@ -92,41 +71,27 @@ let _placemarkCloseSide1Selector = '#placemark_close_side_1';
 let _placemarkCloseSide2Selector = '#placemark_close_side_2';
 let _placemarkAddCommitSelector = '#placemark_add_commit';
 let _placemarkListElementSelector = '.placemark_list_element';
-let _panelToolsContentFilterSelectBlockSelector = "#panel_tools_content_filter_select_block";
 let _placemarkListSelector = '#placemark_list';
-let _placemarkListBlockSelector = '#placemark_list_block';
-let _placemarkAddButtonsBlockSelector = '#placemark_add_buttons_block';
 let _placemarkListElementDivSelector = '.placemark_list_element div';
-let _placemarkContentImgSelector = '#placemark_content img';
 let _placemarkContentSelector = '#placemark_content';
-let _shadowBlockSelector = '#shadow_block';
-let _shadowSelector = '#shadow';
-let _mCustomScrollbarSelector = '.mCustomScrollbar'
-let _alertSelector = '#alert'
 let _placemarkContentBlockSelector = '#placemark_content_block';
 let _placemarkAddCancelSelector = '#placemark_add_cancel';
 let _placemarkAddBlockSelector = '#placemark_add_block';
 let _placemarkAddSelector = '#placemark_add';
 let _placemarkAddOpenSelector = '#placemark_add_open';
 let _showPlacemarkAddOpenSelector = false;
-let _placemarkUpdateOpenFromViewerSelector = '#placemark_update_open_from_viewer';
-let _openPanelSelector = '#open_panel';
 let _showOpenPanelSelector = false;
-let _whereAmISelector = '#where_am_i';
 let _panelToolsSelector = '#panel_tools';
-let _updatePlacemarkFieldSelector = '#update_placemark_field';
 let _yaShield1Selector = '#ya_shield_1';
 let _yMapsIdSelector = '#YMapsID';
 
 let _placemarkContentMargin;
-let _yaShield1Timer;
 let _placemarkAddSetPointTimer;
 let _contentImageWithClusterWidth;
 let _contentImageWithoutClusterWidth;
 let _clusterListImagePrefix = null;
 let _contentImageWithClusterPrefix = null;
 let _contentImageWithoutClusterPrefix = null;
-let _prefix;
 let _bunchFillingTimer;
 let _bunchFillingEnd = 0;
 
