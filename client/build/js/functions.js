@@ -2,11 +2,13 @@
  * Common js functions
  */
 
-function dispatchEvent(name, data) {
+function dispatchEvent(name, data)
+{
     document.dispatchEvent(new CustomEvent(name, {detail:data}));
 }
 
-function detectIE() {
+function detectIE()
+{
   var ua = window.navigator.userAgent;
 
   // Test values; Uncomment to check result …

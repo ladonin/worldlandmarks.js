@@ -23,7 +23,7 @@ let _languages = {
 
 export default {
     apiServer: {
-        socketUrl: 'http://192.168.56.1:3001'
+        socketUrl: 'http://77.222.60.47:3001'
     },
     getServiceConfig:()=>_config[Service.getName()],
     getText:(val)=> _languages[Service.getName()][val]

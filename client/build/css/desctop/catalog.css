@@ -4,43 +4,22 @@
 h3.catalog_state_header, h3.catalog_index_header, h3.catalog_placemark_title{
     background: #f6f6f6;
 }
-
 .catalog_index_header,.catalog_state_header,.catalog_index_block{
     width:900px;
 }
-
-
 .catalog_index_block{
-margin: 0px auto;
-padding-top: 0px;
+    margin: 0px auto;
+    padding-top: 0px;
 }
 .catalog_placemark > .placemarks_category_html_content,.catalog_placemark_address,.catalog_placemark_map_lnk{
     margin-left:20px;
 }
-
 .catalog_index_country_row{
     background-color: #f6f6f6;
 }
-
-
-
-#layout_catalog.view_placemark .catalog_placemark,
-#layout_article.view_view .catalog_placemark{
-    /*margin-bottom:20px;*/
-}
-
-
-
-
 .catalog_country_page_article_items_list{
     padding:10px 10px 0 10px;
 }
-.article_sublist_items{
-
-}
-
-
-
 .sitemap_block{
     width:900px;
     margin:20px auto 0 auto;
@@ -49,42 +28,42 @@ padding-top: 0px;
     padding-bottom: 10px;
 }
 .sitemap_country_row{
-width: 175px;
+    width: 172px;
 }
 .sitemap_category_row{
-  width: 440px;
+    width: 420px;
 }
 .sitemap_country_row,.sitemap_category_row{
-padding: 5px 0;
-float: left;
+    padding: 5px 0;
+    float: left;
 }
 .sitemap_placemark_row{
-   padding: 5px 10px;
+    padding: 5px 20px;
 }
 .sitemap_country_block,.sitemap_category_block{
-
-padding: 5px 10px;
-margin-bottom:10px;
+    padding: 15px 20px;
+    margin-bottom:10px;
 }
 .sitemap_pages_block{
-    padding:10px;
+    padding:0 20px 20px 20px;
 }
 .sitemap_pages_block a{
-padding: 5px;
-line-height: 27px;
+    padding: 5px;
+    line-height: 27px;
 }
-
 .sitemap_header{
-padding: 0px 10px 10px;
-font-size: 17px;
+    padding: 10px 20px 20px;
+    font-size: 17px;
 }
-
 .sitemap_header h3{
-font-size: 17px;
-margin: 0;
-font-weight: lighter;
+    font-size: 15px;
+    margin: 0;
+    font-weight: lighter;
 }
-
+.sitemapChangeType{
+    padding:0 0 10px 10px;
+    margin-left:10px;
+}
 h3.catalog_state_header, h3.catalog_index_header, h3.catalog_placemark_title{
     font-weight:normal;
     margin-top:0;
@@ -103,8 +82,7 @@ h3.catalog_placemark_title{
 .catalog_index_header{
     padding:20px 0 10px 0;
 }
-.catalog_block_last_articles_title
-{
+.catalog_block_last_articles_title{
     width:860px;
     padding:10px;
     font-size: 21px;
@@ -121,21 +99,13 @@ h3.catalog_placemark_title{
 .catalog_placemark{
     text-align: left;
 }
-
 .catalog_placemark{
     background-color:#fff;
 }
-
 .cataolg_page_article_items_list{
     margin:0 10px 20px;
     padding:10px 10px 20px 10px;
 }
-
-
-
-
-
-
 .catalog_scroll_placemark_row_content{
     padding: 10px 10px 10px 0px;
 }
@@ -155,27 +125,21 @@ h3.catalog_placemark_title{
 .catalog_scroll_placemark_row{
     margin-top: 10px;
     background-color: #fff;
-    padding: 0px;/*10px*/
+    padding: 0px;
 }
 .catalog_scroll_placemark_row_content_title{
     text-align:left;
     padding-bottom:5px;
     font-size:17px;
 }
-
-
-
 .catalog_scroll_placemark_row_content_title{
     font-size:21px;
 }
-
-
 .catalog_index_country_row_name{
     float:left;
     margin-left:10px;
     width: 175px
 }
-
 .catalog_index_country_row{
     margin:20px 10px 0px;
     padding:10px;
@@ -183,19 +147,16 @@ h3.catalog_placemark_title{
     float:left;
     cursor:pointer;
 }
-
 .catalog_index_country_row:hover{
     background-color: rgb(255, 255, 222);
 }
 .catalog_index_country_row_name{
     font-size:17px;
 }
-
 .catalog_index_country_placemarks_count{
     font-size:13px;
     color:#555;
 }
-
 .hat_logo{
     width:300px;
 }
@@ -203,18 +164,14 @@ h3.catalog_placemark_title{
     float:left;
     margin-right:10px;
 }
-
 .catalog_scroll_placemark_row_content{
     float:left;
 }
-
-
 .catalog_scroll_placemark_row_photo img,
 .catalog_scroll_placemark_row_content_category img,
 img.category{
     cursor:pointer;
 }
-
 .catalog_scroll_placemark_row_content_category img{
     float:left;
     margin-right:5px;
@@ -223,12 +180,6 @@ img.category{
     font-size:12px;
     margin-top:10px;
 }
-
-
-
-
-
-
 .flag{
     width:62px;
     height:45px;
@@ -237,20 +188,14 @@ img.category{
     float:left;
     loat:left;cursor:pointer;
 }
-
-
-
 #layout_catalog.action_index .padding_after_hat{
     padding:0;
 }
-
-
 .catalog_search_block{
     width: 900px;
     margin: 0 auto;
     text-align: left;
 }
-
 .catalog_search_title{
     padding: 20px 0;
     font-weight: normal;
@@ -259,16 +204,12 @@ img.category{
     text-align: center;
     font-size: 23px;
 }
-
-
 .catalog_search_form_title,.catalog_search_form_category select,.catalog_search_form_country select{
     width:450px;
 }
-
 .catalog_search_form_title_label,.catalog_search_form_category_label,.catalog_search_form_country_label{
     margin:10px 0 5px 0;
 }
-
 #catalog_search_form_submit{
     margin-top:20px;
     margin-bottom:20px;
@@ -279,29 +220,18 @@ img.category{
     font-size: 20px;
     line-height: 45px;
 }
-
-
 #catalog_country_states_block{
     float:left;
     width:290px;
     background-color: rgb(255, 255, 255);
     margin-right: 10px;
 }
-
-
 #catalog_country_states_list{
-max-height: 390px;
-padding: 10px 10px 0 10px;
-overflow-y: auto;
-min-height: 90px;
+    max-height: 390px;
+    padding: 10px 10px 0 10px;
+    overflow-y: auto;
+    min-height: 90px;
 }
-
-#layout_catalog.view_country #list,
-#layout_catalog.view_state #list{
-    /*margin-bottom: 20px;*/
-}
-
-
 #catalog_country_photos_block,.catalog_country_placemarks_counter_title{
     float:left;
 }
@@ -330,25 +260,19 @@ min-height: 90px;
 #catalog_country_state_block{
     width:900px;
 }
-
-
 .pretty_photo_title,#catalog_country_states_title{
     text-align: left;
     padding: 10px;
     font-size: 17px;
-    /*margin-right: 1px;*/
     background-color: rgb(89, 121, 210);
     color: rgb(255, 255, 255);
 }
-
 .pretty_photo_title{
     border-bottom: 1px solid #fff;
     margin-right: 1px;
 }
-
 .catalog_country_page_block_last_articles_title,
-.catalog_state_page_block_last_articles_title
-{
+.catalog_state_page_block_last_articles_title{
     margin-top:20px;
     text-align: left;
     padding: 10px;

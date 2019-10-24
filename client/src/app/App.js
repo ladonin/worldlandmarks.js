@@ -1,3 +1,10 @@
+/*
+ * File src/app/App.js
+ * import App from 'src/app/App';
+ *
+ * Main application component
+ */
+
 import React, { Component } from 'react';
 import { Route, Switch } from 'react-router-dom';
 import { Provider } from "react-redux";
@@ -18,12 +25,9 @@ import Map from './controllers/map/Map';
 import Catalog from './controllers/catalog/Catalog';
 import Articles from './controllers/articles/Articles';
 
-// Css
-import "./Css";
 
 class App extends Component
 {
-
     render()
     {
         return (

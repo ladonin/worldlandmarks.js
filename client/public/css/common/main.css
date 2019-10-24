@@ -7,17 +7,8 @@
     float:right;
 }
 .main_block_map_block a,.main_block_catalog_block a,.main_block_search_block a{
-padding: 5px 10px;
+    padding: 5px 10px;
 }
-
-
-
-
-
-
-
-
-
 .main_block_map_block{
     float:left;
 }
@@ -27,14 +18,11 @@ padding: 5px 10px;
 .main_block_search_block{
     float:left;
 }
-
 .main_block_last_placemarks_title,
 .main_block_last_articles_title{
     color: #fff;
     background-color:rgba(65, 75, 97, 0.7);
 }
-
-
 .main_block_map_block img,.main_block_catalog_block img,.main_block_search_block img{
   margin-left: auto;
   margin-right: auto;
