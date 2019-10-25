@@ -6,7 +6,7 @@
  */
 import Consts from 'src/settings/Constants';
 import Config from 'src/settings/Config';
-import {isMobile} from "react-device-detect";
+import {isMobile, isBrowser} from "react-device-detect";
 import BaseFunctions from 'src/functions/BaseFunctions';
 import ImageDimensions from 'src/modules/ImageDimensions';
 import Router from 'src/modules/Router';
@@ -347,9 +347,11 @@ function preparePlacemarkContentDimensions(atCluster, id)
         }
     }
     BaseFunctions.scrollTop(_placemarkContentSelector, 0);
-    BaseFunctions.kickNicescroll(_placemarkContentSelector);
-    BaseFunctions.kickNicescroll(_placemarkAddBlockSelector);
-    BaseFunctions.kickNicescroll(_placemarkListSelector);
+    if (isBrowser) {
+        BaseFunctions.kickNicescroll(_placemarkContentSelector);
+        BaseFunctions.kickNicescroll(_placemarkAddBlockSelector);
+        BaseFunctions.kickNicescroll(_placemarkListSelector);
+    }
 
     if (atCluster && id) {
         BaseFunctions.scrollTo(_placemarkListSelector, '#placemark_list_element_'+id);
@@ -432,9 +434,11 @@ function actionsAfterShowPointData(id, atCluster)
     preparePlacemarkViewerDimensions(id, atCluster);
     _currentPlacemarkId = id;
     BaseFunctions.scrollTop(_placemarkContentSelector, 0);
-    BaseFunctions.kickNicescroll(_placemarkContentSelector);
-    BaseFunctions.kickNicescroll(_placemarkAddBlockSelector);
-    BaseFunctions.kickNicescroll(_placemarkListSelector);
+    if (isBrowser) {
+        BaseFunctions.kickNicescroll(_placemarkContentSelector);
+        BaseFunctions.kickNicescroll(_placemarkAddBlockSelector);
+        BaseFunctions.kickNicescroll(_placemarkListSelector);
+    }
 }
 
 
@@ -446,9 +450,11 @@ function actionsAfterClosePointData()
     BaseFunctions.setCss(_placemarkToggleSelector + ' ' + _buttonImageSelector, 'top', _buttonsPlacemarkViewerHidePosition);
     moveToCluster(_currentPlacemarkId);
     BaseFunctions.scrollTop(_placemarkContentSelector, 0);
-    BaseFunctions.kickNicescroll(_placemarkContentSelector);
-    BaseFunctions.kickNicescroll(_placemarkAddBlockSelector);
-    BaseFunctions.kickNicescroll(_placemarkListSelector);
+    if (isBrowser) {
+        BaseFunctions.kickNicescroll(_placemarkContentSelector);
+        BaseFunctions.kickNicescroll(_placemarkAddBlockSelector);
+        BaseFunctions.kickNicescroll(_placemarkListSelector);
+    }
 }
 
 
@@ -591,17 +597,21 @@ function init(coords, matchParams)
             clearTimeout(_placemarkAddSetPointTimer);
 
             _placemarkAddSetPointTimer = setTimeout(function () {
-                BaseFunctions.kickNicescroll(_placemarkAddBlockSelector);
-                BaseFunctions.kickNicescroll(_placemarkListSelector);
+                if (isBrowser) {
+                    BaseFunctions.kickNicescroll(_placemarkAddBlockSelector);
+                    BaseFunctions.kickNicescroll(_placemarkListSelector);
+                }
             }, 2000);
         }
     }).add('boundschange', function (event) {
         loadByCoords();
     });
 
-    BaseFunctions.niceScroll(_placemarkContentSelector);
-    BaseFunctions.niceScroll(_placemarkAddBlockSelector);
-    BaseFunctions.niceScroll(_placemarkListSelector);
+    if (isBrowser) {
+        BaseFunctions.niceScroll(_placemarkContentSelector);
+        BaseFunctions.niceScroll(_placemarkAddBlockSelector);
+        BaseFunctions.niceScroll(_placemarkListSelector);
+    }
 
     runBunchFillingTimer();
     loadByCoords();
