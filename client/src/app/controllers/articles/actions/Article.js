@@ -43,7 +43,7 @@ class ArticlesArticle extends Action
         for (let _index in this.props.redux.actionData.categoriesData) {
             let _category = this.props.redux.actionData.categoriesData[_index];
             _categoriesList.push(
-                    <a onClick={this.goTo}
+                    <a key={_index} onClick={this.goTo}
                        data-url={'/' + Consts.CONTROLLER_NAME_ARTICLES + '/' + Consts.ACTION_NAME_CATEGORY + '/' + _category.code + '/1'}>{_category.title}</a>);
         }
 
@@ -51,7 +51,7 @@ class ArticlesArticle extends Action
         for (let _index in this.props.redux.actionData.randomArticles) {
             let _article = this.props.redux.actionData.randomArticles[_index];
             _randomArticlesList.push(
-                    <div className="article_sublist_item">
+                    <div key={_index} className="article_sublist_item">
                         <a onClick={this.goTo}
                            data-url={'/' + Consts.CONTROLLER_NAME_ARTICLES + '/' + _article.id}>
                             {_article.title}

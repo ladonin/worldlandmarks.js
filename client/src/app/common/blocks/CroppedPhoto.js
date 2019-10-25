@@ -13,12 +13,6 @@ import CommonBaseFunctions from 'src/../../server/common/functions/BaseFunctions
 class CroppedPhoto extends Block
 {
 
-    constructor()
-    {
-        super();
-    }
-
-
     render()
     {
 

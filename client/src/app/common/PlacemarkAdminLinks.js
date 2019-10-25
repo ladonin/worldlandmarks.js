@@ -10,12 +10,6 @@ import React, { Component } from 'react';
 class PlacemarkAdminLinks extends Component
 {
 
-    constructor()
-    {
-        super();
-    }
-
-
     render()
     {
         if (!this.props.isAdmin || !this.props.id) {

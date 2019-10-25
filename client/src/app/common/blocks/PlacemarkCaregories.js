@@ -9,7 +9,6 @@ import React from 'react';
 import { connect } from 'react-redux';
 
 import {UpdateStyleData} from 'src/app/parents/Common';
-import Consts from 'src/settings/Constants';
 import CategoryViewerModule from 'src/modules/CategoryViewer';
 import Block from 'src/app/parents/Block';
 

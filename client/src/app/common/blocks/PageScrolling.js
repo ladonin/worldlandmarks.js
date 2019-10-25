@@ -135,7 +135,6 @@ class PageScrolling extends Block
 
     render()
     {
-        let _content = '';
         if (this.state.hidden === true) {
             return null;
         }

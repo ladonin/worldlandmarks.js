@@ -53,7 +53,7 @@ class ArticleCategory extends Common
         for (let _index in this.props.redux.actionData.categoriesData) {
             let _category = this.props.redux.actionData.categoriesData[_index];
             _categoriesList.push(
-                <div className="sitemap_category_row" style={isMobile?{width:(BaseFunctions.getWidth(window)/3)-10 + 'px'} : {}}>
+                <div key={_index} className="sitemap_category_row" style={isMobile?{width:(BaseFunctions.getWidth(window)/3)-10 + 'px'} : {}}>
                     <a onClick={this.goTo} data-url={'/' + Consts.CONTROLLER_NAME_ARTICLES + '/' + Consts.ACTION_NAME_CATEGORY + '/' + _category['code'] + '/1'}>{_category['title']}</a>
                 </div>);
         }
@@ -62,9 +62,9 @@ class ArticleCategory extends Common
         for (let _i = 1; _i <= this.props.redux.actionData.pagesCount; _i++) {
 
             if (_i === parseInt(this.props.redux.actionData.currentPage)) {
-                _pagesList.push(<a className='sitemap_current_page'>{_i}</a>);
+                _pagesList.push(<a key={_i} className='sitemap_current_page'>{_i}</a>);
             } else {
-                _pagesList.push(<a onClick={this.goTo} data-url={'/' + Consts.CONTROLLER_NAME_ARTICLES + '/' + Consts.ACTION_NAME_CATEGORY + '/' + this.props.redux.actionData.categoryCode + '/' + _i}>{_i}</a>);
+                _pagesList.push(<a key={_i} onClick={this.goTo} data-url={'/' + Consts.CONTROLLER_NAME_ARTICLES + '/' + Consts.ACTION_NAME_CATEGORY + '/' + this.props.redux.actionData.categoryCode + '/' + _i}>{_i}</a>);
             }
         }
 
@@ -73,7 +73,7 @@ class ArticleCategory extends Common
         for (let _index in this.props.redux.actionData.articlesData) {
             let _article = this.props.redux.actionData.articlesData[_index];
             _articlesList.push(
-            <div className="sitemap_placemark_row">
+            <div key={_index} className="sitemap_placemark_row">
                 <a onClick={this.goTo} data-url={'/' + Consts.CONTROLLER_NAME_ARTICLES + '/' + _article.id}>{_article.title}</a>
             </div>);
         }

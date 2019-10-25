@@ -61,7 +61,7 @@ class PlacemarksSublist extends Block
                 let dataUrl = this.props.isMap ? ('/' + Consts.CONTROLLER_NAME_MAP + '/' + _placemark['id']) : (_placemark['url']);
 
                 itemsList.push(
-                        <div className="sublist_placemarks_block" style={_style1}>
+                        <div key={_index} className="sublist_placemarks_block" style={_style1}>
                             <div
                             onClick={this.goTo}
                             data-url={dataUrl}
@@ -95,7 +95,7 @@ class PlacemarksSublist extends Block
                             <div className="clear"></div>
                         </div>);
                 if (_i % 2 === 0) {
-                    itemsList.push(<div className="clear"></div>)
+                    itemsList.push(<div key={_index+'_c'} className="clear"></div>)
                 }
             }
             return <div className="sublist_placemarks">

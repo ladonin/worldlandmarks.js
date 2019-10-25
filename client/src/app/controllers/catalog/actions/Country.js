@@ -36,7 +36,7 @@ class CatalogCountry extends Action
             for (let _index in this.props.redux.actionData.data.articles) {
                 let _article = this.props.redux.actionData.data.articles[_index];
                 _articlesList.push(
-                    <div class="catalog_country_page_article_item">
+                    <div key={_index} className="catalog_country_page_article_item">
                         <a onClick={this.goTo} data-url={'/' + Consts.CONTROLLER_NAME_ARTICLES + '/' + _article['id']}>{_article['title']}</a>
                     </div>);
             }
@@ -78,7 +78,7 @@ class CatalogCountry extends Action
         if (this.props.redux.actionData.data && this.props.redux.actionData.data.states) {
             for (let _index in this.props.redux.actionData.data.states) {
                 _statesList.push(
-                    <div className="catalog_country_state_row">
+                    <div key={_index} className="catalog_country_state_row">
                         <a onClick={this.goTo} data-url={this.props.redux.actionData['current_url']+this.props.redux.actionData.data.states[_index]['state_code']}>{this.props.redux.actionData.data.states[_index]['state']}</a>
                     </div>
                 );
@@ -117,7 +117,7 @@ class CatalogCountry extends Action
                                 {_states}
                                 <div className="h_10px"></div>
                             </MobileView>
-                            <div class="clear"></div>
+                            <div className="clear"></div>
                             {this.getLastArticles()}
                         </div>
                         <PlacemarksList

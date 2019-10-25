@@ -28,17 +28,31 @@ class CatalogSearch extends Action
     {
         super();
         this.search = this.search.bind(this);
+        this.state={
+                    category:"",
+                    category:"",
+                    keywords:""
+                };
     }
 
 
     search()
     {
+        let _category = document.getElementsByName('catalog_search_form_category')[0].value;
+        let _country = document.getElementsByName('catalog_search_form_country')[0].value;
+        let _keywords = document.getElementsByName('catalog_search_form_title')[0].value;
         Events.dispatch('search', {
             isSearch: 1,
-            country: document.getElementsByName('catalog_search_form_country')[0].value,
-            category: document.getElementsByName('catalog_search_form_category')[0].value,
-            keywords: document.getElementsByName('catalog_search_form_title')[0].value
+            country: _country,
+            category: _category,
+            keywords: _keywords
         });
+        this.setState(
+                {
+                    category: _category ? _category : "",
+                    country: _country ? _country : "",
+                    keywords: _keywords ? _keywords : ""
+                })
     }
 
 
@@ -53,24 +67,16 @@ class CatalogSearch extends Action
         let _formCategoriesList = [];
         for(let _index in _categories) {
             let _category = _categories[_index];
-            let _selected = false;
-            if (_category.id === this.props.redux.actionData.formData.categoryId) {
-                _selected = true;
-            }
             _formCategoriesList.push(
-                <option value={_category.id} selected={_selected}>{_category.title}</option>
+                <option key={_index} value={_category.id}>{_category.title}</option>
             );
         }
 
         let _formCountriesList = [];
         for(let _index in this.props.redux.actionData.countries) {
             let _country = this.props.redux.actionData.countries[_index];
-            let _selected = false;
-            if (_country.code === this.props.redux.actionData.formData.countryCode) {
-                _selected = true;
-            }
             _formCountriesList.push(
-                <option value={_country.code} selected={_selected}>{_country.name}</option>
+                <option key={_index} value={_country.code}>{_country.name}</option>
             );
         }
 
@@ -85,7 +91,7 @@ class CatalogSearch extends Action
                                         {this.props.redux.staticData.catalog_search_form_title_label}
                                     </div>
                                     <div className="catalog_search_form_title">
-                                        <input type="text" name="catalog_search_form_title"/>
+                                        <input onChange={this.search} value={this.state.keywords} type="text" name="catalog_search_form_title"/>
                                     </div>
                                 </React.Fragment>
                             }
@@ -93,7 +99,7 @@ class CatalogSearch extends Action
                                 {this.props.redux.staticData.catalog_search_form_category_label}
                             </div>
                             <div className="catalog_search_form_category">
-                                <select name="catalog_search_form_category">
+                                <select onChange={this.search} value={this.state.category} name="catalog_search_form_category">
                                     <option value="">{this.props.redux.staticData.catalog_search_form_all_categories}</option>
                                     {_formCategoriesList}
                                 </select>
@@ -102,14 +108,12 @@ class CatalogSearch extends Action
                                 {this.props.redux.staticData.catalog_search_form_country_label}
                             </div>
                             <div className="catalog_search_form_country">
-                                <select name="catalog_search_form_country">
+                                <select onChange={this.search} value={this.state.country} name="catalog_search_form_country">
                                     <option value="">{this.props.redux.staticData.catalog_search_form_all_countries}</option>
                                     {_formCountriesList}
                                 </select>
                             </div>
-                            <div id="catalog_search_form_submit" onClick={this.search}>
-                                {this.props.redux.staticData.catalog_search_form_submit_text}
-                            </div>
+                            <div className="padding_bottom_10"></div>
                         </div>
                         <PlacemarksList
                             photoWidth="290"

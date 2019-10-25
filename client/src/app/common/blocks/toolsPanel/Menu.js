@@ -52,7 +52,7 @@ class Menu extends Block
         let _imageStyles = {width:'33px', height:'33px'};
         if (Router.isMapPage(this.props.match.params) === true) {
             _toolsList.push(
-                    <React.Fragment>
+                    <React.Fragment key={1}>
                         <div id="where_am_i" onClick={this.alert}>
                             <HtmllerButtons device={Consts.DEVICE_NAME_DESCTOP} text={this.props.redux.staticData.panel_tools_where_am_i_title}/>
                         </div>
@@ -64,7 +64,7 @@ class Menu extends Block
 
         if (this.props.redux.staticData.whether_to_show_main_pages === true) {
             _toolsList.push(
-                    <React.Fragment>
+                    <React.Fragment key={2}>
                         <div className="panel_tools_content_links" style={{width:this.props.width + 'px'}}
                             onClick={this.goTo} data-url='/'>
                             <img style={_imageStyles} src="/img/main_icon_30.png"/>{this.props.redux.staticData.panel_tools_link_main}
@@ -75,7 +75,7 @@ class Menu extends Block
 
         if (Router.isMapPage(this.props.match.params) === false) {
             _toolsList.push(
-                    <React.Fragment>
+                    <React.Fragment key={3}>
                         <div className="panel_tools_content_links" style={{width:this.props.width + 'px'}}
                             onClick={this.goTo} data-url={'/' + Consts.CONTROLLER_NAME_MAP}>
                             <img style={_imageStyles} src="/img/map_icon_30.png"/>{this.props.redux.staticData.panel_tools_link_map}
@@ -86,7 +86,7 @@ class Menu extends Block
 
         if (this.props.redux.staticData.whether_to_show_catalog_pages === true) {
             _toolsList.push(
-                    <React.Fragment>
+                    <React.Fragment key={4}>
                         <div className="panel_tools_content_links" style={{width:this.props.width + 'px'}}
                             onClick={this.goTo} data-url={'/' + Consts.CONTROLLER_NAME_CATALOG}>
                             <img style={_imageStyles} src="/img/catalog_icon_30.png"/>{this.props.redux.staticData.panel_tools_link_catalog}
@@ -97,7 +97,7 @@ class Menu extends Block
 
         if (this.props.redux.staticData.whether_to_show_search_pages === true) {
             _toolsList.push(
-                    <React.Fragment>
+                    <React.Fragment key={5}>
                         <div className="panel_tools_content_links" style={{width:this.props.width + 'px'}}
                             onClick={this.goTo} data-url={'/' + Consts.CONTROLLER_NAME_CATALOG + '/' + Consts.ACTION_NAME_SEARCH}>
                             <img style={_imageStyles} src="/img/search_icon_30.png"/>{this.props.redux.staticData.panel_tools_link_catalog_search}
@@ -108,7 +108,7 @@ class Menu extends Block
 
         if (this.props.redux.staticData.whether_to_show_article_pages === true) {
             _toolsList.push(
-                    <React.Fragment>
+                    <React.Fragment key={6}>
                         <div className="panel_tools_content_links" style={{width:this.props.width + 'px'}}
                             onClick={this.goTo} data-url={'/' + Consts.CONTROLLER_NAME_ARTICLES + '/' + Consts.ACTION_NAME_COUNTRIES}>
                             <img style={_imageStyles} src="/img/article_icon_30.png"/>{this.props.redux.staticData.panel_tools_link_article}
@@ -118,7 +118,7 @@ class Menu extends Block
         }
 
         _toolsList.push(
-            <React.Fragment>
+            <React.Fragment key={7}>
                 <div id="panel_tools_content_settings" className="panel_tools_content_links" style={{width:this.props.width + 'px'}}
                     onClick={()=>Events.dispatch(Consts.EVENT_TOOLS_PANEL_SET_STATUS, {value: 1})}>
                     <img style={_imageStyles} src="/img/settings_icon_30.png"/>{this.props.redux.staticData.panel_tools_settings_title}

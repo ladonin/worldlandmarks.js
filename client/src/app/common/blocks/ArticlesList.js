@@ -29,7 +29,7 @@ class ArticlesList extends Block
         for (let _index in this.props.redux.articles) {
             let _item = this.props.redux.articles[_index];
             _articlesList.push(
-                <div className="cataolg_page_article_item">
+                <div key={_index} className="cataolg_page_article_item">
                     <a onClick={this.goTo} data-url={'/' + Consts.CONTROLLER_NAME_ARTICLES + "/" + _item.id}>
                         {_item.title}
                     </a>

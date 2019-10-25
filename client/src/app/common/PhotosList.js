@@ -30,7 +30,7 @@ class PhotosList extends Component
                     _blockWidth,
                     (BaseFunctions.getHeight(window) - 100));
             _photosList.push(
-                <React.Fragment>
+                <React.Fragment key={_index}>
                     <BrowserView>
                         <a href={_photo['dir'] + '1_' + _photo['name']} target="_blank"><img
                             style={{

@@ -8,7 +8,7 @@
 import React from 'react';
 import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
-import {BrowserView, MobileView, isBrowser, isMobile} from "react-device-detect";
+import {isMobile} from "react-device-detect";
 
 import Consts from 'src/settings/Constants';
 import Block from 'src/app/parents/Block';
@@ -16,17 +16,10 @@ import BaseFunctions from 'src/functions/BaseFunctions';
 
 class MainLinks extends Block
 {
-    constructor()
-    {
-        super();
-    }
-
-
     render()
     {
         let _imgBlockStyle = {};
         let _imgStyle = {}
-        let _titleBlockStyle = {}
 
 
         if (isMobile) {

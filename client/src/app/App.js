@@ -7,14 +7,6 @@
 
 import React, { Component } from 'react';
 import { Route, Switch } from 'react-router-dom';
-import { Provider } from "react-redux";
-import { withRouter } from 'react-router-dom';
-
-import Socket from 'src/app/socket/Socket';
-
-// Modules
-import Language from 'src/modules/Language';
-import Router from 'src/modules/Router';
 
 // Settings
 import Consts from 'src/settings/Constants';

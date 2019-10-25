@@ -167,7 +167,7 @@ class MapPlacemark extends Block
                                 atCluster={this.props.redux.atCluster}
                                 />}
                             {this.props.redux.data['another_placemarks'] &&
-                            <div class="another_placemarks"><PlacemarksSublist
+                            <div className="another_placemarks"><PlacemarksSublist
                                 placemarks = {this.props.redux.data['another_placemarks'].placemarks}
                                 isMap = {true}
                                 imageWidth = {this.props.redux.data['another_placemarks'].data.image_width}

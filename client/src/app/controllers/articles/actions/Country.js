@@ -38,7 +38,7 @@ class ArticleCountry extends Common
         for (let _index in this.props.redux.actionData.countriesData) {
             let _country = this.props.redux.actionData.countriesData[_index];
             _countriesList.push(
-                    <div className="sitemap_country_row" style={isMobile?{width:(BaseFunctions.getWidth(window)/3)-10 + 'px'} : {}}>
+                    <div key={_index} className="sitemap_country_row" style={isMobile?{width:(BaseFunctions.getWidth(window)/3)-10 + 'px'} : {}}>
                         <a onClick={this.goTo} data-url={'/' + Consts.CONTROLLER_NAME_ARTICLES + '/' + Consts.ACTION_NAME_COUNTRY + '/' + _country['country_code'] + '/1'}>{_country['name']}</a>
                     </div>);
         }
@@ -47,9 +47,9 @@ class ArticleCountry extends Common
         for (let _i = 1; _i <= this.props.redux.actionData.pagesCount; _i++) {
 
             if (_i === parseInt(this.props.redux.actionData.currentPage)) {
-                _pagesList.push(<a className='sitemap_current_page'>{_i}</a>);
+                _pagesList.push(<a key={_i} className='sitemap_current_page'>{_i}</a>);
             } else {
-                _pagesList.push(<a onClick={this.goTo} data-url={'/' + Consts.CONTROLLER_NAME_ARTICLES + '/' + Consts.ACTION_NAME_COUNTRY + '/' + this.props.redux.actionData.countryCode + '/' + _i}>{_i}</a>);
+                _pagesList.push(<a key={_i} onClick={this.goTo} data-url={'/' + Consts.CONTROLLER_NAME_ARTICLES + '/' + Consts.ACTION_NAME_COUNTRY + '/' + this.props.redux.actionData.countryCode + '/' + _i}>{_i}</a>);
             }
         }
 
@@ -57,7 +57,7 @@ class ArticleCountry extends Common
         for (let _index in this.props.redux.actionData.articlesData) {
             let _article = this.props.redux.actionData.articlesData[_index];
             _articlesList.push(
-            <div className="sitemap_placemark_row">
+            <div key={_index} className="sitemap_placemark_row">
                 <a onClick={this.goTo} data-url={'/' + Consts.CONTROLLER_NAME_ARTICLES + '/' + _article.id}>{_article.title}</a>
             </div>);
         }

@@ -14,7 +14,6 @@ import Consts from 'src/settings/Constants';
 import CategoryViewerModule from 'src/modules/CategoryViewer';
 import Block from 'src/app/parents/Block';
 import {UpdateStyleData} from 'src/app/parents/Common';
-import CommonBaseFunctions from 'src/../../server/common/functions/BaseFunctions';
 import BaseFunctions from 'src/functions/BaseFunctions';
 import Events from 'src/modules/Events';
 
@@ -87,7 +86,7 @@ class CategoryViewer extends Block
             let _category = this.categories[_index];
 
             _categoriesList.push(
-                    <React.Fragment>
+                    <React.Fragment key={'category_list_' + _category.id}>
                         <div key={'category_list_' + _category.id} className={'category_info_content_row_block' + (_selectedItem === _category.id ? ' hidden' : '')} id={'category_info_content_row_block_' + _category.id}>
                             {_categoriesItem(_category)}
                         </div>

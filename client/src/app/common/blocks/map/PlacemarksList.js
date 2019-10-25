@@ -24,19 +24,17 @@ class PlacemarksList extends Component
             let _placemarkId = _placemarksRightList[_key];
             let _photo = _placemarks['id_'+_placemarkId]['data']['photos'][0];
             _list.push(
-                    <React.Fragment>
-                        <div className={"placemark_list_element" + (this.props.selectedId === _placemarkId ? ' placemark_list_element_selected' :'')} id={"placemark_list_element_" + _placemarkId}
-                        onClick={()=>{MapModule.placemarkPreview(_placemarkId, true)}}>
-                            <CroppedPhoto
-                                blockWidth = {MapModule.getClusterListImageWidth()}
-                                blockHeight ={MapModule.getClusterListImageHeight()}
-                                photoWidth = {_photo['width']}
-                                photoHeight = {_photo['height']}
-                                photoSrc = {_photo['dir'] + MapModule.getClusterListImagePrefix() + _photo['name']}
-                            />
-                            {_placemarks['id_'+_placemarkId]['data']['title'] && <div className="placemark_list_element_title">{_placemarks['id_'+_placemarkId]['data']['title']}</div>}
-                        </div>
-                    </React.Fragment>);
+                    <div key={_key} className={"placemark_list_element" + (this.props.selectedId === _placemarkId ? ' placemark_list_element_selected' :'')} id={"placemark_list_element_" + _placemarkId}
+                    onClick={()=>{MapModule.placemarkPreview(_placemarkId, true)}}>
+                        <CroppedPhoto
+                            blockWidth = {MapModule.getClusterListImageWidth()}
+                            blockHeight ={MapModule.getClusterListImageHeight()}
+                            photoWidth = {_photo['width']}
+                            photoHeight = {_photo['height']}
+                            photoSrc = {_photo['dir'] + MapModule.getClusterListImagePrefix() + _photo['name']}
+                        />
+                        {_placemarks['id_'+_placemarkId]['data']['title'] && <div className="placemark_list_element_title">{_placemarks['id_'+_placemarkId]['data']['title']}</div>}
+                    </div>);
         }
 
         const List = () => _list;

@@ -7,13 +7,11 @@
 
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import {BrowserView, MobileView, isBrowser, isMobile} from "react-device-detect";
+import {isMobile} from "react-device-detect";
 
 import MapModule from 'src/modules/Map';
 import HtmllerButtons from 'src/modules/HtmllerButtons';
-
 import BaseFunctions from 'src/functions/BaseFunctions';
-import Consts from 'src/settings/Constants';
 
 class PlacemarkButtons extends Component
 {

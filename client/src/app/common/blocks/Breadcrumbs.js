@@ -26,11 +26,11 @@ class Breadcrumbs extends Block
                 let _breadcrumb = _breadcrumbs[_index];
                 if (_breadcrumb['url']) {
                     _breadbrumbsList.push(
-                        <a onClick={this.goTo} data-url={_breadcrumb['url']}>{_breadcrumb['name']}</a>
+                        <a key={_index} onClick={this.goTo} data-url={_breadcrumb['url']}>{_breadcrumb['name']}</a>
                     );
                 } else {
                     _breadbrumbsList.push(
-                        <h3>{_breadcrumb['name']}</h3>
+                        <h3 key={_index}>{_breadcrumb['name']}</h3>
                     );
                 }
             }

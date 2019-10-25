@@ -7,21 +7,15 @@
 
 import React from 'react';
 import { withRouter } from 'react-router-dom';
-import {BrowserView, MobileView, isBrowser, isMobile} from "react-device-detect";
+import {MobileView, isMobile} from "react-device-detect";
 import { connect } from 'react-redux';
 
 import Block from 'src/app/parents/Block';
 import BaseFunctions from 'src/functions/BaseFunctions';
 import Consts from 'src/settings/Constants';
-import ArticlesList from 'src/app/common/blocks/ArticlesList';
 
 class CountriesList extends Block
 {
-
-    constructor()
-    {
-        super();
-    }
 
     render()
     {
@@ -35,7 +29,7 @@ class CountriesList extends Block
         for (let _index in this.props.redux.data) {
             let _item = this.props.redux.data[_index];
             _countriesList.push(
-                <div className="catalog_index_country_row" style={_style} onClick={this.goTo} data-url={'/' + Consts.CONTROLLER_NAME_CATALOG + '/'+_item.country_code}>
+                <div key={_index} className="catalog_index_country_row" style={_style} onClick={this.goTo} data-url={'/' + Consts.CONTROLLER_NAME_CATALOG + '/'+_item.country_code}>
                     <div>
                         <img className="flag" src={BaseFunctions.getFlagUrl(_item.country_code)}/>
                         <div className="catalog_index_country_row_name"><div className="catalog_index_country_name">{_item.country}</div>

@@ -103,7 +103,7 @@ class CatalogPlacemark extends Action
                                 ident = {this.props.redux.actionData.data['relevant_placemarks'].data.ident}
                                 title = {this.props.redux.actionData.data['relevant_placemarks'].data.title}
                             />}
-                            {this.props.redux.actionData.data['another_placemarks'] &&<div class="another_placemarks"><PlacemarksSublist
+                            {this.props.redux.actionData.data['another_placemarks'] &&<div className="another_placemarks"><PlacemarksSublist
                                 placemarks = {this.props.redux.actionData.data['another_placemarks'].placemarks}
                                 isMap = {false}
                                 imageWidth = {this.props.redux.actionData.data['another_placemarks'].data.image_width}

@@ -8,8 +8,6 @@ import React from 'react';
 import {isMobile} from "react-device-detect";
 import Consts from 'src/settings/Constants';
 
-let _events = {};
-
 export default function (props)
 {
     let _icon = "/img/icons_desctop.png";

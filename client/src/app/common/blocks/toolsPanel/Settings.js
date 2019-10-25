@@ -45,8 +45,7 @@ class Settings extends Block
         let _languagesList = [];
         for (let _index in this.props.redux.staticData.languages) {
             let _language = this.props.redux.staticData.languages[_index];
-            let _selected = (Language.getName() === _language['code']) ? true : false;
-            _languagesList.push(<option value={_language['code']} selected={_selected}>{_language['title']}</option>);
+            _languagesList.push(<option key={_index} value={_language['code']}>{_language['title']}</option>);
         }
 
         return (

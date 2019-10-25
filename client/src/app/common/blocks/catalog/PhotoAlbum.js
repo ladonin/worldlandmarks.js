@@ -325,6 +325,7 @@ class PhotoAlbum extends Block
 
             }
             _smallPhotosList.push(<li className="pp_pi2"
+                key={_index}
                 style={_style}
                 data-id={'id-'+_i}><div><span className="pp_ib"><a id={'pp_iba-'+_i}
                 data-href="" rel="prettyPhoto[gallery]" data-photo=""
@@ -349,11 +350,11 @@ class PhotoAlbum extends Block
                     data-photo-height={_ppPh + _additionalHeight}
                     data-content-height="93"
                     >
-                    <div class="pretty_photo_title">{this.props.redux.title}</div>
-                    <ul class="pretty_photo_portfolio-area" id="pretty_photo_portfolio-area">
+                    <div className="pretty_photo_title">{this.props.redux.title}</div>
+                    <ul className="pretty_photo_portfolio-area" id="pretty_photo_portfolio-area">
                         {_smallPhotosList}
                     </ul>
-                    <div class="pretty_photo_column-clear"></div>
+                    <div className="pretty_photo_column-clear"></div>
                 </div>
             </React.Fragment>
         );
