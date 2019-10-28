@@ -2,3 +2,5 @@ client/node_modules
 client/build/img
 client/build/static
 node_modules
+log
+files
