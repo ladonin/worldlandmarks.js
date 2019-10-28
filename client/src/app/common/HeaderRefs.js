@@ -1,6 +1,6 @@
 /*
- * File src/app/HeaderRefs.js
- * import HeaderRefs from 'src/app/HeaderRefs';
+ * File src/app/common/HeaderRefs.js
+ * import HeaderRefs from 'src/app/common/HeaderRefs';
  *
  * Add to document specific css styles, js files etc
  */

@@ -19,7 +19,7 @@ import Alert from 'src/app/common/Alert';
 import PageScrolling from 'src/app/common/blocks/PageScrolling';
 
 // Css
-import {link} from "./app/HeaderRefs";
+import {link} from "./app/common/HeaderRefs";
 
 
 render(
